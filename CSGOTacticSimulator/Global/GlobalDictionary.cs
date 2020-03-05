@@ -95,8 +95,9 @@ namespace CSGOTacticSimulator.Global
     {
         static public int charatersNumber = 0;
 
-        static public string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
-        static public string baseDirectory = exeDirectory.Substring(0, exeDirectory.LastIndexOf("bin"));
+        static public string exePath = AppDomain.CurrentDomain.BaseDirectory;
+        static public string basePath = exePath.Substring(0, exePath.LastIndexOf("bin"));
+
         static public int characterWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "Character"));
         static public int grenadeWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "Grenade"));
         static public int propsWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "Props"));
@@ -107,8 +108,9 @@ namespace CSGOTacticSimulator.Global
         static public double squatToRunRatio = double.Parse(IniHelper.ReadIni("Ratio", "SquatToRun"));
         static public double speedController = double.Parse(IniHelper.ReadIni("Ratio", "Entirety"));
 
-        static public string mapListPath = System.IO.Path.Combine(Global.GlobalDictionary.baseDirectory, IniHelper.ReadIni("Path", "MapList"));
-        static public string backgroundPath = System.IO.Path.Combine(Global.GlobalDictionary.baseDirectory, IniHelper.ReadIni("Path", "Background"));
+        static public string mapListPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "MapList"));
+        static public string mapFolderPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "MapFolder"));
+        static public string backgroundPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Background"));
 
         static public int firebombLifespan = int.Parse(IniHelper.ReadIni("Grenade", "FirebombLifespan"));
         static public int smokeLifespan = int.Parse(IniHelper.ReadIni("Grenade", "SmokeLifespan"));

@@ -83,7 +83,7 @@ namespace CSGOTacticSimulator
         private void btn_select_folder_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             System.Windows.Forms.FolderBrowserDialog selectFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
-            selectFolderDialog.SelectedPath = Global.GlobalDictionary.baseDirectory;
+            selectFolderDialog.SelectedPath = GlobalDictionary.mapFolderPath;
             if (selectFolderDialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
             {
                 return;
@@ -803,14 +803,14 @@ namespace CSGOTacticSimulator
             if (characters[characters.IndexOf(character)].Props == Props.Bomb)
             {
                 Image bombImage = new Image();
-                bombImage.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.baseDirectory, "img/props_bomb.png")));
+                bombImage.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/props_bomb.png")));
                 bombImage.Width = GlobalDictionary.propsWidthAndHeight;
                 bombImage.Height = GlobalDictionary.propsWidthAndHeight;
                 bombImage.Opacity = 0.75;
                 Point bombWndPoint = GetWndPoint(character.MapPoint, ImgType.Props);
 
                 Image explosionImage = new Image();
-                explosionImage.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.baseDirectory, "img/explosion.png")));
+                explosionImage.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/explosion.png")));
                 explosionImage.Width = GlobalDictionary.explosionEffectWidthAndHeight;
                 explosionImage.Height = GlobalDictionary.explosionEffectWidthAndHeight;
                 Point explosionWndPoint = GetWndPoint(character.MapPoint, ImgType.ExplosionEffect);
@@ -948,35 +948,35 @@ namespace CSGOTacticSimulator
             switch (grenade)
             {
                 case Grenade.Decoy:
-                    grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.baseDirectory, "img/grenade_decoy.png")));
+                    grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/grenade_decoy.png")));
                     break;
                 case Grenade.Firebomb:
                     grenadeEffectImg = new Image();
                     if (character.IsT)
                     {
-                        grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.baseDirectory, "img/grenade_molotov.png")));
-                        grenadeEffectImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.baseDirectory, "img/effect_fire.png")));
+                        grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/grenade_molotov.png")));
+                        grenadeEffectImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/effect_fire.png")));
                     }
                     else
                     {
-                        grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.baseDirectory, "img/grenade_incgrenade.png")));
-                        grenadeEffectImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.baseDirectory, "img/effect_fire.png")));
+                        grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/grenade_incgrenade.png")));
+                        grenadeEffectImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/effect_fire.png")));
                     }
                     effectLifeSpan = GlobalDictionary.firebombLifespan;
                     break;
                 case Grenade.Flashbang:
                     grenadeEffectImg = new Image();
-                    grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.baseDirectory, "img/grenade_flashbang.png")));
-                    grenadeEffectImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.baseDirectory, "img/effect_flash.png")));
+                    grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/grenade_flashbang.png")));
+                    grenadeEffectImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/effect_flash.png")));
                     effectLifeSpan = GlobalDictionary.flashbangLifespan;
                     break;
                 case Grenade.Grenade:
-                    grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.baseDirectory, "img/grenade_hegrenade.png")));
+                    grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/grenade_hegrenade.png")));
                     break;
                 case Grenade.Smoke:
                     grenadeEffectImg = new Image();
-                    grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.baseDirectory, "img/grenade_smokegrenade.png")));
-                    grenadeEffectImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.baseDirectory, "img/effect_smoke.png")));
+                    grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/grenade_smokegrenade.png")));
+                    grenadeEffectImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/effect_smoke.png")));
                     effectLifeSpan = GlobalDictionary.smokeLifespan;
                     break;
             }
@@ -1150,7 +1150,7 @@ namespace CSGOTacticSimulator
         private void SaveFile()
         {
             System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
-            sfd.InitialDirectory = Global.GlobalDictionary.baseDirectory;
+            sfd.InitialDirectory = Global.GlobalDictionary.basePath;
             sfd.Filter = "txt file|*.txt";
             if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -1161,7 +1161,7 @@ namespace CSGOTacticSimulator
         private void btn_select_file_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
-            ofd.InitialDirectory = Global.GlobalDictionary.baseDirectory;
+            ofd.InitialDirectory = GlobalDictionary.basePath;
             ofd.DefaultExt = ".txt";
             ofd.Filter = "txt file|*.txt";
             if (ofd.ShowDialog() == true)

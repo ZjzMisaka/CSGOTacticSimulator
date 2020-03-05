@@ -84,11 +84,11 @@ namespace CSGOTacticSimulator.Model
 
             if (isFriendly)
             {
-                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.baseDirectory, "img/FRIENDLY_ALIVE_UPPER.png")));
+                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.basePath, "img/FRIENDLY_ALIVE_UPPER.png")));
             }
             else
             {
-                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.baseDirectory, "img/ENEMY_ALIVE_UPPER.png")));
+                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.basePath, "img/ENEMY_ALIVE_UPPER.png")));
             }
 
             this.MapPoint = mapPoint;
@@ -100,32 +100,32 @@ namespace CSGOTacticSimulator.Model
         {
             if (status  == Status.Alive && IsFriendly == true && verticalPosition == VerticalPosition.Upper)
             {
-                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.baseDirectory, "img/FRIENDLY_ALIVE_UPPER.png")));
+                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.basePath, "img/FRIENDLY_ALIVE_UPPER.png")));
                 CharacterImg.Opacity = 1;
             }
             else if (status == Status.Alive && IsFriendly == false && verticalPosition == VerticalPosition.Upper)
             {
-                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.baseDirectory, "img/ENEMY_ALIVE_UPPER.png"))); 
+                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.basePath, "img/ENEMY_ALIVE_UPPER.png"))); 
                 CharacterImg.Opacity = 1;
             }
             else if (status == Status.Alive && IsFriendly == true && verticalPosition == VerticalPosition.Lower)
             {
-                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.baseDirectory, "img/FRIENDLY_ALIVE_LOWER.png")));
+                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.basePath, "img/FRIENDLY_ALIVE_LOWER.png")));
                 CharacterImg.Opacity = 0.4;
             }
             else if (status == Status.Alive && IsFriendly == false && verticalPosition == VerticalPosition.Lower)
             {
-                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.baseDirectory, "img/ENEMY_ALIVE_LOWER.png")));
+                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.basePath, "img/ENEMY_ALIVE_LOWER.png")));
                 CharacterImg.Opacity = 0.4;
             }
             else if (status == Status.Dead && verticalPosition == VerticalPosition.Upper)
             {
-                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.baseDirectory, "img/DEAD_UPPER.png")));
+                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.basePath, "img/DEAD_UPPER.png")));
                 CharacterImg.Opacity = 1;
             }
             else if (status == Status.Dead && verticalPosition == VerticalPosition.Lower)
             {
-                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.baseDirectory, "img/DEAD_LOWER.png")));
+                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.basePath, "img/DEAD_LOWER.png")));
                 CharacterImg.Opacity = 0.85;
             }
         }

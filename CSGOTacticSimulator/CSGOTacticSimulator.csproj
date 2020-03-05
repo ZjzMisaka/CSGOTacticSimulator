@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{BDE483A3-352A-4F39-BC19-7334AA93398A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>CSGOTacticsSimulator</RootNamespace>
-    <AssemblyName>CSGOTacticsSimulator</AssemblyName>
+    <RootNamespace>CSGOTacticSimulator</RootNamespace>
+    <AssemblyName>CSGOTacticSimulator</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
