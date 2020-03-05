@@ -1,4 +1,4 @@
-# CSGOTacticsSimulator
+# CSGOTacticSimulator
 CSGO战术模拟器
 ## 示例
 https://www.iaders.com/upload/2020/0305/CTSDemo.gif
