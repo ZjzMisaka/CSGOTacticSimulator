@@ -21,7 +21,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif
 |give character {角色编号} grenade {投掷物}|为某个角色配备指定投掷物|√|
 |give character {角色编号} props [bomb / defusekit]|为某个角色配备炸弹 / 拆弹器|√|
 |set character {角色编号} status [alive / dead]|设定某个角色的存活状态|√|
-|set character {角色编号} vertical_position [upper / lower]|设定显示某个角色处于三维地图的上方或下方|√|
+|set character {角色编号} vertical position [upper / lower]|设定显示某个角色处于三维地图的上方或下方|√|
 |action character {角色编号} move [run / walk / squat / teleport] {坐标}|将角色移动到某一地点|√ (除了teleport)|
 |action character {角色编号} throw [smoke / grenade / flashbang / firebomb / decoy] {坐标} <{坐标} ...... {坐标}>|让角色投掷投掷物到某一坐标 |√|
 |action character {角色编号} shoot [{坐标} / {目标编号} [die / live]]|让角色向某坐标或某目标射击|√|
