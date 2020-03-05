@@ -71,7 +71,7 @@ namespace CSGOTacticsSimulator.Helper
                 {
                     return Command.SetCharacterStatus;
                 }
-                else if (cmd.Contains("vertical_position"))
+                else if (cmd.Contains("vertical position"))
                 {
                     return Command.SetCharacterVerticalPosition;
                 }

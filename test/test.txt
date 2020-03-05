@@ -17,7 +17,7 @@ create character t 904.28,348.98
 创建ct角色
 create character ct 738.71,626.63
 create character ct 677.57,727.24
-set character 6 vertical_position lower
+set character 6 vertical position lower
 create character ct 422.85,589.69
 create character ct 543.84,603.7
 create character ct 449.59,826.59
@@ -44,7 +44,7 @@ ct动作
 二楼下ct烧到包点
 action character 6 wait until 9.5
 action character 6 move run 635.54,728.52
-set character 6 vertical_position upper
+set character 6 vertical position upper
 action character 6 move walk 622.81,755.26
 action character 6 move walk 598.61,769.27
 vipct被烧走

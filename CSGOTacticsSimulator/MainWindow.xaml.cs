@@ -378,7 +378,7 @@ namespace CSGOTacticsSimulator
                 {
                     foreach (Model.VerticalPosition verticalPosition in Enum.GetValues(typeof(Model.VerticalPosition)))
                     {
-                        if (verticalPosition.ToString().ToLower() == splitedCmd[4])
+                        if (verticalPosition.ToString().ToLower() == splitedCmd[5])
                         {
                             charactorVerticalPosition = verticalPosition;
                         }
