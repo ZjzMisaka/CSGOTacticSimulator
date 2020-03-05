@@ -18,7 +18,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif
 |create character [t, ct] {坐标}|在指定的坐标生成一名角色|√|
 |delete character {角色编号}|删除一个角色|×|
 |give character {角色编号} weapon {武器}|为某个角色配备指定武器|√|
-|give character {角色编号} grenade {投掷物}|为某个角色配备指定投掷物|√|
+|give character {角色编号} grenade {投掷物} <{投掷物} ...... {投掷物}>|为某个角色配备指定投掷物|√|
 |give character {角色编号} props [bomb / defusekit]|为某个角色配备炸弹 / 拆弹器|√|
 |set character {角色编号} status [alive / dead]|设定某个角色的存活状态|√|
 |set character {角色编号} vertical position [upper / lower]|设定显示某个角色处于三维地图的上方或下方|√|
