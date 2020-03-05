@@ -1,5 +1,5 @@
-﻿using CSGOTacticsSimulator.Global;
-using CSGOTacticsSimulator.Model;
+﻿using CSGOTacticSimulator.Global;
+using CSGOTacticSimulator.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace CSGOTacticsSimulator.Helper
+namespace CSGOTacticSimulator.Helper
 {
     
     static public class CommandHelper

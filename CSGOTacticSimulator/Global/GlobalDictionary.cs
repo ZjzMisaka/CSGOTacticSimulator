@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CSGOTacticsSimulator.Model;
-using CSGOTacticsSimulator.Helper;
+using CSGOTacticSimulator.Model;
+using CSGOTacticSimulator.Helper;
 using System.Threading.Tasks;
 
-namespace CSGOTacticsSimulator.Global
+namespace CSGOTacticSimulator.Global
 {
     public enum Props
     {

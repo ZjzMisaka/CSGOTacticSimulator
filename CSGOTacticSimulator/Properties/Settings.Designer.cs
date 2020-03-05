@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CSGOTacticsSimulator.Properties
+namespace CSGOTacticSimulator.Properties
 {
 
 

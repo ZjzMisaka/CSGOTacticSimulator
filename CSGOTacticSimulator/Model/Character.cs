@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using CSGOTacticsSimulator.Model;
-using CSGOTacticsSimulator.Helper;
-using CSGOTacticsSimulator.Global;
+using CSGOTacticSimulator.Model;
+using CSGOTacticSimulator.Helper;
+using CSGOTacticSimulator.Global;
 using System.Windows.Media.Imaging;
 
-namespace CSGOTacticsSimulator.Model
+namespace CSGOTacticSimulator.Model
 {
     public enum Status
     {

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 /// 原文链接：https://blog.csdn.net/chuangand/article/details/48056015
 /// </summary>
 
-namespace CSGOTacticsSimulator.Helper
+namespace CSGOTacticSimulator.Helper
 {
     class IniHelper
     {

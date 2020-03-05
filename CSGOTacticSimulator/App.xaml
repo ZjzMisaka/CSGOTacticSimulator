@@ -1,7 +1,7 @@
-﻿<Application x:Class="CSGOTacticsSimulator.App"
+﻿<Application x:Class="CSGOTacticSimulator.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:CSGOTacticsSimulator"
+             xmlns:local="clr-namespace:CSGOTacticSimulator"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

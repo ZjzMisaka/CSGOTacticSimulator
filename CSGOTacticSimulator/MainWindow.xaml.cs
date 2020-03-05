@@ -14,14 +14,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Resources;
 using System.Windows.Shapes;
-using CSGOTacticsSimulator.Model;
-using CSGOTacticsSimulator.Helper;
-using CSGOTacticsSimulator.Global;
+using CSGOTacticSimulator.Model;
+using CSGOTacticSimulator.Helper;
+using CSGOTacticSimulator.Global;
 using CustomizableMessageBox;
 using MessageBox = CustomizableMessageBox.MessageBox;
 using System.Threading;
 
-namespace CSGOTacticsSimulator
+namespace CSGOTacticSimulator
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
