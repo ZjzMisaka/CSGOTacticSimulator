@@ -6,9 +6,29 @@
         xmlns:local="clr-namespace:CSGOTacticSimulator"
         mc:Ignorable="d"
         Title="CSGO Tactics Simulator" Height="1024" Width="1600" AllowsTransparency="True" WindowStyle="None" MouseLeftButtonDown="Window_MouseLeftButtonDown" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip" SizeChanged="Window_SizeChanged" Loaded="Window_Loaded">
-    <Grid>
+    <Window.Resources>
+        <Style x:Key="Style.OkOperationButton" TargetType="ButtonBase">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border x:Name="Border" Background="{TemplateBinding Background}">
+                        </Border>
 
-        <Grid Margin="50">
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Border" Property="Opacity" Value="8" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Border" Property="Opacity" Value="5" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid Margin="30, 80, 30, 30">
             <Grid.RowDefinitions>
                 <RowDefinition Height="35"></RowDefinition>
                 <RowDefinition Height="35"></RowDefinition>
@@ -16,8 +36,8 @@
                 <RowDefinition Height="50"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"></ColumnDefinition>
-                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
@@ -32,7 +52,7 @@
                 </ComboBox>
             </StackPanel>
 
-            <Grid x:Name="g_map" Grid.Row="2" Grid.Column="0" Margin="0, 0, 10, 0" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <Grid x:Name="g_map" Grid.Row="2" Grid.Column="0" Margin="0, 0, 5, 0" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <Image x:Name="i_map" MouseLeftButtonDown="i_map_MouseLeftButtonDown">
                 </Image>
                 <TextBlock x:Name="tb_infos" Visibility="Hidden" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5"></TextBlock>
@@ -50,23 +70,23 @@
                 <Button x:Name="btn_select_file" Width="50" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Content="..." FontSize="20" Margin="0,0,0,3" Click="btn_select_file_Click" />
             </StackPanel>
 
-            <TextBox x:Name="tb_editor" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" FontSize="20" Margin="10, 0, 0, 0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
+            <TextBox x:Name="tb_editor" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" FontSize="20" Margin="5, 0, 0, 0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="NoWrap" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
 
-            <Grid x:Name="g_controller_buttons" Grid.Row="3" Grid.Column="1"  Margin="10, 0, 0, 0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid x:Name="g_controller_buttons" Grid.Row="3" Grid.Column="1"  Margin="5, 5, 0, 0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="btn_run" Content="Run" FontSize="20" Grid.Column="0" Click="btn_run_Click"></Button>
-                <Button x:Name="btn_stop" Content="Stop" FontSize="20" Grid.Column="1" Click="btn_stop_Click"></Button>
-                <Button x:Name="btn_save" Content="Save" FontSize="20" Grid.Column="2" Click="btn_save_Click"></Button>
-                <Button x:Name="btn_exit" Content="Exit" FontSize="20" Grid.Column="3" Click="btn_exit_Click"></Button>
+                <Button x:Name="btn_run" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="0" Click="btn_run_Click"></Button>
+                <Button x:Name="btn_stop" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="1" Click="btn_stop_Click"></Button>
+                <Button x:Name="btn_save" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="2" Click="btn_save_Click"></Button>
+                <Button x:Name="btn_exit" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="3" Click="btn_exit_Click"></Button>
             </Grid>
         </Grid>
-
         <Canvas x:Name="c_canvas">
         </Canvas>
+        <Button x:Name="btn_minimize" Style="{StaticResource Style.OkOperationButton}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="30" Width="30" Height="30" Click="btn_minimize_Click"></Button>
     </Grid>
 </Window>

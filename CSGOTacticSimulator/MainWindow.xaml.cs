@@ -39,6 +39,31 @@ namespace CSGOTacticSimulator
         public MainWindow()
         {
             InitializeComponent();
+
+            ImageBrush minimizeBrush = new ImageBrush();
+            minimizeBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.minimizePath));
+            minimizeBrush.Stretch = Stretch.Uniform;
+            btn_minimize.Background = minimizeBrush;
+
+            ImageBrush runBrush = new ImageBrush();
+            runBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.runPath));
+            runBrush.Stretch = Stretch.Uniform;
+            btn_run.Background = runBrush;
+
+            ImageBrush stopBrush = new ImageBrush();
+            stopBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.stopPath));
+            stopBrush.Stretch = Stretch.Uniform;
+            btn_stop.Background = stopBrush;
+
+            ImageBrush saveBrush = new ImageBrush();
+            saveBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.savePath));
+            saveBrush.Stretch = Stretch.Uniform;
+            btn_save.Background = saveBrush;
+
+            ImageBrush exitBrush = new ImageBrush();
+            exitBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.exitPath));
+            exitBrush.Stretch = Stretch.Uniform;
+            btn_exit.Background = exitBrush;
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -58,10 +83,7 @@ namespace CSGOTacticSimulator
                 SaveFile();
             }
             Stop();
-            //if (timerThread != null)
-            //{
-            //    timerThread.Abort();
-            //}
+
             Application.Current.Shutdown(-1);
         }
 
@@ -244,13 +266,15 @@ namespace CSGOTacticSimulator
 
         private void btn_run_Click(object sender, RoutedEventArgs e)
         {
+            if(i_map.Source == null)
+            {
+                return;
+            }
+
             ratio = i_map.ActualWidth / i_map.Source.Width;
 
             bombDefused = false;
-            //if(timerThread != null)
-            //{
-            //    timerThread.Abort();
-            //}
+
             Stop();
 
             CommandHelper.GetCommands(tb_editor.Text);
@@ -418,7 +442,7 @@ namespace CSGOTacticSimulator
             string[] splitedCmd = command.Split(' ');
             int number = int.Parse(splitedCmd[2]);
             List<Grenade> grenades = new List<Grenade>();
-            for (int i = 0; i < splitedCmd.Count(); ++i)
+            for (int i = 4; i < splitedCmd.Count(); ++i)
             {
                 foreach (Grenade grenade in Enum.GetValues(typeof(Grenade)))
                 {
@@ -666,6 +690,11 @@ namespace CSGOTacticSimulator
         }
         private void RunAnimationWaitUntil(Character character, Animation animation)
         {
+            if(character.Status == Model.Status.Dead)
+            {
+                return;
+            }
+
             characters[characters.IndexOf(character)].IsRunningAnimation = true;
             animations[animations.IndexOf(animation)].status = Helper.Status.Running;
 
@@ -697,6 +726,11 @@ namespace CSGOTacticSimulator
 
         private void RunAnimationWaitFor(Character character, Animation animation)
         {
+            if (character.Status == Model.Status.Dead)
+            {
+                return;
+            }
+
             characters[characters.IndexOf(character)].IsRunningAnimation = true;
             animations[animations.IndexOf(animation)].status = Helper.Status.Running;
 
@@ -718,6 +752,11 @@ namespace CSGOTacticSimulator
         }
         private void RunAnimationChangeVerticalPosition(Character character, Animation animation)
         {
+            if (character.Status == Model.Status.Dead)
+            {
+                return;
+            }
+
             characters[characters.IndexOf(character)].IsRunningAnimation = true;
             animations[animations.IndexOf(animation)].status = Helper.Status.Running;
 
@@ -733,6 +772,11 @@ namespace CSGOTacticSimulator
         }
         private void RunAnimationDefuse(Character character, Animation animation)
         {
+            if (character.Status == Model.Status.Dead)
+            {
+                return;
+            }
+
             characters[characters.IndexOf(character)].IsRunningAnimation = true;
             animations[animations.IndexOf(animation)].status = Helper.Status.Running;
 
@@ -797,6 +841,11 @@ namespace CSGOTacticSimulator
 
         private void RunAnimationPlant(Character character, Animation animation)
         {
+            if (character.Status == Model.Status.Dead)
+            {
+                return;
+            }
+
             characters[characters.IndexOf(character)].IsRunningAnimation = true;
             animations[animations.IndexOf(animation)].status = Helper.Status.Running;
 
@@ -882,6 +931,11 @@ namespace CSGOTacticSimulator
         }
         private void RunAnimationMove(Character character, Animation animation, double speed)
         {
+            if (character.Status == Model.Status.Dead)
+            {
+                return;
+            }
+
             int animationFreshTime = GlobalDictionary.animationFreshTime;
             double pixelPerFresh = speed / (1000 / GlobalDictionary.animationFreshTime) * ratio * GlobalDictionary.speedController;
             Point startWndPoint = GetWndPoint(character.MapPoint, ImgType.Character);
@@ -931,6 +985,11 @@ namespace CSGOTacticSimulator
 
         private void RunAnimationThrow(Character character, Animation animation, double speed)
         {
+            if (character.Status == Model.Status.Dead)
+            {
+                return;
+            }
+
             int animationFreshTime = GlobalDictionary.animationFreshTime;
             double pixelPerFresh = speed / (1000 / GlobalDictionary.animationFreshTime) * ratio * GlobalDictionary.speedController;
             Point startWndPoint = GetWndPoint(character.MapPoint, ImgType.Character);
@@ -990,7 +1049,19 @@ namespace CSGOTacticSimulator
                 grenadeEffectImg.Height = GlobalDictionary.grenadeEffectWidthAndHeight;
             }
 
-            characters[characters.IndexOf(character)].Grenades.Remove(grenade);
+            if (characters[characters.IndexOf(character)].Grenades.Contains(grenade))
+            {
+                characters[characters.IndexOf(character)].Grenades.Remove(grenade);
+            }
+            else
+            {
+                Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+                {
+                    Stop();
+                    MessageBox.Show(new List<object> { new ButtonSpacer(500), "确定" }, "角色" + character.Number + "未持有道具" + grenade.ToString() + ", 可能是没有配备, 或已经被扔出, 因此无法投掷. ", "错误", MessageBoxImage.Warning);
+                }));
+                
+            }
             Thread throwThread = new Thread(() =>
             {
                 Point nowWndPoint = startWndPoint;
@@ -1053,6 +1124,11 @@ namespace CSGOTacticSimulator
 
         private void RunAnimationShoot(Character character, Animation animation)
         {
+            if (character.Status == Model.Status.Dead)
+            {
+                return;
+            }
+
             Point fromMapPoint = character.MapPoint;
             Point fromWndPoint = GetWndPoint(fromMapPoint, ImgType.Nothing);
             Point toWndPoint = new Point();
@@ -1192,6 +1268,11 @@ namespace CSGOTacticSimulator
             backgroundBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.backgroundPath));
             backgroundBrush.Stretch = Stretch.Fill;
             this.Background = backgroundBrush;
+        }
+
+        private void btn_minimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
         }
     }
 }

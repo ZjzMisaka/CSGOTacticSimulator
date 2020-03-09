@@ -111,6 +111,11 @@ namespace CSGOTacticSimulator.Global
         static public string mapListPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "MapList"));
         static public string mapFolderPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "MapFolder"));
         static public string backgroundPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Background"));
+        static public string runPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Run"));
+        static public string stopPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Stop"));
+        static public string savePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Save"));
+        static public string exitPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Exit"));
+        static public string minimizePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Minimize"));
 
         static public int firebombLifespan = int.Parse(IniHelper.ReadIni("Grenade", "FirebombLifespan"));
         static public int smokeLifespan = int.Parse(IniHelper.ReadIni("Grenade", "SmokeLifespan"));
