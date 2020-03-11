@@ -34,6 +34,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif (v1.1.0)
 |create comment {秒数} {坐标} {内容}|在指定时间地点创建一个标注|×|
 ## 第三资源使用
 |资源|许可证|
+|----|----|
 |[icsharpcode.AvalonEdit](https://github.com/icsharpcode/AvalonEdit)|MIT|
 |[ZjzMisaka.CustomizableMessageBox](https://github.com/ZjzMisaka/CustomizableMessageBox)|WTFPL|
 |[simpleradar.CSGOMaps](http://simpleradar.com/)|Unknown|
