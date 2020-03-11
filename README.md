@@ -1,9 +1,9 @@
 # CSGOTacticSimulator
 CSGO战术模拟器
 ## 示例
-*(v1.1.0 gif)*
-https://www.iaders.com/upload/2020/0305/CTSDemo.gif 
-*(v1.2.0 screenshot)*
+*(v1.1.0 gif)* </br>
+https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
+*(v1.2.0 screenshot)* </br>
 ![screenshot](https://www.iaders.com/upload/2020/0312/v1.3.0.png)
 ## 提示
 - 可以通过点击图片获得坐标. 
