@@ -1,8 +1,10 @@
 # CSGOTacticSimulator
 CSGO战术模拟器
 ## 示例
-https://www.iaders.com/upload/2020/0305/CTSDemo.gif (v1.1.0)
-![Screenshot](https://www.iaders.com/upload/2020/0312/v1.3.0.png)
+*(v1.1.0 gif)*
+https://www.iaders.com/upload/2020/0305/CTSDemo.gif 
+*(v1.2.0 screenshot)*
+![screenshot](https://www.iaders.com/upload/2020/0312/v1.3.0.png)
 ## 提示
 - 可以通过点击图片获得坐标. 
 - 坐标与图片在窗口内的缩放程度无关, 可以任意改变窗口大小而不用修改脚本. 
