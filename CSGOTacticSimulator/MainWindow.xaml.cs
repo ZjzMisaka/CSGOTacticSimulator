@@ -20,6 +20,10 @@ using CSGOTacticSimulator.Global;
 using CustomizableMessageBox;
 using MessageBox = CustomizableMessageBox.MessageBox;
 using System.Threading;
+using ICSharpCode.AvalonEdit.Search;
+using System.Xml;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using ICSharpCode.AvalonEdit.Highlighting;
 
 namespace CSGOTacticSimulator
 {
@@ -32,6 +36,7 @@ namespace CSGOTacticSimulator
         public List<Animation> animations = new List<Animation>();
         private Camp currentCamp;
         double ratio = 1;
+        double localSpeedController = -1;
         bool bombDefused = false;
 
         private List<Thread> listThread = new List<Thread>();
@@ -106,6 +111,7 @@ namespace CSGOTacticSimulator
         {
             System.Windows.Forms.FolderBrowserDialog selectFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             selectFolderDialog.SelectedPath = GlobalDictionary.mapFolderPath;
+            selectFolderDialog.ShowNewFolderButton = false;
             if (selectFolderDialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
             {
                 return;
@@ -210,14 +216,14 @@ namespace CSGOTacticSimulator
                 case ImgType.Character:
                     widthAndHeight = GlobalDictionary.characterWidthAndHeight;
                     break;
-                case ImgType.GrenadeEffect:
-                    widthAndHeight = GlobalDictionary.grenadeEffectWidthAndHeight;
+                case ImgType.MissileEffect:
+                    widthAndHeight = GlobalDictionary.missileEffectWidthAndHeight;
                     break;
                 case ImgType.ExplosionEffect:
                     widthAndHeight = GlobalDictionary.explosionEffectWidthAndHeight;
                     break;
-                case ImgType.Grenade:
-                    widthAndHeight = GlobalDictionary.grenadeWidthAndHeight;
+                case ImgType.Missile:
+                    widthAndHeight = GlobalDictionary.missileWidthAndHeight;
                     break;
                 case ImgType.Props:
                     widthAndHeight = GlobalDictionary.propsWidthAndHeight;
@@ -238,8 +244,8 @@ namespace CSGOTacticSimulator
                 case ImgType.Character:
                     widthAndHeight = GlobalDictionary.characterWidthAndHeight;
                     break;
-                case ImgType.GrenadeEffect:
-                    widthAndHeight = GlobalDictionary.grenadeEffectWidthAndHeight;
+                case ImgType.MissileEffect:
+                    widthAndHeight = GlobalDictionary.missileEffectWidthAndHeight;
                     break;
                 case ImgType.ExplosionEffect:
                     widthAndHeight = GlobalDictionary.explosionEffectWidthAndHeight;
@@ -247,8 +253,8 @@ namespace CSGOTacticSimulator
                 case ImgType.Props:
                     widthAndHeight = GlobalDictionary.propsWidthAndHeight;
                     break;
-                case ImgType.Grenade:
-                    widthAndHeight = GlobalDictionary.grenadeWidthAndHeight;
+                case ImgType.Missile:
+                    widthAndHeight = GlobalDictionary.missileWidthAndHeight;
                     break;
                 case ImgType.Nothing:
                     widthAndHeight = 0;
@@ -277,7 +283,7 @@ namespace CSGOTacticSimulator
 
             Stop();
 
-            CommandHelper.GetCommands(tb_editor.Text);
+            CommandHelper.GetCommands(te_editor.Text);
 
             foreach (string command in CommandHelper.commands)
             {
@@ -285,6 +291,9 @@ namespace CSGOTacticSimulator
                 Command commandType = CommandHelper.AnalysisCommand(command);
                 switch (commandType)
                 {
+                    case Command.SetEntiretySpeed:
+                        SetEntiretySpeed(processedCommand);
+                        break;
                     case Command.ActionCharacterDo:
                         ActionCharacterDo(processedCommand);
                         break;
@@ -312,8 +321,8 @@ namespace CSGOTacticSimulator
                         break;
                     case Command.CreateTeam:
                         break;
-                    case Command.GiveCharacterGrenade:
-                        GiveCharacterGrenade(processedCommand);
+                    case Command.GiveCharacterMissile:
+                        GiveCharacterMissile(processedCommand);
                         break;
                     case Command.GiveCharacterProps:
                         GiveCharacterProps(processedCommand);
@@ -417,7 +426,11 @@ namespace CSGOTacticSimulator
             string[] splitedCmd = command.Split(' ');
             currentCamp = splitedCmd[2] == "t" ? Camp.T : Camp.Ct;
         }
-
+        private void SetEntiretySpeed(string command)
+        {
+            string[] splitedCmd = command.Split(' ');
+            localSpeedController = double.Parse(splitedCmd[3]);
+        }
         private void GiveCharacterWeapon(string command)
         {
             string[] splitedCmd = command.Split(' ');
@@ -437,18 +450,18 @@ namespace CSGOTacticSimulator
                 }
             }
         }
-        private void GiveCharacterGrenade(string command)
+        private void GiveCharacterMissile(string command)
         {
             string[] splitedCmd = command.Split(' ');
             int number = int.Parse(splitedCmd[2]);
-            List<Grenade> grenades = new List<Grenade>();
+            List<Missile> missiles = new List<Missile>();
             for (int i = 4; i < splitedCmd.Count(); ++i)
             {
-                foreach (Grenade grenade in Enum.GetValues(typeof(Grenade)))
+                foreach (Missile missile in Enum.GetValues(typeof(Missile)))
                 {
-                    if (splitedCmd[i] == grenade.ToString().ToLower())
+                    if (splitedCmd[i] == missile.ToString().ToLower())
                     {
-                        grenades.Add(grenade);
+                        missiles.Add(missile);
                     }
                 }
             }
@@ -456,29 +469,29 @@ namespace CSGOTacticSimulator
             {
                 if (characters[i].Number == number)
                 {
-                    foreach (Grenade grenade in grenades)
+                    foreach (Missile missile in missiles)
                     {
-                        if (characters[i].Grenades.Count >= 4)
+                        if (characters[i].Missiles.Count >= 4)
                         {
                             return;
                         }
-                        if (grenade != Grenade.Flashbang && !characters[i].Grenades.Contains(grenade))
+                        if (missile != Missile.Flashbang && !characters[i].Missiles.Contains(missile))
                         {
-                            characters[i].Grenades.Add(grenade);
+                            characters[i].Missiles.Add(missile);
                         }
-                        else if (grenade == Grenade.Flashbang)
+                        else if (missile == Missile.Flashbang)
                         {
                             int flashbangCount = 0;
-                            foreach (Grenade grenadeTemp in characters[i].Grenades)
+                            foreach (Missile missileTemp in characters[i].Missiles)
                             {
-                                if (grenadeTemp == Grenade.Flashbang)
+                                if (missileTemp == Missile.Flashbang)
                                 {
                                     ++flashbangCount;
                                 }
                             }
                             if (flashbangCount <= 1)
                             {
-                                characters[i].Grenades.Add(grenade);
+                                characters[i].Missiles.Add(missile);
                             }
                         }
                         else
@@ -608,14 +621,14 @@ namespace CSGOTacticSimulator
         {
             string[] splitedCmd = command.Split(' ');
             int number = int.Parse(splitedCmd[2]);
-            string grenadeStr = splitedCmd[4];
+            string missileStr = splitedCmd[4];
             Helper.Action action = Helper.Action.Throw;
-            Grenade grenade = Grenade.Nothing;
-            foreach (Grenade grenadeTemp in Enum.GetValues(typeof(Grenade)))
+            Missile missile = Missile.Nothing;
+            foreach (Missile missileTemp in Enum.GetValues(typeof(Missile)))
             {
-                if (grenadeTemp.ToString().ToLower() == grenadeStr)
+                if (missileTemp.ToString().ToLower() == missileStr)
                 {
-                    grenade = grenadeTemp;
+                    missile = missileTemp;
                 }
             }
             List<Point> mapPoints = new List<Point>();
@@ -623,7 +636,7 @@ namespace CSGOTacticSimulator
             {
                 mapPoints.Add(VectorHelper.Cast(splitedCmd[i]));
             }
-            animations.Add(new Animation(number, action, new Point(), grenade, mapPoints));
+            animations.Add(new Animation(number, action, new Point(), missile, mapPoints));
         }
         private void TraversalAnimations()
         {
@@ -648,7 +661,7 @@ namespace CSGOTacticSimulator
         private void RunAnimation(Character character, Animation animation)
         {
             double runSpeed = double.Parse(IniHelper.ReadIni("RunSpeed", character.Weapon.ToString()));
-            double grenadeSpeed = double.Parse(IniHelper.ReadIni("Grenade", "Speed"));
+            double missileSpeed = double.Parse(IniHelper.ReadIni("Missile", "Speed"));
             switch (animation.action)
             {
                 case Helper.Action.Run:
@@ -672,7 +685,7 @@ namespace CSGOTacticSimulator
                     RunAnimationShoot(character, animation);
                     break;
                 case Helper.Action.Throw:
-                    RunAnimationThrow(character, animation, grenadeSpeed);
+                    RunAnimationThrow(character, animation, missileSpeed);
                     break;
                 case Helper.Action.ChangeStatus:
                     RunAnimationChangeStatus(character, animation);
@@ -936,8 +949,10 @@ namespace CSGOTacticSimulator
                 return;
             }
 
+            double speedController = localSpeedController != -1 ? localSpeedController : GlobalDictionary.speedController;
+
             int animationFreshTime = GlobalDictionary.animationFreshTime;
-            double pixelPerFresh = speed / (1000 / GlobalDictionary.animationFreshTime) * ratio * GlobalDictionary.speedController;
+            double pixelPerFresh = speed / (1000 / GlobalDictionary.animationFreshTime) * ratio * speedController;
             Point startWndPoint = GetWndPoint(character.MapPoint, ImgType.Character);
             Point endWndPoint = GetWndPoint(animation.endMapPoint, ImgType.Character);
             Point unitVector = VectorHelper.GetUnitVector(startWndPoint, endWndPoint);
@@ -990,75 +1005,77 @@ namespace CSGOTacticSimulator
                 return;
             }
 
+            double speedController = localSpeedController != -1 ? localSpeedController : GlobalDictionary.speedController;
+
             int animationFreshTime = GlobalDictionary.animationFreshTime;
-            double pixelPerFresh = speed / (1000 / GlobalDictionary.animationFreshTime) * ratio * GlobalDictionary.speedController;
+            double pixelPerFresh = speed / (1000 / GlobalDictionary.animationFreshTime) * ratio * speedController;
             Point startWndPoint = GetWndPoint(character.MapPoint, ImgType.Character);
-            Grenade grenade = (Grenade)animation.objectPara[0];
+            Missile missile = (Missile)animation.objectPara[0];
             List<Point> mapPoints = (List<Point>)animation.objectPara[1];
             List<Point> wndPoints = new List<Point>();
             foreach (Point mapPoint in mapPoints)
             {
-                wndPoints.Add(GetWndPoint(mapPoint, ImgType.Grenade));
+                wndPoints.Add(GetWndPoint(mapPoint, ImgType.Missile));
             }
 
-            Image grenadeImg = new Image();
-            Image grenadeEffectImg = null;
+            Image missileImg = new Image();
+            Image missileEffectImg = null;
             int effectLifeSpan = 0;
-            switch (grenade)
+            switch (missile)
             {
-                case Grenade.Decoy:
-                    grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/grenade_decoy.png")));
+                case Missile.Decoy:
+                    missileImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/missile_decoy.png")));
                     break;
-                case Grenade.Firebomb:
-                    grenadeEffectImg = new Image();
+                case Missile.Firebomb:
+                    missileEffectImg = new Image();
                     if (character.IsT)
                     {
-                        grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/grenade_molotov.png")));
-                        grenadeEffectImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/effect_fire.png")));
+                        missileImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/missile_molotov.png")));
+                        missileEffectImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/effect_fire.png")));
                     }
                     else
                     {
-                        grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/grenade_incgrenade.png")));
-                        grenadeEffectImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/effect_fire.png")));
+                        missileImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/missile_incgrenade.png")));
+                        missileEffectImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/effect_fire.png")));
                     }
                     effectLifeSpan = GlobalDictionary.firebombLifespan;
                     break;
-                case Grenade.Flashbang:
-                    grenadeEffectImg = new Image();
-                    grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/grenade_flashbang.png")));
-                    grenadeEffectImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/effect_flash.png")));
+                case Missile.Flashbang:
+                    missileEffectImg = new Image();
+                    missileImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/missile_flashbang.png")));
+                    missileEffectImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/effect_flash.png")));
                     effectLifeSpan = GlobalDictionary.flashbangLifespan;
                     break;
-                case Grenade.Grenade:
-                    grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/grenade_hegrenade.png")));
+                case Missile.Grenade:
+                    missileImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/missile_hegrenade.png")));
                     break;
-                case Grenade.Smoke:
-                    grenadeEffectImg = new Image();
-                    grenadeImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/grenade_smokegrenade.png")));
-                    grenadeEffectImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/effect_smoke.png")));
+                case Missile.Smoke:
+                    missileEffectImg = new Image();
+                    missileImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/missile_smokegrenade.png")));
+                    missileEffectImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/effect_smoke.png")));
                     effectLifeSpan = GlobalDictionary.smokeLifespan;
                     break;
             }
-            grenadeImg.Width = GlobalDictionary.grenadeWidthAndHeight;
-            grenadeImg.Height = GlobalDictionary.grenadeWidthAndHeight;
+            missileImg.Width = GlobalDictionary.missileWidthAndHeight;
+            missileImg.Height = GlobalDictionary.missileWidthAndHeight;
 
-            if (grenadeEffectImg != null)
+            if (missileEffectImg != null)
             {
-                grenadeEffectImg.Opacity = 0.85;
-                grenadeEffectImg.Width = GlobalDictionary.grenadeEffectWidthAndHeight;
-                grenadeEffectImg.Height = GlobalDictionary.grenadeEffectWidthAndHeight;
+                missileEffectImg.Opacity = 0.85;
+                missileEffectImg.Width = GlobalDictionary.missileEffectWidthAndHeight;
+                missileEffectImg.Height = GlobalDictionary.missileEffectWidthAndHeight;
             }
 
-            if (characters[characters.IndexOf(character)].Grenades.Contains(grenade))
+            if (characters[characters.IndexOf(character)].Missiles.Contains(missile))
             {
-                characters[characters.IndexOf(character)].Grenades.Remove(grenade);
+                characters[characters.IndexOf(character)].Missiles.Remove(missile);
             }
             else
             {
                 Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
                 {
                     Stop();
-                    MessageBox.Show(new List<object> { new ButtonSpacer(500), "确定" }, "角色" + character.Number + "未持有道具" + grenade.ToString() + ", 可能是没有配备, 或已经被扔出, 因此无法投掷. ", "错误", MessageBoxImage.Warning);
+                    MessageBox.Show(new List<object> { new ButtonSpacer(500), "确定" }, "角色" + character.Number + "未持有道具" + missile.ToString() + ", 可能是没有配备, 或已经被扔出, 因此无法投掷. ", "错误", MessageBoxImage.Warning);
                 }));
                 
             }
@@ -1074,13 +1091,13 @@ namespace CSGOTacticSimulator
 
                         c_canvas.Dispatcher.Invoke(() =>
                         {
-                            if (c_canvas.Children.Contains(grenadeImg))
+                            if (c_canvas.Children.Contains(missileImg))
                             {
-                                c_canvas.Children.Remove(grenadeImg);
+                                c_canvas.Children.Remove(missileImg);
                             }
-                            Canvas.SetLeft(grenadeImg, nowWndPoint.X);
-                            Canvas.SetTop(grenadeImg, nowWndPoint.Y);
-                            c_canvas.Children.Add(grenadeImg);
+                            Canvas.SetLeft(missileImg, nowWndPoint.X);
+                            Canvas.SetTop(missileImg, nowWndPoint.Y);
+                            c_canvas.Children.Add(missileImg);
                         });
 
                         Thread.Sleep(animationFreshTime);
@@ -1089,25 +1106,25 @@ namespace CSGOTacticSimulator
                 }
                 c_canvas.Dispatcher.Invoke(() =>
                 {
-                    if (c_canvas.Children.Contains(grenadeImg))
+                    if (c_canvas.Children.Contains(missileImg))
                     {
-                        c_canvas.Children.Remove(grenadeImg);
+                        c_canvas.Children.Remove(missileImg);
                     }
                 });
 
-                nowWndPoint = GetWndPoint(GetMapPoint(nowWndPoint, ImgType.Grenade), ImgType.GrenadeEffect);
+                nowWndPoint = GetWndPoint(GetMapPoint(nowWndPoint, ImgType.Missile), ImgType.MissileEffect);
                 c_canvas.Dispatcher.Invoke(() =>
                 {
-                    Canvas.SetLeft(grenadeEffectImg, nowWndPoint.X);
-                    Canvas.SetTop(grenadeEffectImg, nowWndPoint.Y);
-                    c_canvas.Children.Add(grenadeEffectImg);
+                    Canvas.SetLeft(missileEffectImg, nowWndPoint.X);
+                    Canvas.SetTop(missileEffectImg, nowWndPoint.Y);
+                    c_canvas.Children.Add(missileEffectImg);
                 });
                 Thread.Sleep(effectLifeSpan * 1000);
                 c_canvas.Dispatcher.Invoke(() =>
                 {
-                    if (c_canvas.Children.Contains(grenadeEffectImg))
+                    if (c_canvas.Children.Contains(missileEffectImg))
                     {
-                        c_canvas.Children.Remove(grenadeEffectImg);
+                        c_canvas.Children.Remove(missileEffectImg);
                     }
                 });
             });
@@ -1190,24 +1207,24 @@ namespace CSGOTacticSimulator
             {
                 if (character.CharacterImg == sender)
                 {
-                    string grenadeListStr = "";
-                    foreach (Grenade grenade in character.Grenades)
+                    string missileListStr = "";
+                    foreach (Missile missile in character.Missiles)
                     {
-                        grenadeListStr += grenade.ToString() + " / ";
+                        missileListStr += missile.ToString() + " / ";
                     }
-                    if (character.Grenades.Count >= 1)
+                    if (character.Missiles.Count >= 1)
                     {
-                        grenadeListStr = grenadeListStr.Substring(0, grenadeListStr.Length - 3);
+                        missileListStr = missileListStr.Substring(0, missileListStr.Length - 3);
                     }
                     else
                     {
-                        grenadeListStr = "Nothing";
+                        missileListStr = "Nothing";
                     }
                     tb_infos.Text =
                         "Number: " + character.Number +
                         "\nPosisiion: " + character.MapPoint.ToString() +
                         "\nWeapon: " + character.Weapon.ToString() +
-                        "\nGrenades: " + grenadeListStr +
+                        "\nMissile: " + missileListStr +
                         "\nprops: " + character.Props.ToString();
                 }
             }
@@ -1230,7 +1247,7 @@ namespace CSGOTacticSimulator
             sfd.Filter = "txt file|*.txt";
             if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                File.WriteAllText(sfd.FileName, tb_editor.Text);
+                File.WriteAllText(sfd.FileName, te_editor.Text);
             }
         }
 
@@ -1243,7 +1260,7 @@ namespace CSGOTacticSimulator
             if (ofd.ShowDialog() == true)
             {
                 string filePath = ofd.FileName;
-                tb_editor.Text = File.ReadAllText(filePath);
+                te_editor.Text = File.ReadAllText(filePath);
             }
         }
 
@@ -1260,10 +1277,19 @@ namespace CSGOTacticSimulator
             characters.Clear();
             c_canvas.Children.Clear();
             GlobalDictionary.charatersNumber = 0;
+            localSpeedController = -1;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            //快速搜索功能
+            SearchPanel.Install(te_editor.TextArea);
+            //设置语法规则
+            string highlightPath = GlobalDictionary.highlightPath;
+            XmlTextReader reader = new XmlTextReader(highlightPath);
+            var xshd = HighlightingLoader.LoadXshd(reader);
+            te_editor.SyntaxHighlighting = HighlightingLoader.Load(xshd, HighlightingManager.Instance);
+
             ImageBrush backgroundBrush = new ImageBrush();
             backgroundBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.backgroundPath));
             backgroundBrush.Stretch = Stretch.Fill;

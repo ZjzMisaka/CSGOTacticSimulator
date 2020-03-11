@@ -5,6 +5,9 @@
 *****         WTFPL         *****
 *********************************
 
+设置总体速度比率为 0.21
+set entirety speed 0.21
+
 阵营为t
 set camp t
 
@@ -26,42 +29,46 @@ create character ct 681.39,685.21
 create character ct 565.49,757.81
 create character ct 497.99,756.54
 create character ct 338.79,729.79
+create character ct 595,645.19
 
 // 忍者偷包
 - create character ct 590.5,810.76
-- give character 15 grenade smoke flashbang
-- give character 15 props defusekit
-- action character 15 wait until 25
-- action character 15 move walk 603.39,807.25
-- action character 15 move walk 601.15,770.55
-- action character 15 wait until 28
-- action character 15 throw smoke 601.15,770.55
-- action character 15 wait until 29
-- action character 15 throw flashbang 601.15,770.55
-- action character 15 do refuse
+- give character 16 missile smoke flashbang
+- give character 16 props defusekit
+- action character 16 wait until 33.5
+- action character 16 move walk 603.39,807.25
+- action character 16 move walk 601.15,770.55
+- action character 16 wait for 3
+- action character 16 throw smoke 601.15,770.55
+- action character 16 wait for 1
+- ction character 16 throw flashbang 601.15,770.55
+- action character 16 do defuse
 
 ct动作
 二楼下ct烧到包点
-action character 6 wait until 9.5
+action character 6 wait until 18
 action character 6 move run 635.54,728.52
 set character 6 vertical position upper
 action character 6 move walk 622.81,755.26
 action character 6 move walk 598.61,769.27
+三明治ct被烧出
+action character 15 wait until 19
+action character 15 move run 595.66,664.6
 vipct被烧走
-action character 7 wait until 15
+action character 7 wait until 20
 action character 7 move run 427.94,601.15
 action character 7 move run 449.59,606.25
 跳台 ct 混烟
-action character 7 wait until 15
+action character 7 wait until 28
 action character 7 move run 490.35,653.37
 action character 7 move run 490.35,685.21
 vip ct 混烟
-action character 8 wait until 15
+action character 8 wait until 28
 action character 8 move run 542.57,676.3
 
 t方0号配武器道具并移动
 give character 0 weapon ak47
-give character 0 grenade smoke grenade firebomb
+give character 0 missile smoke grenade firebomb
 action character 0 move run 904.28,422.85
 action character 0 move run 904.28,617.71
 action character 0 move run 846.97,635.54
@@ -70,25 +77,25 @@ action character 0 move walk 811.3,788.38
 action character 0 move walk 761.63,787.1
 t方1号配武器道具并移动
 give character 1 weapon awp
-give character 1 grenade smoke grenade flashbang firebomb
+give character 1 missile smoke grenade flashbang flashbang
 action character 1 move run 895.36,424.12
 action character 1 move run 895.36,482.71
 t方2号配武器道具并移动
 give character 2 weapon ak47
 give character 2 props bomb
-give character 2 grenade smoke flashbang flashbang firebomb
+give character 2 missile smoke flashbang flashbang firebomb
 action character 2 move run 895.36,424.12
 action character 2 move run 891.54,473.79
 action character 2 move run 873.71,580.78
 t方3号配武器道具并移动
 give character 3 weapon sg553
-give character 3 grenade smoke flashbang flashbang firebomb
+give character 3 missile smoke flashbang flashbang firebomb
 action character 3 move run 882.63,593.51
 action character 3 move run 807.48,594.79
 action character 3 move run 811.3,630.45
 t方4号配武器道具, 攻击并移动
 give character 4 weapon sg553
-give character 4 grenade smoke flashbang flashbang
+give character 4 missile smoke flashbang flashbang
 action character 4 move run 890.27,482.71
 action character 4 move run 864.8,548.94
 action character 4 move run 793.47,576.96
@@ -99,43 +106,49 @@ action character 4 shoot 5 die
 action character 4 move walk 704.32,669.93
 
 t方等待到8秒
-action character 0 wait until 8
-action character 1 wait until 8
-action character 2 wait until 8
-action character 3 wait until 8
-action character 4 wait until 8
+action character 0 wait until 15
+action character 1 wait until 15
+action character 2 wait until 15
+action character 3 wait until 15
+action character 4 wait until 15
 
 A区爆弹
 action character 0 move run 700.5,801.11
 action character 0 throw firebomb 649.55,816.4 672.48,734.89
 action character 0 move run 649.55,813.85
 action character 3 throw smoke 514.55,662.29
+action character 3 wait for 0.3
+action character 3 move run 804.48,585.62
+action character 3 wait for 0.5
+action character 3 throw firebomb 570.23,664.6
 action character 2 throw smoke 547.66,654.65
 action character 1 throw smoke 463.6,818.95
 
 A区进点
 action character 0 move run 659.74,787.1
-action character 0 wait until 16
+action character 0 wait until 19.3
+action character 0 shoot 15 die
+action character 0 wait until 29.5
 action character 0 shoot 8 die
-action character 0 wait until 16.5
+action character 0 wait for 0.5
 action character 0 shoot 7 die
 action character 1 move run 859.7,547.66
 action character 1 move run 812.58,550.21
-action character 1 wait until 11
+action character 1 wait until 20
 action character 1 throw flashbang 661.01,627.9
-action character 1 wait until 12
+action character 1 wait for 1
 action character 1 throw flashbang 610.07,667.38
 action character 1 move run 755.26,653.37
 action character 1 move run 683.94,662.29
 action character 1 move run 626.63,635.45
-action character 1 wait until 15
+action character 1 wait for 0.5
 action character 1 shoot 12 die
-action character 1 wait until 15.5
+action character 1 wait for 0.5
 action character 1 shoot 13 die
 action character 2 move run 792.2,578.23
 action character 2 move run 751.44,653.37
 action character 2 move run 717.05,662.29
-action character 2 wait until 13
+action character 2 wait until 22.5
 action character 2 move run 683.94,654.65
 action character 2 move run 681.39,685.21
 action character 2 throw firebomb 389.73,601.15 408.84,583.32 
@@ -143,12 +156,9 @@ action character 2 move run 631.72,692.86
 action character 2 move run 608.8,759.08
 action character 2 move run 597.37,769.98
 action character 2 do plant
-action character 3 wait until 9
-action character 3 throw flashbang 568.04,719.6
-action character 3 wait until 10
-action character 3 throw flashbang 666.11,634.27
-action character 3 wait until 11.5
-action character 3 move run 704.32,653.37
+action character 3 move run 754.95,652.55
+action character 3 move run 708.1,661.92
+action character 3 wait until 21
 action character 3 move run 681.39,654.65
 action character 3 shoot 11 die
 action character 3 move run 626.63,690.31
@@ -156,16 +166,17 @@ action character 3 move run 622.81,722.15
 action character 3 shoot 10 die
 action character 3 move run 610.07,760.36
 action character 3 shoot 6 die
-action character 3 wait until 15
+action character 3 wait for 2
 action character 3 move run 610.07,760.36
 action character 3 move run 578.23,783.28
 action character 3 shoot 12 die
 action character 3 move run 486.53,806.21
-action character 4 wait until 12
-action character 4 move run 690.31,630.45
-action character 4 move run 680.12,627.9
+action character 4 wait until 19.5
+action character 4 shoot 15 die
+action character 4 wait until 21
+action character 4 move run 692.04,640.56
+action character 4 move run 625.43,690.67
 action character 4 shoot 11 die
-action character 4 move run 626.63,663.56
 action character 4 move run 601.15,703.04
 action character 4 shoot 10 die
 action character 4 move run 612.62,765.45
@@ -177,14 +188,14 @@ action character 4 shoot 570.59,818.95
 action character 4 move run 504.36,815.12
 
 突破手清警家
-action character 2 wait until 21
+action character 2 wait until 31.5
 action character 2 throw flashbang 441.95,806.21
-action character 2 wait until 22
+action character 2 wait for 1
 action character 2 throw flashbang 338.79,838.05
 action character 2 move run 585.87,778.19
 action character 2 move run 516.69,775.62
-action character 3 wait until 22
-action character 4 wait until 22
+action character 3 wait until 31.5
+action character 4 wait until 31.5
 action character 3 move run 431.76,810.03
 action character 4 move run 449.59,826.59
 action character 3 shoot 9 die
@@ -192,4 +203,4 @@ action character 4 shoot 9 die
 action character 3 move run 347.7,797.29
 action character 4 move run 365.53,811.3
 action character 3 shoot 14 die
-action character 4 shoot 14 die
+action character 4 shoot 14 die 

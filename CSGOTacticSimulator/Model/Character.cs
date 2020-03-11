@@ -33,8 +33,8 @@ namespace CSGOTacticSimulator.Model
     {
         public Weapon Weapon { get => weapon; set => weapon = value; }
         private Weapon weapon = Weapon.Knife;
-        public List<Grenade> Grenades { get => grenades; set => grenades = value; }
-        private List<Grenade> grenades = new List<Grenade>();
+        public List<Missile> Missiles { get => grenades; set => grenades = value; }
+        private List<Missile> grenades = new List<Missile>();
         public Props Props { get => props; set => props = value; }
         private Props props = Props.Nothing;
         public bool IsFriendly { get => isFriendly; set => isFriendly = value; }

@@ -29,8 +29,12 @@ namespace CSGOTacticSimulator.Helper
             {
                 return Command.BadOrNotCommand;
             }
-
-            if (cmd.Contains("set camp"))
+            
+            if (cmd.Contains("set entirety speed"))
+            {
+                return Command.SetEntiretySpeed;
+            }
+            else if (cmd.Contains("set camp"))
             {
                 return Command.SetCamp;
             }
@@ -52,9 +56,9 @@ namespace CSGOTacticSimulator.Helper
                 {
                     return Command.GiveCharacterWeapon;
                 }
-                else if (cmd.Contains("grenade"))
+                else if (cmd.Contains("missile"))
                 {
-                    return Command.GiveCharacterGrenade;
+                    return Command.GiveCharacterMissile;
                 }
                 else if (cmd.Contains("props"))
                 {

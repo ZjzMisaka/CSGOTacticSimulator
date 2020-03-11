@@ -5,21 +5,24 @@
 *****         WTFPL         *****
 *********************************
 
+设置总体速度比率为 0.21
+set entirety speed 0.21
+
 阵营为t
 set camp t
 
 创建t角色
 create character t 882.63,385.91
-give character 0 grenade smoke grenade flashbang firebomb
+give character 0 missile smoke grenade flashbang firebomb
 create character t 877.53,380.82
-give character 1 grenade smoke grenade flashbang flashbang
+give character 1 missile smoke grenade flashbang flashbang
 give character 1 props bomb
 create character t 918.29,384.64
-give character 2 grenade smoke firebomb flashbang flashbang
+give character 2 missile smoke firebomb flashbang flashbang
 create character t 878.81,345.15
-give character 3 grenade smoke firebomb flashbang flashbang
+give character 3 missile smoke firebomb flashbang flashbang
 create character t 904.28,348.98
-give character 4 grenade smoke firebomb flashbang flashbang
+give character 4 missile smoke firebomb flashbang flashbang
 
 action character 0 move run 932.13,332.95
 action character 0 wait for 0.5
@@ -31,10 +34,10 @@ action character 0 move run 830.2,224.31
 action character 0 move run 769.84,205.54
 action character 0 move run 759.11,188.1
 action character 0 move run 674.62,182.74
-action character 0 move walk 618.29,188.1
-action character 0 move walk 552.57,221.63
-action character 0 move walk 407.72,231.02
-action character 0 wait until 9
+action character 0 move run 618.29,188.1
+action character 0 move run 552.57,221.63
+action character 0 move run 407.72,231.02
+action character 0 wait until 14.5
 action character 0 move run 404.25,208.15
 action character 0 move run 404.25,208.15
 action character 0 move run 346.69,204.13
@@ -57,14 +60,14 @@ action character 1 move run 828.86,224.31
 action character 1 move run 769.84,205.54
 action character 1 move run 759.11,188.1
 action character 1 move run 674.62,182.74
-action character 1 move walk 618.29,165.3
-action character 1 wait until 9
+action character 1 move run 618.29,165.3
+action character 1 wait until 12
 action character 1 throw smoke 258.34,391.53
 action character 1 wait for 0.3
 action character 1 move run 567.55,222.87
 action character 1 throw flashbang 263.7,189.41
 action character 1 move run 544.79,222.87
-action character 1 wait for 0.3
+action character 1 wait for 1
 action character 1 throw flashbang 319.92,217.52
 action character 1 move run 445.74,221.53
 action character 1 move run 345.35,204.13
@@ -74,16 +77,15 @@ action character 1 move run 261.02,277.75
 action character 1 do plant
 action character 1 move run 476.53,324.6
 
-
 action character 2 move run 871.77,298.08
 action character 2 move run 828.86,224.31
 action character 2 move run 769.84,205.54
 action character 2 move run 759.11,188.1
 action character 2 move run 674.62,182.74
-action character 2 move walk 618.29,188.1
-action character 2 move walk 552.57,221.63
-action character 2 move walk 403.7,216.27
-action character 2 wait until 8
+action character 2 move run 618.29,188.1
+action character 2 move run 552.57,221.63
+action character 2 move run 403.7,216.27
+action character 2 wait until 13.5
 action character 2 throw smoke 347.26,192 301.04,213.33
 action character 2 wait for 1
 action character 2 move run 346.07,192
@@ -97,12 +99,10 @@ action character 3 move run 835.56,260.53
 action character 3 move run 783.26,249.8
 action character 3 move run 751.07,255.16
 action character 3 move run 726.93,273.94
-action character 3 move run 679.98,381.23
-action character 3 wait for 2
 action character 3 move run 679.98,390.62
-action character 3 wait for 0.5
-action character 3 throw firebomb 498.96,516.74
 action character 3 wait for 1
+action character 3 throw firebomb 498.96,516.74
+action character 3 wait for 3
 action character 3 throw smoke 498.96,516.74
 action character 3 wait for 1
 action character 3 throw flashbang 520.38,503.28
@@ -125,11 +125,10 @@ action character 4 move run 783.26,249.8
 action character 4 move run 751.07,255.16
 action character 4 move run 726.93,273.94
 action character 4 move run 719.41,355.56
-action character 4 wait for 2
 action character 4 move run 719.41,453.93
 action character 4 move run 715.85,478.81
 action character 4 move run 713.11,483.56
-action character 4 wait for 1
+action character 4 wait for 4
 action character 4 throw flashbang 520.38,503.28
 action character 4 wait for 1
 action character 4 throw flashbang 498.96,453.93

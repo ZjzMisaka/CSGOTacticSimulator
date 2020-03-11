@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="Command" extensions=".txt" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <!-- The named colors 'Comment' and 'String' are used in SharpDevelop to detect if a line is inside a multiline string/comment -->
+  <!-- 注释 -->
+  <Color name="Comment" foreground="#ff999999" exampleText="- comment" />
+  <!-- 数字 -->
+  <Color name="NumberLiteral" foreground="#ff99cc99"/>
+  <!-- 命令 -->
+  <Color name="Keywords" fontWeight="bold" foreground="#ff6699cc" />
+  <Color name="Option" fontWeight="bold" foreground="#ff66cccc" />
+
+  <RuleSet name="CommentMarkerSet">
+    <Keywords fontWeight="bold" foreground="#fff2777a">
+      <Word>TODO</Word>
+      <Word>FIXME</Word>
+    </Keywords>
+    <Keywords fontWeight="bold" foreground="#fff2777a">
+      <Word>UNDONE</Word>
+    </Keywords>
+  </RuleSet>
+
+  <!-- This is the main ruleset. -->
+  <RuleSet>
+
+    <Span color="Comment">
+      <Begin color="XmlDoc/DocComment">---</Begin>
+      <RuleSet>
+        <Import ruleSet="XmlDoc/DocCommentSet"/>
+        <Import ruleSet="CommentMarkerSet"/>
+      </RuleSet>
+    </Span>
+
+
+    <Span color="Comment" ruleSet="CommentMarkerSet" multiline="true">
+      <Begin>--\[[=]*\[</Begin>
+      <End>\][=]*]</End>
+    </Span>
+
+
+    <Span color="Comment" ruleSet="CommentMarkerSet">
+      <Begin>-</Begin>
+    </Span>
+
+    <Keywords color="Keywords">
+      <Word>set</Word>
+      <Word>entirety</Word>
+      <Word>speed</Word>
+      <Word>camp</Word>
+      <Word>create</Word>
+      <Word>team</Word>
+      <Word>character</Word>
+      <Word>delete</Word>
+      <Word>give</Word>
+      <Word>weapon</Word>
+      <Word>missile</Word>
+      <Word>props</Word>
+      <Word>status</Word>
+      <Word>vertical</Word>
+      <Word>position</Word>
+      <Word>action</Word>
+      <Word>move</Word>
+      <Word>throw</Word>
+      <Word>shoot</Word>
+      <Word>do</Word>
+      <Word>wait</Word>
+      <Word>until</Word>
+	  <Word>for</Word>
+	  <Word>comment</Word>
+    </Keywords>
+	
+	<Keywords color="Option">
+      <Word>t</Word>
+      <Word>ct</Word>
+	  <Word>pistol</Word>
+	  <Word>eco</Word>
+	  <Word>forcebuy</Word>
+	  <Word>quasibuy</Word>
+	  <Word>bomb</Word>
+	  <Word>defusekit</Word>
+	  <Word>alive</Word>
+	  <Word>dead</Word>
+	  <Word>upper</Word>
+	  <Word>lower</Word>
+	  <Word>run</Word>
+	  <Word>walk</Word>
+	  <Word>squat</Word>
+	  <Word>teleport</Word>
+	  <Word>smoke</Word>
+	  <Word>grenade</Word>
+	  <Word>flashbang</Word>
+	  <Word>firebomb</Word>
+	  <Word>decoy</Word>
+	  <Word>die</Word>
+	  <Word>live</Word>
+	  <Word>plant</Word>
+	  <Word>defuse</Word>
+    </Keywords>
+
+    <!-- Digits -->
+    <Rule color="NumberLiteral">
+      \b0[xX][0-9a-fA-F]+  # hex number
+      |
+      ( \b\d+(\.[0-9]+)?   #number with optional floating point
+      | \.[0-9]+           #or just starting with floating point
+      )
+      ([eE][+-]?[0-9]+)? # optional exponent
+    </Rule>
+  </RuleSet>
+</SyntaxDefinition>
