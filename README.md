@@ -1,7 +1,8 @@
 # CSGOTacticSimulator
 CSGO战术模拟器
 ## 示例
-https://www.iaders.com/upload/2020/0305/CTSDemo.gif
+https://www.iaders.com/upload/2020/0305/CTSDemo.gif (v1.1.0)
+![Screenshot](https://www.iaders.com/upload/2020/0312/v1.3.0.png)
 ## 提示
 - 可以通过点击图片获得坐标. 
 - 坐标与图片在窗口内的缩放程度无关, 可以任意改变窗口大小而不用修改脚本. 
@@ -10,6 +11,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif
 ### 提示
 - 每行脚本代表某个角色进行了某个动作, 例如购买 (瞬间), 移动 (耗时), 等待. 
 - 脚本中角色之间的顺序并不影响最终效果, 例如可以把某个角色的动作集中在一起写出, 也可多个角色一起按时间顺序编写脚本. 
+- 在脚本命令等语句前加 "-" 即可注释这行后面的内容. 
 ### 查询表
 |语法|解释|实现与否|
 |----|----|----|
