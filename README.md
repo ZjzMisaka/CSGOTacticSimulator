@@ -13,6 +13,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif
 ### 查询表
 |语法|解释|实现与否|
 |----|----|----|
+|set entirety speed {比率值}|设置当前脚本使用的整体速度比率值, 若不设定则使用默认值|√|
 |set camp [t, ct]|设置当前队伍|√|
 |create team [ct, t] [pistol, eco, forcebuy, quasibuy]|生成队伍在出生点, 并自动配备武器与投掷物|×|
 |create character [t, ct] {坐标}|在指定的坐标生成一名角色|√|
