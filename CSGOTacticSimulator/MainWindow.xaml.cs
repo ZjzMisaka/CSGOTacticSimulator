@@ -24,6 +24,7 @@ using ICSharpCode.AvalonEdit.Search;
 using System.Xml;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.CodeCompletion;
 
 namespace CSGOTacticSimulator
 {
@@ -38,12 +39,32 @@ namespace CSGOTacticSimulator
         double ratio = 1;
         double localSpeedController = -1;
         bool bombDefused = false;
+        CompletionWindow completionWindow;
 
         private List<Thread> listThread = new List<Thread>();
 
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            //快速搜索功能
+            SearchPanel.Install(te_editor.TextArea);
+            //设置语法规则
+            string highlightPath = GlobalDictionary.highlightPath;
+            XmlTextReader reader = new XmlTextReader(highlightPath);
+            var xshd = HighlightingLoader.LoadXshd(reader);
+            te_editor.SyntaxHighlighting = HighlightingLoader.Load(xshd, HighlightingManager.Instance);
+
+            te_editor.TextArea.TextEntering += te_editor_TextArea_TextEntering;
+            te_editor.TextArea.TextEntered += te_editor_TextArea_TextEntered;
+
+            ImageBrush backgroundBrush = new ImageBrush();
+            backgroundBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.backgroundPath));
+            backgroundBrush.Stretch = Stretch.Fill;
+            this.Background = backgroundBrush;
 
             ImageBrush minimizeBrush = new ImageBrush();
             minimizeBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.minimizePath));
@@ -1280,20 +1301,82 @@ namespace CSGOTacticSimulator
             localSpeedController = -1;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        void te_editor_TextArea_TextEntered(object sender, TextCompositionEventArgs e)
         {
-            //快速搜索功能
-            SearchPanel.Install(te_editor.TextArea);
-            //设置语法规则
-            string highlightPath = GlobalDictionary.highlightPath;
-            XmlTextReader reader = new XmlTextReader(highlightPath);
-            var xshd = HighlightingLoader.LoadXshd(reader);
-            te_editor.SyntaxHighlighting = HighlightingLoader.Load(xshd, HighlightingManager.Instance);
+            if (e.Text == " ")
+            {
+                // Open code completion after the user has pressed dot:
+                completionWindow = new CompletionWindow(te_editor.TextArea);
+                IList<ICompletionData> data = completionWindow.CompletionList.CompletionData;
+                data.Add(new CompletionData("set"));
+                data.Add(new CompletionData("entirety"));
+                data.Add(new CompletionData("speed"));
+                data.Add(new CompletionData("camp"));
+                data.Add(new CompletionData("create"));
+                data.Add(new CompletionData("team"));
+                data.Add(new CompletionData("character"));
+                data.Add(new CompletionData("delete"));
+                data.Add(new CompletionData("give"));
+                data.Add(new CompletionData("weapon"));
+                data.Add(new CompletionData("missile"));
+                data.Add(new CompletionData("props"));
+                data.Add(new CompletionData("status"));
+                data.Add(new CompletionData("vertical"));
+                data.Add(new CompletionData("position"));
+                data.Add(new CompletionData("action"));
+                data.Add(new CompletionData("move"));
+                data.Add(new CompletionData("throw"));
+                data.Add(new CompletionData("shoot"));
+                data.Add(new CompletionData("do"));
+                data.Add(new CompletionData("wait"));
+                data.Add(new CompletionData("until"));
+                data.Add(new CompletionData("for"));
+                data.Add(new CompletionData("comment"));
+                data.Add(new CompletionData("t"));
+                data.Add(new CompletionData("ct"));
+                data.Add(new CompletionData("pistol"));
+                data.Add(new CompletionData("eco"));
+                data.Add(new CompletionData("forcebuy"));
+                data.Add(new CompletionData("quasibuy"));
+                data.Add(new CompletionData("bomb"));
+                data.Add(new CompletionData("defusekit"));
+                data.Add(new CompletionData("alive"));
+                data.Add(new CompletionData("dead"));
+                data.Add(new CompletionData("upper"));
+                data.Add(new CompletionData("lower"));
+                data.Add(new CompletionData("run"));
+                data.Add(new CompletionData("walk"));
+                data.Add(new CompletionData("squat"));
+                data.Add(new CompletionData("teleport"));
+                data.Add(new CompletionData("smoke"));
+                data.Add(new CompletionData("grenade"));
+                data.Add(new CompletionData("flashbang"));
+                data.Add(new CompletionData("firebomb"));
+                data.Add(new CompletionData("decoy"));
+                data.Add(new CompletionData("die"));
+                data.Add(new CompletionData("live"));
+                data.Add(new CompletionData("plant"));
+                data.Add(new CompletionData("defuse"));
+                completionWindow.Show();
+                completionWindow.Closed += delegate {
+                    completionWindow = null;
+                };
+            }
+        }
 
-            ImageBrush backgroundBrush = new ImageBrush();
-            backgroundBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.backgroundPath));
-            backgroundBrush.Stretch = Stretch.Fill;
-            this.Background = backgroundBrush;
+        void te_editor_TextArea_TextEntering(object sender, TextCompositionEventArgs e)
+        {
+            if (e.Text.Length > 0 && completionWindow != null)
+            {
+                if (!char.IsLetterOrDigit(e.Text[0]))
+                {
+                    // Whenever a non-letter is typed while the completion window is open,
+                    // insert the currently selected element.
+                    completionWindow.CompletionList.RequestInsertion(e);
+                }
+            }
+            // Do not set e.Handled=true.
+            // We still want to insert the character that was typed.
         }
 
         private void btn_minimize_Click(object sender, RoutedEventArgs e)
