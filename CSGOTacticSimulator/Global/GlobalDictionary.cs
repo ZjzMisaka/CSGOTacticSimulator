@@ -5,6 +5,7 @@ using System.Text;
 using CSGOTacticSimulator.Model;
 using CSGOTacticSimulator.Helper;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace CSGOTacticSimulator.Global
 {
@@ -95,6 +96,8 @@ namespace CSGOTacticSimulator.Global
     static public class GlobalDictionary
     {
         static public int charatersNumber = 0;
+        static public int size = 3;
+        static public SolidColorBrush color = (SolidColorBrush)(new BrushConverter().ConvertFrom("red"));
 
         static public string exePath = AppDomain.CurrentDomain.BaseDirectory;
         static public string basePath = exePath.Substring(0, exePath.LastIndexOf("bin"));

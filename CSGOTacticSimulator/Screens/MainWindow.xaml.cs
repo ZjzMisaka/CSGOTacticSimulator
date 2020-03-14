@@ -40,6 +40,8 @@ namespace CSGOTacticSimulator
         double localSpeedController = -1;
         bool bombDefused = false;
         CompletionWindow completionWindow;
+        Point mouseLastPosition = new Point(-1, -1);
+        Selector selector = null;
 
         private List<Thread> listThread = new List<Thread>();
 
@@ -94,7 +96,8 @@ namespace CSGOTacticSimulator
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            this.DragMove();
+            if(c_paintcanvas.IsHitTestVisible == false)
+                this.DragMove();
         }
 
         private void btn_exit_Click(object sender, RoutedEventArgs e)
@@ -124,6 +127,7 @@ namespace CSGOTacticSimulator
 
         private void i_map_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            e.Handled = true;
             Point pointInMap = new Point(Math.Round((e.GetPosition(i_map).X / ratio), 2), Math.Round((e.GetPosition(i_map).Y / ratio), 2));
             tb_point.Text = pointInMap.ToString();
         }
@@ -205,10 +209,10 @@ namespace CSGOTacticSimulator
             foreach (Character character in characters)
             {
                 Point wndPoint = GetWndPoint(character.MapPoint, ImgType.Character);
-                c_canvas.Children.Remove(character.CharacterImg);
+                c_runcanvas.Children.Remove(character.CharacterImg);
                 Canvas.SetLeft(character.CharacterImg, wndPoint.X);
                 Canvas.SetTop(character.CharacterImg, wndPoint.Y);
-                c_canvas.Children.Add(character.CharacterImg);
+                c_runcanvas.Children.Add(character.CharacterImg);
             }
         }
 
@@ -220,7 +224,7 @@ namespace CSGOTacticSimulator
 
             Canvas.SetLeft(character.CharacterImg, wndPoint.X);
             Canvas.SetTop(character.CharacterImg, wndPoint.Y);
-            c_canvas.Children.Add(character.CharacterImg);
+            c_runcanvas.Children.Add(character.CharacterImg);
         }
 
         private Point GetWndPoint(Point mapPoint, ImgType imgType)
@@ -635,8 +639,12 @@ namespace CSGOTacticSimulator
                 action = Helper.Action.Teleport;
             }
 
-            Point endMapPoint = VectorHelper.Cast(splitedCmd[5]);
-            animations.Add(new Animation(number, action, endMapPoint));
+            List<Point> mapPoints = new List<Point>();
+            for (int i = 5; i < splitedCmd.Count(); ++i)
+            {
+                mapPoints.Add(VectorHelper.Cast(splitedCmd[i]));
+            }
+            animations.Add(new Animation(number, action, new Point(), mapPoints));
         }
         private void ActionCharacterThrow(string command)
         {
@@ -823,7 +831,7 @@ namespace CSGOTacticSimulator
             bool canDefuse = false;
 
             Image img = null;
-            foreach (UIElement obj in c_canvas.Children)
+            foreach (UIElement obj in c_runcanvas.Children)
             {
                 if (obj is Image)
                 {
@@ -831,7 +839,7 @@ namespace CSGOTacticSimulator
                     BitmapImage bitmapImage = (BitmapImage)img.Source;
                     if (bitmapImage.UriSource.LocalPath.Contains("props_bomb"))
                     {
-                        if (VectorHelper.GetDistance(character.MapPoint, GetMapPoint(new Point(Canvas.GetLeft(c_canvas.Children[c_canvas.Children.IndexOf(obj)]), Canvas.GetTop(c_canvas.Children[c_canvas.Children.IndexOf(obj)])), ImgType.Props)) <= 50)
+                        if (VectorHelper.GetDistance(character.MapPoint, GetMapPoint(new Point(Canvas.GetLeft(c_runcanvas.Children[c_runcanvas.Children.IndexOf(obj)]), Canvas.GetTop(c_runcanvas.Children[c_runcanvas.Children.IndexOf(obj)])), ImgType.Props)) <= 50)
                         {
                             canDefuse = true;
                         }
@@ -846,9 +854,9 @@ namespace CSGOTacticSimulator
             {
                 Thread.Sleep(defuseTime * 1000);
 
-                c_canvas.Dispatcher.Invoke(() =>
+                c_runcanvas.Dispatcher.Invoke(() =>
                 {
-                    c_canvas.Children.Remove(img);
+                    c_runcanvas.Children.Remove(img);
                     bombDefused = true;
                 });
 
@@ -901,11 +909,11 @@ namespace CSGOTacticSimulator
                 Thread plantThread = new Thread(() =>
                 {
                     Thread.Sleep(4000);
-                    c_canvas.Dispatcher.Invoke(() =>
+                    c_runcanvas.Dispatcher.Invoke(() =>
                     {
                         Canvas.SetLeft(bombImage, bombWndPoint.X);
                         Canvas.SetTop(bombImage, bombWndPoint.Y);
-                        c_canvas.Children.Add(bombImage);
+                        c_runcanvas.Children.Add(bombImage);
                     });
                     characters[characters.IndexOf(character)].Props = Props.Nothing;
 
@@ -924,21 +932,21 @@ namespace CSGOTacticSimulator
                         {
                             return;
                         }
-                        c_canvas.Dispatcher.Invoke(() =>
+                        c_runcanvas.Dispatcher.Invoke(() =>
                         {
-                            c_canvas.Children.Remove(bombImage);
+                            c_runcanvas.Children.Remove(bombImage);
                         });
 
-                        c_canvas.Dispatcher.Invoke(() =>
+                        c_runcanvas.Dispatcher.Invoke(() =>
                         {
                             Canvas.SetLeft(explosionImage, explosionWndPoint.X);
                             Canvas.SetTop(explosionImage, explosionWndPoint.Y);
-                            c_canvas.Children.Add(explosionImage);
+                            c_runcanvas.Children.Add(explosionImage);
                         });
                         Thread.Sleep(3000);
-                        c_canvas.Dispatcher.Invoke(() =>
+                        c_runcanvas.Dispatcher.Invoke(() =>
                         {
-                            c_canvas.Children.Remove(explosionImage);
+                            c_runcanvas.Children.Remove(explosionImage);
                         });
                     });
                     explosionThread.Start();
@@ -975,37 +983,49 @@ namespace CSGOTacticSimulator
             int animationFreshTime = GlobalDictionary.animationFreshTime;
             double pixelPerFresh = speed / (1000 / GlobalDictionary.animationFreshTime) * ratio * speedController;
             Point startWndPoint = GetWndPoint(character.MapPoint, ImgType.Character);
-            Point endWndPoint = GetWndPoint(animation.endMapPoint, ImgType.Character);
-            Point unitVector = VectorHelper.GetUnitVector(startWndPoint, endWndPoint);
+            // Point endWndPoint = GetWndPoint(animation.endMapPoint, ImgType.Character);
+            List<Point> endMapPointList = (List<Point>)animation.objectPara[0];
+            List<Point> endWndPointList = new List<Point>();
+            foreach(Point endMapPoint in endMapPointList)
+            {
+                endWndPointList.Add(GetWndPoint(endMapPoint, ImgType.Character));
+            }
 
             Point nowWndPoint = startWndPoint;
             Thread moveThread = null;
             moveThread = new Thread(() =>
             {
-                characters[characters.IndexOf(character)].IsRunningAnimation = true;
-                animations[animations.IndexOf(animation)].status = Helper.Status.Running;
-                while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, endWndPoint), unitVector) < 1)
+                foreach(Point endWndPoint in endWndPointList)
                 {
-                    nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
-                    characters[characters.IndexOf(character)].MapPoint = GetMapPoint(nowWndPoint, ImgType.Character);
-                    c_canvas.Dispatcher.Invoke(() =>
+                    Point unitVector = VectorHelper.GetUnitVector(nowWndPoint, endWndPoint);
+
+                    characters[characters.IndexOf(character)].IsRunningAnimation = true;
+                    animations[animations.IndexOf(animation)].status = Helper.Status.Running;
+                    while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, endWndPoint), unitVector) < 1)
                     {
-                        try
+                        nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
+                        characters[characters.IndexOf(character)].MapPoint = GetMapPoint(nowWndPoint, ImgType.Character);
+                        c_runcanvas.Dispatcher.Invoke(() =>
                         {
-                            c_canvas.Children.Remove(character.CharacterImg);
-                            Canvas.SetLeft(character.CharacterImg, nowWndPoint.X);
-                            Canvas.SetTop(character.CharacterImg, nowWndPoint.Y);
-                            c_canvas.Children.Add(character.CharacterImg);
-                        }
-                        catch
-                        {
-                            Stop();
-                        }
-                    });
+                            try
+                            {
+                                c_runcanvas.Children.Remove(character.CharacterImg);
+                                Canvas.SetLeft(character.CharacterImg, nowWndPoint.X);
+                                Canvas.SetTop(character.CharacterImg, nowWndPoint.Y);
+                                c_runcanvas.Children.Add(character.CharacterImg);
+                            }
+                            catch
+                            {
+                                Stop();
+                            }
+                        });
 
-                    Thread.Sleep(animationFreshTime);
+                        Thread.Sleep(animationFreshTime);
+                    }
+
+
+                    nowWndPoint = endWndPoint;
                 }
-
                 characters[characters.IndexOf(character)].IsRunningAnimation = false;
                 animations[animations.IndexOf(animation)].status = Helper.Status.Finished;
 
@@ -1110,42 +1130,42 @@ namespace CSGOTacticSimulator
                     {
                         nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
 
-                        c_canvas.Dispatcher.Invoke(() =>
+                        c_runcanvas.Dispatcher.Invoke(() =>
                         {
-                            if (c_canvas.Children.Contains(missileImg))
+                            if (c_runcanvas.Children.Contains(missileImg))
                             {
-                                c_canvas.Children.Remove(missileImg);
+                                c_runcanvas.Children.Remove(missileImg);
                             }
                             Canvas.SetLeft(missileImg, nowWndPoint.X);
                             Canvas.SetTop(missileImg, nowWndPoint.Y);
-                            c_canvas.Children.Add(missileImg);
+                            c_runcanvas.Children.Add(missileImg);
                         });
 
                         Thread.Sleep(animationFreshTime);
                     }
                     startWndPoint = nowWndPoint;
                 }
-                c_canvas.Dispatcher.Invoke(() =>
+                c_runcanvas.Dispatcher.Invoke(() =>
                 {
-                    if (c_canvas.Children.Contains(missileImg))
+                    if (c_runcanvas.Children.Contains(missileImg))
                     {
-                        c_canvas.Children.Remove(missileImg);
+                        c_runcanvas.Children.Remove(missileImg);
                     }
                 });
 
                 nowWndPoint = GetWndPoint(GetMapPoint(nowWndPoint, ImgType.Missile), ImgType.MissileEffect);
-                c_canvas.Dispatcher.Invoke(() =>
+                c_runcanvas.Dispatcher.Invoke(() =>
                 {
                     Canvas.SetLeft(missileEffectImg, nowWndPoint.X);
                     Canvas.SetTop(missileEffectImg, nowWndPoint.Y);
-                    c_canvas.Children.Add(missileEffectImg);
+                    c_runcanvas.Children.Add(missileEffectImg);
                 });
                 Thread.Sleep(effectLifeSpan * 1000);
-                c_canvas.Dispatcher.Invoke(() =>
+                c_runcanvas.Dispatcher.Invoke(() =>
                 {
-                    if (c_canvas.Children.Contains(missileEffectImg))
+                    if (c_runcanvas.Children.Contains(missileEffectImg))
                     {
-                        c_canvas.Children.Remove(missileEffectImg);
+                        c_runcanvas.Children.Remove(missileEffectImg);
                     }
                 });
             });
@@ -1200,14 +1220,14 @@ namespace CSGOTacticSimulator
             bulletLine.Y1 = fromWndPoint.Y;
             bulletLine.X2 = toWndPoint.X;
             bulletLine.Y2 = toWndPoint.Y;
-            c_canvas.Children.Add(bulletLine);
+            c_runcanvas.Children.Add(bulletLine);
 
             Thread shootThread = new Thread(() =>
             {
                 Thread.Sleep(500);
-                c_canvas.Dispatcher.Invoke(() =>
+                c_runcanvas.Dispatcher.Invoke(() =>
                 {
-                    c_canvas.Children.Remove(bulletLine);
+                    c_runcanvas.Children.Remove(bulletLine);
                 });
             });
             shootThread.Start();
@@ -1296,7 +1316,7 @@ namespace CSGOTacticSimulator
             CommandHelper.commands.Clear();
             animations.Clear();
             characters.Clear();
-            c_canvas.Children.Clear();
+            c_runcanvas.Children.Clear();
             GlobalDictionary.charatersNumber = 0;
             localSpeedController = -1;
         }
@@ -1382,6 +1402,122 @@ namespace CSGOTacticSimulator
         private void btn_minimize_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
+        }
+
+        private void c_paintcanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.LeftShift) && e.LeftButton == MouseButtonState.Pressed)
+            {
+                if (selector != null)
+                {
+                    c_paintcanvas.Children.Remove(selector);
+                    selector = null;
+                }
+
+                LineGeometry lineGeometry = new LineGeometry();
+
+                if (mouseLastPosition == new Point(-1, -1))
+                {
+                    mouseLastPosition = e.GetPosition((FrameworkElement)sender);
+                    return;
+                }
+
+                lineGeometry.StartPoint = mouseLastPosition;
+                lineGeometry.EndPoint = e.GetPosition((FrameworkElement)sender);
+                mouseLastPosition = lineGeometry.EndPoint;
+
+                System.Windows.Shapes.Path path = new System.Windows.Shapes.Path();
+                path.Stroke = GlobalDictionary.color;
+                path.StrokeThickness = GlobalDictionary.size;
+                path.Data = lineGeometry;
+                c_paintcanvas.Children.Add(path);
+            }
+            else if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.Z) && e.LeftButton != MouseButtonState.Pressed)
+            {
+                if (selector != null)
+                {
+                    c_paintcanvas.Children.Remove(selector);
+                    selector = null;
+                }
+
+                if (c_paintcanvas.Children.Count == 0)
+                {
+                    return;
+                }
+                mouseLastPosition = new Point(-1, -1);
+                c_paintcanvas.Children.RemoveAt(c_paintcanvas.Children.Count - 1);
+            }
+            else if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.C))
+            {
+                mouseLastPosition = new Point(-1, -1);
+                if (selector == null)
+                {
+                    selector = new Selector(Selector.SelectType.Color, this);
+                    Canvas.SetLeft(selector, e.GetPosition((FrameworkElement)sender).X - selector.Width / 2);
+                    Canvas.SetTop(selector, e.GetPosition((FrameworkElement)sender).Y - selector.Height / 2);
+                    c_paintcanvas.Children.Add(selector);
+                }
+            }
+            else if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.S))
+            {
+                mouseLastPosition = new Point(-1, -1);
+                if (selector == null)
+                {
+                    selector = new Selector(Selector.SelectType.Size, this);
+                    Canvas.SetLeft(selector, e.GetPosition((FrameworkElement)sender).X - selector.Width / 2);
+                    Canvas.SetTop(selector, e.GetPosition((FrameworkElement)sender).Y - selector.Height / 2);
+                    c_paintcanvas.Children.Add(selector);
+                }
+            }
+            else if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.LeftShift) && e.LeftButton == MouseButtonState.Pressed)
+            {
+                mouseLastPosition = new Point(-1, -1);
+                Point mousePoint = e.GetPosition((FrameworkElement)sender);
+                
+                for (int i = 0; i < c_paintcanvas.Children.Count; ++i)
+                {
+                    if(!(c_paintcanvas.Children[i] is System.Windows.Shapes.Path))
+                    {
+                        continue;
+                    }
+                    System.Windows.Shapes.Path path = (System.Windows.Shapes.Path)c_paintcanvas.Children[i];
+                    LineGeometry lineGeometry = (LineGeometry)path.Data;
+                    if (VectorHelper.GetDistance(lineGeometry.StartPoint, mousePoint) < 2 * GlobalDictionary.size)
+                    {
+                        c_paintcanvas.Children.RemoveAt(i);
+                        --i;
+                    }
+                }
+            }
+            else
+            {
+                mouseLastPosition = new Point(-1, -1);
+                if (selector != null)
+                {
+                    c_paintcanvas.Children.Remove(selector);
+                    selector = null;
+                }
+            }
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.Delete))
+            {
+                c_paintcanvas.IsHitTestVisible = true;
+            }
+            else if(Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.Delete))
+            {
+                c_paintcanvas.Children.Clear();
+            }
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.LeftCtrl)
+            {
+                c_paintcanvas.IsHitTestVisible = false;
+            }
         }
     }
 }

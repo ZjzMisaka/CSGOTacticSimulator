@@ -81,7 +81,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainWindow.xaml">
+    <Compile Include="Controls\Selector.xaml.cs">
+      <DependentUpon>Selector.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Screens\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -92,12 +95,17 @@
     <Compile Include="Global\GlobalDictionary.cs" />
     <Compile Include="Helper\Animation.cs" />
     <Compile Include="Helper\CommandHelper.cs" />
+    <Compile Include="Helper\CompletionData.cs" />
     <Compile Include="Helper\IniHelper.cs" />
     <Compile Include="Helper\VectorHelper.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Screens\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Controls\Selector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Character.cs" />
