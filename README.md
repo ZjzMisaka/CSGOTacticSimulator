@@ -27,13 +27,23 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |give character {角色编号} props [bomb / defusekit]|为某个角色配备炸弹 / 拆弹器|√|
 |set character {角色编号} status [alive / dead]|设定某个角色的存活状态|√|
 |set character {角色编号} vertical position [upper / lower]|设定显示某个角色处于三维地图的上方或下方|√|
-|action character {角色编号} move [run / walk / squat / teleport] {坐标}|将角色移动到某一地点|√ (除了teleport)|
+|action character {角色编号} move [run / walk / squat / teleport] {坐标} <{坐标} ...... {坐标}>|将角色移动到某一地点|√ (除了teleport)|
 |action character {角色编号} throw [smoke / grenade / flashbang / firebomb / decoy] {坐标} <{坐标} ...... {坐标}>|让角色投掷投掷物到某一坐标 |√|
 |action character {角色编号} shoot [{坐标} / {目标编号} [die / live]]|让角色向某坐标或某目标射击|√|
 |action character {角色编号} do [plant, defuse]|让角色下 / 拆包|√|
 |action character {角色编号} wait until {秒数}|让角色原地等待到指定秒数|√|
 |action character {角色编号} wait for {秒数}|让角色原地等待指定秒数|√|
 |create comment {秒数} {坐标} {内容}|在指定时间地点创建一个标注|×|
+## 绘图功能
+- 在任意时刻按住LControl键, 即可使用左键在界面上绘图. 
+### 相关快捷键
+|快捷键|作用|
+|----|----|
+|LControl + LShift|橡皮擦|
+|LControl + Z|撤销|
+|LControl + C|选择颜色|
+|LControl + S|选择画笔或橡皮擦大小|
+|LControl + Delete|清除画布|
 ## 第三资源使用
 |资源|许可证|
 |----|----|
