@@ -44,6 +44,8 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |LControl + C|选择颜色|
 |LControl + S|选择画笔或橡皮擦大小|
 |LControl + Delete|清除画布|
+## TODO
+默认地图骨架, 自动寻路
 ## 第三资源使用
 |资源|许可证|
 |----|----|
