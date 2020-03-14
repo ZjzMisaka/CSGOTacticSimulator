@@ -73,6 +73,11 @@ namespace CSGOTacticSimulator
             minimizeBrush.Stretch = Stretch.Uniform;
             btn_minimize.Background = minimizeBrush;
 
+            ImageBrush previewBrush = new ImageBrush();
+            previewBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.previewPath));
+            previewBrush.Stretch = Stretch.Uniform;
+            btn_preview.Background = previewBrush;
+
             ImageBrush runBrush = new ImageBrush();
             runBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.runPath));
             runBrush.Stretch = Stretch.Uniform;
@@ -227,7 +232,7 @@ namespace CSGOTacticSimulator
             c_runcanvas.Children.Add(character.CharacterImg);
         }
 
-        private Point GetWndPoint(Point mapPoint, ImgType imgType)
+        public Point GetWndPoint(Point mapPoint, ImgType imgType)
         {
             Point scaledMapPoint = new Point(mapPoint.X * ratio, mapPoint.Y * ratio);
             Point wndPoint = new Point();
@@ -261,7 +266,7 @@ namespace CSGOTacticSimulator
             return wndPoint;
         }
 
-        private Point GetMapPoint(Point wndPoint, ImgType imgType)
+        public Point GetMapPoint(Point wndPoint, ImgType imgType)
         {
             int widthAndHeight = 0;
             switch (imgType)
@@ -1529,6 +1534,30 @@ namespace CSGOTacticSimulator
             if (e.Key == Key.LeftCtrl)
             {
                 c_paintcanvas.IsHitTestVisible = false;
+            }
+        }
+
+        private void btn_preview_Click(object sender, RoutedEventArgs e)
+        {
+            if (i_map.Source == null)
+            {
+                return;
+            }
+
+            ratio = i_map.ActualWidth / i_map.Source.Width;
+
+            if (c_previewcanvas.Children.Count == 0)
+            {
+                List<FrameworkElement> previewElements = CommandHelper.GetPreviewElements(te_editor.Text, this);
+                foreach(FrameworkElement previewElement in previewElements)
+                {
+                    c_previewcanvas.Children.Add(previewElement);
+                }
+            }
+            else
+            {
+                c_previewcanvas.Children.Clear();
+                CommandHelper.previewCharactorCount = 0;
             }
         }
     }

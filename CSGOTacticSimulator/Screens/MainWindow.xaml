@@ -80,14 +80,18 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="btn_run" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="0" Click="btn_run_Click"></Button>
-                <Button x:Name="btn_stop" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="1" Click="btn_stop_Click"></Button>
-                <Button x:Name="btn_save" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="2" Click="btn_save_Click"></Button>
-                <Button x:Name="btn_exit" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="3" Click="btn_exit_Click"></Button>
+                <Button x:Name="btn_preview" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="0" Click="btn_preview_Click"></Button>
+                <Button x:Name="btn_run" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="1" Click="btn_run_Click"></Button>
+                <Button x:Name="btn_stop" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="2" Click="btn_stop_Click"></Button>
+                <Button x:Name="btn_save" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="3" Click="btn_save_Click"></Button>
+                <Button x:Name="btn_exit" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="4" Click="btn_exit_Click"></Button>
             </Grid>
         </Grid>
         <Canvas x:Name="c_runcanvas">
+        </Canvas>
+        <Canvas x:Name="c_previewcanvas">
         </Canvas>
         <Canvas x:Name="c_paintcanvas" Background="Transparent" IsHitTestVisible="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseMove="c_paintcanvas_MouseMove" >
         </Canvas>
