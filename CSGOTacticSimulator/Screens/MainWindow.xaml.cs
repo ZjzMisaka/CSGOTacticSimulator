@@ -1427,8 +1427,9 @@ namespace CSGOTacticSimulator
                 mouseLastPosition = lineGeometry.EndPoint;
 
                 System.Windows.Shapes.Path path = new System.Windows.Shapes.Path();
-                path.Stroke = GlobalDictionary.color;
-                path.StrokeThickness = GlobalDictionary.size;
+                path.Stroke = GlobalDictionary.pathLineColor;
+                path.StrokeThickness = GlobalDictionary.pathLineSize;
+                path.Opacity = GlobalDictionary.pathLineOpacity;
                 path.Data = lineGeometry;
                 c_paintcanvas.Children.Add(path);
             }
@@ -1469,6 +1470,17 @@ namespace CSGOTacticSimulator
                     c_paintcanvas.Children.Add(selector);
                 }
             }
+            else if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.A))
+            {
+                mouseLastPosition = new Point(-1, -1);
+                if (selector == null)
+                {
+                    selector = new Selector(Selector.SelectType.Opacity, this);
+                    Canvas.SetLeft(selector, e.GetPosition((FrameworkElement)sender).X - selector.Width / 2);
+                    Canvas.SetTop(selector, e.GetPosition((FrameworkElement)sender).Y - selector.Height / 2);
+                    c_paintcanvas.Children.Add(selector);
+                }
+            }
             else if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.LeftShift) && e.LeftButton == MouseButtonState.Pressed)
             {
                 mouseLastPosition = new Point(-1, -1);
@@ -1482,7 +1494,7 @@ namespace CSGOTacticSimulator
                     }
                     System.Windows.Shapes.Path path = (System.Windows.Shapes.Path)c_paintcanvas.Children[i];
                     LineGeometry lineGeometry = (LineGeometry)path.Data;
-                    if (VectorHelper.GetDistance(lineGeometry.StartPoint, mousePoint) < 2 * GlobalDictionary.size)
+                    if (VectorHelper.GetDistance(lineGeometry.StartPoint, mousePoint) < 2 * GlobalDictionary.pathLineSize)
                     {
                         c_paintcanvas.Children.RemoveAt(i);
                         --i;

@@ -96,8 +96,9 @@ namespace CSGOTacticSimulator.Global
     static public class GlobalDictionary
     {
         static public int charatersNumber = 0;
-        static public int size = 3;
-        static public SolidColorBrush color = (SolidColorBrush)(new BrushConverter().ConvertFrom("red"));
+        static public int pathLineSize = 3;
+        static public SolidColorBrush pathLineColor = (SolidColorBrush)(new BrushConverter().ConvertFrom("red"));
+        static public double pathLineOpacity = 0.9;
 
         static public string exePath = AppDomain.CurrentDomain.BaseDirectory;
         static public string basePath = exePath.Substring(0, exePath.LastIndexOf("bin"));
