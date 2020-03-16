@@ -15,12 +15,19 @@
                     <ControlTemplate TargetType="{x:Type ButtonBase}">
                         <Border x:Name="Border" Background="{TemplateBinding Background}">
                         </Border>
-
                         <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="BorderThickness" Value="1" />
+                                <Setter TargetName="Border" Property="BorderBrush" Value="white" />
+                                <Setter TargetName="Border" Property="Opacity" Value="9" />
+                            </Trigger>
                             <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="white" />
+                                <Setter TargetName="Border" Property="BorderThickness" Value="2" />
                                 <Setter TargetName="Border" Property="Opacity" Value="8" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="white" />
                                 <Setter TargetName="Border" Property="Opacity" Value="5" />
                             </Trigger>
                         </ControlTemplate.Triggers>
