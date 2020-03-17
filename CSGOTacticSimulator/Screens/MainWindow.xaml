@@ -9,7 +9,35 @@
         Title="CSGO Tactics Simulator" Height="1024" Width="1600" AllowsTransparency="True" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip" 
         SizeChanged="Window_SizeChanged" Loaded="Window_Loaded" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" MouseLeftButtonDown="Window_MouseLeftButtonDown" >
     <Window.Resources>
-        <Style x:Key="Style.OkOperationButton" TargetType="ButtonBase">
+        <Style x:Key="Style.TextContentButton" TargetType="Button">
+            <Setter Property="Width" Value="70"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="#808080"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True">
+                            <TextBlock Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderThickness" Value="1" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="white" />
+                                <Setter TargetName="border" Property="Opacity" Value="9" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="BorderThickness" Value="2" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="white" />
+                                <Setter TargetName="border" Property="Opacity" Value="8" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="Style.ImageBackgroundButton" TargetType="ButtonBase">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ButtonBase}">
@@ -50,13 +78,13 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
-                <Label x:Name="lb_select_folder" Width="130" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="设定文件夹: " FontSize="20" Foreground="White" Background="Black"></Label>
+                <Label x:Name="lb_select_folder" Width="130" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="设定文件夹: " FontSize="20" Foreground="White"></Label>
                 <TextBox x:Name="tb_select_folder" Width="200" Height="32" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" TextChanged="tb_select_folder_TextChanged"></TextBox>
-                <Button x:Name="btn_select_folder" Width="50" Height="32" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="..." FontSize="20" PreviewMouseLeftButtonUp="btn_select_folder_PreviewMouseLeftButtonUp" ></Button>
+                <Button x:Name="btn_select_folder" Style="{StaticResource Style.TextContentButton}" Width="50" Height="32" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="..." FontSize="20" PreviewMouseLeftButtonUp="btn_select_folder_PreviewMouseLeftButtonUp" ></Button>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
-                <Label x:Name="lb_select_map" Width="130" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="选择地图: " FontSize="20" Foreground="White" Background="Black"></Label>
+                <Label x:Name="lb_select_map" Width="130" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="选择地图: " FontSize="20" Foreground="White"></Label>
                 <ComboBox x:Name="cb_select_map" Margin="10, 0, 0, 0" Width="200" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" SelectionChanged="cb_select_map_SelectionChanged">
                 </ComboBox>
             </StackPanel>
@@ -69,14 +97,14 @@
             </Grid>
 
             <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="0">
-                <Label x:Name="lb_point" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="坐标: " FontSize="20" Foreground="White" Background="Black"></Label>
+                <Label x:Name="lb_point" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="坐标: " FontSize="20" Foreground="White"></Label>
                 <TextBox x:Name="tb_point" Width="160" Height="32" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" IsReadOnly="True"></TextBox>
-                <Button x:Name="btn_point" Width="50" Height="32" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="复制" FontSize="20" Click="btn_point_Click" ></Button>
+                <Button x:Name="btn_point" Style="{StaticResource Style.TextContentButton}" Width="50" Height="32" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="复制" FontSize="20" Click="btn_point_Click" ></Button>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1">
                 <TextBox x:Name="tb_select_file" Width="200" Height="32" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="20"></TextBox>
-                <Button x:Name="btn_select_file" Width="50" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Content="..." FontSize="20" Margin="0,0,0,3" Click="btn_select_file_Click" />
+                <Button x:Name="btn_select_file" Style="{StaticResource Style.TextContentButton}" Width="50" Height="32" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Content="..." FontSize="20" Margin="0,0,0,3" Click="btn_select_file_Click" />
             </StackPanel>
 
             <avalonEdit:TextEditor x:Name="te_editor" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" FontSize="20" Margin="5, 0, 0, 0" ShowLineNumbers="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
@@ -89,11 +117,11 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="btn_preview" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="0" Click="btn_preview_Click"></Button>
-                <Button x:Name="btn_run" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="1" Click="btn_run_Click"></Button>
-                <Button x:Name="btn_stop" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="2" Click="btn_stop_Click"></Button>
-                <Button x:Name="btn_save" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="3" Click="btn_save_Click"></Button>
-                <Button x:Name="btn_exit" Style="{StaticResource Style.OkOperationButton}" FontSize="20" Grid.Column="4" Click="btn_exit_Click"></Button>
+                <Button x:Name="btn_preview" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="0" Click="btn_preview_Click"></Button>
+                <Button x:Name="btn_run" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="1" Click="btn_run_Click"></Button>
+                <Button x:Name="btn_stop" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="2" Click="btn_stop_Click"></Button>
+                <Button x:Name="btn_save" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="3" Click="btn_save_Click"></Button>
+                <Button x:Name="btn_exit" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="4" Click="btn_exit_Click"></Button>
             </Grid>
         </Grid>
         <Canvas x:Name="c_runcanvas">
@@ -102,6 +130,6 @@
         </Canvas>
         <Canvas x:Name="c_paintcanvas" Background="Transparent" IsHitTestVisible="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseMove="c_paintcanvas_MouseMove" >
         </Canvas>
-        <Button x:Name="btn_minimize" Style="{StaticResource Style.OkOperationButton}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="30" Width="30" Height="30" Click="btn_minimize_Click"></Button>
+        <Button x:Name="btn_minimize" Style="{StaticResource Style.ImageBackgroundButton}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="30" Width="30" Height="30" Click="btn_minimize_Click"></Button>
     </Grid>
 </Window>
