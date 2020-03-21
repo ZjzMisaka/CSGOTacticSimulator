@@ -56,6 +56,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 ## 第三资源使用
 |资源|许可证|
 |----|----|
-|[icsharpcode.AvalonEdit](https://github.com/icsharpcode/AvalonEdit)|MIT|
-|[ZjzMisaka.CustomizableMessageBox](https://github.com/ZjzMisaka/CustomizableMessageBox)|WTFPL|
-|[simpleradar.CSGOMaps](http://simpleradar.com/)|Unknown|
+|[icsharpcode/AvalonEdit](https://github.com/icsharpcode/AvalonEdit)|MIT|
+|[JamesNK/Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)|MIT|
+|[ZjzMisaka/CustomizableMessageBox](https://github.com/ZjzMisaka/CustomizableMessageBox)|WTFPL|
+|[simpleradar/CSGOMaps](http://simpleradar.com/)|Unknown|
