@@ -651,6 +651,7 @@ namespace CSGOTacticSimulator
         private void ActionCharacterAutoMove(string command)
         {
             // action character 1 layout 0 auto move 0,0 layout 0 [quietly / noisily]
+            // action character 1 from 0,0 layout 0 auto move 0,0 layout 0 [quietly / noisily]
             List<string> replaceCommandList = new List<string>();
 
             Map mapFrame = GlobalDictionary.mapDic[cb_select_mapframe.Text];
@@ -659,21 +660,45 @@ namespace CSGOTacticSimulator
                 return;
             }
             string[] splitedCmd = command.Split(' ');
-            int characterNumber = int.Parse(splitedCmd[2]);
+            int characterNumber;
             Point startMapPoint = new Point();
             Character character = null;
-            foreach (Character characterTemp in characters)
+            int startLayout;
+            Point endMapPoint = new Point();
+            int endLayout;
+            VolumeLimit volumeLimit;
+            if (!command.Contains("from"))
             {
-                if (characterTemp.Number == characterNumber)
+                characterNumber = int.Parse(splitedCmd[2]);
+                foreach (Character characterTemp in characters)
                 {
-                    startMapPoint = characterTemp.MapPoint;
-                    character = characterTemp;
+                    if (characterTemp.Number == characterNumber)
+                    {
+                        startMapPoint = characterTemp.MapPoint;
+                        character = characterTemp;
+                    }
                 }
+                startLayout = int.Parse(splitedCmd[4]);
+                endMapPoint = new Point(double.Parse(splitedCmd[7].Split(',')[0]), double.Parse(splitedCmd[7].Split(',')[1]));
+                endLayout = int.Parse(splitedCmd[9]);
+                volumeLimit = splitedCmd[10] == VolumeLimit.Noisily.ToString().ToLower() ? VolumeLimit.Noisily : VolumeLimit.Quietly;
             }
-            int startLayout = int.Parse(splitedCmd[4]);
-            Point endMapPoint = new Point(double.Parse(splitedCmd[7].Split(',')[0]), double.Parse(splitedCmd[7].Split(',')[1]));
-            int endLayout = int.Parse(splitedCmd[9]);
-            VolumeLimit volumeLimit = splitedCmd[10] == VolumeLimit.Noisily.ToString().ToLower() ? VolumeLimit.Noisily : VolumeLimit.Quietly;
+            else
+            {
+                characterNumber = int.Parse(splitedCmd[2]);
+                foreach (Character characterTemp in characters)
+                {
+                    if (characterTemp.Number == characterNumber)
+                    {
+                        character = characterTemp;
+                    }
+                }
+                startLayout = int.Parse(splitedCmd[6]);
+                startMapPoint = GetNearestNode(VectorHelper.Cast(splitedCmd[4]), startLayout, mapFrame).nodePoint;
+                endMapPoint = new Point(double.Parse(splitedCmd[9].Split(',')[0]), double.Parse(splitedCmd[9].Split(',')[1]));
+                endLayout = int.Parse(splitedCmd[11]);
+                volumeLimit = splitedCmd[12] == VolumeLimit.Noisily.ToString().ToLower() ? VolumeLimit.Noisily : VolumeLimit.Quietly;
+            }
 
             // 寻找与起始点最近的同层的节点
             MapNode startNode = GetNearestNode(startMapPoint, startLayout, mapFrame);
@@ -862,6 +887,12 @@ namespace CSGOTacticSimulator
                     }
                     resultMapPathNodes.Insert(0, startNode);
                 }
+            }
+
+            foreach(MapNode mapNode in mapNodes)
+            {
+                mapNode.parent = null;
+                mapNode.F = mapNode.G = mapNode.H = -1;
             }
 
             return resultMapPathNodes;
@@ -1644,6 +1675,7 @@ namespace CSGOTacticSimulator
                 data.Add(new CompletionData("auto"));
                 data.Add(new CompletionData("quietly"));
                 data.Add(new CompletionData("noisily"));
+                data.Add(new CompletionData("from"));
                 completionWindow.Show();
                 completionWindow.Closed += delegate {
                     completionWindow = null;

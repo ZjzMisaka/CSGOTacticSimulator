@@ -69,6 +69,7 @@
   	  <Word>comment</Word>
   	  <Word>layout</Word>
   	  <Word>auto</Word>
+	  <Word>from</Word>
     </Keywords>
 	
   	<Keywords color="Option">
