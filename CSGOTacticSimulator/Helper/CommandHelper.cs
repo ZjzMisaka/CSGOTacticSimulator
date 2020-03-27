@@ -19,7 +19,7 @@ namespace CSGOTacticSimulator.Helper
         static public List<string> commands = new List<string>();
         static public List<string> GetCommands(string commandsText)
         {
-            commands = new List<string>(commandsText.Split('\n'));
+            commands = new List<string>(string.Join(" ", commandsText.Replace("\r", "").Replace("\\\n", " ").Trim().Split(new char[]{' '},StringSplitOptions.RemoveEmptyEntries)).Split('\n'));
             for (int i = 0; i < commands.Count; ++i)
             {
                 commands[i].Trim();

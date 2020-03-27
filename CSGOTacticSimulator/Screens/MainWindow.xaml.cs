@@ -1640,6 +1640,10 @@ namespace CSGOTacticSimulator
                 data.Add(new CompletionData("live"));
                 data.Add(new CompletionData("plant"));
                 data.Add(new CompletionData("defuse"));
+                data.Add(new CompletionData("layout"));
+                data.Add(new CompletionData("auto"));
+                data.Add(new CompletionData("quietly"));
+                data.Add(new CompletionData("noisily"));
                 completionWindow.Show();
                 completionWindow.Closed += delegate {
                     completionWindow = null;

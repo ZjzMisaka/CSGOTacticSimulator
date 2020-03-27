@@ -8,6 +8,7 @@
   <!-- 命令 -->
   <Color name="Keywords" fontWeight="bold" foreground="#ff6699cc" />
   <Color name="Option" fontWeight="bold" foreground="#ff66cccc" />
+  <Color name="Symbol" fontWeight="bold" foreground="#ff33aa33" />
 
   <RuleSet name="CommentMarkerSet">
     <Keywords fontWeight="bold" foreground="#fff2777a">
@@ -64,40 +65,44 @@
       <Word>do</Word>
       <Word>wait</Word>
       <Word>until</Word>
-	  <Word>for</Word>
-	  <Word>comment</Word>
-	  <Word>layout</Word>
-	  <Word>auto</Word>
+  	  <Word>for</Word>
+  	  <Word>comment</Word>
+  	  <Word>layout</Word>
+  	  <Word>auto</Word>
     </Keywords>
 	
-	<Keywords color="Option">
+  	<Keywords color="Option">
       <Word>t</Word>
       <Word>ct</Word>
-	  <Word>pistol</Word>
-	  <Word>eco</Word>
-	  <Word>forcebuy</Word>
-	  <Word>quasibuy</Word>
-	  <Word>bomb</Word>
-	  <Word>defusekit</Word>
-	  <Word>alive</Word>
-	  <Word>dead</Word>
-	  <Word>upper</Word>
-	  <Word>lower</Word>
-	  <Word>run</Word>
-	  <Word>walk</Word>
-	  <Word>squat</Word>
-	  <Word>teleport</Word>
-	  <Word>smoke</Word>
-	  <Word>grenade</Word>
-	  <Word>flashbang</Word>
-	  <Word>firebomb</Word>
-	  <Word>decoy</Word>
-	  <Word>die</Word>
-	  <Word>live</Word>
-	  <Word>plant</Word>
-	  <Word>defuse</Word>
-	  <Word>noisily</Word>
-	  <Word>quietly</Word>
+  	  <Word>pistol</Word>
+  	  <Word>eco</Word>
+  	  <Word>forcebuy</Word>
+  	  <Word>quasibuy</Word>
+  	  <Word>bomb</Word>
+  	  <Word>defusekit</Word>
+  	  <Word>alive</Word>
+  	  <Word>dead</Word>
+  	  <Word>upper</Word>
+  	  <Word>lower</Word>
+  	  <Word>run</Word>
+  	  <Word>walk</Word>
+  	  <Word>squat</Word>
+  	  <Word>teleport</Word>
+  	  <Word>smoke</Word>
+  	  <Word>grenade</Word>
+  	  <Word>flashbang</Word>
+  	  <Word>firebomb</Word>
+  	  <Word>decoy</Word>
+  	  <Word>die</Word>
+  	  <Word>live</Word>
+  	  <Word>plant</Word>
+  	  <Word>defuse</Word>
+  	  <Word>noisily</Word>
+  	  <Word>quietly</Word>
+    </Keywords>
+
+    <Keywords color="Symbol">
+      <Word>\</Word>
     </Keywords>
 
     <!-- Digits -->
