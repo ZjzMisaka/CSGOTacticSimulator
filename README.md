@@ -29,7 +29,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |give character {角色编号} props [bomb / defusekit]|为某个角色配备炸弹 / 拆弹器|√|
 |set character {角色编号} status [alive / dead]|设定某个角色的存活状态|√|
 |set character {角色编号} vertical position [upper / lower]|设定显示某个角色处于三维地图的上方或下方|√|
-|action character {角色编号} layout {起始层数} auto move {终点坐标} layout {终点层数} [quietly / noisily]|自动寻路|×|
+|action character {角色编号} layout {起始层数} auto move {终点坐标} layout {终点层数} [quietly / noisily]|自动寻路|√|
 |action character {角色编号} move [run / walk / squat / teleport] {坐标} <{坐标} ...... {坐标}>|将角色移动到某一地点|√ (除了teleport)|
 |action character {角色编号} throw [smoke / grenade / flashbang / firebomb / decoy] {坐标} <{坐标} ...... {坐标}>|让角色投掷投掷物到某一坐标 |√|
 |action character {角色编号} shoot [{坐标} / {目标编号} [die / live]]|让角色向某坐标或某目标射击|√|
@@ -37,6 +37,10 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |action character {角色编号} wait until {秒数}|让角色原地等待到指定秒数|√|
 |action character {角色编号} wait for {秒数}|让角色原地等待指定秒数|√|
 |create comment {秒数} {坐标} {内容}|在指定时间地点创建一个标注|×|
+## 自动寻路
+### 层数
+- 层数代表当前所表示的点的二维坐标在地图上的层数, 例如MirageA包点和A二楼层数都为0, 而A二楼平台上层数为1, 平台下层数为0. 
+- quietly / noisily 代表这次寻路移动是否可以发出声音. 如果选择quietly则哪怕路径允许跑动也会静步移动; 如果路径只允许跑跳则会绕过这条路径. 
 ## 绘图功能
 - 在任意时刻按住LControl键, 即可使用左键在界面上绘图. 
 ### 相关快捷键
@@ -50,7 +54,6 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |LControl + Delete|清除画布|
 ## TODO
 ### 脚本支持换行
-
 ## 外部资源使用
 |资源|许可证|
 |----|----|
