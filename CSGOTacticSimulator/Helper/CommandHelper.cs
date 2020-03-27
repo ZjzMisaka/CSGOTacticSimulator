@@ -174,13 +174,52 @@ namespace CSGOTacticSimulator.Helper
                 }
                 else if (AnalysisCommand(command) == Command.ActionCharacterAutoMove)
                 {
-                    string[] splitedCmd = command.Split(' ');
-                    int number = int.Parse(splitedCmd[2]);
-                    List<Point> wndPoints = new List<Point>();
-                    for (int i = 5; i < splitedCmd.Count(); ++i)
+                    Map mapFrame = GlobalDictionary.mapDic[mainWindow.cb_select_mapframe.Text];
+                    if (mapFrame == null)
                     {
-                        wndPoints.Add(mainWindow.GetWndPoint(VectorHelper.Cast(splitedCmd[i]), ImgType.Nothing));
+                        return null;
                     }
+                    string[] splitedCmd = command.Split(' ');
+                    Point startMapPoint = new Point();
+                    int startLayout;
+                    Point endMapPoint = new Point();
+                    int endLayout;
+                    VolumeLimit volumeLimit;
+                    if (!command.Contains("from"))
+                    {
+                        characterNumber = int.Parse(splitedCmd[2]);
+                        startMapPoint = charactorWndPoints[characterNumber];
+                        startLayout = int.Parse(splitedCmd[4]);
+                        endMapPoint = new Point(double.Parse(splitedCmd[7].Split(',')[0]), double.Parse(splitedCmd[7].Split(',')[1]));
+                        endLayout = int.Parse(splitedCmd[9]);
+                        volumeLimit = splitedCmd[10] == VolumeLimit.Noisily.ToString().ToLower() ? VolumeLimit.Noisily : VolumeLimit.Quietly;
+                    }
+                    else
+                    {
+                        characterNumber = int.Parse(splitedCmd[2]);
+                        startLayout = int.Parse(splitedCmd[6]);
+                        startMapPoint = mainWindow.GetNearestNode(VectorHelper.Cast(splitedCmd[4]), startLayout, mapFrame).nodePoint;
+                        endMapPoint = new Point(double.Parse(splitedCmd[9].Split(',')[0]), double.Parse(splitedCmd[9].Split(',')[1]));
+                        endLayout = int.Parse(splitedCmd[11]);
+                        volumeLimit = splitedCmd[12] == VolumeLimit.Noisily.ToString().ToLower() ? VolumeLimit.Noisily : VolumeLimit.Quietly;
+                    }
+
+                    // 寻找与起始点最近的同层的节点
+                    MapNode startNode = mainWindow.GetNearestNode(startMapPoint, startLayout, mapFrame);
+                    string startCommand = "action character" + " " + characterNumber + " " + "move" + " " + (volumeLimit == VolumeLimit.Noisily ? "run" : "walk") + " " + startNode.nodePoint;
+                    // 寻找与结束点最近的同层的节点
+                    MapNode endNode = mainWindow.GetNearestNode(endMapPoint, endLayout, mapFrame);
+
+                    List<MapNode> mapPathNodes = mainWindow.GetMapPathNodes(startNode, endNode, mapFrame, volumeLimit);
+
+                    List<Point> wndPoints = new List<Point>();
+                    wndPoints.Add(mainWindow.GetWndPoint(startMapPoint, ImgType.Nothing));
+                    foreach(MapNode mapNode in mapPathNodes)
+                    {
+                        wndPoints.Add(mainWindow.GetWndPoint(mapNode.nodePoint, ImgType.Nothing));
+                    }
+                    wndPoints.Add(mainWindow.GetWndPoint(endMapPoint, ImgType.Nothing));
+
                     foreach (Point toWndPoint in wndPoints)
                     {
                         Line moveLine = new Line();
@@ -190,8 +229,8 @@ namespace CSGOTacticSimulator.Helper
                         moveLine.StrokeDashCap = PenLineCap.Triangle;
                         moveLine.StrokeEndLineCap = PenLineCap.Triangle;
                         moveLine.StrokeStartLineCap = PenLineCap.Square;
-                        moveLine.X1 = charactorWndPoints[number].X;
-                        moveLine.Y1 = charactorWndPoints[number].Y;
+                        moveLine.X1 = charactorWndPoints[characterNumber].X;
+                        moveLine.Y1 = charactorWndPoints[characterNumber].Y;
                         moveLine.X2 = toWndPoint.X;
                         moveLine.Y2 = toWndPoint.Y;
                         moveLine.MouseEnter += delegate {
@@ -199,7 +238,7 @@ namespace CSGOTacticSimulator.Helper
                         };
                         previewElements.Add(moveLine);
 
-                        charactorWndPoints[number] = toWndPoint;
+                        charactorWndPoints[characterNumber] = toWndPoint;
                     }
                 }
                 else if (AnalysisCommand(command) == Command.ActionCharacterMove)

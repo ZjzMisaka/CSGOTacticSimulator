@@ -772,7 +772,7 @@ namespace CSGOTacticSimulator
             replaceCommandList.Add(endCommand);
             ActionCharacterMove(endCommand);
         }
-        private MapNode GetNearestNode(Point startMapPoint, int startLayout, Map mapFrame)
+        public MapNode GetNearestNode(Point startMapPoint, int startLayout, Map mapFrame)
         {
             double minimumDistance = -1;
             MapNode startNode = null;
@@ -792,7 +792,7 @@ namespace CSGOTacticSimulator
             return startNode;
         }
 
-        private List<MapNode> GetMapPathNodes(MapNode startNode, MapNode endNode, Map mapFrame, VolumeLimit volumeLimit)
+        public List<MapNode> GetMapPathNodes(MapNode startNode, MapNode endNode, Map mapFrame, VolumeLimit volumeLimit)
         {
             List<MapNode> resultMapPathNodes = new List<MapNode>();
 
