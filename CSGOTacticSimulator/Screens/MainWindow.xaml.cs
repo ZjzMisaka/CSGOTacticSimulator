@@ -1715,7 +1715,7 @@ namespace CSGOTacticSimulator
                 mouseLastPosition = new Point(-1, -1);
                 c_paintcanvas.Children.RemoveAt(c_paintcanvas.Children.Count - 1);
             }
-            else if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.C))
+            else if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.C) && te_editor.SelectionLength == 0)
             {
                 mouseLastPosition = new Point(-1, -1);
                 if (selector == null)
@@ -1726,7 +1726,7 @@ namespace CSGOTacticSimulator
                     c_paintcanvas.Children.Add(selector);
                 }
             }
-            else if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.S))
+            else if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.S) && te_editor.SelectionLength == 0)
             {
                 mouseLastPosition = new Point(-1, -1);
                 if (selector == null)
@@ -1737,7 +1737,7 @@ namespace CSGOTacticSimulator
                     c_paintcanvas.Children.Add(selector);
                 }
             }
-            else if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.A))
+            else if (Keyboard.IsKeyDown(Key.LeftCtrl) && Keyboard.IsKeyDown(Key.A) && te_editor.SelectionLength == 0)
             {
                 mouseLastPosition = new Point(-1, -1);
                 if (selector == null)
