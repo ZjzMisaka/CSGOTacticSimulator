@@ -6,6 +6,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 *(v1.2.0 screenshot)* </br>
 ![screenshot](https://www.iaders.com/upload/2020/0312/v1.3.0.png)
 ## 提示
+- 支持自动寻路
 - 可以通过点击图片获得坐标. 
 - 坐标与图片在窗口内的缩放程度无关, 可以任意改变窗口大小而不用修改脚本. 
 - 将鼠标移到人物点上, 可以看到该角色信息 (编号, 物品, 坐标). 
@@ -48,10 +49,6 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |LControl + A|选择透明度|
 |LControl + Delete|清除画布|
 ## TODO
-### 自动寻路
-- 制作地图 √
-- 自动寻路 √
-- 相应脚本支持
 ### 脚本支持换行
 
 ## 外部资源使用
