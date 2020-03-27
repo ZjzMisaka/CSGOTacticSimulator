@@ -84,16 +84,17 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
-                <Label x:Name="lb_select_map" Width="130" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="选择地图: " FontSize="20" Foreground="White"></Label>
-                <ComboBox x:Name="cb_select_map" Margin="10, 0, 0, 0" Width="200" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" SelectionChanged="cb_select_map_SelectionChanged">
-                </ComboBox>
+                <Label x:Name="lb_select_mapimg" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="选择地图: " FontSize="20" Foreground="White"></Label>
+                <ComboBox x:Name="cb_select_mapimg" Margin="10, 0, 0, 0" Width="200" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" SelectionChanged="cb_select_mapimg_SelectionChanged" />
+                <Label x:Name="lb_select_frame" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="选择框架: " FontSize="20" Foreground="White" Margin="15, 0, 0, 0"></Label>
+                <ComboBox x:Name="cb_select_mapframe" Margin="10, 0, 0, 0" Width="200" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" SelectionChanged="cb_select_mapframe_SelectionChanged" />
             </StackPanel>
 
             <Grid x:Name="g_map" Grid.Row="2" Grid.Column="0" Margin="0, 0, 5, 0" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <Image x:Name="i_map" MouseLeftButtonDown="i_map_MouseLeftButtonDown">
                 </Image>
-                <TextBlock x:Name="tb_infos" Visibility="Hidden" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5"></TextBlock>
-                <TextBlock x:Name="tb_timer" Visibility="Hidden" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="5"></TextBlock>
+                <TextBlock x:Name="tb_infos" Visibility="Hidden" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5" MouseLeftButtonDown="tb_infos_MouseLeftButtonDown"></TextBlock>
+                <TextBlock x:Name="tb_timer" Visibility="Hidden" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="5" MouseLeftButtonDown="tb_timer_MouseLeftButtonDown"></TextBlock>
             </Grid>
 
             <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="0">

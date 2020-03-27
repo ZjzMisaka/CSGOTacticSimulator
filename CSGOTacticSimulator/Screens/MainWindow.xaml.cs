@@ -25,6 +25,7 @@ using System.Xml;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.CodeCompletion;
+using Path = System.IO.Path;
 
 namespace CSGOTacticSimulator
 {
@@ -158,13 +159,20 @@ namespace CSGOTacticSimulator
 
         private void AddMapsFromFolder(string folderPath)
         {
-            cb_select_map.Items.Clear();
+            cb_select_mapimg.Items.Clear();
+            cb_select_mapframe.Items.Clear();
 
-            DirectoryInfo dir = new DirectoryInfo(folderPath);
-            if (!dir.Exists)
+            DirectoryInfo imgDir = new DirectoryInfo(Path.Combine(folderPath, "mapimg"));
+            if (!imgDir.Exists)
                 return;
-            DirectoryInfo dirD = dir as DirectoryInfo;
-            FileSystemInfo[] files = dirD.GetFileSystemInfos();
+            DirectoryInfo imgDirD = imgDir as DirectoryInfo;
+            FileSystemInfo[] imgFiles = imgDirD.GetFileSystemInfos();
+
+            DirectoryInfo frameDir = new DirectoryInfo(Path.Combine(folderPath, "mapframe"));
+            if (!imgDir.Exists)
+                return;
+            DirectoryInfo frameDirD = frameDir as DirectoryInfo;
+            FileSystemInfo[] frameFiles = frameDirD.GetFileSystemInfos();
 
             List<string> maps = new List<string>();
             string line;
@@ -173,8 +181,7 @@ namespace CSGOTacticSimulator
             {
                 maps.Add(line);
             }
-
-            foreach (FileSystemInfo fileSystemInfo in files)
+            foreach (FileSystemInfo fileSystemInfo in imgFiles)
             {
                 FileInfo fileInfo = fileSystemInfo as FileInfo;
                 if (fileInfo != null)
@@ -186,21 +193,44 @@ namespace CSGOTacticSimulator
                             ComboBoxItem cbItem = new ComboBoxItem();
                             cbItem.Content = map;
                             cbItem.Tag = fileInfo.FullName;
-                            cb_select_map.Items.Add(cbItem);
+                            cb_select_mapimg.Items.Add(cbItem);
                         }
                     }
                 }
             }
+
+            foreach (FileSystemInfo fileSystemInfo in frameFiles)
+            {
+                FileInfo fileInfo = fileSystemInfo as FileInfo;
+                if (fileInfo != null)
+                {
+                    ComboBoxItem cbItem = new ComboBoxItem();
+                    cbItem.Content = Path.GetFileNameWithoutExtension(fileInfo.Name);
+                    cbItem.Tag = fileInfo.FullName;
+                    cb_select_mapframe.Items.Add(cbItem);
+                }
+            }
         }
 
-        private void cb_select_map_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cb_select_mapimg_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ComboBoxItem selectedItem = (ComboBoxItem)cb_select_map.SelectedItem;
+            ComboBoxItem selectedItem = (ComboBoxItem)cb_select_mapimg.SelectedItem;
             if (selectedItem != null)
             {
                 i_map.Source = new BitmapImage(new Uri(selectedItem.Tag.ToString(), UriKind.Absolute));
                 tb_infos.Visibility = Visibility.Visible;
                 tb_timer.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void cb_select_mapframe_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBoxItem selectedItem = (ComboBoxItem)cb_select_mapframe.SelectedItem;
+            if (selectedItem != null)
+            {
+                string frameJson;
+                frameJson = File.ReadAllText((string)selectedItem.Tag);
+                Newtonsoft.Json.JsonConvert.DeserializeObject<Map>(frameJson);
             }
         }
 
@@ -326,6 +356,9 @@ namespace CSGOTacticSimulator
                         break;
                     case Command.ActionCharacterDo:
                         ActionCharacterDo(processedCommand);
+                        break;
+                    case Command.ActionCharacterAutoMove:
+                        ActionCharacterAutoMove(processedCommand);
                         break;
                     case Command.ActionCharacterMove:
                         ActionCharacterMove(processedCommand);
@@ -614,6 +647,226 @@ namespace CSGOTacticSimulator
             }
             animations.Add(new Animation(number, action, new Point()));
         }
+
+        private void ActionCharacterAutoMove(string command)
+        {
+            // action character 1 layout 0 auto move 0,0 layout 0 [quietly / noisily]
+            List<string> replaceCommandList = new List<string>();
+
+            Map mapFrame = GlobalDictionary.mapDic[cb_select_mapframe.Text];
+            if (mapFrame == null)
+            {
+                return;
+            }
+            string[] splitedCmd = command.Split(' ');
+            int characterNumber = int.Parse(splitedCmd[2]);
+            Point startMapPoint = new Point();
+            Character character = null;
+            foreach (Character characterTemp in characters)
+            {
+                if (characterTemp.Number == characterNumber)
+                {
+                    startMapPoint = characterTemp.MapPoint;
+                    character = characterTemp;
+                }
+            }
+            int startLayout = int.Parse(splitedCmd[4]);
+            Point endMapPoint = new Point(double.Parse(splitedCmd[7].Split(',')[0]), double.Parse(splitedCmd[7].Split(',')[1]));
+            int endLayout = int.Parse(splitedCmd[9]);
+            VolumeLimit volumeLimit = splitedCmd[10] == VolumeLimit.Noisily.ToString().ToLower() ? VolumeLimit.Noisily : VolumeLimit.Quietly;
+
+            // 寻找与起始点最近的同层的节点
+            MapNode startNode = GetNearestNode(startMapPoint, startLayout, mapFrame);
+            string startCommand = "action character" + " " + characterNumber + " " + "move" + " " + (volumeLimit == VolumeLimit.Noisily ? "run" : "walk") + " " + startNode.nodePoint;
+            ActionCharacterMove(startCommand);
+            replaceCommandList.Add(startCommand);
+            // 寻找与结束点最近的同层的节点
+            MapNode endNode = GetNearestNode(endMapPoint, endLayout, mapFrame);
+            string endCommand = "action character" + " " + characterNumber + " " + "move" + " " + (volumeLimit == VolumeLimit.Noisily ? "run" : "walk") + " " + endMapPoint;
+
+            List<MapNode> mapPathNodes = GetMapPathNodes(startNode, endNode, mapFrame, volumeLimit);
+            for(int i = 0; i < mapPathNodes.Count - 1; ++i)
+            {
+                string currentCommand;
+                MapNode currentStartNode = mapPathNodes[i];
+                MapNode currentEndNode = mapPathNodes[i + 1];
+                WayInfo wayInfo = currentStartNode.neighbourNodes[currentEndNode.index];
+
+                double runSpeed = double.Parse(IniHelper.ReadIni("RunSpeed", character.Weapon.ToString()));
+                double speedController = localSpeedController != -1 ? localSpeedController : GlobalDictionary.speedController;
+                if (currentStartNode.nodePoint == currentEndNode.nodePoint)
+                {
+                    // 爬梯子
+                    if (volumeLimit == VolumeLimit.Quietly || wayInfo.actionLimit == ActionLimit.WalkClimb)
+                    {
+                        // 静音爬梯子
+                        // 准备增加爬梯速度的比率, 因此if和else算了两遍速度
+                        runSpeed *= GlobalDictionary.walkToRunRatio;
+                    }
+
+                    double pixelPerFresh = runSpeed / (1000 / GlobalDictionary.animationFreshTime) * ratio * speedController;
+                    double climbTime = (wayInfo.distance / pixelPerFresh) * (GlobalDictionary.animationFreshTime / 1000.0);
+                    currentCommand = "action character" + " " + characterNumber + " " + "wait for" + " " + climbTime;
+                    ActionCharacterWaitFor(currentCommand);
+                }
+                else
+                {
+                    if (volumeLimit == VolumeLimit.Quietly)
+                    {
+                        // 静音移动
+                        if(wayInfo.actionLimit == ActionLimit.SquatOnly)
+                        {
+                            currentCommand = "action character" + " " + characterNumber + " " + "move" + " " + "squat" + " " + currentEndNode.nodePoint;
+                        }
+                        else
+                        {
+                            currentCommand = "action character" + " " + characterNumber + " " + "move" + " " + "walk" + " " + currentEndNode.nodePoint;
+                        }
+                    }
+                    else
+                    {
+                        // 可以跑动, 取决于地图限制
+                        if (wayInfo.actionLimit == ActionLimit.SquatOnly)
+                        {
+                            currentCommand = "action character" + " " + characterNumber + " " + "move" + " " + "squat" + " " + currentEndNode.nodePoint;
+                        }
+                        else if(wayInfo.actionLimit == ActionLimit.WalkOnly || wayInfo.actionLimit == ActionLimit.WalkOrSquat)
+                        {
+                            currentCommand = "action character" + " " + characterNumber + " " + "move" + " " + "walk" + " " + currentEndNode.nodePoint;
+                        }
+                        else
+                        {
+                            currentCommand = "action character" + " " + characterNumber + " " + "move" + " " + "run" + " " + currentEndNode.nodePoint;
+                        }
+                    }
+                    ActionCharacterMove(currentCommand);
+                }
+                replaceCommandList.Add(currentCommand);
+            }
+
+            replaceCommandList.Add(endCommand);
+            ActionCharacterMove(endCommand);
+        }
+        private MapNode GetNearestNode(Point startMapPoint, int startLayout, Map mapFrame)
+        {
+            double minimumDistance = -1;
+            MapNode startNode = null;
+            foreach (MapNode mapNode in mapFrame.mapNodes)
+            {
+                if (startLayout != mapNode.layoutNumber)
+                {
+                    continue;
+                }
+                double currentDistance = VectorHelper.GetDistance(startMapPoint, mapNode.nodePoint);
+                if (minimumDistance == -1 || currentDistance < minimumDistance)
+                {
+                    minimumDistance = currentDistance;
+                    startNode = mapNode;
+                }
+            }
+            return startNode;
+        }
+
+        private List<MapNode> GetMapPathNodes(MapNode startNode, MapNode endNode, Map mapFrame, VolumeLimit volumeLimit)
+        {
+            List<MapNode> resultMapPathNodes = new List<MapNode>();
+
+            List<MapNode> mapNodes = mapFrame.mapNodes;
+
+            List<int> openList = new List<int>();
+            List<int> closeList = new List<int>();
+            openList.Add(startNode.index);
+
+            while (openList.Count != 0)
+            {
+                double minimumF = -1;
+                double minimumH = -1;
+                MapNode minFNode = null;
+                foreach (int i in openList)
+                {
+                    if ((minimumF == -1 || mapNodes[i].F < minimumF) || (mapNodes[i].F == minimumF && mapNodes[i].H < minimumH)) 
+                    {
+                        if (mapNodes[i].G == -1)
+                        {
+                            mapNodes[i].G = 0;
+                        }
+                        if (mapNodes[i].H == -1)
+                        {
+                            mapNodes[i].H = VectorHelper.GetDistance(mapNodes[i].nodePoint, endNode.nodePoint);
+                        }
+
+                        minFNode = mapNodes[i];
+                        minimumH = mapNodes[i].H;
+                        minimumF = mapNodes[i].H + mapNodes[i].G;
+                    }
+                }
+                openList.Remove(minFNode.index);
+                closeList.Add(minFNode.index);
+
+                foreach (int key in minFNode.neighbourNodes.Keys)
+                {
+                    if (volumeLimit == VolumeLimit.Quietly)
+                    {
+                        ActionLimit actionLimit = minFNode.neighbourNodes[key].actionLimit;
+                        if(actionLimit == ActionLimit.RunClimbOrFall || actionLimit == ActionLimit.RunJumpOnly || actionLimit == ActionLimit.RunOnly)
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (!closeList.Contains(key))
+                    {
+                        if (!openList.Contains(key))
+                        {
+                            openList.Add(key);
+                            mapNodes[key].H = VectorHelper.GetDistance(mapNodes[key].nodePoint, endNode.nodePoint);
+                            // F暂且以二维平面距离计算, 与高度层数和移速和移动方式无关
+                            if (minFNode.nodePoint == mapNodes[key].nodePoint && minFNode.layoutNumber != mapNodes[key].layoutNumber)
+                            {
+                                mapNodes[key].G = minFNode.G;
+                            }
+                            else
+                            {
+                                mapNodes[key].G = minFNode.G + VectorHelper.GetDistance(mapNodes[key].nodePoint, minFNode.nodePoint); ;
+                            }
+                            mapNodes[key].parent = minFNode;
+                        }
+                        if (openList.Contains(key))
+                        {
+                            // F暂且以二维平面距离计算, 与高度层数和移速和移动方式无关
+                            if (minFNode.nodePoint == mapNodes[key].nodePoint && minFNode.layoutNumber != mapNodes[key].layoutNumber)
+                            {
+                                //DO NOTHING, mapNodes[key].g == minFNode.g;
+                                mapNodes[key].parent = minFNode;
+                            }
+                            else
+                            {
+                                double currentG = minFNode.G + VectorHelper.GetDistance(mapNodes[key].nodePoint, minFNode.nodePoint);
+                                if (mapNodes[key].G > currentG)
+                                {
+                                    mapNodes[key].G = currentG;
+                                    mapNodes[key].parent = minFNode;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (openList.Contains(endNode.index))
+                {
+                    MapNode nodeTemp = endNode;
+                    while(nodeTemp != startNode)
+                    {
+                        resultMapPathNodes.Insert(0, nodeTemp);
+                        nodeTemp = nodeTemp.parent;
+                    }
+                    resultMapPathNodes.Insert(0, startNode);
+                }
+            }
+
+            return resultMapPathNodes;
+        }
+
         private void ActionCharacterMove(string command)
         {
             string[] splitedCmd = command.Split(' ');
@@ -1276,6 +1529,11 @@ namespace CSGOTacticSimulator
             }
         }
 
+        public void ShowCharacterImgInfos(object sender, MouseEventArgs e)
+        {
+            Image img = (Image)sender;
+            tb_infos.Text = img.Tag.ToString();
+        }
         private void btn_point_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Clipboard.SetDataObject(tb_point.Text);
@@ -1559,6 +1817,16 @@ namespace CSGOTacticSimulator
                 c_previewcanvas.Children.Clear();
                 CommandHelper.previewCharactorCount = 0;
             }
+        }
+
+        private void tb_infos_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void tb_timer_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }

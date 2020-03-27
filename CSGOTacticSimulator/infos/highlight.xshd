@@ -66,6 +66,8 @@
       <Word>until</Word>
 	  <Word>for</Word>
 	  <Word>comment</Word>
+	  <Word>layout</Word>
+	  <Word>auto</Word>
     </Keywords>
 	
 	<Keywords color="Option">
@@ -94,6 +96,8 @@
 	  <Word>live</Word>
 	  <Word>plant</Word>
 	  <Word>defuse</Word>
+	  <Word>noisily</Word>
+	  <Word>quietly</Word>
     </Keywords>
 
     <!-- Digits -->

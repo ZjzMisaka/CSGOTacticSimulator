@@ -76,6 +76,7 @@ namespace CSGOTacticSimulator.Global
         GiveCharacterProps,
         SetCharacterStatus,
         SetCharacterVerticalPosition,
+        ActionCharacterAutoMove,
         ActionCharacterMove,
         ActionCharacterThrow,
         ActionCharacterShoot,
@@ -127,5 +128,7 @@ namespace CSGOTacticSimulator.Global
         static public int firebombLifespan = int.Parse(IniHelper.ReadIni("Missile", "FirebombLifespan"));
         static public int smokeLifespan = int.Parse(IniHelper.ReadIni("Missile", "SmokeLifespan"));
         static public int flashbangLifespan = int.Parse(IniHelper.ReadIni("Missile", "FlashbangLifespan"));
+
+        static public Dictionary<string, Map> mapDic = new Dictionary<string, Map>(); 
     }
 }

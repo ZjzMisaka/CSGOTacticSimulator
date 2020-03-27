@@ -90,7 +90,11 @@ namespace CSGOTacticSimulator.Helper
             }
             else if (cmd.Contains("action character"))
             {
-                if (cmd.Contains("move"))
+                if (cmd.Contains("auto move"))
+                {
+                    return Command.ActionCharacterAutoMove;
+                }
+                else if (cmd.Contains("move"))
                 {
                     return Command.ActionCharacterMove;
                 }
@@ -131,6 +135,8 @@ namespace CSGOTacticSimulator.Helper
 
             Dictionary<int, Point> charactorWndPoints = new Dictionary<int, Point>();
 
+            int characterNumber = 0;
+
             List<string> commands = GetCommands(commandText);
             foreach(string command in commands)
             {
@@ -160,8 +166,41 @@ namespace CSGOTacticSimulator.Helper
                     Point charactorWndPoint = mainWindow.GetWndPoint(mapPoint, ImgType.Character);
                     Canvas.SetLeft(characterImg, charactorWndPoint.X);
                     Canvas.SetTop(characterImg, charactorWndPoint.Y);
+                    characterImg.Tag = "Number: " + characterNumber + "\n" + "Posisiion: " + mapPoint.ToString();
+                    ++characterNumber;
+                    characterImg.MouseEnter += mainWindow.ShowCharacterImgInfos;
                     previewElements.Add(characterImg);
                     charactorWndPoints.Add(previewCharactorCount++, mainWindow.GetWndPoint(mapPoint, ImgType.Nothing));
+                }
+                else if (AnalysisCommand(command) == Command.ActionCharacterAutoMove)
+                {
+                    string[] splitedCmd = command.Split(' ');
+                    int number = int.Parse(splitedCmd[2]);
+                    List<Point> wndPoints = new List<Point>();
+                    for (int i = 5; i < splitedCmd.Count(); ++i)
+                    {
+                        wndPoints.Add(mainWindow.GetWndPoint(VectorHelper.Cast(splitedCmd[i]), ImgType.Nothing));
+                    }
+                    foreach (Point toWndPoint in wndPoints)
+                    {
+                        Line moveLine = new Line();
+                        moveLine.Stroke = Brushes.White;
+                        moveLine.StrokeThickness = 2;
+                        moveLine.StrokeDashArray = new DoubleCollection() { 2, 3 };
+                        moveLine.StrokeDashCap = PenLineCap.Triangle;
+                        moveLine.StrokeEndLineCap = PenLineCap.Triangle;
+                        moveLine.StrokeStartLineCap = PenLineCap.Square;
+                        moveLine.X1 = charactorWndPoints[number].X;
+                        moveLine.Y1 = charactorWndPoints[number].Y;
+                        moveLine.X2 = toWndPoint.X;
+                        moveLine.Y2 = toWndPoint.Y;
+                        moveLine.MouseEnter += delegate {
+                            mainWindow.tb_infos.Text = command;
+                        };
+                        previewElements.Add(moveLine);
+
+                        charactorWndPoints[number] = toWndPoint;
+                    }
                 }
                 else if (AnalysisCommand(command) == Command.ActionCharacterMove)
                 {

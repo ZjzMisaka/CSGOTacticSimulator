@@ -29,7 +29,25 @@ namespace CSGOTacticSimulator.Helper
         Plant,
         Defuse
     }
-
+    public enum ActionLimit
+    {
+        RunJumpOnly,
+        RunOrWalkJump,
+        Jump,
+        RunOnly,
+        WalkOnly,
+        SquatOnly,
+        RunOrWalk,
+        WalkOrSquat,
+        RunClimbOrFall,
+        WalkClimb,
+        AllAllowed
+    }
+    public enum VolumeLimit
+    {
+        Quietly,
+        Noisily
+    }
     public class Animation
     {
         public int ownerIndex;
