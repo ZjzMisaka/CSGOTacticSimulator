@@ -6,6 +6,8 @@ using CSGOTacticSimulator.Model;
 using CSGOTacticSimulator.Helper;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using CustomizableMessageBox;
+using System.Windows;
 
 namespace CSGOTacticSimulator.Global
 {
@@ -129,6 +131,25 @@ namespace CSGOTacticSimulator.Global
         static public int smokeLifespan = int.Parse(IniHelper.ReadIni("Missile", "SmokeLifespan"));
         static public int flashbangLifespan = int.Parse(IniHelper.ReadIni("Missile", "FlashbangLifespan"));
 
-        static public Dictionary<string, Map> mapDic = new Dictionary<string, Map>(); 
+        static public Dictionary<string, Map> mapDic = new Dictionary<string, Map>();
+
+        static public PropertiesSetter propertiesSetter = new PropertiesSetter()
+        {
+            ButtonFontSize = 20,
+            MessageFontSize = 20,
+            TitleFontSize = 20,
+            WindowWidth = 500,
+            WindowMinHeight = 250,
+            ButtonPanelColor = new MessageBoxColor("#F03A3A3A"),
+            MessagePanelColor = new MessageBoxColor("#F03A3A3A"),
+            TitlePanelColor = new MessageBoxColor("#F03A3A3A"),
+            TitlePanelBorderThickness = new Thickness(0, 0, 0, 2),
+            TitlePanelBorderColor = new MessageBoxColor("#FFEFE2E2"),
+            MessagePanelBorderThickness = new Thickness(0),
+            ButtonPanelBorderThickness = new Thickness(0, 1, 0, 0),
+            WndBorderThickness = new Thickness(1),
+            TitleFontColor = new MessageBoxColor("#FFCBBEBE"),
+            MessageFontColor = new MessageBoxColor(Colors.White),
+        };
     }
 }

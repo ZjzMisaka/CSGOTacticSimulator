@@ -108,7 +108,7 @@ namespace CSGOTacticSimulator
 
         private void btn_exit_Click(object sender, RoutedEventArgs e)
         {
-            int resultIndex = MessageBox.Show(new List<object> { "保存后退出", "直接退出", new ButtonSpacer(200), "取消" }, "是否另存战术脚本", "正在退出程序", MessageBoxImage.Warning);
+            int resultIndex = MessageBox.Show(GlobalDictionary.propertiesSetter, new List<object> { "保存后退出", "直接退出", new ButtonSpacer(100), "取消" }, "是否另存战术脚本", "正在退出程序", MessageBoxImage.Warning);
             if (MessageBox.ButtonList[resultIndex].ToString() == "取消")
             {
                 return;
@@ -337,6 +337,8 @@ namespace CSGOTacticSimulator
                 return;
             }
 
+            string processedCommand = null;
+
             ratio = i_map.ActualWidth / i_map.Source.Width;
 
             bombDefused = false;
@@ -349,7 +351,7 @@ namespace CSGOTacticSimulator
             {
                 foreach (string command in CommandHelper.commands)
                 {
-                    string processedCommand = command.Replace("\r", "").Trim();
+                    processedCommand = command.Replace("\r", "").Trim();
                     Command commandType = CommandHelper.AnalysisCommand(command);
                     switch (commandType)
                     {
@@ -409,7 +411,7 @@ namespace CSGOTacticSimulator
             }
             catch (Exception ex)
             {
-                MessageBox.Show(new List<object> { new ButtonSpacer(500), "确定" }, "解析命令时出错: " + ex.Message, "错误", MessageBoxImage.Error);
+                MessageBox.Show(GlobalDictionary.propertiesSetter, new List<object> { new ButtonSpacer(250), "确定" }, "解析命令 \"" + processedCommand + "\" 时出错\n错误信息: " + ex.Message, "错误", MessageBoxImage.Error);
             }
 
             StartTimer();
@@ -1294,7 +1296,7 @@ namespace CSGOTacticSimulator
                 Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
                 {
                     Stop();
-                    MessageBox.Show(new List<object> { new ButtonSpacer(500), "确定" }, "角色" + character.Number + "未持有道具" + missile.ToString() + ", 可能是没有配备, 或已经被扔出, 因此无法投掷. ", "错误", MessageBoxImage.Warning);
+                    MessageBox.Show(GlobalDictionary.propertiesSetter, new List<object> { new ButtonSpacer(250), "确定" }, "角色" + character.Number + "未持有道具" + missile.ToString() + ", 可能是没有配备, 或已经被扔出, 因此无法投掷. ", "错误", MessageBoxImage.Warning);
                 }));
                 
             }
