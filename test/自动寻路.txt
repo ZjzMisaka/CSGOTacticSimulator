@@ -1,0 +1,21 @@
+设置总体速度比率为 0.21
+set entirety speed 0.21
+
+阵营为t
+set camp t
+
+创建t角色
+create character t 852.15,816.72
+
+自动寻路去B2楼
+action character 0 layout 0\
+auto move 235.63,175.39 layout 0 noisily
+自动寻路返回
+action character 0 from 235.63,175.39 layout 0\
+auto move  852.15,816.72 layout 0 noisily
+自动寻路去电话亭后
+action character 0 from 852.15,816.72 layout 0\
+auto move  448.42,833.25 layout 0 noisily
+自动寻路返回
+action character 0 from 448.42,833.25 layout 0\
+auto move  852.15,816.72 layout 0 noisily
