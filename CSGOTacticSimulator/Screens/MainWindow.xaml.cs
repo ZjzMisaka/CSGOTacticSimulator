@@ -345,64 +345,71 @@ namespace CSGOTacticSimulator
 
             CommandHelper.GetCommands(te_editor.Text);
 
-            foreach (string command in CommandHelper.commands)
+            try
             {
-                string processedCommand = command.Replace("\r", "").Trim();
-                Command commandType = CommandHelper.AnalysisCommand(command);
-                switch (commandType)
+                foreach (string command in CommandHelper.commands)
                 {
-                    case Command.SetEntiretySpeed:
-                        SetEntiretySpeed(processedCommand);
-                        break;
-                    case Command.ActionCharacterDo:
-                        ActionCharacterDo(processedCommand);
-                        break;
-                    case Command.ActionCharacterAutoMove:
-                        ActionCharacterAutoMove(processedCommand);
-                        break;
-                    case Command.ActionCharacterMove:
-                        ActionCharacterMove(processedCommand);
-                        break;
-                    case Command.ActionCharacterShoot:
-                        ActionCharacterShoot(processedCommand);
-                        break;
-                    case Command.ActionCharacterThrow:
-                        ActionCharacterThrow(processedCommand);
-                        break;
-                    case Command.ActionCharacterWaitUntil:
-                        ActionCharacterWaitUntil(processedCommand);
-                        break;
-                    case Command.ActionCharacterWaitFor:
-                        ActionCharacterWaitFor(processedCommand);
-                        break;
-                    case Command.BadOrNotCommand:
-                        break;
-                    case Command.CreateCharacter:
-                        CreateCharacter(processedCommand);
-                        break;
-                    case Command.CreateComment:
-                        break;
-                    case Command.CreateTeam:
-                        break;
-                    case Command.GiveCharacterMissile:
-                        GiveCharacterMissile(processedCommand);
-                        break;
-                    case Command.GiveCharacterProps:
-                        GiveCharacterProps(processedCommand);
-                        break;
-                    case Command.GiveCharacterWeapon:
-                        GiveCharacterWeapon(processedCommand);
-                        break;
-                    case Command.SetCamp:
-                        SetCamp(processedCommand);
-                        break;
-                    case Command.SetCharacterStatus:
-                        SetCharacterStatus(processedCommand);
-                        break;
-                    case Command.SetCharacterVerticalPosition:
-                        SetCharacterVerticalPosition(processedCommand);
-                        break;
+                    string processedCommand = command.Replace("\r", "").Trim();
+                    Command commandType = CommandHelper.AnalysisCommand(command);
+                    switch (commandType)
+                    {
+                        case Command.SetEntiretySpeed:
+                            SetEntiretySpeed(processedCommand);
+                            break;
+                        case Command.ActionCharacterDo:
+                            ActionCharacterDo(processedCommand);
+                            break;
+                        case Command.ActionCharacterAutoMove:
+                            ActionCharacterAutoMove(processedCommand);
+                            break;
+                        case Command.ActionCharacterMove:
+                            ActionCharacterMove(processedCommand);
+                            break;
+                        case Command.ActionCharacterShoot:
+                            ActionCharacterShoot(processedCommand);
+                            break;
+                        case Command.ActionCharacterThrow:
+                            ActionCharacterThrow(processedCommand);
+                            break;
+                        case Command.ActionCharacterWaitUntil:
+                            ActionCharacterWaitUntil(processedCommand);
+                            break;
+                        case Command.ActionCharacterWaitFor:
+                            ActionCharacterWaitFor(processedCommand);
+                            break;
+                        case Command.BadOrNotCommand:
+                            break;
+                        case Command.CreateCharacter:
+                            CreateCharacter(processedCommand);
+                            break;
+                        case Command.CreateComment:
+                            break;
+                        case Command.CreateTeam:
+                            break;
+                        case Command.GiveCharacterMissile:
+                            GiveCharacterMissile(processedCommand);
+                            break;
+                        case Command.GiveCharacterProps:
+                            GiveCharacterProps(processedCommand);
+                            break;
+                        case Command.GiveCharacterWeapon:
+                            GiveCharacterWeapon(processedCommand);
+                            break;
+                        case Command.SetCamp:
+                            SetCamp(processedCommand);
+                            break;
+                        case Command.SetCharacterStatus:
+                            SetCharacterStatus(processedCommand);
+                            break;
+                        case Command.SetCharacterVerticalPosition:
+                            SetCharacterVerticalPosition(processedCommand);
+                            break;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(new List<object> { new ButtonSpacer(500), "确定" }, "解析命令时出错: " + ex.Message, "错误", MessageBoxImage.Error);
             }
 
             StartTimer();
@@ -647,7 +654,6 @@ namespace CSGOTacticSimulator
             }
             animations.Add(new Animation(number, action, new Point()));
         }
-
         private void ActionCharacterAutoMove(string command)
         {
             // action character 1 layout 0 auto move 0,0 layout 0 [quietly / noisily]
@@ -694,22 +700,22 @@ namespace CSGOTacticSimulator
                     }
                 }
                 startLayout = int.Parse(splitedCmd[6]);
-                startMapPoint = GetNearestNode(VectorHelper.Cast(splitedCmd[4]), startLayout, mapFrame).nodePoint;
+                startMapPoint = PathfindingHelper.GetNearestNode(VectorHelper.Cast(splitedCmd[4]), startLayout, mapFrame).nodePoint;
                 endMapPoint = new Point(double.Parse(splitedCmd[9].Split(',')[0]), double.Parse(splitedCmd[9].Split(',')[1]));
                 endLayout = int.Parse(splitedCmd[11]);
                 volumeLimit = splitedCmd[12] == VolumeLimit.Noisily.ToString().ToLower() ? VolumeLimit.Noisily : VolumeLimit.Quietly;
             }
 
             // 寻找与起始点最近的同层的节点
-            MapNode startNode = GetNearestNode(startMapPoint, startLayout, mapFrame);
+            MapNode startNode = PathfindingHelper.GetNearestNode(startMapPoint, startLayout, mapFrame);
             string startCommand = "action character" + " " + characterNumber + " " + "move" + " " + (volumeLimit == VolumeLimit.Noisily ? "run" : "walk") + " " + startNode.nodePoint;
             ActionCharacterMove(startCommand);
             replaceCommandList.Add(startCommand);
             // 寻找与结束点最近的同层的节点
-            MapNode endNode = GetNearestNode(endMapPoint, endLayout, mapFrame);
+            MapNode endNode = PathfindingHelper.GetNearestNode(endMapPoint, endLayout, mapFrame);
             string endCommand = "action character" + " " + characterNumber + " " + "move" + " " + (volumeLimit == VolumeLimit.Noisily ? "run" : "walk") + " " + endMapPoint;
 
-            List<MapNode> mapPathNodes = GetMapPathNodes(startNode, endNode, mapFrame, volumeLimit);
+            List<MapNode> mapPathNodes = PathfindingHelper.GetMapPathNodes(startNode, endNode, mapFrame, volumeLimit);
             for(int i = 0; i < mapPathNodes.Count - 1; ++i)
             {
                 string currentCommand;
@@ -771,131 +777,14 @@ namespace CSGOTacticSimulator
 
             replaceCommandList.Add(endCommand);
             ActionCharacterMove(endCommand);
-        }
-        public MapNode GetNearestNode(Point startMapPoint, int startLayout, Map mapFrame)
-        {
-            double minimumDistance = -1;
-            MapNode startNode = null;
-            foreach (MapNode mapNode in mapFrame.mapNodes)
+
+            te_editor.Text += "\n\n";
+            te_editor.Text += "\n--------------------------------------------";
+            te_editor.Text += "\n- " + command + ": \n";
+            foreach (string commandStr in replaceCommandList)
             {
-                if (startLayout != mapNode.layoutNumber)
-                {
-                    continue;
-                }
-                double currentDistance = VectorHelper.GetDistance(startMapPoint, mapNode.nodePoint);
-                if (minimumDistance == -1 || currentDistance < minimumDistance)
-                {
-                    minimumDistance = currentDistance;
-                    startNode = mapNode;
-                }
+                te_editor.Text += "\n- " + commandStr;
             }
-            return startNode;
-        }
-
-        public List<MapNode> GetMapPathNodes(MapNode startNode, MapNode endNode, Map mapFrame, VolumeLimit volumeLimit)
-        {
-            List<MapNode> resultMapPathNodes = new List<MapNode>();
-
-            List<MapNode> mapNodes = mapFrame.mapNodes;
-
-            List<int> openList = new List<int>();
-            List<int> closeList = new List<int>();
-            openList.Add(startNode.index);
-
-            while (openList.Count != 0)
-            {
-                double minimumF = -1;
-                double minimumH = -1;
-                MapNode minFNode = null;
-                foreach (int i in openList)
-                {
-                    if ((minimumF == -1 || mapNodes[i].F < minimumF) || (mapNodes[i].F == minimumF && mapNodes[i].H < minimumH)) 
-                    {
-                        if (mapNodes[i].G == -1)
-                        {
-                            mapNodes[i].G = 0;
-                        }
-                        if (mapNodes[i].H == -1)
-                        {
-                            mapNodes[i].H = VectorHelper.GetDistance(mapNodes[i].nodePoint, endNode.nodePoint);
-                        }
-
-                        minFNode = mapNodes[i];
-                        minimumH = mapNodes[i].H;
-                        minimumF = mapNodes[i].H + mapNodes[i].G;
-                    }
-                }
-                openList.Remove(minFNode.index);
-                closeList.Add(minFNode.index);
-
-                foreach (int key in minFNode.neighbourNodes.Keys)
-                {
-                    if (volumeLimit == VolumeLimit.Quietly)
-                    {
-                        ActionLimit actionLimit = minFNode.neighbourNodes[key].actionLimit;
-                        if(actionLimit == ActionLimit.RunClimbOrFall || actionLimit == ActionLimit.RunJumpOnly || actionLimit == ActionLimit.RunOnly)
-                        {
-                            continue;
-                        }
-                    }
-
-                    if (!closeList.Contains(key))
-                    {
-                        if (!openList.Contains(key))
-                        {
-                            openList.Add(key);
-                            mapNodes[key].H = VectorHelper.GetDistance(mapNodes[key].nodePoint, endNode.nodePoint);
-                            // F暂且以二维平面距离计算, 与高度层数和移速和移动方式无关
-                            if (minFNode.nodePoint == mapNodes[key].nodePoint && minFNode.layoutNumber != mapNodes[key].layoutNumber)
-                            {
-                                mapNodes[key].G = minFNode.G;
-                            }
-                            else
-                            {
-                                mapNodes[key].G = minFNode.G + VectorHelper.GetDistance(mapNodes[key].nodePoint, minFNode.nodePoint); ;
-                            }
-                            mapNodes[key].parent = minFNode;
-                        }
-                        if (openList.Contains(key))
-                        {
-                            // F暂且以二维平面距离计算, 与高度层数和移速和移动方式无关
-                            if (minFNode.nodePoint == mapNodes[key].nodePoint && minFNode.layoutNumber != mapNodes[key].layoutNumber)
-                            {
-                                //DO NOTHING, mapNodes[key].g == minFNode.g;
-                                mapNodes[key].parent = minFNode;
-                            }
-                            else
-                            {
-                                double currentG = minFNode.G + VectorHelper.GetDistance(mapNodes[key].nodePoint, minFNode.nodePoint);
-                                if (mapNodes[key].G > currentG)
-                                {
-                                    mapNodes[key].G = currentG;
-                                    mapNodes[key].parent = minFNode;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (openList.Contains(endNode.index))
-                {
-                    MapNode nodeTemp = endNode;
-                    while(nodeTemp != startNode)
-                    {
-                        resultMapPathNodes.Insert(0, nodeTemp);
-                        nodeTemp = nodeTemp.parent;
-                    }
-                    resultMapPathNodes.Insert(0, startNode);
-                }
-            }
-
-            foreach(MapNode mapNode in mapNodes)
-            {
-                mapNode.parent = null;
-                mapNode.F = mapNode.G = mapNode.H = -1;
-            }
-
-            return resultMapPathNodes;
         }
 
         private void ActionCharacterMove(string command)

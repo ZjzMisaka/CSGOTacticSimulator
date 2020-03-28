@@ -198,19 +198,19 @@ namespace CSGOTacticSimulator.Helper
                     {
                         characterNumber = int.Parse(splitedCmd[2]);
                         startLayout = int.Parse(splitedCmd[6]);
-                        startMapPoint = mainWindow.GetNearestNode(VectorHelper.Cast(splitedCmd[4]), startLayout, mapFrame).nodePoint;
+                        startMapPoint = PathfindingHelper.GetNearestNode(VectorHelper.Cast(splitedCmd[4]), startLayout, mapFrame).nodePoint;
                         endMapPoint = new Point(double.Parse(splitedCmd[9].Split(',')[0]), double.Parse(splitedCmd[9].Split(',')[1]));
                         endLayout = int.Parse(splitedCmd[11]);
                         volumeLimit = splitedCmd[12] == VolumeLimit.Noisily.ToString().ToLower() ? VolumeLimit.Noisily : VolumeLimit.Quietly;
                     }
 
                     // 寻找与起始点最近的同层的节点
-                    MapNode startNode = mainWindow.GetNearestNode(startMapPoint, startLayout, mapFrame);
+                    MapNode startNode = PathfindingHelper.GetNearestNode(startMapPoint, startLayout, mapFrame);
                     string startCommand = "action character" + " " + characterNumber + " " + "move" + " " + (volumeLimit == VolumeLimit.Noisily ? "run" : "walk") + " " + startNode.nodePoint;
                     // 寻找与结束点最近的同层的节点
-                    MapNode endNode = mainWindow.GetNearestNode(endMapPoint, endLayout, mapFrame);
+                    MapNode endNode = PathfindingHelper.GetNearestNode(endMapPoint, endLayout, mapFrame);
 
-                    List<MapNode> mapPathNodes = mainWindow.GetMapPathNodes(startNode, endNode, mapFrame, volumeLimit);
+                    List<MapNode> mapPathNodes = PathfindingHelper.GetMapPathNodes(startNode, endNode, mapFrame, volumeLimit);
 
                     List<Point> wndPoints = new List<Point>();
                     wndPoints.Add(mainWindow.GetWndPoint(startMapPoint, ImgType.Nothing));
