@@ -1733,16 +1733,53 @@ namespace CSGOTacticSimulator
 
             if (c_previewcanvas.Children.Count == 0)
             {
-                List<FrameworkElement> previewElements = CommandHelper.GetPreviewElements(te_editor.Text, this);
-                foreach(FrameworkElement previewElement in previewElements)
+                if (te_editor.Text.Length != 0)
                 {
-                    c_previewcanvas.Children.Add(previewElement);
+                    PreviewAction();
+                }
+                else
+                {
+                    PreviewFrame();
                 }
             }
             else
             {
                 c_previewcanvas.Children.Clear();
                 CommandHelper.previewCharactorCount = 0;
+            }
+        }
+
+        private void PreviewAction()
+        {
+            List<FrameworkElement> previewElements = CommandHelper.GetPreviewElements(te_editor.Text, this);
+            foreach (FrameworkElement previewElement in previewElements)
+            {
+                c_previewcanvas.Children.Add(previewElement);
+            }
+        }
+
+        private void PreviewFrame()
+        {
+            Map mapFrame = GlobalDictionary.mapDic[cb_select_mapframe.Text];
+
+            List<MapNode> mapNodes = mapFrame.mapNodes;
+
+            foreach (MapNode mapNode in mapNodes)
+            {
+                Image characterImg = new Image();
+                characterImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/FRIENDLY_ALIVE_UPPER.png")));
+                characterImg.Width = GlobalDictionary.characterWidthAndHeight;
+                characterImg.Height = GlobalDictionary.characterWidthAndHeight;
+                Point charactorWndPoint = GetWndPoint(mapNode.nodePoint, ImgType.Character);
+                Canvas.SetLeft(characterImg, charactorWndPoint.X);
+                Canvas.SetTop(characterImg, charactorWndPoint.Y);
+                characterImg.Tag += "Current Node -- Index: " + mapNode.index + "\n";
+                foreach (KeyValuePair<int, WayInfo> neighbourNode in mapNode.neighbourNodes)
+                {
+                    characterImg.Tag += "Neighbour Node -- Index: " + neighbourNode.Key + " " + "Action Limit: " + neighbourNode.Value.actionLimit.ToString() + "\n";
+                }
+                characterImg.MouseEnter += ShowCharacterImgInfos;
+                c_previewcanvas.Children.Add(characterImg);
             }
         }
 
