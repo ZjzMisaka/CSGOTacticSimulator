@@ -19,6 +19,10 @@ namespace CSGOTacticSimulator.Model
             {
                 GlobalDictionary.mapDic.Add(this.mapName, this);
             }
+            else
+            {
+                GlobalDictionary.mapDic[mapName] = this;
+            }
         }
         public Map(string mapName, List<MapNode> mapNodes)
         {

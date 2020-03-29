@@ -85,7 +85,13 @@ namespace CSGOTacticSimulator.Global
         ActionCharacterDo,
         ActionCharacterWaitFor,
         ActionCharacterWaitUntil,
-        BadOrNotCommand
+        BadOrNotCommand, 
+
+        CreateMap, 
+        CreateNode, 
+        CreatePath, 
+        DeleteNode, 
+        DeletePath
     }
     public enum ImgType
     {

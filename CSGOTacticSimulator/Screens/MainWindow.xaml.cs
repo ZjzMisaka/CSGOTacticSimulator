@@ -406,6 +406,22 @@ namespace CSGOTacticSimulator
                         case Command.SetCharacterVerticalPosition:
                             SetCharacterVerticalPosition(processedCommand);
                             break;
+
+                        case Command.CreateMap:
+                            CreateMap(processedCommand);
+                            break;
+                        case Command.CreateNode:
+                            CreateNode(processedCommand);
+                            break;
+                        case Command.CreatePath:
+                            CreatePath(processedCommand);
+                            break;
+                        case Command.DeleteNode:
+                            DeleteNode(processedCommand);
+                            break;
+                        case Command.DeletePath:
+                            DeletePath(processedCommand);
+                            break;
                     }
                 }
             }
@@ -417,6 +433,155 @@ namespace CSGOTacticSimulator
             StartTimer();
 
             TraversalAnimations();
+        }
+        private void ReCreateJson(Map map)
+        {
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(map);
+            File.WriteAllText(Path.Combine(tb_select_folder.Text.Trim(), "mapframe", map.mapName + ".json"), json);
+            AddMapsFromFolder(tb_select_folder.Text.Trim());
+            foreach (ComboBoxItem item in cb_select_mapframe.Items)
+            {
+                if (item.Content.ToString() == map.mapName)
+                {
+                    cb_select_mapframe.SelectedItem = item;
+                }
+            }
+        }
+        private void CreateMap(string command)
+        {
+            // create map Mirage
+            string[] splitedCmd = command.Split(' ');
+            string mapName = splitedCmd[2];
+            Map map = new Map(mapName);
+
+            ReCreateJson(map);
+            PreviewFrame();
+        }
+        private void CreateNode(string command)
+        {
+            // create node 100,100 layout 0
+            string mapName = cb_select_mapframe.Text;
+            string[] splitedCmd = command.Split(' ');
+            Point point = VectorHelper.Parse(splitedCmd[2]);
+            int layout = int.Parse(splitedCmd[4]);
+            new MapNode(mapName, point, layout);
+
+            ReCreateJson(GlobalDictionary.mapDic[mapName]);
+            PreviewFrame();
+        }
+        private void CreatePath(string command)
+        {
+            // create path 0 to 1 2 3 4 5 limit allallowed mode twoway distance 100
+            string[] splitedCmd = command.Split(' ');
+            string mapName = cb_select_mapframe.Text;
+            int mapNodeIndex = int.Parse(splitedCmd[2]);
+            Point fromPoint = GlobalDictionary.mapDic[mapName].mapNodes[mapNodeIndex].nodePoint;
+            int fromLayout = GlobalDictionary.mapDic[mapName].mapNodes[mapNodeIndex].layoutNumber;
+            string actionLimitStr = splitedCmd[Array.IndexOf(splitedCmd, "limit") + 1];
+            ActionLimit actionLimit = ActionLimit.AllAllowed;
+            foreach (ActionLimit actionLimitTemp in Enum.GetValues(typeof(ActionLimit)))
+            {
+                if (actionLimitTemp.ToString().ToLower() == actionLimitStr)
+                {
+                    actionLimit = actionLimitTemp;
+                }
+            }
+            string directionModeStr = splitedCmd[Array.IndexOf(splitedCmd, "mode") + 1];
+            DirectionMode directionMode = DirectionMode.OneWay;
+            foreach (DirectionMode directionModeTemp in Enum.GetValues(typeof(DirectionMode)))
+            {
+                if (directionModeTemp.ToString().ToLower() == directionModeStr)
+                {
+                    directionMode = directionModeTemp;
+                }
+            }
+            double distance = -1;
+            int distanceIndex = Array.IndexOf(splitedCmd, "distance");
+            if (distanceIndex != -1)
+            {
+                distance = double.Parse(splitedCmd[Array.IndexOf(splitedCmd, "distance") + 1]);
+            }
+
+            for (int i = 4; i <= Array.IndexOf(splitedCmd, "limit") - 1; ++i)
+            {
+                int neighbourIndex = int.Parse(splitedCmd[i]);
+                new MapNode(mapName, fromPoint, fromLayout, distance, actionLimit, directionMode, GlobalDictionary.mapDic[mapName].mapNodes[neighbourIndex]);
+            }
+
+            ReCreateJson(GlobalDictionary.mapDic[mapName]);
+            PreviewFrame();
+        }
+        private void DeleteNode(string command)
+        {
+            // delete node 0
+            string[] splitedCmd = command.Split(' ');
+            string mapName = cb_select_mapframe.Text;
+
+            int removeIndex = int.Parse(splitedCmd[2]);
+            Map map = GlobalDictionary.mapDic[mapName];
+
+            map.mapNodes.RemoveAt(removeIndex);
+            for(int i = 0; i < map.mapNodes.Count; ++i)
+            {
+                map.mapNodes[i].index = i;
+                map.mapNodes[i].neighbourNodes.Remove(removeIndex);
+                List<int> keyList = new List<int>(map.mapNodes[i].neighbourNodes.Keys);
+                foreach (int key in keyList)
+                {
+                    if (key > removeIndex)
+                    {
+                        map.mapNodes[i].neighbourNodes.Add(key - 1, map.mapNodes[i].neighbourNodes[key]);
+                        map.mapNodes[i].neighbourNodes.Remove(key);
+                    }
+                }
+            }
+
+            ReCreateJson(map);
+            PreviewFrame();
+        }
+        private void DeletePath(string command)
+        {
+            // delete path 0 to 1 2 3 4 5 mode twoway
+            string[] splitedCmd = command.Split(' ');
+            string mapName = cb_select_mapframe.Text;
+
+            int fromIndex = int.Parse(splitedCmd[2]);
+            Map map = GlobalDictionary.mapDic[mapName];
+
+            string directionModeStr = splitedCmd[Array.IndexOf(splitedCmd, "mode") + 1];
+            DirectionMode directionMode = DirectionMode.OneWay;
+            foreach (DirectionMode directionModeTemp in Enum.GetValues(typeof(DirectionMode)))
+            {
+                if (directionModeTemp.ToString().ToLower() == directionModeStr)
+                {
+                    directionMode = directionModeTemp;
+                }
+            }
+
+            if (directionMode != DirectionMode.ReversedOneWay)
+            {
+                for (int i = 4; i <= Array.IndexOf(splitedCmd, "mode") - 1; ++i)
+                {
+                    int deleteIndex = int.Parse(splitedCmd[i]);
+                    map.mapNodes[fromIndex].neighbourNodes.Remove(deleteIndex);
+                }
+            }
+            if (directionMode != DirectionMode.OneWay)
+            {
+                foreach(MapNode mapNode in map.mapNodes)
+                {
+                    for (int i = 4; i <= Array.IndexOf(splitedCmd, "mode") - 1; ++i)
+                    {
+                        if (mapNode.index == int.Parse(splitedCmd[i]))
+                        {
+                            mapNode.neighbourNodes.Remove(fromIndex);
+                        }
+                    }
+                }
+            }
+
+            ReCreateJson(GlobalDictionary.mapDic[mapName]);
+            PreviewFrame();
         }
 
         private void StartTimer()
@@ -614,7 +779,7 @@ namespace CSGOTacticSimulator
             }
             else
             {
-                toMapPoint = VectorHelper.Cast(splitedCmd[4]);
+                toMapPoint = VectorHelper.Parse(splitedCmd[4]);
                 animations.Add(new Animation(number, Helper.Action.Shoot, toMapPoint));
             }
         }
@@ -702,7 +867,7 @@ namespace CSGOTacticSimulator
                     }
                 }
                 startLayout = int.Parse(splitedCmd[6]);
-                startMapPoint = PathfindingHelper.GetNearestNode(VectorHelper.Cast(splitedCmd[4]), startLayout, mapFrame).nodePoint;
+                startMapPoint = PathfindingHelper.GetNearestNode(VectorHelper.Parse(splitedCmd[4]), startLayout, mapFrame).nodePoint;
                 endMapPoint = new Point(double.Parse(splitedCmd[9].Split(',')[0]), double.Parse(splitedCmd[9].Split(',')[1]));
                 endLayout = int.Parse(splitedCmd[11]);
                 volumeLimit = splitedCmd[12] == VolumeLimit.Noisily.ToString().ToLower() ? VolumeLimit.Noisily : VolumeLimit.Quietly;
@@ -822,7 +987,7 @@ namespace CSGOTacticSimulator
             List<Point> mapPoints = new List<Point>();
             for (int i = 5; i < splitedCmd.Count(); ++i)
             {
-                mapPoints.Add(VectorHelper.Cast(splitedCmd[i]));
+                mapPoints.Add(VectorHelper.Parse(splitedCmd[i]));
             }
             animations.Add(new Animation(number, action, new Point(), mapPoints));
         }
@@ -843,7 +1008,7 @@ namespace CSGOTacticSimulator
             List<Point> mapPoints = new List<Point>();
             for (int i = 5; i < splitedCmd.Count(); ++i)
             {
-                mapPoints.Add(VectorHelper.Cast(splitedCmd[i]));
+                mapPoints.Add(VectorHelper.Parse(splitedCmd[i]));
             }
             animations.Add(new Animation(number, action, new Point(), missile, mapPoints));
         }
@@ -1543,32 +1708,69 @@ namespace CSGOTacticSimulator
                 data.Add(new CompletionData("eco"));
                 data.Add(new CompletionData("forcebuy"));
                 data.Add(new CompletionData("quasibuy"));
-                data.Add(new CompletionData("bomb"));
-                data.Add(new CompletionData("defusekit"));
-                data.Add(new CompletionData("alive"));
-                data.Add(new CompletionData("dead"));
-                data.Add(new CompletionData("upper"));
-                data.Add(new CompletionData("lower"));
                 data.Add(new CompletionData("run"));
                 data.Add(new CompletionData("walk"));
                 data.Add(new CompletionData("squat"));
                 data.Add(new CompletionData("teleport"));
-                data.Add(new CompletionData("smoke"));
-                data.Add(new CompletionData("grenade"));
-                data.Add(new CompletionData("flashbang"));
-                data.Add(new CompletionData("firebomb"));
-                data.Add(new CompletionData("decoy"));
                 data.Add(new CompletionData("die"));
                 data.Add(new CompletionData("live"));
-                data.Add(new CompletionData("plant"));
-                data.Add(new CompletionData("defuse"));
                 data.Add(new CompletionData("layout"));
                 data.Add(new CompletionData("auto"));
-                data.Add(new CompletionData("quietly"));
-                data.Add(new CompletionData("noisily"));
                 data.Add(new CompletionData("from"));
+                data.Add(new CompletionData("map"));
+                data.Add(new CompletionData("node"));
+                data.Add(new CompletionData("path"));
+                data.Add(new CompletionData("limit"));
+                data.Add(new CompletionData("mode"));
+                data.Add(new CompletionData("distance"));
+                data.Add(new CompletionData("to"));
+                foreach (Props props in Enum.GetValues(typeof(Props)))
+                {
+                    if (props == Props.Nothing)
+                    {
+                        continue;
+                    }
+                    data.Add(new CompletionData(props.ToString().ToLower()));
+                }
+                foreach (VerticalPosition verticalPosition in Enum.GetValues(typeof(VerticalPosition)))
+                {
+                    data.Add(new CompletionData(verticalPosition.ToString().ToLower()));
+                }
+                foreach (DoWithProps doWithProps in Enum.GetValues(typeof(DoWithProps)))
+                {
+                    data.Add(new CompletionData(doWithProps.ToString().ToLower()));
+                }
+                foreach (Model.Status status in Enum.GetValues(typeof(Model.Status)))
+                {
+                    data.Add(new CompletionData(status.ToString().ToLower()));
+                }
+                foreach (Missile missile in Enum.GetValues(typeof(Missile)))
+                {
+                    if(missile == Missile.Nothing)
+                    {
+                        continue;
+                    }
+                    data.Add(new CompletionData(missile.ToString().ToLower()));
+                }
+                foreach (VolumeLimit volumeLimit in Enum.GetValues(typeof(VolumeLimit)))
+                {
+                    data.Add(new CompletionData(volumeLimit.ToString().ToLower()));
+                }
+                foreach (DirectionMode directionMode in Enum.GetValues(typeof(DirectionMode)))
+                {
+                    data.Add(new CompletionData(directionMode.ToString().ToLower()));
+                }
+                foreach (ActionLimit actionLimit in Enum.GetValues(typeof(ActionLimit)))
+                {
+                    data.Add(new CompletionData(actionLimit.ToString().ToLower()));
+                }
+                foreach (Weapon weapon in Enum.GetValues(typeof(Weapon)))
+                {
+                    data.Add(new CompletionData(weapon.ToString().ToLower()));
+                }
                 completionWindow.Show();
-                completionWindow.Closed += delegate {
+                completionWindow.Closed += delegate 
+                {
                     completionWindow = null;
                 };
             }
@@ -1744,13 +1946,20 @@ namespace CSGOTacticSimulator
             }
             else
             {
-                c_previewcanvas.Children.Clear();
-                CommandHelper.previewCharactorCount = 0;
+                ClearPreviewCanvas();
             }
+        }
+
+        private void ClearPreviewCanvas()
+        {
+            c_previewcanvas.Children.Clear();
+            CommandHelper.previewCharactorCount = 0;
         }
 
         private void PreviewAction()
         {
+            ClearPreviewCanvas();
+
             List<FrameworkElement> previewElements = CommandHelper.GetPreviewElements(te_editor.Text, this);
             foreach (FrameworkElement previewElement in previewElements)
             {
@@ -1760,6 +1969,8 @@ namespace CSGOTacticSimulator
 
         private void PreviewFrame()
         {
+            ClearPreviewCanvas();
+
             Map mapFrame = GlobalDictionary.mapDic[cb_select_mapframe.Text];
 
             List<MapNode> mapNodes = mapFrame.mapNodes;

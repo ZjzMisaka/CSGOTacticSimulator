@@ -69,7 +69,14 @@
   	  <Word>comment</Word>
   	  <Word>layout</Word>
   	  <Word>auto</Word>
-	  <Word>from</Word>
+      <Word>from</Word>
+      <Word>map</Word>
+      <Word>node</Word>
+      <Word>path</Word>
+      <Word>limit</Word>
+      <Word>mode</Word>
+      <Word>distance</Word>
+      <Word>to</Word>
     </Keywords>
 	
   	<Keywords color="Option">
@@ -100,6 +107,52 @@
   	  <Word>defuse</Word>
   	  <Word>noisily</Word>
   	  <Word>quietly</Word>
+      <Word>oneway</Word>
+      <Word>twoway</Word>
+      <Word>reversedoneway</Word>
+      <Word>runjumponly</Word>
+      <Word>runorwalkjump</Word>
+      <Word>jump</Word>
+      <Word>runonly</Word>
+      <Word>walkonly</Word>
+      <Word>squatonly</Word>
+      <Word>runorwalk</Word>
+      <Word>walkorsquat</Word>
+      <Word>runclimborfall</Word>
+      <Word>walkclimb</Word>
+      <Word>allallowed</Word>
+      <Word>glock18</Word>
+      <Word>p2000</Word>
+      <Word>usps</Word>
+      <Word>p250</Word>
+      <Word>tec9</Word>
+      <Word>dualberettas</Word>
+      <Word>fiveseven</Word>
+      <Word>cz75auto</Word>
+      <Word>deserteagle</Word>
+      <Word>galilar</Word>
+      <Word>famas</Word>
+      <Word>ak47</Word>
+      <Word>sg553</Word>
+      <Word>m4a1s</Word>
+      <Word>m4a4</Word>
+      <Word>aug</Word>
+      <Word>ssg08</Word>
+      <Word>awp</Word>
+      <Word>g3sg1</Word>
+      <Word>scar20</Word>
+      <Word>mac10</Word>
+      <Word>ump45</Word>
+      <Word>mp9</Word>
+      <Word>ppbizon</Word>
+      <Word>mp7</Word>
+      <Word>p90</Word>
+      <Word>nova</Word>
+      <Word>sawedoff</Word>
+      <Word>mag7</Word>
+      <Word>xm1014</Word>
+      <Word>m249</Word>
+      <Word>knife</Word>
     </Keywords>
 
     <Keywords color="Symbol">

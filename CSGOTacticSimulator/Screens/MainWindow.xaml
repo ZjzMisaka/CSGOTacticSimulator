@@ -78,7 +78,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
-                <Label x:Name="lb_select_folder" Width="130" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="设定文件夹: " FontSize="20" Foreground="White"></Label>
+                <Label x:Name="lb_select_folder" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="设定文件夹: " FontSize="20" Foreground="White"></Label>
                 <TextBox x:Name="tb_select_folder" Width="200" Height="32" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" TextChanged="tb_select_folder_TextChanged"></TextBox>
                 <Button x:Name="btn_select_folder" Style="{StaticResource Style.TextContentButton}" Width="50" Height="32" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="..." FontSize="20" PreviewMouseLeftButtonUp="btn_select_folder_PreviewMouseLeftButtonUp" ></Button>
             </StackPanel>

@@ -35,7 +35,7 @@ namespace CSGOTacticSimulator.Helper
             return new Point(point.X + addend.X, point.Y + addend.Y);
         }
 
-        static public Point Cast(string pointStr)
+        static public Point Parse(string pointStr)
         {
             pointStr = pointStr.Replace("(", "").Replace(")", "");
             return new Point(Double.Parse(pointStr.Split(',')[0]), Double.Parse(pointStr.Split(',')[1]));
