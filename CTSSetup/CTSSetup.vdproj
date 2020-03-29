@@ -256,12 +256,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3347DDC257394486A7E9804942D9B7ED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_AEDD4250BE3946FCBF9CFC237AA63EA9"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -275,6 +269,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_F2FFB379251762A0B8FCFFE51EDC5EAF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_3347DDC257394486A7E9804942D9B7ED"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -302,6 +302,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -1341,15 +1349,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:CSGOTacticSimulator"
-        "ProductCode" = "8:{3630885B-A62B-4233-9485-C03A1D74697F}"
-        "PackageCode" = "8:{0FA3713B-C6DC-4136-9344-4DA252C6369C}"
+        "ProductCode" = "8:{678F2B9A-76A6-4779-8A3C-4ECCA5F76A4E}"
+        "PackageCode" = "8:{B7EB12EC-0294-4836-AB08-6EC355D80C01}"
         "UpgradeCode" = "8:{BFEFB412-4BF8-42C0-B55D-2D761BA55F79}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.4.0"
         "Manufacturer" = "8:Default Company Name"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
