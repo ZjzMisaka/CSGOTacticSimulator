@@ -4,7 +4,7 @@
     {
       "index": 0,
       "nodePoint": "875.28,331.58",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "1": {
           "actionLimit": "AllAllowed",
@@ -35,7 +35,7 @@
     {
       "index": 1,
       "nodePoint": "875.28,409.6",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "0": {
           "actionLimit": "AllAllowed",
@@ -70,7 +70,7 @@
     {
       "index": 2,
       "nodePoint": "914.12,331.58",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "0": {
           "actionLimit": "AllAllowed",
@@ -109,7 +109,7 @@
     {
       "index": 3,
       "nodePoint": "914.12,409.6",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "0": {
           "actionLimit": "AllAllowed",
@@ -148,7 +148,7 @@
     {
       "index": 4,
       "nodePoint": "875.28,370.59",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "0": {
           "actionLimit": "AllAllowed",
@@ -175,7 +175,7 @@
     {
       "index": 5,
       "nodePoint": "914.12,370.59",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "0": {
           "actionLimit": "AllAllowed",
@@ -202,7 +202,7 @@
     {
       "index": 6,
       "nodePoint": "897.22,482.74",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "1": {
           "actionLimit": "AllAllowed",
@@ -225,7 +225,7 @@
     {
       "index": 7,
       "nodePoint": "903.72,616.03",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "6": {
           "actionLimit": "AllAllowed",
@@ -244,7 +244,7 @@
     {
       "index": 8,
       "nodePoint": "834.37,640.36",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "7": {
           "actionLimit": "AllAllowed",
@@ -259,7 +259,7 @@
     {
       "index": 9,
       "nodePoint": "828.54,733.72",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "8": {
           "actionLimit": "AllAllowed",
@@ -278,7 +278,7 @@
     {
       "index": 10,
       "nodePoint": "811.03,786.23",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "9": {
           "actionLimit": "AllAllowed",
@@ -293,7 +293,7 @@
     {
       "index": 11,
       "nodePoint": "717.68,762.89",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "9": {
           "actionLimit": "AllAllowed",
@@ -308,7 +308,7 @@
     {
       "index": 12,
       "nodePoint": "706.01,803.74",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "10": {
           "actionLimit": "AllAllowed",
@@ -327,7 +327,7 @@
     {
       "index": 13,
       "nodePoint": "668.08,792.07",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "12": {
           "actionLimit": "AllAllowed",
@@ -346,7 +346,7 @@
     {
       "index": 14,
       "nodePoint": "667.83,754.4",
-      "layoutNumber": 1,
+      "layerNumber": 1,
       "neighbourNodes": {
         "13": {
           "actionLimit": "AllAllowed",
@@ -365,7 +365,7 @@
     {
       "index": 15,
       "nodePoint": "638.14,774.18",
-      "layoutNumber": 1,
+      "layerNumber": 1,
       "neighbourNodes": {
         "13": {
           "actionLimit": "AllAllowed",
@@ -388,7 +388,7 @@
     {
       "index": 16,
       "nodePoint": "678.02,720.98",
-      "layoutNumber": 1,
+      "layerNumber": 1,
       "neighbourNodes": {
         "14": {
           "actionLimit": "AllAllowed",
@@ -411,7 +411,7 @@
     {
       "index": 17,
       "nodePoint": "640.87,730.27",
-      "layoutNumber": 1,
+      "layerNumber": 1,
       "neighbourNodes": {
         "14": {
           "actionLimit": "AllAllowed",
@@ -438,7 +438,7 @@
     {
       "index": 18,
       "nodePoint": "678.02,720.98",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "16": {
           "actionLimit": "RunClimbOrFall",
@@ -457,7 +457,7 @@
     {
       "index": 19,
       "nodePoint": "613.01,776.71",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "18": {
           "actionLimit": "AllAllowed",
@@ -472,7 +472,7 @@
     {
       "index": 20,
       "nodePoint": "613.01,725.62",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "18": {
           "actionLimit": "AllAllowed",
@@ -503,7 +503,7 @@
     {
       "index": 21,
       "nodePoint": "636.23,679.18",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "20": {
           "actionLimit": "AllAllowed",
@@ -538,7 +538,7 @@
     {
       "index": 22,
       "nodePoint": "561.92,778.32",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "19": {
           "actionLimit": "AllAllowed",
@@ -561,7 +561,7 @@
     {
       "index": 23,
       "nodePoint": "561.92,718.66",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "20": {
           "actionLimit": "AllAllowed",
@@ -592,7 +592,7 @@
     {
       "index": 24,
       "nodePoint": "494.59,795.28",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "20": {
           "actionLimit": "AllAllowed",
@@ -615,7 +615,7 @@
     {
       "index": 25,
       "nodePoint": "494.59,737.23",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "21": {
           "actionLimit": "AllAllowed",
@@ -642,7 +642,7 @@
     {
       "index": 26,
       "nodePoint": "494.59,674.54",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "20": {
           "actionLimit": "AllAllowed",
@@ -677,7 +677,7 @@
     {
       "index": 27,
       "nodePoint": "527.09,674.54",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "20": {
           "actionLimit": "AllAllowed",
@@ -712,7 +712,7 @@
     {
       "index": 28,
       "nodePoint": "443.5,804.57",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "22": {
           "actionLimit": "AllAllowed",
@@ -731,7 +731,7 @@
     {
       "index": 29,
       "nodePoint": "478.33,628.1",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "26": {
           "actionLimit": "AllAllowed",
@@ -750,7 +750,7 @@
     {
       "index": 30,
       "nodePoint": "510.84,498.07",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "26": {
           "actionLimit": "AllAllowed",
@@ -777,7 +777,7 @@
     {
       "index": 31,
       "nodePoint": "345.98,776.71",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "28": {
           "actionLimit": "AllAllowed",
@@ -792,7 +792,7 @@
     {
       "index": 32,
       "nodePoint": "336.69,570.05",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "31": {
           "actionLimit": "AllAllowed",
@@ -811,7 +811,7 @@
     {
       "index": 33,
       "nodePoint": "329.72,514.32",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "32": {
           "actionLimit": "AllAllowed",
@@ -830,7 +830,7 @@
     {
       "index": 34,
       "nodePoint": "320.44,479.49",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "33": {
           "actionLimit": "AllAllowed",
@@ -845,7 +845,7 @@
     {
       "index": 35,
       "nodePoint": "371.52,535.22",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "32": {
           "actionLimit": "AllAllowed",
@@ -868,7 +868,7 @@
     {
       "index": 36,
       "nodePoint": "388.52,535.22",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "35": {
           "actionLimit": "SquatOnly",
@@ -887,7 +887,7 @@
     {
       "index": 37,
       "nodePoint": "415.64,604.88",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "29": {
           "actionLimit": "AllAllowed",
@@ -906,7 +906,7 @@
     {
       "index": 38,
       "nodePoint": "424.93,472.53",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "36": {
           "actionLimit": "AllAllowed",
@@ -933,7 +933,7 @@
     {
       "index": 39,
       "nodePoint": "459.76,498.07",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "38": {
           "actionLimit": "RunJumpOnly",
@@ -952,7 +952,7 @@
     {
       "index": 40,
       "nodePoint": "434.21,465.56",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "30": {
           "actionLimit": "AllAllowed",
@@ -971,7 +971,7 @@
     {
       "index": 41,
       "nodePoint": "643.19,449.31",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "30": {
           "actionLimit": "AllAllowed",
@@ -994,7 +994,7 @@
     {
       "index": 42,
       "nodePoint": "678.02,391.26",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "41": {
           "actionLimit": "AllAllowed",
@@ -1013,7 +1013,7 @@
     {
       "index": 43,
       "nodePoint": "643.19,414.48",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "41": {
           "actionLimit": "AllAllowed",
@@ -1032,7 +1032,7 @@
     {
       "index": 44,
       "nodePoint": "513.16,414.48",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "41": {
           "actionLimit": "AllAllowed",
@@ -1063,7 +1063,7 @@
     {
       "index": 45,
       "nodePoint": "462.08,442.34",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "44": {
           "actionLimit": "AllAllowed",
@@ -1082,7 +1082,7 @@
     {
       "index": 46,
       "nodePoint": "399.38,437.7",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "38": {
           "actionLimit": "AllAllowed",
@@ -1097,7 +1097,7 @@
     {
       "index": 47,
       "nodePoint": "413.32,433.05",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "46": {
           "actionLimit": "AllAllowed",
@@ -1112,7 +1112,7 @@
     {
       "index": 48,
       "nodePoint": "413.32,425.05",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "47": {
           "actionLimit": "SquatOnly",
@@ -1127,7 +1127,7 @@
     {
       "index": 49,
       "nodePoint": "422.6,384.29",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "48": {
           "actionLimit": "AllAllowed",
@@ -1146,7 +1146,7 @@
     {
       "index": 50,
       "nodePoint": "455.11,384.29",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "49": {
           "actionLimit": "AllAllowed",
@@ -1161,7 +1161,7 @@
     {
       "index": 51,
       "nodePoint": "450.47,363.39",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "50": {
           "actionLimit": "AllAllowed",
@@ -1176,7 +1176,7 @@
     {
       "index": 52,
       "nodePoint": "480.65,344.82",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "44": {
           "actionLimit": "AllAllowed",
@@ -1199,7 +1199,7 @@
     {
       "index": 53,
       "nodePoint": "480.65,328.56",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "52": {
           "actionLimit": "AllAllowed",
@@ -1218,7 +1218,7 @@
     {
       "index": 54,
       "nodePoint": "873.07,293.73",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "0": {
           "actionLimit": "AllAllowed",
@@ -1241,7 +1241,7 @@
     {
       "index": 55,
       "nodePoint": "838.24,258.9",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "2": {
           "actionLimit": "AllAllowed",
@@ -1264,7 +1264,7 @@
     {
       "index": 56,
       "nodePoint": "819.66,224.07",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "2": {
           "actionLimit": "AllAllowed",
@@ -1291,7 +1291,7 @@
     {
       "index": 57,
       "nodePoint": "765.65,206.68",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "56": {
           "actionLimit": "AllAllowed",
@@ -1310,7 +1310,7 @@
     {
       "index": 58,
       "nodePoint": "753.91,253.65",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "56": {
           "actionLimit": "AllAllowed",
@@ -1329,7 +1329,7 @@
     {
       "index": 59,
       "nodePoint": "721.03,277.14",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "42": {
           "actionLimit": "AllAllowed",
@@ -1344,7 +1344,7 @@
     {
       "index": 60,
       "nodePoint": "861.94,542.53",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "1": {
           "actionLimit": "AllAllowed",
@@ -1363,7 +1363,7 @@
     {
       "index": 61,
       "nodePoint": "791.49,580.11",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "60": {
           "actionLimit": "AllAllowed",
@@ -1378,7 +1378,7 @@
     {
       "index": 62,
       "nodePoint": "753.91,652.92",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "61": {
           "actionLimit": "AllAllowed",
@@ -1393,7 +1393,7 @@
     {
       "index": 63,
       "nodePoint": "685.8,659.96",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "62": {
           "actionLimit": "AllAllowed",
@@ -1408,7 +1408,7 @@
     {
       "index": 64,
       "nodePoint": "765.65,185.54",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "57": {
           "actionLimit": "AllAllowed",
@@ -1423,7 +1423,7 @@
     {
       "index": 65,
       "nodePoint": "624.73,178.5",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "64": {
           "actionLimit": "AllAllowed",
@@ -1442,7 +1442,7 @@
     {
       "index": 66,
       "nodePoint": "544.88,220.77",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "65": {
           "actionLimit": "AllAllowed",
@@ -1461,7 +1461,7 @@
     {
       "index": 67,
       "nodePoint": "439.19,220.77",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "66": {
           "actionLimit": "AllAllowed",
@@ -1476,7 +1476,7 @@
     {
       "index": 68,
       "nodePoint": "401.61,211.38",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "67": {
           "actionLimit": "AllAllowed",
@@ -1491,7 +1491,7 @@
     {
       "index": 69,
       "nodePoint": "342.9,201.98",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "68": {
           "actionLimit": "AllAllowed",
@@ -1506,7 +1506,7 @@
     {
       "index": 70,
       "nodePoint": "288.88,201.98",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "69": {
           "actionLimit": "AllAllowed",
@@ -1525,7 +1525,7 @@
     {
       "index": 71,
       "nodePoint": "253.65,194.94",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "70": {
           "actionLimit": "AllAllowed",
@@ -1544,7 +1544,7 @@
     {
       "index": 72,
       "nodePoint": "173.8,201.98",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "71": {
           "actionLimit": "RunJumpOnly",
@@ -1555,7 +1555,7 @@
     {
       "index": 73,
       "nodePoint": "176.15,220.77",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "71": {
           "actionLimit": "AllAllowed",
@@ -1578,7 +1578,7 @@
     {
       "index": 74,
       "nodePoint": "288.88,220.77",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "75": {
           "actionLimit": "AllAllowed",
@@ -1601,7 +1601,7 @@
     {
       "index": 75,
       "nodePoint": "394.57,281.83",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "53": {
           "actionLimit": "AllAllowed",
@@ -1620,7 +1620,7 @@
     {
       "index": 76,
       "nodePoint": "324.11,319.41",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "53": {
           "actionLimit": "AllAllowed",
@@ -1647,7 +1647,7 @@
     {
       "index": 77,
       "nodePoint": "256,385.17",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "76": {
           "actionLimit": "AllAllowed",
@@ -1670,7 +1670,7 @@
     {
       "index": 78,
       "nodePoint": "176.15,382.83",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "73": {
           "actionLimit": "AllAllowed",
@@ -1697,7 +1697,7 @@
     {
       "index": 79,
       "nodePoint": "279.49,453.8",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "34": {
           "actionLimit": "AllAllowed",
@@ -1716,7 +1716,7 @@
     {
       "index": 80,
       "nodePoint": "183.19,443.89",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "78": {
           "actionLimit": "AllAllowed",
@@ -1731,7 +1731,7 @@
     {
       "index": 81,
       "nodePoint": "563.67,251.3",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "65": {
           "actionLimit": "AllAllowed",
@@ -1750,7 +1750,7 @@
     {
       "index": 82,
       "nodePoint": "450.94,265.39",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "40": {
           "actionLimit": "AllAllowed",
@@ -1765,7 +1765,7 @@
     {
       "index": 83,
       "nodePoint": "274.79,288.88",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "74": {
           "actionLimit": "AllAllowed",
@@ -1784,7 +1784,7 @@
     {
       "index": 84,
       "nodePoint": "197.28,291.23",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "73": {
           "actionLimit": "AllAllowed",
@@ -1803,7 +1803,7 @@
     {
       "index": 85,
       "nodePoint": "232.51,253.65",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "73": {
           "actionLimit": "AllAllowed",
@@ -1822,7 +1822,7 @@
     {
       "index": 86,
       "nodePoint": "232.51,333.5",
-      "layoutNumber": 0,
+      "layerNumber": 0,
       "neighbourNodes": {
         "77": {
           "actionLimit": "AllAllowed",

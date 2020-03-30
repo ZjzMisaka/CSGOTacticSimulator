@@ -206,34 +206,34 @@ namespace CSGOTacticSimulator.Helper
                         }
                         string[] splitedCmd = command.Split(' ');
                         Point startMapPoint = new Point();
-                        int startLayout;
+                        int startLayer;
                         Point endMapPoint = new Point();
-                        int endLayout;
+                        int endLayer;
                         VolumeLimit volumeLimit;
                         if (!command.Contains("from"))
                         {
                             characterNumber = int.Parse(splitedCmd[2]);
                             startMapPoint = charactorWndPoints[characterNumber];
-                            startLayout = int.Parse(splitedCmd[4]);
+                            startLayer = int.Parse(splitedCmd[4]);
                             endMapPoint = new Point(double.Parse(splitedCmd[7].Split(',')[0]), double.Parse(splitedCmd[7].Split(',')[1]));
-                            endLayout = int.Parse(splitedCmd[9]);
+                            endLayer = int.Parse(splitedCmd[9]);
                             volumeLimit = splitedCmd[10] == VolumeLimit.Noisily.ToString().ToLower() ? VolumeLimit.Noisily : VolumeLimit.Quietly;
                         }
                         else
                         {
                             characterNumber = int.Parse(splitedCmd[2]);
-                            startLayout = int.Parse(splitedCmd[6]);
-                            startMapPoint = PathfindingHelper.GetNearestNode(VectorHelper.Parse(splitedCmd[4]), startLayout, mapFrame).nodePoint;
+                            startLayer = int.Parse(splitedCmd[6]);
+                            startMapPoint = PathfindingHelper.GetNearestNode(VectorHelper.Parse(splitedCmd[4]), startLayer, mapFrame).nodePoint;
                             endMapPoint = new Point(double.Parse(splitedCmd[9].Split(',')[0]), double.Parse(splitedCmd[9].Split(',')[1]));
-                            endLayout = int.Parse(splitedCmd[11]);
+                            endLayer = int.Parse(splitedCmd[11]);
                             volumeLimit = splitedCmd[12] == VolumeLimit.Noisily.ToString().ToLower() ? VolumeLimit.Noisily : VolumeLimit.Quietly;
                         }
 
                         // 寻找与起始点最近的同层的节点
-                        MapNode startNode = PathfindingHelper.GetNearestNode(startMapPoint, startLayout, mapFrame);
+                        MapNode startNode = PathfindingHelper.GetNearestNode(startMapPoint, startLayer, mapFrame);
                         string startCommand = "action character" + " " + characterNumber + " " + "move" + " " + (volumeLimit == VolumeLimit.Noisily ? "run" : "walk") + " " + startNode.nodePoint;
                         // 寻找与结束点最近的同层的节点
-                        MapNode endNode = PathfindingHelper.GetNearestNode(endMapPoint, endLayout, mapFrame);
+                        MapNode endNode = PathfindingHelper.GetNearestNode(endMapPoint, endLayer, mapFrame);
 
                         List<MapNode> mapPathNodes = PathfindingHelper.GetMapPathNodes(startNode, endNode, mapFrame, volumeLimit);
 

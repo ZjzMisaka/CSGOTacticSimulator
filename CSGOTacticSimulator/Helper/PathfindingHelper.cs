@@ -10,13 +10,13 @@ namespace CSGOTacticSimulator.Helper
 {
     static public class PathfindingHelper
     {
-        static public MapNode GetNearestNode(Point startMapPoint, int startLayout, Map mapFrame)
+        static public MapNode GetNearestNode(Point startMapPoint, int startLayer, Map mapFrame)
         {
             double minimumDistance = -1;
             MapNode startNode = null;
             foreach (MapNode mapNode in mapFrame.mapNodes)
             {
-                if (startLayout != mapNode.layoutNumber)
+                if (startLayer != mapNode.layerNumber)
                 {
                     continue;
                 }
@@ -83,7 +83,7 @@ namespace CSGOTacticSimulator.Helper
                             openList.Add(key);
                             mapNodes[key].H = VectorHelper.GetDistance(mapNodes[key].nodePoint, endNode.nodePoint);
                             // F暂且以二维平面距离计算, 与高度层数和移速和移动方式无关
-                            if (minFNode.nodePoint == mapNodes[key].nodePoint && minFNode.layoutNumber != mapNodes[key].layoutNumber)
+                            if (minFNode.nodePoint == mapNodes[key].nodePoint && minFNode.layerNumber != mapNodes[key].layerNumber)
                             {
                                 mapNodes[key].G = minFNode.G;
                             }
@@ -96,7 +96,7 @@ namespace CSGOTacticSimulator.Helper
                         if (openList.Contains(key))
                         {
                             // F暂且以二维平面距离计算, 与高度层数和移速和移动方式无关
-                            if (minFNode.nodePoint == mapNodes[key].nodePoint && minFNode.layoutNumber != mapNodes[key].layoutNumber)
+                            if (minFNode.nodePoint == mapNodes[key].nodePoint && minFNode.layerNumber != mapNodes[key].layerNumber)
                             {
                                 //DO NOTHING, mapNodes[key].g == minFNode.g;
                                 mapNodes[key].parent = minFNode;

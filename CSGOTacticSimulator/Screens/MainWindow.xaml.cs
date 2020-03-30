@@ -459,12 +459,12 @@ namespace CSGOTacticSimulator
         }
         private void CreateNode(string command)
         {
-            // create node 100,100 layout 0
+            // create node 100,100 layer 0
             string mapName = cb_select_mapframe.Text;
             string[] splitedCmd = command.Split(' ');
             Point point = VectorHelper.Parse(splitedCmd[2]);
-            int layout = int.Parse(splitedCmd[4]);
-            new MapNode(mapName, point, layout);
+            int layer = int.Parse(splitedCmd[4]);
+            new MapNode(mapName, point, layer);
 
             ReCreateJson(GlobalDictionary.mapDic[mapName]);
             PreviewFrame();
@@ -476,7 +476,7 @@ namespace CSGOTacticSimulator
             string mapName = cb_select_mapframe.Text;
             int mapNodeIndex = int.Parse(splitedCmd[2]);
             Point fromPoint = GlobalDictionary.mapDic[mapName].mapNodes[mapNodeIndex].nodePoint;
-            int fromLayout = GlobalDictionary.mapDic[mapName].mapNodes[mapNodeIndex].layoutNumber;
+            int fromLayer = GlobalDictionary.mapDic[mapName].mapNodes[mapNodeIndex].layerNumber;
             string actionLimitStr = splitedCmd[Array.IndexOf(splitedCmd, "limit") + 1];
             ActionLimit actionLimit = ActionLimit.AllAllowed;
             foreach (ActionLimit actionLimitTemp in Enum.GetValues(typeof(ActionLimit)))
@@ -505,7 +505,7 @@ namespace CSGOTacticSimulator
             for (int i = 4; i <= Array.IndexOf(splitedCmd, "limit") - 1; ++i)
             {
                 int neighbourIndex = int.Parse(splitedCmd[i]);
-                new MapNode(mapName, fromPoint, fromLayout, distance, actionLimit, directionMode, GlobalDictionary.mapDic[mapName].mapNodes[neighbourIndex]);
+                new MapNode(mapName, fromPoint, fromLayer, distance, actionLimit, directionMode, GlobalDictionary.mapDic[mapName].mapNodes[neighbourIndex]);
             }
 
             ReCreateJson(GlobalDictionary.mapDic[mapName]);
@@ -823,8 +823,8 @@ namespace CSGOTacticSimulator
         }
         private void ActionCharacterAutoMove(string command)
         {
-            // action character 1 layout 0 auto move 0,0 layout 0 [quietly / noisily]
-            // action character 1 from 0,0 layout 0 auto move 0,0 layout 0 [quietly / noisily]
+            // action character 1 layer 0 auto move 0,0 layer 0 [quietly / noisily]
+            // action character 1 from 0,0 layer 0 auto move 0,0 layer 0 [quietly / noisily]
             List<string> replaceCommandList = new List<string>();
 
             Map mapFrame = GlobalDictionary.mapDic[cb_select_mapframe.Text];
@@ -836,9 +836,9 @@ namespace CSGOTacticSimulator
             int characterNumber;
             Point startMapPoint = new Point();
             Character character = null;
-            int startLayout;
+            int startLayer;
             Point endMapPoint = new Point();
-            int endLayout;
+            int endLayer;
             VolumeLimit volumeLimit;
             if (!command.Contains("from"))
             {
@@ -851,9 +851,9 @@ namespace CSGOTacticSimulator
                         character = characterTemp;
                     }
                 }
-                startLayout = int.Parse(splitedCmd[4]);
+                startLayer = int.Parse(splitedCmd[4]);
                 endMapPoint = new Point(double.Parse(splitedCmd[7].Split(',')[0]), double.Parse(splitedCmd[7].Split(',')[1]));
-                endLayout = int.Parse(splitedCmd[9]);
+                endLayer = int.Parse(splitedCmd[9]);
                 volumeLimit = splitedCmd[10] == VolumeLimit.Noisily.ToString().ToLower() ? VolumeLimit.Noisily : VolumeLimit.Quietly;
             }
             else
@@ -866,20 +866,20 @@ namespace CSGOTacticSimulator
                         character = characterTemp;
                     }
                 }
-                startLayout = int.Parse(splitedCmd[6]);
-                startMapPoint = PathfindingHelper.GetNearestNode(VectorHelper.Parse(splitedCmd[4]), startLayout, mapFrame).nodePoint;
+                startLayer = int.Parse(splitedCmd[6]);
+                startMapPoint = PathfindingHelper.GetNearestNode(VectorHelper.Parse(splitedCmd[4]), startLayer, mapFrame).nodePoint;
                 endMapPoint = new Point(double.Parse(splitedCmd[9].Split(',')[0]), double.Parse(splitedCmd[9].Split(',')[1]));
-                endLayout = int.Parse(splitedCmd[11]);
+                endLayer = int.Parse(splitedCmd[11]);
                 volumeLimit = splitedCmd[12] == VolumeLimit.Noisily.ToString().ToLower() ? VolumeLimit.Noisily : VolumeLimit.Quietly;
             }
 
             // 寻找与起始点最近的同层的节点
-            MapNode startNode = PathfindingHelper.GetNearestNode(startMapPoint, startLayout, mapFrame);
+            MapNode startNode = PathfindingHelper.GetNearestNode(startMapPoint, startLayer, mapFrame);
             string startCommand = "action character" + " " + characterNumber + " " + "move" + " " + (volumeLimit == VolumeLimit.Noisily ? "run" : "walk") + " " + startNode.nodePoint;
             ActionCharacterMove(startCommand);
             replaceCommandList.Add(startCommand);
             // 寻找与结束点最近的同层的节点
-            MapNode endNode = PathfindingHelper.GetNearestNode(endMapPoint, endLayout, mapFrame);
+            MapNode endNode = PathfindingHelper.GetNearestNode(endMapPoint, endLayer, mapFrame);
             string endCommand = "action character" + " " + characterNumber + " " + "move" + " " + (volumeLimit == VolumeLimit.Noisily ? "run" : "walk") + " " + endMapPoint;
 
             List<MapNode> mapPathNodes = PathfindingHelper.GetMapPathNodes(startNode, endNode, mapFrame, volumeLimit);
@@ -1714,7 +1714,7 @@ namespace CSGOTacticSimulator
                 data.Add(new CompletionData("teleport"));
                 data.Add(new CompletionData("die"));
                 data.Add(new CompletionData("live"));
-                data.Add(new CompletionData("layout"));
+                data.Add(new CompletionData("layer"));
                 data.Add(new CompletionData("auto"));
                 data.Add(new CompletionData("from"));
                 data.Add(new CompletionData("map"));

@@ -39,12 +39,12 @@ namespace CSGOTacticSimulator.Model
         {
             nodePoint = point;
             neighbourNodes = new Dictionary<int, WayInfo>();
-            this.layoutNumber = layerNumber;
+            this.layerNumber = layerNumber;
             bool isAlreadyInDic = false;
             for (int i = 0; i < GlobalDictionary.mapDic[mapName].mapNodes.Count; ++i)
             {
                 MapNode mapNode = GlobalDictionary.mapDic[mapName].mapNodes[i];
-                if (mapNode.nodePoint == this.nodePoint && mapNode.layoutNumber == this.layoutNumber)
+                if (mapNode.nodePoint == this.nodePoint && mapNode.layerNumber == this.layerNumber)
                 {
                     this.index = mapNode.index;
                     this.neighbourNodes = mapNode.neighbourNodes;
@@ -80,7 +80,7 @@ namespace CSGOTacticSimulator.Model
                     for (int i = 0; i < GlobalDictionary.mapDic[mapName].mapNodes.Count; ++i)
                     {
                         MapNode mapNode = GlobalDictionary.mapDic[mapName].mapNodes[i];
-                        if (mapNode.nodePoint == neighbourNode.nodePoint && mapNode.layoutNumber == neighbourNode.layoutNumber)
+                        if (mapNode.nodePoint == neighbourNode.nodePoint && mapNode.layerNumber == neighbourNode.layerNumber)
                         {
                             wayInfo = new WayInfo(moveMode, point == neighbourNode.nodePoint ? distance : VectorHelper.GetDistance(point, neighbourNode.nodePoint));
                             if (!GlobalDictionary.mapDic[mapName].mapNodes[i].neighbourNodes.ContainsKey(GlobalDictionary.mapDic[mapName].mapNodes.IndexOf(this)))
@@ -97,7 +97,7 @@ namespace CSGOTacticSimulator.Model
         {
             for(int i = 0; i < mapNodes.Count; ++i)
             {
-                if(this.nodePoint == mapNodes[i].nodePoint && this.layoutNumber == mapNodes[i].layoutNumber)
+                if(this.nodePoint == mapNodes[i].nodePoint && this.layerNumber == mapNodes[i].layerNumber)
                 {
                     mapNodes[i] = this;
                     return;
@@ -110,7 +110,7 @@ namespace CSGOTacticSimulator.Model
 
         public Point nodePoint;
 
-        public int layoutNumber;
+        public int layerNumber;
 
         public Dictionary<int, WayInfo> neighbourNodes;
 
