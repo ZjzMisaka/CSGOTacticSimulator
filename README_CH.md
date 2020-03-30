@@ -24,9 +24,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |----|----|----|
 |set entirety speed {比率值}|设置当前脚本使用的整体速度比率值, 若不设定则使用默认值|√|
 |set camp [t, ct]|设置当前队伍|√|
-|create team [ct, t] [pistol, eco, forcebuy, quasibuy]|生成队伍在出生点, 并自动配备武器与投掷物|×|
 |create character [t, ct] {坐标}|在指定的坐标生成一名角色|√|
-|delete character {角色编号}|删除一个角色|×|
 |give character {角色编号} weapon {武器}|为某个角色配备指定武器|√|
 |give character {角色编号} missile {投掷物} <{投掷物} ...... {投掷物}>|为某个角色配备指定投掷物|√|
 |give character {角色编号} props [bomb / defusekit]|为某个角色配备炸弹 / 拆弹器|√|
