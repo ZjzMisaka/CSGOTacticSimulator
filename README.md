@@ -52,7 +52,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |delete path {Node number} to {Node number} <{Node number} ...... {Node number}> mode [oneway / reversedoneway / twoway]|Delete a path|√|
 ## WAYFINDING
 ### LAYER
-- The number of layers represents the number of layers of the two-dimensional coordinates of the currently represented point on the map, 例如MirageA包点和A二楼层数都为0, 而A二楼平台上层数为1, 平台下层数为0. 
+- The number of layers represents the number of layers of the two-dimensional coordinates of the currently represented point on the map, Take A side of Mirrage as an example: Palace and A Bomb Site have a layout value of 0, while Balcony has a layout value of 1, and Under Balcony has a layout value of 0.
 - quietly / noisily represents whether the pathfinding movement can make a sound. If quietly is selected, even if the path allows running, it will move silently; if the path only allows running and jumping, the path will be bypassed.
 ## Drawing function
 - You can hold down the LControl key at any time and use left button to draw. 
