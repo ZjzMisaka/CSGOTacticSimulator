@@ -26,8 +26,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |----|----|----|
 |set entirety speed {Ratio value}|Sets the overall speed ratio value used by the current script. If not set, the default value is used.|√|
 |set camp [t, ct]|Set current team|√|
-|create team [ct, t] [pistol, eco, forcebuy, quasibuy]|Generate a team at the birth point and automatically equip weapons and projectiles
-|×|
+|create team [ct, t] [pistol, eco, forcebuy, quasibuy]|Generate a team at the birth point and automatically equip weapons and projectiles|×|
 |create character [t, ct] {Coordinate}|Generate a character at the specified coordinates|√|
 |delete character {Character number}|Delete a character|×|
 |give character {Character number} weapon {Weapon}|Assign a weapon to a character|√|
