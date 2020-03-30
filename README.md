@@ -34,7 +34,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |give character {Character number} props [bomb / defusekit]|Equip a Character with a Bomb / Defusekit|√|
 |set character {Character number} status [alive / dead]|Set the survival status of a role|√|
 |set character {Character number} vertical position [upper / lower]|Set to show a character above or below the 3D map|√|
-|action character {Character number} <from {Coordinate}> layout {Starting layout} auto move {Finishing coordinates} layout {Finishing layer} [quietly / noisily]|Pathfinding|√|
+|action character {Character number} <from {Coordinate}> layer {Starting layer} auto move {Finishing coordinates} layer {Finishing layer} [quietly / noisily]|Pathfinding|√|
 |action character {Character number} move [run / walk / squat / teleport] {Coordinate} <{Coordinate} ...... {Coordinate}>|Move character to a place|√ (Except teleport)|
 |action character {Character number} throw [smoke / grenade / flashbang / firebomb / decoy] {Coordinate} <{Coordinate} ...... {Coordinate}>|Throw a missile to a certain coordinate|√|
 |action character {Character number} shoot [{Coordinate} / {Goal number} [die / live]]|Shoot to a coordinate or target|√|
@@ -46,13 +46,13 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |Grammar|Explanation|Implementation or Not|
 |----|----|----|
 |create map {Map name}|Create a new map frame|√|
-|create node {Coordinate} layout {Layout}|Create a new node|√|
+|create node {Coordinate} layer {layer}|Create a new node|√|
 |create path {Node number} to {Node number} <{Node number} ...... {Node number}> limit {Movement limits} mode [oneway / reversedoneway / twoway] distance {Distance}|Create a path|√|
 |delete node {Node number}|Delete a node|√|
 |delete path {Node number} to {Node number} <{Node number} ...... {Node number}> mode [oneway / reversedoneway / twoway]|Delete a path|√|
 ## WAYFINDING
 ### LAYER
-- The number of layers represents the number of layers of the two-dimensional coordinates of the currently represented point on the map, Take A side of Mirrage as an example: Palace and A Bomb Site have a layout value of 0, while Balcony has a layout value of 1, and Under Balcony has a layout value of 0.
+- The number of layers represents the number of layers of the two-dimensional coordinates of the currently represented point on the map, Take A side of Mirrage as an example: Palace and A Bomb Site have a layer value of 0, while Balcony has a layer value of 1, and Under Balcony has a layer value of 0.
 - quietly / noisily represents whether the pathfinding movement can make a sound. If quietly is selected, even if the path allows running, it will move silently; if the path only allows running and jumping, the path will be bypassed.
 ## Drawing function
 - You can hold down the LControl key at any time and use left button to draw. 
