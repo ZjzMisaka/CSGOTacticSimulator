@@ -26,9 +26,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |----|----|----|
 |set entirety speed {Ratio value}|Sets the overall speed ratio value used by the current script. If not set, the default value is used.|√|
 |set camp [t, ct]|Set current team|√|
-|create team [ct, t] [pistol, eco, forcebuy, quasibuy]|Generate a team at the birth point and automatically equip weapons and projectiles|×|
 |create character [t, ct] {Coordinate}|Generate a character at the specified coordinates|√|
-|delete character {Character number}|Delete a character|×|
 |give character {Character number} weapon {Weapon}|Assign a weapon to a character|√|
 |give character {Character number} missile {missile} <{missile} ...... {missile}>|Assign missiles to a character|√|
 |give character {Character number} props [bomb / defusekit]|Equip a Character with a Bomb / Defusekit|√|
@@ -38,11 +36,11 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |action character {Character number} move [run / walk / squat / teleport] {Coordinate} <{Coordinate} ...... {Coordinate}>|Move character to a place|√ (Except teleport)|
 |action character {Character number} throw [smoke / grenade / flashbang / firebomb / decoy] {Coordinate} <{Coordinate} ...... {Coordinate}>|Throw a missile to a certain coordinate|√|
 |action character {Character number} shoot [{Coordinate} / {Goal number} [die / live]]|Shoot to a coordinate or target|√|
-|action character {Character number} do [plant, defuse]|plant / defuse|√|
+|action character {Character number} do [plant, defuse]|Plant / defuse|√|
 |action character {Character number} wait until {Seconds}|Wait in place until the specified time|√|
 |action character {Character number} wait for {Seconds}|Wait in place for a specified number of seconds|√|
 |create comment {Seconds} {Coordinate} {Content}|Create a callout at a specified time and place|×|
-#### ABOUT MAP fRAME CREATION AND MODIFICATION
+#### ABOUT MAP FRAME CREATION AND MODIFICATION
 |Grammar|Explanation|Implementation or Not|
 |----|----|----|
 |create map {Map name}|Create a new map frame|√|
@@ -54,7 +52,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 ### LAYER
 - The number of layers represents the number of layers of the two-dimensional coordinates of the currently represented point on the map, Take A side of Mirrage as an example: Palace and A Bomb Site have a layer value of 0, while Balcony has a layer value of 1, and Under Balcony has a layer value of 0.
 - quietly / noisily represents whether the pathfinding movement can make a sound. If quietly is selected, even if the path allows running, it will move silently; if the path only allows running and jumping, the path will be bypassed.
-## Drawing function
+## DRAWING FUNCTION
 - You can hold down the LControl key at any time and use left button to draw. 
 ### RELATED HOT KEYS
 |Hot keys|Effect|
@@ -66,7 +64,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |LControl + A|Choose transparency|
 |LControl + Delete|Clear canvas|
 ## TODO
-## Use of external resources
+## USE OF EXTERNAL RESOURCES
 |Resource|License|
 |----|----|
 |[icsharpcode/AvalonEdit](https://github.com/icsharpcode/AvalonEdit)|MIT|
