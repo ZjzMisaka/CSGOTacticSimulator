@@ -62,10 +62,12 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |LControl + A|选择透明度|
 |LControl + Delete|清除画布|
 ## TODO
+- 可视化地生成命令
 ## 外部资源使用
 |资源|许可证|
 |----|----|
 |[icsharpcode/AvalonEdit](https://github.com/icsharpcode/AvalonEdit)|MIT|
 |[JamesNK/Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)|MIT|
+|[sdl/Multiselect-ComboBox](https://github.com/sdl/Multiselect-ComboBox)|Apache-2.0|
 |[ZjzMisaka/CustomizableMessageBox](https://github.com/ZjzMisaka/CustomizableMessageBox)|WTFPL|
 |[simpleradar/CSGOMaps](http://simpleradar.com/)|Unknown|
