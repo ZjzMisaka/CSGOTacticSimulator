@@ -15,10 +15,10 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 - You can edit the map frame in the program (for pathfinding).
 ## SCRIPT
 ### PROMPT
-- Input box supports syntax highlighting, auto-completion, search.
+- The input box is a full-fledged script editor (Thanks to AvalonEdit), and it is still being improved. It supports syntax highlighting, auto-completion, and searching.
 - You can use a backslash at the end of a line for multi-line input commands.
 - Each script performs an action on behalf of a character, such as buying (instantly), moving (time-consuming), waiting.
-- The order between the characters in the script does not affect the final effect.For example, you can write the scripts of the actions of a character at the same time, or you can write the scripts of multiple characters at the same time.
+- The order between the characters in the script does not affect the final effect. For example, you can write the scripts of the actions of one character at the same time, or you can write the scripts of multiple characters at the same time.
 - You can add "-" before the script command and other statements to comment the content after this line.
 ### QUERY TABLE
 #### ABOUT TACTIC SIMULATION
