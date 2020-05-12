@@ -112,15 +112,22 @@ namespace CSGOTacticSimulator.Global
         static public string exePath = AppDomain.CurrentDomain.BaseDirectory;
         static public string basePath = exePath.Substring(0, exePath.LastIndexOf("bin"));
 
-        static public int characterWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "Character"));
-        static public int missileWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "Missile"));
-        static public int propsWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "Props"));
-        static public int missileEffectWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "MissileEffect"));
-        static public int explosionEffectWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "ExplosionEffect"));
-        static public int animationFreshTime = int.Parse(IniHelper.ReadIni("Setting", "AnimationFreshTime"));
+        private static int characterWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "Character"));
+        private static int missileWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "Missile"));
+        private static int propsWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "Props"));
+        private static int missileEffectWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "MissileEffect"));
+        private static int explosionEffectWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "ExplosionEffect"));
+        static public int animationFreshTime = int.Parse(IniHelper.ReadIni("Setting", "AnimationFreshTime"));   // 刷新间隔
         static public double walkToRunRatio = double.Parse(IniHelper.ReadIni("Ratio", "WalkToRun"));
         static public double squatToRunRatio = double.Parse(IniHelper.ReadIni("Ratio", "SquatToRun"));
         static public double speedController = double.Parse(IniHelper.ReadIni("Ratio", "Entirety"));
+        static public double imageRatio = 1;
+
+        public static int CharacterWidthAndHeight { get => (int)(characterWidthAndHeight * imageRatio); set => characterWidthAndHeight = value; }
+        public static int MissileWidthAndHeight { get => (int)(missileWidthAndHeight * imageRatio); set => missileWidthAndHeight = value; }
+        public static int PropsWidthAndHeight { get => (int)(propsWidthAndHeight * imageRatio); set => propsWidthAndHeight = value; }
+        public static int MissileEffectWidthAndHeight { get => (int)(missileEffectWidthAndHeight * imageRatio); set => missileEffectWidthAndHeight = value; }
+        public static int ExplosionEffectWidthAndHeight { get => (int)(explosionEffectWidthAndHeight * imageRatio); set => explosionEffectWidthAndHeight = value; }
 
         static public string mapListPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "MapList")).Replace("/", "\\");
         static public string highlightPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Highlight")).Replace("/", "\\");
@@ -157,5 +164,7 @@ namespace CSGOTacticSimulator.Global
             TitleFontColor = new MessageBoxColor("#FFCBBEBE"),
             MessageFontColor = new MessageBoxColor(Colors.White),
         };
+
+        
     }
 }

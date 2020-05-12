@@ -76,8 +76,8 @@ namespace CSGOTacticSimulator.Model
         {
             CharacterImg.MouseEnter += wnd.ShowCharacterInfos;
 
-            CharacterImg.Width = GlobalDictionary.characterWidthAndHeight;
-            CharacterImg.Height = GlobalDictionary.characterWidthAndHeight;
+            CharacterImg.Width = GlobalDictionary.CharacterWidthAndHeight;
+            CharacterImg.Height = GlobalDictionary.CharacterWidthAndHeight;
 
             this.IsFriendly = isFriendly;
             this.IsT = isT;

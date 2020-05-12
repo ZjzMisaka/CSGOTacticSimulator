@@ -3,11 +3,15 @@ using CSGOTacticSimulator.Model;
 using CustomizableMessageBox;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
@@ -151,6 +155,9 @@ namespace CSGOTacticSimulator.Helper
             }
         }
 
+        private static MouseEventHandler objMouseMove;
+        private static bool isFirstClick = true;
+
         static public List<FrameworkElement> GetPreviewElements(string commandText, MainWindow mainWindow)
         {
             List<FrameworkElement> previewElements = new List<FrameworkElement>();
@@ -186,14 +193,54 @@ namespace CSGOTacticSimulator.Helper
                         {
                             characterImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/ENEMY_ALIVE_UPPER.png")));
                         }
-                        characterImg.Width = GlobalDictionary.characterWidthAndHeight;
-                        characterImg.Height = GlobalDictionary.characterWidthAndHeight;
+                        characterImg.Width = GlobalDictionary.CharacterWidthAndHeight;
+                        characterImg.Height = GlobalDictionary.CharacterWidthAndHeight;
                         Point charactorWndPoint = mainWindow.GetWndPoint(mapPoint, ImgType.Character);
                         Canvas.SetLeft(characterImg, charactorWndPoint.X);
                         Canvas.SetTop(characterImg, charactorWndPoint.Y);
-                        characterImg.Tag = "Number: " + characterNumber + "\n" + "Posisiion: " + mapPoint.ToString();
-                        ++characterNumber;
+                        characterImg.Tag = "Number: " + characterNumber + "\n" + "Posision: " + mapPoint.ToString();
                         characterImg.MouseEnter += mainWindow.ShowCharacterImgInfos;
+                        objMouseMove = delegate (object sender, MouseEventArgs e)
+                        {
+                            Point mousePosition = e.GetPosition(mainWindow.i_map);
+                            mainWindow.mouseMovePathInPreview.Add(new Point((mousePosition.X / GlobalDictionary.imageRatio), (mousePosition.Y / GlobalDictionary.imageRatio)));
+
+                            if(Keyboard.IsKeyDown(Key.LeftCtrl) && isFirstClick)
+                            {
+                                mainWindow.keyDownInPreview.Add(new Point((mousePosition.X / GlobalDictionary.imageRatio), (mousePosition.Y / GlobalDictionary.imageRatio)));
+                                isFirstClick = false;
+                            }
+                            if (Keyboard.IsKeyUp(Key.LeftCtrl))
+                            {
+                                isFirstClick = true;
+                            }
+                        };
+                        characterImg.MouseLeftButtonDown += delegate (object sender, MouseButtonEventArgs e)
+                        {
+                            e.Handled = true;
+                            ((UIElement)e.Source).CaptureMouse();
+                            mainWindow.mouseMovePathInPreview.Clear();
+                            mainWindow.keyDownInPreview.Clear();
+                            characterImg.MouseMove += objMouseMove;
+                        };
+                        characterImg.MouseLeftButtonUp += delegate (object sender, MouseButtonEventArgs e)
+                        {
+                            ((UIElement)e.Source).ReleaseMouseCapture();
+                            characterImg.MouseMove -= objMouseMove;
+
+                            if (mainWindow.mouseMovePathInPreview.Count > 0)
+                            {
+                                string tag = characterImg.Tag.ToString();
+                                int number = int.Parse(tag.Substring(tag.IndexOf("Number: ") + 8, tag.IndexOf("Posision: ") - (tag.IndexOf("Number: ") + 9)));
+                                mainWindow.CreateCommandInWindow(number, new Point(Math.Round((e.GetPosition(mainWindow.i_map).X / GlobalDictionary.imageRatio), 2), Math.Round((e.GetPosition(mainWindow.i_map).Y / GlobalDictionary.imageRatio), 2)));
+                            }
+                        };
+                        
+                        characterImg.MouseRightButtonDown += delegate (object sender, MouseButtonEventArgs e)
+                        {
+                            mainWindow.CreateCommandInWindow(characterNumber, new Point());
+                        };
+                        ++characterNumber;
                         previewElements.Add(characterImg);
                         charactorWndPoints.Add(previewCharactorCount++, mainWindow.GetWndPoint(mapPoint, ImgType.Nothing));
                     }
@@ -305,6 +352,42 @@ namespace CSGOTacticSimulator.Helper
                 }
             }
             return previewElements;
+        }
+
+        static private void ClearEvent(FrameworkElement frameworkElement, string eventname)
+        {
+            if (frameworkElement == null) return;
+            if (string.IsNullOrEmpty(eventname)) return;
+
+            BindingFlags mPropertyFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic;
+            BindingFlags mFieldFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase | BindingFlags.Static;
+            Type controlType = frameworkElement.GetType();
+            PropertyInfo propertyInfo = controlType.GetProperty("Events", mPropertyFlags);
+            if (propertyInfo == null)
+            {
+                Type baseType = frameworkElement.GetType(); ;
+                while ((baseType = baseType.BaseType) != typeof(object) && propertyInfo == null)
+                {
+                    propertyInfo = baseType.GetProperty("Events", mPropertyFlags);
+                }
+            }
+            EventHandlerList eventHandlerList = (EventHandlerList)propertyInfo.GetValue(frameworkElement, null);
+            FieldInfo fieldInfo = frameworkElement.GetType().GetField("Event_" + eventname, mFieldFlags);
+            if (fieldInfo == null)
+            {
+                Type baseType = frameworkElement.GetType();
+                while ((baseType = baseType.BaseType) != typeof(object) && fieldInfo == null)
+                {
+                    fieldInfo = baseType.GetField("Event_" + eventname, mFieldFlags);
+                }
+            }
+            Delegate d = eventHandlerList[fieldInfo.GetValue(frameworkElement)];
+
+            if (d == null) return;
+            EventInfo eventInfo = controlType.GetEvent(eventname);
+
+            foreach (Delegate dx in d.GetInvocationList())
+                eventInfo.RemoveEventHandler(frameworkElement, dx);
         }
     }
 }

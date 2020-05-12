@@ -26,6 +26,8 @@ using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using Path = System.IO.Path;
+using Sdl.MultiSelectComboBox.Themes.Generic;
+using Sdl.MultiSelectComboBox.EventArgs;
 
 namespace CSGOTacticSimulator
 {
@@ -37,12 +39,13 @@ namespace CSGOTacticSimulator
         public List<Character> characters = new List<Character>();
         public List<Animation> animations = new List<Animation>();
         private Camp currentCamp;
-        double ratio = 1;
-        double localSpeedController = -1;
-        bool bombDefused = false;
-        CompletionWindow completionWindow;
-        Point mouseLastPosition = new Point(-1, -1);
-        Selector selector = null;
+        private double localSpeedController = -1;
+        private bool bombDefused = false;
+        private CompletionWindow completionWindow;
+        private Point mouseLastPosition = new Point(-1, -1);
+        private Selector selector = null;
+        public List<Point> mouseMovePathInPreview = new List<Point>();
+        public List<Point> keyDownInPreview = new List<Point>();
 
         private List<Thread> listThread = new List<Thread>();
 
@@ -134,7 +137,7 @@ namespace CSGOTacticSimulator
         private void i_map_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
-            Point pointInMap = new Point(Math.Round((e.GetPosition(i_map).X / ratio), 2), Math.Round((e.GetPosition(i_map).Y / ratio), 2));
+            Point pointInMap = new Point(Math.Round((e.GetPosition(i_map).X / GlobalDictionary.imageRatio), 2), Math.Round((e.GetPosition(i_map).Y / GlobalDictionary.imageRatio), 2));
             tb_point.Text = pointInMap.ToString();
         }
 
@@ -238,7 +241,7 @@ namespace CSGOTacticSimulator
         {
             if (i_map.Source != null)
             {
-                ratio = i_map.ActualWidth / i_map.Source.Width;
+                GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
             }
 
             foreach (Character character in characters)
@@ -264,7 +267,7 @@ namespace CSGOTacticSimulator
 
         public Point GetWndPoint(Point mapPoint, ImgType imgType)
         {
-            Point scaledMapPoint = new Point(mapPoint.X * ratio, mapPoint.Y * ratio);
+            Point scaledMapPoint = new Point(mapPoint.X * GlobalDictionary.imageRatio, mapPoint.Y * GlobalDictionary.imageRatio);
             Point wndPoint = new Point();
             i_map.Dispatcher.Invoke(() =>
             {
@@ -274,19 +277,19 @@ namespace CSGOTacticSimulator
             switch (imgType)
             {
                 case ImgType.Character:
-                    widthAndHeight = GlobalDictionary.characterWidthAndHeight;
+                    widthAndHeight = GlobalDictionary.CharacterWidthAndHeight;
                     break;
                 case ImgType.MissileEffect:
-                    widthAndHeight = GlobalDictionary.missileEffectWidthAndHeight;
+                    widthAndHeight = GlobalDictionary.MissileEffectWidthAndHeight;
                     break;
                 case ImgType.ExplosionEffect:
-                    widthAndHeight = GlobalDictionary.explosionEffectWidthAndHeight;
+                    widthAndHeight = GlobalDictionary.ExplosionEffectWidthAndHeight;
                     break;
                 case ImgType.Missile:
-                    widthAndHeight = GlobalDictionary.missileWidthAndHeight;
+                    widthAndHeight = GlobalDictionary.MissileWidthAndHeight;
                     break;
                 case ImgType.Props:
-                    widthAndHeight = GlobalDictionary.propsWidthAndHeight;
+                    widthAndHeight = GlobalDictionary.PropsWidthAndHeight;
                     break;
                 case ImgType.Nothing:
                     widthAndHeight = 0;
@@ -302,19 +305,19 @@ namespace CSGOTacticSimulator
             switch (imgType)
             {
                 case ImgType.Character:
-                    widthAndHeight = GlobalDictionary.characterWidthAndHeight;
+                    widthAndHeight = GlobalDictionary.CharacterWidthAndHeight;
                     break;
                 case ImgType.MissileEffect:
-                    widthAndHeight = GlobalDictionary.missileEffectWidthAndHeight;
+                    widthAndHeight = GlobalDictionary.MissileEffectWidthAndHeight;
                     break;
                 case ImgType.ExplosionEffect:
-                    widthAndHeight = GlobalDictionary.explosionEffectWidthAndHeight;
+                    widthAndHeight = GlobalDictionary.ExplosionEffectWidthAndHeight;
                     break;
                 case ImgType.Props:
-                    widthAndHeight = GlobalDictionary.propsWidthAndHeight;
+                    widthAndHeight = GlobalDictionary.PropsWidthAndHeight;
                     break;
                 case ImgType.Missile:
-                    widthAndHeight = GlobalDictionary.missileWidthAndHeight;
+                    widthAndHeight = GlobalDictionary.MissileWidthAndHeight;
                     break;
                 case ImgType.Nothing:
                     widthAndHeight = 0;
@@ -326,7 +329,7 @@ namespace CSGOTacticSimulator
             {
                 scaledMapPoint = this.TranslatePoint(wndPoint, i_map);
             });
-            Point mapPoint = new Point(scaledMapPoint.X / ratio, scaledMapPoint.Y / ratio);
+            Point mapPoint = new Point(scaledMapPoint.X / GlobalDictionary.imageRatio, scaledMapPoint.Y / GlobalDictionary.imageRatio);
             return mapPoint;
         }
 
@@ -339,7 +342,7 @@ namespace CSGOTacticSimulator
 
             string processedCommand = null;
 
-            ratio = i_map.ActualWidth / i_map.Source.Width;
+            GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
 
             bombDefused = false;
 
@@ -902,7 +905,7 @@ namespace CSGOTacticSimulator
                         runSpeed *= GlobalDictionary.walkToRunRatio;
                     }
 
-                    double pixelPerFresh = runSpeed / (1000 / GlobalDictionary.animationFreshTime) * ratio * speedController;
+                    double pixelPerFresh = runSpeed / (1000 / GlobalDictionary.animationFreshTime) * GlobalDictionary.imageRatio * speedController;
                     double climbTime = (wayInfo.distance / pixelPerFresh) * (GlobalDictionary.animationFreshTime / 1000.0);
                     currentCommand = "action character" + " " + characterNumber + " " + "wait for" + " " + climbTime;
                     ActionCharacterWaitFor(currentCommand);
@@ -1240,15 +1243,15 @@ namespace CSGOTacticSimulator
             {
                 Image bombImage = new Image();
                 bombImage.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/props_bomb.png")));
-                bombImage.Width = GlobalDictionary.propsWidthAndHeight;
-                bombImage.Height = GlobalDictionary.propsWidthAndHeight;
+                bombImage.Width = GlobalDictionary.PropsWidthAndHeight;
+                bombImage.Height = GlobalDictionary.PropsWidthAndHeight;
                 bombImage.Opacity = 0.75;
                 Point bombWndPoint = GetWndPoint(character.MapPoint, ImgType.Props);
 
                 Image explosionImage = new Image();
                 explosionImage.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/explosion.png")));
-                explosionImage.Width = GlobalDictionary.explosionEffectWidthAndHeight;
-                explosionImage.Height = GlobalDictionary.explosionEffectWidthAndHeight;
+                explosionImage.Width = GlobalDictionary.ExplosionEffectWidthAndHeight;
+                explosionImage.Height = GlobalDictionary.ExplosionEffectWidthAndHeight;
                 Point explosionWndPoint = GetWndPoint(character.MapPoint, ImgType.ExplosionEffect);
                 Thread explosionThread = null;
                 Thread plantThread = new Thread(() =>
@@ -1326,7 +1329,7 @@ namespace CSGOTacticSimulator
             double speedController = localSpeedController != -1 ? localSpeedController : GlobalDictionary.speedController;
 
             int animationFreshTime = GlobalDictionary.animationFreshTime;
-            double pixelPerFresh = speed / (1000 / GlobalDictionary.animationFreshTime) * ratio * speedController;
+            double pixelPerFresh = speed / (1000 / GlobalDictionary.animationFreshTime) * GlobalDictionary.imageRatio * speedController;
             Point startWndPoint = GetWndPoint(character.MapPoint, ImgType.Character);
             // Point endWndPoint = GetWndPoint(animation.endMapPoint, ImgType.Character);
             List<Point> endMapPointList = (List<Point>)animation.objectPara[0];
@@ -1394,7 +1397,7 @@ namespace CSGOTacticSimulator
             double speedController = localSpeedController != -1 ? localSpeedController : GlobalDictionary.speedController;
 
             int animationFreshTime = GlobalDictionary.animationFreshTime;
-            double pixelPerFresh = speed / (1000 / GlobalDictionary.animationFreshTime) * ratio * speedController;
+            double pixelPerFresh = speed / (1000 / GlobalDictionary.animationFreshTime) * GlobalDictionary.imageRatio * speedController;
             Point startWndPoint = GetWndPoint(character.MapPoint, ImgType.Character);
             Missile missile = (Missile)animation.objectPara[0];
             List<Point> mapPoints = (List<Point>)animation.objectPara[1];
@@ -1442,14 +1445,14 @@ namespace CSGOTacticSimulator
                     effectLifeSpan = GlobalDictionary.smokeLifespan;
                     break;
             }
-            missileImg.Width = GlobalDictionary.missileWidthAndHeight;
-            missileImg.Height = GlobalDictionary.missileWidthAndHeight;
+            missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
+            missileImg.Height = GlobalDictionary.MissileWidthAndHeight;
 
             if (missileEffectImg != null)
             {
                 missileEffectImg.Opacity = 0.85;
-                missileEffectImg.Width = GlobalDictionary.missileEffectWidthAndHeight;
-                missileEffectImg.Height = GlobalDictionary.missileEffectWidthAndHeight;
+                missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
+                missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
             }
 
             if (characters[characters.IndexOf(character)].Missiles.Contains(missile))
@@ -1931,7 +1934,7 @@ namespace CSGOTacticSimulator
                 return;
             }
 
-            ratio = i_map.ActualWidth / i_map.Source.Width;
+            GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
 
             if (c_previewcanvas.Children.Count == 0)
             {
@@ -1979,8 +1982,8 @@ namespace CSGOTacticSimulator
             {
                 Image characterImg = new Image();
                 characterImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/FRIENDLY_ALIVE_UPPER.png")));
-                characterImg.Width = GlobalDictionary.characterWidthAndHeight;
-                characterImg.Height = GlobalDictionary.characterWidthAndHeight;
+                characterImg.Width = GlobalDictionary.CharacterWidthAndHeight;
+                characterImg.Height = GlobalDictionary.CharacterWidthAndHeight;
                 Point charactorWndPoint = GetWndPoint(mapNode.nodePoint, ImgType.Character);
                 Canvas.SetLeft(characterImg, charactorWndPoint.X);
                 Canvas.SetTop(characterImg, charactorWndPoint.Y);
@@ -1994,14 +1997,596 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void tb_infos_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        public void CreateCommandInWindow(int characterNumber, Point mapPoint)
         {
-            e.Handled = true;
+            PropertiesSetter propertiesSetter = new PropertiesSetter(GlobalDictionary.propertiesSetter);
+            propertiesSetter.EnableCloseButton = true;
+            if (characterNumber == -1)
+            {
+                // 右键单击地图
+                // set entirety speed
+                // set camp
+                // create character
+                Button buttonSpeed = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+                buttonSpeed.Content = "设置速度";
+                Button buttonCamp = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+                buttonCamp.Content = "设置阵营";
+                Button buttonCreateCharacter = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+                buttonCreateCharacter.Content = "创建角色";
+                buttonSpeed.Click += delegate (object sender, RoutedEventArgs e) 
+                {
+                    MessageBox.ButtonList = new List<object> { new Label() { Content = "设置速度", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, new TextBox() { Width = 60, FontSize = 20, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 10, 0, 10) }, new ButtonSpacer(200), "OK" };
+                    MessageBox.MessageBoxImageType = MessageBoxImage.None;
+                    MessageBox.MessageText = "填写速度比率";
+                };
+                buttonCamp.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    ComboBox comboBox = new ComboBox();
+                    comboBox.Width = 60;
+                    comboBox.Margin = new Thickness(0, 10, 0 ,10);
+                    comboBox.VerticalContentAlignment = VerticalAlignment.Center;
+                    comboBox.Items.Add(new ComboBoxItem() { Content = "T", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBox.Items.Add(new ComboBoxItem() { Content = "CT", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBox.SelectedIndex = 0;
+                    MessageBox.ButtonList = new List<object> { new Label() { Content = "设置阵营", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, new ButtonSpacer(200), "OK" };
+                    MessageBox.MessageBoxImageType = MessageBoxImage.None;
+                    MessageBox.MessageText = "选择主视角阵营";
+                };
+                buttonCreateCharacter.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    ComboBox comboBox = new ComboBox();
+                    comboBox.Width = 60;
+                    comboBox.Margin = new Thickness(0, 10, 0, 10);
+                    comboBox.VerticalContentAlignment = VerticalAlignment.Center;
+                    comboBox.Items.Add(new ComboBoxItem() { Content = "T", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBox.Items.Add(new ComboBoxItem() { Content = "CT", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBox.SelectedIndex = 0;
+                    MessageBox.ButtonList = new List<object> { new Label() { Content = "创建角色", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, new ButtonSpacer(200), "OK" };
+                    MessageBox.MessageBoxImageType = MessageBoxImage.None;
+                    MessageBox.MessageText = "选择角色阵营和坐标";
+                };
+                int res = MessageBox.Show(propertiesSetter, new List<object> { buttonSpeed, buttonCamp, buttonCreateCharacter }, "选择命令的种类", "创建命令", MessageBoxImage.Question);
+                if(res == -1)
+                {
+                    return;
+                }
+                switch ((MessageBox.ButtonList[0] as Label).Content)
+                {
+                    case "设置速度":
+                        double speedController = double.Parse((MessageBox.ButtonList[1] as TextBox).Text);
+                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        {
+                            te_editor.Text += "\n";
+                        }
+                        te_editor.Text += "set entirety speed " + speedController + "\n";
+                        break;
+                    case "设置阵营":
+                        string camp = (MessageBox.ButtonList[1] as ComboBox).Text.ToLower();
+                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        {
+                            te_editor.Text += "\n";
+                        }
+                        te_editor.Text += "set camp " + camp + "\n";
+                        break;
+                    case "创建角色":
+                        string newCamp = (MessageBox.ButtonList[1] as ComboBox).Text.ToLower();
+                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        {
+                            te_editor.Text += "\n";
+                        }
+                        te_editor.Text += "create character " + newCamp + " " + mapPoint + "\n";
+                        break;
+                }
+            }
+            else if(mapPoint == new Point())
+            {
+                // 右键单击预览
+                // give character weapon
+                // give character missile
+                // give character props
+                // set character status
+                // set character vertical position
+                // do
+                // wait for
+                // wait until
+                Button buttonGive = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+                buttonGive.Content = "装备";
+                Button buttonSet = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+                buttonSet.Content = "设置";
+                Button buttonDo = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+                buttonDo.Content = "动作";
+                Button buttonWait = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+                buttonWait.Content = "等待";
+
+                buttonGive.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    MultiSelectComboBox multiSelectComboBox = new MultiSelectComboBox();
+                    multiSelectComboBox.ItemsSource = new List<string>();
+                    multiSelectComboBox.ItemsSource.Add("烟");
+                    multiSelectComboBox.ItemsSource.Add("火");
+                    multiSelectComboBox.ItemsSource.Add("雷");
+                    multiSelectComboBox.ItemsSource.Add("闪1");
+                    multiSelectComboBox.ItemsSource.Add("闪2");
+                    multiSelectComboBox.ItemsSource.Add("诱");
+                    multiSelectComboBox.Height = 32;
+                    multiSelectComboBox.FontSize = 20;
+                    multiSelectComboBox.VerticalContentAlignment = VerticalAlignment.Center;
+                    multiSelectComboBox.Margin = new Thickness(0, 5, 0, 5);
+                    multiSelectComboBox.SelectedItemsChanged += delegate (object s, SelectedItemsChangedEventArgs sice) 
+                    {
+                        MultiSelectComboBox msc = s as MultiSelectComboBox;
+                        if (msc.SelectedItems != null && msc.SelectedItems.Count == 4)
+                        {
+                            msc.SelectedItems.RemoveAt(0);
+                        }
+                    };
+
+                    ComboBox comboBoxProps = new ComboBox();
+                    comboBoxProps.Height = 32;
+                    comboBoxProps.Margin = new Thickness(0, 5, 0, 5);
+                    comboBoxProps.VerticalContentAlignment = VerticalAlignment.Center;
+                    comboBoxProps.FontSize = 20;
+                    comboBoxProps.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    foreach (Props props in Enum.GetValues(typeof(Props)))
+                    {
+                        comboBoxProps.Items.Add(new ComboBoxItem() { Content = props.ToString().ToLower(), FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    }
+                    comboBoxProps.SelectedIndex = 0;
+
+                    ComboBox comboBoxWeapon = new ComboBox();
+                    comboBoxWeapon.Height = 32;
+                    comboBoxWeapon.Margin = new Thickness(0, 5, 0, 5);
+                    comboBoxWeapon.VerticalContentAlignment = VerticalAlignment.Center;
+                    comboBoxWeapon.FontSize = 20;
+                    comboBoxWeapon.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    foreach (Weapon weapon in Enum.GetValues(typeof(Weapon)))
+                    {
+                        comboBoxWeapon.Items.Add(new ComboBoxItem() { Content = weapon.ToString().ToLower(), FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    }
+                    comboBoxWeapon.SelectedIndex = 0;
+
+                    Grid grid = new Grid();
+                    RowDefinition rowDefinitionR0 = new RowDefinition() { Height = new GridLength(42) };
+                    RowDefinition rowDefinitionR1 = new RowDefinition() { Height = new GridLength(42) };
+                    RowDefinition rowDefinitionR2 = new RowDefinition() { Height = new GridLength(42) };
+                    grid.RowDefinitions.Add(rowDefinitionR0);
+                    grid.RowDefinitions.Add(rowDefinitionR1);
+                    grid.RowDefinitions.Add(rowDefinitionR2);
+                    Grid.SetRow(comboBoxWeapon, 0);
+                    Grid.SetRow(multiSelectComboBox, 1);
+                    Grid.SetRow(comboBoxProps, 2);
+                    grid.Children.Add(comboBoxWeapon);
+                    grid.Children.Add(multiSelectComboBox);
+                    grid.Children.Add(comboBoxProps);
+                    grid.Height = 126;
+
+                    MessageBox.ButtonList = new List<object> {
+                        new Label() { Content = "装备", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
+                        grid,
+                        "OK"
+                    };
+                    MessageBox.MessageBoxImageType = MessageBoxImage.None;
+                    MessageBox.MessageText = "选择要给予的装备";
+                };
+                buttonSet.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    ComboBox comboBoxStatus = new ComboBox();
+                    comboBoxStatus.Height = 32;
+                    comboBoxStatus.Margin = new Thickness(0, 5, 0, 5);
+                    comboBoxStatus.VerticalContentAlignment = VerticalAlignment.Center;
+                    comboBoxStatus.FontSize = 20;
+                    comboBoxStatus.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    foreach (Model.Status status in Enum.GetValues(typeof(Model.Status)))
+                    {
+                        comboBoxStatus.Items.Add(new ComboBoxItem() { Content = status.ToString().ToLower(), FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    }
+                    comboBoxStatus.SelectedIndex = 0;
+
+                    ComboBox comboBoxVerticalPosition = new ComboBox();
+                    comboBoxVerticalPosition.Height = 32;
+                    comboBoxVerticalPosition.Margin = new Thickness(0, 5, 0, 5);
+                    comboBoxVerticalPosition.VerticalContentAlignment = VerticalAlignment.Center;
+                    comboBoxVerticalPosition.FontSize = 20;
+                    comboBoxVerticalPosition.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    foreach (VerticalPosition verticalPosition in Enum.GetValues(typeof(VerticalPosition)))
+                    {
+                        comboBoxVerticalPosition.Items.Add(new ComboBoxItem() { Content = verticalPosition.ToString().ToLower(), FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    }
+                    comboBoxVerticalPosition.SelectedIndex = 0;
+
+                    Grid grid = new Grid();
+                    RowDefinition rowDefinitionR0 = new RowDefinition() { Height = new GridLength(42) };
+                    RowDefinition rowDefinitionR1 = new RowDefinition() { Height = new GridLength(42) };
+                    grid.RowDefinitions.Add(rowDefinitionR0);
+                    grid.RowDefinitions.Add(rowDefinitionR1);
+                    Grid.SetRow(comboBoxVerticalPosition, 0);
+                    Grid.SetRow(comboBoxStatus, 1);
+                    grid.Children.Add(comboBoxVerticalPosition);
+                    grid.Children.Add(comboBoxStatus);
+                    grid.Height = 84;
+
+                    MessageBox.ButtonList = new List<object> {
+                        new Label() { Content = "设置", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
+                        grid,
+                        "OK"
+                    };
+                    MessageBox.MessageBoxImageType = MessageBoxImage.None;
+                    MessageBox.MessageText = "选择要进行的设置";
+                };
+                buttonDo.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    ComboBox comboBox = new ComboBox();
+                    comboBox.Width = 60;
+                    comboBox.Margin = new Thickness(0, 10, 0, 10);
+                    comboBox.VerticalContentAlignment = VerticalAlignment.Center;
+                    foreach (DoWithProps doWithProps in Enum.GetValues(typeof(DoWithProps)))
+                    {
+                        comboBox.Items.Add(new ComboBoxItem() { Content = doWithProps.ToString().ToLower(), FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    }
+                    comboBox.SelectedIndex = 0;
+                    MessageBox.ButtonList = new List<object> { new Label() { Content = "动作", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, new ButtonSpacer(200), "OK" };
+                    MessageBox.MessageBoxImageType = MessageBoxImage.None;
+                    MessageBox.MessageText = "选择要进行的动作";
+                };
+                buttonWait.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    ComboBox comboBox = new ComboBox();
+                    comboBox.Width = 60;
+                    comboBox.Margin = new Thickness(0, 10, 0, 10);
+                    comboBox.VerticalContentAlignment = VerticalAlignment.Center;
+                    comboBox.Items.Add(new ComboBoxItem() { Content = "等待", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBox.Items.Add(new ComboBoxItem() { Content = "等待至", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBox.SelectedIndex = 0;
+                    MessageBox.ButtonList = new List<object>
+                    { 
+                        new Label() { Content = "等待", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
+                        comboBox,
+                        new TextBox() { Width = 60, FontSize = 20, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 10, 0, 10) },
+                        new Label() { Content = "秒", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
+                        new ButtonSpacer(140), 
+                        "OK"
+                    };
+                    MessageBox.MessageBoxImageType = MessageBoxImage.None;
+                    MessageBox.MessageText = "选择要进行的动作";
+                };
+                int res = MessageBox.Show(propertiesSetter, new List<object> { buttonGive, buttonSet, buttonDo, buttonWait }, "选择命令的种类", "创建命令", MessageBoxImage.Question);
+                if (res == -1)
+                {
+                    return;
+                }
+
+                switch ((MessageBox.ButtonList[0] as Label).Content)
+                {
+                    case "装备":
+                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        {
+                            te_editor.Text += "\n";
+                        }
+                        if ((((MessageBox.ButtonList[1] as Grid).Children[0] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() != "-")
+                        {
+                            te_editor.Text += "give character " + characterNumber + " weapon " + (((MessageBox.ButtonList[1] as Grid).Children[0] as ComboBox).SelectedItem as ComboBoxItem).Content + "\n";
+                        }
+                        if (((MessageBox.ButtonList[1] as Grid).Children[1] as MultiSelectComboBox).SelectedItems.Count != 0)
+                        {
+                            te_editor.Text += "give character " + characterNumber + " missile";
+                            foreach (string str in ((MessageBox.ButtonList[1] as Grid).Children[1] as MultiSelectComboBox).SelectedItems)
+                            {
+                                te_editor.Text += " " + str;
+                            }
+                            te_editor.Text += "\n";
+                        }
+                        if ((((MessageBox.ButtonList[1] as Grid).Children[2] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() != "-")
+                        {
+                            te_editor.Text += "give character " + characterNumber + " props " + (((MessageBox.ButtonList[1] as Grid).Children[2] as ComboBox).SelectedItem as ComboBoxItem).Content + "\n";
+                        }
+                        break;
+                    case "设置":
+                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        {
+                            te_editor.Text += "\n";
+                        }
+                        if ((((MessageBox.ButtonList[1] as Grid).Children[0] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() != "-")
+                        {
+                            te_editor.Text += "set character " + characterNumber + " status " + (((MessageBox.ButtonList[1] as Grid).Children[0] as ComboBox).SelectedItem as ComboBoxItem).Content + "\n";
+                        }
+                        if ((((MessageBox.ButtonList[1] as Grid).Children[1] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() != "-")
+                        {
+                            te_editor.Text += "set character " + characterNumber + " vertical position " + (((MessageBox.ButtonList[1] as Grid).Children[1] as ComboBox).SelectedItem as ComboBoxItem).Content + "\n";
+                        }
+                        break;
+                    case "动作":
+                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        {
+                            te_editor.Text += "\n";
+                        }
+                        if (((MessageBox.ButtonList[1] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() != "-")
+                        {
+                            te_editor.Text += "action character " + characterNumber + " do " + ((MessageBox.ButtonList[1] as ComboBox).SelectedItem as ComboBoxItem).Content + "\n";
+                        }
+                        break;
+                    case "等待":
+                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        {
+                            te_editor.Text += "\n";
+                        }
+                        te_editor.Text += "action character " + characterNumber + ((MessageBox.ButtonList[1] as ComboBox).SelectedItem as ComboBoxItem).Content == "等待" ? " wait for " : " wait until " + (MessageBox.ButtonList[2] as TextBox).Text + "\n";
+                        break;
+                }
+                
+            }
+            else
+            {
+                // 拖动预览
+                // move
+                // automove
+                // throw
+                // shoot
+                Button buttonMove = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+                buttonMove.Content = "移动";
+                Button buttonAutoMove = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+                buttonAutoMove.Content = "寻路";
+                if(keyDownInPreview.Count == 0)
+                {
+                    buttonAutoMove.IsEnabled = false;
+                }
+                Button buttonThrow = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+                buttonThrow.Content = "投掷";
+                Button buttonShoot = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+                buttonShoot.Content = "射击";
+                buttonMove.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    ComboBox comboBoxRecord = new ComboBox();
+                    comboBoxRecord.Height = 32;
+                    comboBoxRecord.Margin = new Thickness(0, 5, 0, 5);
+                    comboBoxRecord.VerticalContentAlignment = VerticalAlignment.Center;
+                    comboBoxRecord.FontSize = 20;
+                    comboBoxRecord.Items.Add(new ComboBoxItem() { Content = "使用完整路径", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBoxRecord.Items.Add(new ComboBoxItem() { Content = "仅使用起始点", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBoxRecord.SelectedIndex = 0;
+
+                    ComboBox comboBoxMove = new ComboBox();
+                    comboBoxMove.Height = 32;
+                    comboBoxMove.Margin = new Thickness(0, 5, 0, 5);
+                    comboBoxMove.VerticalContentAlignment = VerticalAlignment.Center;
+                    comboBoxMove.FontSize = 20;
+                    comboBoxMove.Items.Add(new ComboBoxItem() { Content = "Run", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBoxMove.Items.Add(new ComboBoxItem() { Content = "Walk", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBoxMove.Items.Add(new ComboBoxItem() { Content = "Squat", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    // comboBoxMove.Items.Add(new ComboBoxItem() { Content = "Teleport", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBoxMove.SelectedIndex = 0;
+
+                    Grid grid = new Grid();
+                    RowDefinition rowDefinitionR0 = new RowDefinition() { Height = new GridLength(42) };
+                    RowDefinition rowDefinitionR1 = new RowDefinition() { Height = new GridLength(42) };
+                    grid.RowDefinitions.Add(rowDefinitionR0);
+                    grid.RowDefinitions.Add(rowDefinitionR1);
+                    Grid.SetRow(comboBoxRecord, 0);
+                    grid.Children.Add(comboBoxRecord);
+                    Grid.SetRow(comboBoxMove, 1);
+                    grid.Children.Add(comboBoxMove);
+                    grid.Height = 84;
+
+                    MessageBox.ButtonList = new List<object> {
+                        new Label() { Content = "移动", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
+                        grid,
+                        "OK"
+                    };
+                    MessageBox.MessageBoxImageType = MessageBoxImage.None;
+                    MessageBox.MessageText = "移动设置";
+                };
+                buttonAutoMove.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    Label labelStartLayer = new Label() { Content = "起始层数", Foreground = new SolidColorBrush(Colors.White), FontSize = 20, Height = 32 };
+                    TextBox textBoxStartLayer = new TextBox() { FontSize = 20, Height = 32, Width = 50, HorizontalAlignment = HorizontalAlignment.Left, Name = "textBoxStartLayer" };
+                    Label labelEndLayer = new Label() { Content = "结束层数", Foreground = new SolidColorBrush(Colors.White), FontSize = 20, Height = 32 };
+                    TextBox textBoxEndLayer = new TextBox() { FontSize = 20, Height = 32, Width = 50, HorizontalAlignment = HorizontalAlignment.Left, Name = "textBoxEndLayer" };
+
+                    ComboBox comboBoxVolumeLimit = new ComboBox();
+                    comboBoxVolumeLimit.Height = 32;
+                    comboBoxVolumeLimit.Width = 80;
+                    comboBoxVolumeLimit.Margin = new Thickness(0, 5, 0, 5);
+                    comboBoxVolumeLimit.VerticalContentAlignment = VerticalAlignment.Center;
+                    comboBoxVolumeLimit.FontSize = 20;
+                    comboBoxVolumeLimit.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    foreach (VolumeLimit volumeLimit in Enum.GetValues(typeof(VolumeLimit)))
+                    {
+                        comboBoxVolumeLimit.Items.Add(new ComboBoxItem() { Content = volumeLimit.ToString().ToLower(), FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    }
+                    comboBoxVolumeLimit.SelectedIndex = 0;
+
+                    Grid grid = new Grid();
+                    RowDefinition rowDefinitionR0 = new RowDefinition() { Height = new GridLength(42) };
+                    RowDefinition rowDefinitionR1 = new RowDefinition() { Height = new GridLength(42) };
+                    ColumnDefinition columnDefinitionC0 = new ColumnDefinition() { Width = new GridLength(100) };
+                    ColumnDefinition columnDefinitionC1 = new ColumnDefinition() { };
+                    grid.RowDefinitions.Add(rowDefinitionR0);
+                    grid.RowDefinitions.Add(rowDefinitionR1);
+                    grid.ColumnDefinitions.Add(columnDefinitionC0);
+                    grid.ColumnDefinitions.Add(columnDefinitionC1);
+                    Grid.SetRow(labelStartLayer, 0);
+                    Grid.SetColumn(labelStartLayer, 0);
+                    grid.Children.Add(labelStartLayer);
+                    Grid.SetRow(textBoxStartLayer, 0);
+                    Grid.SetColumn(textBoxStartLayer, 1);
+                    grid.Children.Add(textBoxStartLayer);
+                    Grid.SetRow(labelEndLayer, 1);
+                    Grid.SetColumn(labelEndLayer, 0);
+                    grid.Children.Add(labelEndLayer);
+                    Grid.SetRow(textBoxEndLayer, 1);
+                    Grid.SetColumn(textBoxEndLayer, 1);
+                    grid.Children.Add(textBoxEndLayer);
+                    grid.Height = 84;
+
+                    MessageBox.ButtonList = new List<object> {
+                        new Label() { Content = "寻路", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
+                        grid,
+                        comboBoxVolumeLimit,
+                        "OK"
+                    };
+                    MessageBox.MessageBoxImageType = MessageBoxImage.None;
+                    MessageBox.MessageText = "寻路设置";
+                };
+                buttonThrow.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    ComboBox comboBoxMissile = new ComboBox();
+                    comboBoxMissile.Height = 32;
+                    comboBoxMissile.Width = 80;
+                    comboBoxMissile.Margin = new Thickness(0, 5, 0, 5);
+                    comboBoxMissile.VerticalContentAlignment = VerticalAlignment.Center;
+                    comboBoxMissile.FontSize = 20;
+                    comboBoxMissile.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    foreach (Missile missile in Enum.GetValues(typeof(Missile)))
+                    {
+                        comboBoxMissile.Items.Add(new ComboBoxItem() { Content = missile.ToString().ToLower(), FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    }
+                    comboBoxMissile.SelectedIndex = 0;
+
+                    MessageBox.ButtonList = new List<object> {
+                        new Label() { Content = "投掷", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
+                        comboBoxMissile,
+                        "OK"
+                    };
+                    MessageBox.MessageBoxImageType = MessageBoxImage.None;
+                    MessageBox.MessageText = "投掷设置";
+                };
+                buttonShoot.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    CheckBox cb = new CheckBox() { Content = "射击某角色", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), Height = 32 };
+                    TextBox tb = new TextBox() { Width = 60, FontSize = 20, Height = 32, HorizontalAlignment = HorizontalAlignment.Left };
+                    tb.IsEnabled = false;
+                    cb.Click += delegate (object cbSender, RoutedEventArgs cbE)
+                    {
+                        if(((CheckBox)cbSender).IsChecked == true)
+                        {
+                            tb.IsEnabled = true;
+                        }
+                        else
+                        {
+                            tb.Text = "";
+                            tb.IsEnabled = false;
+                        }
+                    };
+
+                    Grid grid = new Grid();
+                    grid.Margin = new Thickness(0, 10, 0, 10);
+                    RowDefinition rowDefinitionR0 = new RowDefinition() { Height = new GridLength(42) };
+                    RowDefinition rowDefinitionR1 = new RowDefinition() { Height = new GridLength(42) };
+                    grid.RowDefinitions.Add(rowDefinitionR0);
+                    grid.RowDefinitions.Add(rowDefinitionR1);
+                    Grid.SetRow(cb, 0);
+                    grid.Children.Add(cb);
+                    Grid.SetRow(tb, 1);
+                    grid.Children.Add(tb);
+                    grid.Height = 84;
+
+                    ComboBox comboBox = new ComboBox();
+                    comboBox.Margin = new Thickness(0, 10, 0, 10);
+                    comboBox.VerticalContentAlignment = VerticalAlignment.Center;
+                    comboBox.FontSize = 20;
+                    comboBox.Items.Add(new ComboBoxItem() { Content = "Live", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBox.Items.Add(new ComboBoxItem() { Content = "Die", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBox.SelectedIndex = 0;
+
+                    MessageBox.ButtonList = new List<object> {
+                        new Label() { Content = "射击", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
+                        grid,
+                        comboBox,
+                        "OK"
+                    };
+                    MessageBox.MessageBoxImageType = MessageBoxImage.None;
+                    MessageBox.MessageText = "射击设置";
+                };
+                int res = MessageBox.Show(propertiesSetter, new List<object> { buttonMove, buttonAutoMove, buttonThrow, buttonShoot }, "选择命令的种类", "创建命令", MessageBoxImage.Question);
+                if (res == -1)
+                {
+                    return;
+                }
+                switch ((MessageBox.ButtonList[0] as Label).Content)
+                {
+                    case "移动":
+                        string pointsStr = "";
+                        if ((((MessageBox.ButtonList[1] as Grid).Children[0] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() == "使用完整路径")
+                        {
+                            foreach(Point point in mouseMovePathInPreview)
+                            {
+                                pointsStr += point.ToString() + " ";
+                            }
+                            if (pointsStr.Count() > 0)
+                            {
+                                pointsStr = pointsStr.Remove(pointsStr.Count() - 1, 1);
+                            }
+                        }
+                        else
+                        {
+                            pointsStr += mapPoint.ToString();
+                        }
+                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        {
+                            te_editor.Text += "\n";
+                        }
+                        te_editor.Text += "action character " + characterNumber + " move " + (((MessageBox.ButtonList[1] as Grid).Children[1] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString().ToLowerInvariant() + " " + pointsStr + "\n";
+                        break;
+                    case "寻路":
+                        Grid grid = MessageBox.ButtonList[1] as Grid;
+                        string textBoxStartLayer = "";
+                        string textBoxEndLayer = "";
+                        foreach(UIElement ue in grid.Children)
+                        {
+                            if(ue is TextBox)
+                            {
+                                TextBox tb = (TextBox)ue;
+                                if(tb.Name == "textBoxStartLayer")
+                                {
+                                    textBoxStartLayer = tb.Text;
+                                }
+                                if (tb.Name == "textBoxEndLayer")
+                                {
+                                    textBoxEndLayer = tb.Text;
+                                }
+                            }
+                        }
+                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        {
+                            te_editor.Text += "\n";
+                        }
+                        te_editor.Text += "action character " + characterNumber + " from " + keyDownInPreview[0] + " layer " + textBoxStartLayer + " auto move " + keyDownInPreview[1] + " layer " + textBoxEndLayer + " " + (MessageBox.ButtonList[2] as ComboBox).Text.ToLowerInvariant() + "\n";
+                        break;
+                    case "投掷":
+                        string pointsMissilePathStr = "";
+                        if(keyDownInPreview.Count() == 0)
+                        {
+                            pointsMissilePathStr = mapPoint.ToString();
+                        }
+                        else
+                        {
+                            foreach(Point point in keyDownInPreview)
+                            {
+                                pointsMissilePathStr += point.ToString() + " ";
+                            }
+                            pointsMissilePathStr.Remove(pointsMissilePathStr.Count() - 1, 1);
+                        }
+                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        {
+                            te_editor.Text += "\n";
+                        }
+                        te_editor.Text += "action character " + characterNumber + " throw " + (MessageBox.ButtonList[1] as ComboBox).Text.ToLowerInvariant() + " " + pointsMissilePathStr + "\n";
+                        break;
+                    case "射击":
+                        string target = "";
+                        target = ((MessageBox.ButtonList[1] as Grid).Children[0] as CheckBox).IsChecked == true ? ((MessageBox.ButtonList[1] as Grid).Children[1] as TextBox).Text : mapPoint.ToString();
+                        if(te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        {
+                            te_editor.Text += "\n";
+                        }
+                        te_editor.Text += "action character " + characterNumber + " shoot " + target + " " + (MessageBox.ButtonList[2] as ComboBox).Text.ToLowerInvariant() + "\n";
+                        break;
+                }
+            }
         }
 
-        private void tb_timer_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void i_map_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            e.Handled = true;
+            CreateCommandInWindow(-1, new Point(Math.Round((e.GetPosition(i_map).X / GlobalDictionary.imageRatio), 2), Math.Round((e.GetPosition(i_map).Y / GlobalDictionary.imageRatio), 2)));
         }
     }
 }
