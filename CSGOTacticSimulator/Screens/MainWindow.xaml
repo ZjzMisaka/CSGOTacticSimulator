@@ -7,7 +7,7 @@
         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
         mc:Ignorable="d"
         Title="CSGO Tactics Simulator" Height="1024" Width="1600" AllowsTransparency="True" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip" 
-        SizeChanged="Window_SizeChanged" Loaded="Window_Loaded" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" MouseLeftButtonDown="Window_MouseLeftButtonDown" >
+        SizeChanged="Window_SizeChanged" Loaded="Window_Loaded" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" MouseLeftButtonDown="Window_MouseLeftButtonDown" StateChanged="Window_StateChanged" >
     <Window.Resources>
         <Style x:Key="Style.TextContentButton" TargetType="Button">
             <Setter Property="Width" Value="70"/>
@@ -132,5 +132,6 @@
         <Canvas x:Name="c_paintcanvas" Background="Transparent" IsHitTestVisible="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseMove="c_paintcanvas_MouseMove" >
         </Canvas>
         <Button x:Name="btn_minimize" Style="{StaticResource Style.ImageBackgroundButton}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="30" Width="30" Height="30" Click="btn_minimize_Click"></Button>
+        <Button x:Name="btn_restore" Style="{StaticResource Style.ImageBackgroundButton}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="30, 30, 75, 30" Width="30" Height="30" Visibility="Collapsed" Click="btn_restore_Click"></Button>
     </Grid>
 </Window>

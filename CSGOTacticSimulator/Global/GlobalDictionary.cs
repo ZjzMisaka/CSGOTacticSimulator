@@ -138,7 +138,12 @@ namespace CSGOTacticSimulator.Global
         static public string stopPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Stop")).Replace("/", "\\");
         static public string savePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Save")).Replace("/", "\\");
         static public string exitPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Exit")).Replace("/", "\\");
+        static public string infoPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Info")).Replace("/", "\\");
+        static public string warningPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Warning")).Replace("/", "\\");
+        static public string questionPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Question")).Replace("/", "\\");
+        static public string errorPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Error")).Replace("/", "\\");
         static public string minimizePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Minimize")).Replace("/", "\\");
+        static public string restorePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Restore")).Replace("/", "\\");
 
         static public int firebombLifespan = int.Parse(IniHelper.ReadIni("Missile", "FirebombLifespan"));
         static public int smokeLifespan = int.Parse(IniHelper.ReadIni("Missile", "SmokeLifespan"));
@@ -164,6 +169,10 @@ namespace CSGOTacticSimulator.Global
             TitleFontColor = new MessageBoxColor("#FFCBBEBE"),
             MessageFontColor = new MessageBoxColor(Colors.White),
             CloseIcon = new System.Windows.Media.Imaging.BitmapImage(new Uri(GlobalDictionary.exitPath)),
+            InfoIcon = new System.Windows.Media.Imaging.BitmapImage(new Uri(GlobalDictionary.infoPath)),
+            WarningIcon = new System.Windows.Media.Imaging.BitmapImage(new Uri(GlobalDictionary.warningPath)),
+            QuestionIcon = new System.Windows.Media.Imaging.BitmapImage(new Uri(GlobalDictionary.questionPath)),
+            ErrorIcon = new System.Windows.Media.Imaging.BitmapImage(new Uri(GlobalDictionary.errorPath)),
         };
     }
 }

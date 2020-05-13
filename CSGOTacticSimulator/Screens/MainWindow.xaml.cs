@@ -77,6 +77,11 @@ namespace CSGOTacticSimulator
             minimizeBrush.Stretch = Stretch.Uniform;
             btn_minimize.Background = minimizeBrush;
 
+            ImageBrush restoreBrush = new ImageBrush();
+            restoreBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.restorePath));
+            restoreBrush.Stretch = Stretch.Uniform;
+            btn_restore.Background = restoreBrush;
+
             ImageBrush previewBrush = new ImageBrush();
             previewBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.previewPath));
             previewBrush.Stretch = Stretch.Uniform;
@@ -251,6 +256,18 @@ namespace CSGOTacticSimulator
                 Canvas.SetLeft(character.CharacterImg, wndPoint.X);
                 Canvas.SetTop(character.CharacterImg, wndPoint.Y);
                 c_runcanvas.Children.Add(character.CharacterImg);
+            }
+        }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if(WindowState == WindowState.Normal)
+            {
+                btn_restore.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                btn_restore.Visibility = Visibility.Visible;
             }
         }
 
@@ -1797,6 +1814,10 @@ namespace CSGOTacticSimulator
         private void btn_minimize_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
+        }
+        private void btn_restore_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Normal;
         }
 
         private void c_paintcanvas_MouseMove(object sender, MouseEventArgs e)
