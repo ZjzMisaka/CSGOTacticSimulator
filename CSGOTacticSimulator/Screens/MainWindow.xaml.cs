@@ -2022,6 +2022,7 @@ namespace CSGOTacticSimulator
                 buttonCamp.Click += delegate (object sender, RoutedEventArgs e)
                 {
                     ComboBox comboBox = new ComboBox();
+                    comboBox.FontSize = 20;
                     comboBox.Width = 60;
                     comboBox.Margin = new Thickness(0, 10, 0 ,10);
                     comboBox.VerticalContentAlignment = VerticalAlignment.Center;
@@ -2035,6 +2036,7 @@ namespace CSGOTacticSimulator
                 buttonCreateCharacter.Click += delegate (object sender, RoutedEventArgs e)
                 {
                     ComboBox comboBox = new ComboBox();
+                    comboBox.FontSize = 20;
                     comboBox.Width = 60;
                     comboBox.Margin = new Thickness(0, 10, 0, 10);
                     comboBox.VerticalContentAlignment = VerticalAlignment.Center;
@@ -2101,25 +2103,21 @@ namespace CSGOTacticSimulator
                 buttonGive.Click += delegate (object sender, RoutedEventArgs e)
                 {
                     MultiSelectComboBox multiSelectComboBox = new MultiSelectComboBox();
+                    multiSelectComboBox.SelectedItems = new List<string>();
                     multiSelectComboBox.ItemsSource = new List<string>();
-                    multiSelectComboBox.ItemsSource.Add("烟");
-                    multiSelectComboBox.ItemsSource.Add("火");
-                    multiSelectComboBox.ItemsSource.Add("雷");
-                    multiSelectComboBox.ItemsSource.Add("闪1");
-                    multiSelectComboBox.ItemsSource.Add("闪2");
-                    multiSelectComboBox.ItemsSource.Add("诱");
+                    multiSelectComboBox.ItemsSource.Add("烟 - Smoke");
+                    multiSelectComboBox.ItemsSource.Add("火 - Firebomb");
+                    multiSelectComboBox.ItemsSource.Add("雷 - Grenade");
+                    multiSelectComboBox.ItemsSource.Add("闪1 - Flashbang");
+                    multiSelectComboBox.ItemsSource.Add("闪2 - Flashbang");
+                    multiSelectComboBox.ItemsSource.Add("诱 - Decoy");
                     multiSelectComboBox.Height = 32;
                     multiSelectComboBox.FontSize = 20;
                     multiSelectComboBox.VerticalContentAlignment = VerticalAlignment.Center;
                     multiSelectComboBox.Margin = new Thickness(0, 5, 0, 5);
-                    multiSelectComboBox.SelectedItemsChanged += delegate (object s, SelectedItemsChangedEventArgs sice) 
-                    {
-                        MultiSelectComboBox msc = s as MultiSelectComboBox;
-                        if (msc.SelectedItems != null && msc.SelectedItems.Count == 4)
-                        {
-                            msc.SelectedItems.RemoveAt(0);
-                        }
-                    };
+                    //multiSelectComboBox.SelectedItemsChanged += delegate (object s, SelectedItemsChangedEventArgs sice) 
+                    //{
+                    //};
 
                     ComboBox comboBoxProps = new ComboBox();
                     comboBoxProps.Height = 32;
@@ -2129,6 +2127,10 @@ namespace CSGOTacticSimulator
                     comboBoxProps.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                     foreach (Props props in Enum.GetValues(typeof(Props)))
                     {
+                        if(props == Props.Nothing)
+                        {
+                            continue;
+                        }
                         comboBoxProps.Items.Add(new ComboBoxItem() { Content = props.ToString().ToLower(), FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                     }
                     comboBoxProps.SelectedIndex = 0;
@@ -2159,6 +2161,7 @@ namespace CSGOTacticSimulator
                     grid.Children.Add(multiSelectComboBox);
                     grid.Children.Add(comboBoxProps);
                     grid.Height = 126;
+                    grid.Width = 350;
 
                     MessageBox.ButtonList = new List<object> {
                         new Label() { Content = "装备", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
@@ -2216,6 +2219,7 @@ namespace CSGOTacticSimulator
                 buttonDo.Click += delegate (object sender, RoutedEventArgs e)
                 {
                     ComboBox comboBox = new ComboBox();
+                    comboBox.FontSize = 20;
                     comboBox.Width = 60;
                     comboBox.Margin = new Thickness(0, 10, 0, 10);
                     comboBox.VerticalContentAlignment = VerticalAlignment.Center;
@@ -2231,6 +2235,7 @@ namespace CSGOTacticSimulator
                 buttonWait.Click += delegate (object sender, RoutedEventArgs e)
                 {
                     ComboBox comboBox = new ComboBox();
+                    comboBox.FontSize = 20;
                     comboBox.Width = 80;
                     comboBox.Margin = new Thickness(0, 10, 0, 10);
                     comboBox.VerticalContentAlignment = VerticalAlignment.Center;
@@ -2255,29 +2260,37 @@ namespace CSGOTacticSimulator
                     return;
                 }
 
-                switch ((MessageBox.ButtonList[0] as Label).Content)
+                List<object> btnList = MessageBox.ButtonList;
+                switch ((btnList[0] as Label).Content)
                 {
                     case "装备":
                         if (te_editor.Text.Count() > 0 && te_editor.Text[te_editor.Text.Count() - 1] != '\n')
                         {
                             te_editor.Text += "\n";
                         }
-                        if ((((MessageBox.ButtonList[1] as Grid).Children[0] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() != "-")
+                        if ((((btnList[1] as Grid).Children[0] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() != "-")
                         {
-                            te_editor.Text += "give character " + characterNumber + " weapon " + (((MessageBox.ButtonList[1] as Grid).Children[0] as ComboBox).SelectedItem as ComboBoxItem).Content + "\n";
+                            te_editor.Text += "give character " + characterNumber + " weapon " + (((btnList[1] as Grid).Children[0] as ComboBox).SelectedItem as ComboBoxItem).Content + "\n";
                         }
-                        if (((MessageBox.ButtonList[1] as Grid).Children[1] as MultiSelectComboBox).SelectedItems != null && ((MessageBox.ButtonList[1] as Grid).Children[1] as MultiSelectComboBox).SelectedItems.Count != 0)
+                        if (((btnList[1] as Grid).Children[1] as MultiSelectComboBox).SelectedItems != null && ((btnList[1] as Grid).Children[1] as MultiSelectComboBox).SelectedItems.Count != 0)
                         {
                             te_editor.Text += "give character " + characterNumber + " missile";
-                            foreach (string str in ((MessageBox.ButtonList[1] as Grid).Children[1] as MultiSelectComboBox).SelectedItems)
+                            int i = 1;
+                            foreach (string str in ((btnList[1] as Grid).Children[1] as MultiSelectComboBox).SelectedItems)
                             {
-                                te_editor.Text += " " + str;
+                                if(i == 5)
+                                {
+                                    MessageBox.Show(propertiesSetter, "选择了太多投掷物, 因此只取前四个. ", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                    break;
+                                }
+                                te_editor.Text += " " + str.Substring(str.IndexOf("-") + 2).ToLowerInvariant();
+                                ++i;
                             }
                             te_editor.Text += "\n";
                         }
-                        if ((((MessageBox.ButtonList[1] as Grid).Children[2] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() != "-")
+                        if ((((btnList[1] as Grid).Children[2] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() != "-")
                         {
-                            te_editor.Text += "give character " + characterNumber + " props " + (((MessageBox.ButtonList[1] as Grid).Children[2] as ComboBox).SelectedItem as ComboBoxItem).Content + "\n";
+                            te_editor.Text += "give character " + characterNumber + " props " + (((btnList[1] as Grid).Children[2] as ComboBox).SelectedItem as ComboBoxItem).Content + "\n";
                         }
                         break;
                     case "设置":
@@ -2285,13 +2298,13 @@ namespace CSGOTacticSimulator
                         {
                             te_editor.Text += "\n";
                         }
-                        if ((((MessageBox.ButtonList[1] as Grid).Children[0] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() != "-")
+                        if ((((btnList[1] as Grid).Children[0] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() != "-")
                         {
-                            te_editor.Text += "set character " + characterNumber + " status " + (((MessageBox.ButtonList[1] as Grid).Children[0] as ComboBox).SelectedItem as ComboBoxItem).Content + "\n";
+                            te_editor.Text += "set character " + characterNumber + " status " + (((btnList[1] as Grid).Children[0] as ComboBox).SelectedItem as ComboBoxItem).Content + "\n";
                         }
-                        if ((((MessageBox.ButtonList[1] as Grid).Children[1] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() != "-")
+                        if ((((btnList[1] as Grid).Children[1] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() != "-")
                         {
-                            te_editor.Text += "set character " + characterNumber + " vertical position " + (((MessageBox.ButtonList[1] as Grid).Children[1] as ComboBox).SelectedItem as ComboBoxItem).Content + "\n";
+                            te_editor.Text += "set character " + characterNumber + " vertical position " + (((btnList[1] as Grid).Children[1] as ComboBox).SelectedItem as ComboBoxItem).Content + "\n";
                         }
                         break;
                     case "动作":
@@ -2299,9 +2312,9 @@ namespace CSGOTacticSimulator
                         {
                             te_editor.Text += "\n";
                         }
-                        if (((MessageBox.ButtonList[1] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() != "-")
+                        if (((btnList[1] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() != "-")
                         {
-                            te_editor.Text += "action character " + characterNumber + " do " + ((MessageBox.ButtonList[1] as ComboBox).SelectedItem as ComboBoxItem).Content + "\n";
+                            te_editor.Text += "action character " + characterNumber + " do " + ((btnList[1] as ComboBox).SelectedItem as ComboBoxItem).Content + "\n";
                         }
                         break;
                     case "等待":
@@ -2309,7 +2322,7 @@ namespace CSGOTacticSimulator
                         {
                             te_editor.Text += "\n";
                         }
-                        te_editor.Text += "action character " + characterNumber + (((MessageBox.ButtonList[1] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() == "等待" ? " wait for " : " wait until ") + (MessageBox.ButtonList[2] as TextBox).Text + "\n";
+                        te_editor.Text += "action character " + characterNumber + (((btnList[1] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() == "等待" ? " wait for " : " wait until ") + (btnList[2] as TextBox).Text + "\n";
                         break;
                 }
                 
