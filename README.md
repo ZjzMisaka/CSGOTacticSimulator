@@ -20,7 +20,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 - Each script performs an action on behalf of a character, such as buying (instantly), moving (time-consuming), waiting.
 - The order between the characters in the script does not affect the final effect. For example, you can write the scripts of the actions of one character at the same time, or you can write the scripts of multiple characters at the same time.
 - You can add "-" before the script command and other statements to comment the content after this line.
-### 可视化创建脚本
+### Create scripts visually
 - Right-click the map
     - Set the speed
         - Sets the overall speed ratio value
