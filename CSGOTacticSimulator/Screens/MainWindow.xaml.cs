@@ -2231,7 +2231,7 @@ namespace CSGOTacticSimulator
                 buttonWait.Click += delegate (object sender, RoutedEventArgs e)
                 {
                     ComboBox comboBox = new ComboBox();
-                    comboBox.Width = 60;
+                    comboBox.Width = 80;
                     comboBox.Margin = new Thickness(0, 10, 0, 10);
                     comboBox.VerticalContentAlignment = VerticalAlignment.Center;
                     comboBox.Items.Add(new ComboBoxItem() { Content = "等待", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
@@ -2266,7 +2266,7 @@ namespace CSGOTacticSimulator
                         {
                             te_editor.Text += "give character " + characterNumber + " weapon " + (((MessageBox.ButtonList[1] as Grid).Children[0] as ComboBox).SelectedItem as ComboBoxItem).Content + "\n";
                         }
-                        if (((MessageBox.ButtonList[1] as Grid).Children[1] as MultiSelectComboBox).SelectedItems.Count != 0)
+                        if (((MessageBox.ButtonList[1] as Grid).Children[1] as MultiSelectComboBox).SelectedItems != null && ((MessageBox.ButtonList[1] as Grid).Children[1] as MultiSelectComboBox).SelectedItems.Count != 0)
                         {
                             te_editor.Text += "give character " + characterNumber + " missile";
                             foreach (string str in ((MessageBox.ButtonList[1] as Grid).Children[1] as MultiSelectComboBox).SelectedItems)
@@ -2309,7 +2309,7 @@ namespace CSGOTacticSimulator
                         {
                             te_editor.Text += "\n";
                         }
-                        te_editor.Text += "action character " + characterNumber + ((MessageBox.ButtonList[1] as ComboBox).SelectedItem as ComboBoxItem).Content == "等待" ? " wait for " : " wait until " + (MessageBox.ButtonList[2] as TextBox).Text + "\n";
+                        te_editor.Text += "action character " + characterNumber + (((MessageBox.ButtonList[1] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() == "等待" ? " wait for " : " wait until ") + (MessageBox.ButtonList[2] as TextBox).Text + "\n";
                         break;
                 }
                 
