@@ -38,7 +38,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
         - Set the survival status of a role
     - Action
         - Plant / defuse
-    - Qait
+    - Waiting
         - Wait for / until the specified time
 - Click the preview button and drag the preview of the character with the left button
     - Moving
