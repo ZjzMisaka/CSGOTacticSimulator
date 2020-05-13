@@ -163,8 +163,7 @@ namespace CSGOTacticSimulator.Global
             WndBorderThickness = new Thickness(1),
             TitleFontColor = new MessageBoxColor("#FFCBBEBE"),
             MessageFontColor = new MessageBoxColor(Colors.White),
+            CloseIcon = new System.Windows.Media.Imaging.BitmapImage(new Uri(GlobalDictionary.exitPath)),
         };
-
-        
     }
 }
