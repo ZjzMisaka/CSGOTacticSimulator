@@ -20,6 +20,44 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 - Each script performs an action on behalf of a character, such as buying (instantly), moving (time-consuming), waiting.
 - The order between the characters in the script does not affect the final effect. For example, you can write the scripts of the actions of one character at the same time, or you can write the scripts of multiple characters at the same time.
 - You can add "-" before the script command and other statements to comment the content after this line.
+### 可视化创建脚本
+- Right-click the map
+    - Set the speed
+        - Sets the overall speed ratio value
+    - Set the camp
+        - Set the camp
+    - Create the character
+        - Create the character
+- Click the preview button and right click the preview of the character
+    - Add equipment for the character
+        - weapon
+        - missile
+        - props
+    - Setting character state
+        - Set to show a character above or below the 3D map
+        - Set the survival status of a role
+    - Action
+        - Plant / defuse
+    - Qait
+        - Wait for / until the specified time
+- Click the preview button and drag the preview of the character with the left button
+    - Moving
+        - Create the moving command, You can set to use the full path or just the start and end point, or set the movement mode. 
+    - Throwing
+        - Throw a missile
+    - Shooting
+        - Shoot to a point
+        - Shoot at a character, You can set whether the character being shot survives or not
+- Click the preview button and drag the preview of the character with the left button, And click the middle mouse button to create two special points while mouse moving
+    - Moving
+        - Create the moving command, You can set to use the full path or just the start and end point, or set the movement mode. 
+    - Pathfinding
+        - Two special points are used as starting and ending points for automatic pathfinding, You can set the starting and ending layer number, or set the pathfinding mode
+    - Throwing
+        - Throw a missile
+    - Shooting
+        - Shoot to a point
+        - Shoot to a character, you can set whether the character being shot survives or not
 ### QUERY TABLE
 #### ABOUT TACTIC SIMULATION
 |Grammar|Explanation|Implementation or Not|
@@ -32,7 +70,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |give character {Character number} props [bomb / defusekit]|Equip a Character with a Bomb / Defusekit|√|
 |set character {Character number} status [alive / dead]|Set the survival status of a role|√|
 |set character {Character number} vertical position [upper / lower]|Set to show a character above or below the 3D map|√|
-|action character {Character number} <from {Coordinate}> layer {Starting layer} auto move {Finishing coordinates} layer {Finishing layer} [quietly / noisily]|Pathfinding|√|
+|action character {Character number} <from {Coordinate}> layer {Starting layer} auto move {Finishing coordinate} layer {Finishing layer} [quietly / noisily]|Pathfinding|√|
 |action character {Character number} move [run / walk / squat / teleport] {Coordinate} <{Coordinate} ...... {Coordinate}>|Move character to a place|√ (Except teleport)|
 |action character {Character number} throw [smoke / grenade / flashbang / firebomb / decoy] {Coordinate} <{Coordinate} ...... {Coordinate}>|Throw a missile to a certain coordinate|√|
 |action character {Character number} shoot [{Coordinate} / {Goal number} [die / live]]|Shoot to a coordinate or target|√|
@@ -64,7 +102,6 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |LControl + A|Choose transparency|
 |LControl + Delete|Clear canvas|
 ## TODO
-- Generate commands visually
 ## USE OF EXTERNAL RESOURCES
 |Resource|License|
 |----|----|
