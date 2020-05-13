@@ -2240,9 +2240,10 @@ namespace CSGOTacticSimulator
                 buttonDo.Click += delegate (object sender, RoutedEventArgs e)
                 {
                     ComboBox comboBox = new ComboBox();
+                    comboBox.Height = 32;
                     comboBox.FontSize = 20;
-                    comboBox.Width = 60;
-                    comboBox.Margin = new Thickness(0, 10, 0, 10);
+                    comboBox.Width = 160;
+                    comboBox.Margin = new Thickness(0, 5, 0, 5);
                     comboBox.VerticalContentAlignment = VerticalAlignment.Center;
                     foreach (DoWithProps doWithProps in Enum.GetValues(typeof(DoWithProps)))
                     {
@@ -2256,9 +2257,10 @@ namespace CSGOTacticSimulator
                 buttonWait.Click += delegate (object sender, RoutedEventArgs e)
                 {
                     ComboBox comboBox = new ComboBox();
+                    comboBox.Height = 32;
                     comboBox.FontSize = 20;
                     comboBox.Width = 80;
-                    comboBox.Margin = new Thickness(0, 10, 0, 10);
+                    comboBox.Margin = new Thickness(0, 5, 0, 5);
                     comboBox.VerticalContentAlignment = VerticalAlignment.Center;
                     comboBox.Items.Add(new ComboBoxItem() { Content = "等待", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                     comboBox.Items.Add(new ComboBoxItem() { Content = "等待至", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
@@ -2417,7 +2419,7 @@ namespace CSGOTacticSimulator
 
                     ComboBox comboBoxVolumeLimit = new ComboBox();
                     comboBoxVolumeLimit.Height = 32;
-                    comboBoxVolumeLimit.Width = 80;
+                    comboBoxVolumeLimit.Width = 100;
                     comboBoxVolumeLimit.Margin = new Thickness(0, 5, 0, 5);
                     comboBoxVolumeLimit.VerticalContentAlignment = VerticalAlignment.Center;
                     comboBoxVolumeLimit.FontSize = 20;
@@ -2464,7 +2466,7 @@ namespace CSGOTacticSimulator
                 {
                     ComboBox comboBoxMissile = new ComboBox();
                     comboBoxMissile.Height = 32;
-                    comboBoxMissile.Width = 80;
+                    comboBoxMissile.Width = 130;
                     comboBoxMissile.Margin = new Thickness(0, 5, 0, 5);
                     comboBoxMissile.VerticalContentAlignment = VerticalAlignment.Center;
                     comboBoxMissile.FontSize = 20;
@@ -2519,6 +2521,7 @@ namespace CSGOTacticSimulator
                     comboBox.FontSize = 20;
                     comboBox.Items.Add(new ComboBoxItem() { Content = "Live", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                     comboBox.Items.Add(new ComboBoxItem() { Content = "Die", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBox.Height = 32;
                     comboBox.SelectedIndex = 0;
 
                     MessageBox.ButtonList = new List<object> {
