@@ -2054,7 +2054,7 @@ namespace CSGOTacticSimulator
                 {
                     case "设置速度":
                         double speedController = double.Parse((MessageBox.ButtonList[1] as TextBox).Text);
-                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        if (te_editor.Text.Count() > 0 && te_editor.Text[te_editor.Text.Count() - 1] != '\n')
                         {
                             te_editor.Text += "\n";
                         }
@@ -2062,7 +2062,7 @@ namespace CSGOTacticSimulator
                         break;
                     case "设置阵营":
                         string camp = (MessageBox.ButtonList[1] as ComboBox).Text.ToLower();
-                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        if (te_editor.Text.Count() > 0 && te_editor.Text[te_editor.Text.Count() - 1] != '\n')
                         {
                             te_editor.Text += "\n";
                         }
@@ -2070,7 +2070,7 @@ namespace CSGOTacticSimulator
                         break;
                     case "创建角色":
                         string newCamp = (MessageBox.ButtonList[1] as ComboBox).Text.ToLower();
-                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        if (te_editor.Text.Count() > 0 && te_editor.Text[te_editor.Text.Count() - 1] != '\n')
                         {
                             te_editor.Text += "\n";
                         }
@@ -2258,7 +2258,7 @@ namespace CSGOTacticSimulator
                 switch ((MessageBox.ButtonList[0] as Label).Content)
                 {
                     case "装备":
-                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        if (te_editor.Text.Count() > 0 && te_editor.Text[te_editor.Text.Count() - 1] != '\n')
                         {
                             te_editor.Text += "\n";
                         }
@@ -2281,7 +2281,7 @@ namespace CSGOTacticSimulator
                         }
                         break;
                     case "设置":
-                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        if (te_editor.Text.Count() > 0 && te_editor.Text[te_editor.Text.Count() - 1] != '\n')
                         {
                             te_editor.Text += "\n";
                         }
@@ -2295,7 +2295,7 @@ namespace CSGOTacticSimulator
                         }
                         break;
                     case "动作":
-                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        if (te_editor.Text.Count() > 0 && te_editor.Text[te_editor.Text.Count() - 1] != '\n')
                         {
                             te_editor.Text += "\n";
                         }
@@ -2305,7 +2305,7 @@ namespace CSGOTacticSimulator
                         }
                         break;
                     case "等待":
-                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        if (te_editor.Text.Count() > 0 && te_editor.Text[te_editor.Text.Count() - 1] != '\n')
                         {
                             te_editor.Text += "\n";
                         }
@@ -2325,7 +2325,7 @@ namespace CSGOTacticSimulator
                 buttonMove.Content = "移动";
                 Button buttonAutoMove = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
                 buttonAutoMove.Content = "寻路";
-                if(keyDownInPreview.Count == 0)
+                if(keyDownInPreview.Count < 2 || keyDownInPreview.Count > 2)
                 {
                     buttonAutoMove.IsEnabled = false;
                 }
@@ -2520,7 +2520,7 @@ namespace CSGOTacticSimulator
                         {
                             pointsStr += mapPoint.ToString();
                         }
-                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        if (te_editor.Text.Count() > 0 && te_editor.Text[te_editor.Text.Count() - 1] != '\n')
                         {
                             te_editor.Text += "\n";
                         }
@@ -2545,7 +2545,7 @@ namespace CSGOTacticSimulator
                                 }
                             }
                         }
-                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        if (te_editor.Text.Count() > 0 && te_editor.Text[te_editor.Text.Count() - 1] != '\n')
                         {
                             te_editor.Text += "\n";
                         }
@@ -2565,7 +2565,7 @@ namespace CSGOTacticSimulator
                             }
                             pointsMissilePathStr.Remove(pointsMissilePathStr.Count() - 1, 1);
                         }
-                        if (te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        if (te_editor.Text.Count() > 0 && te_editor.Text[te_editor.Text.Count() - 1] != '\n')
                         {
                             te_editor.Text += "\n";
                         }
@@ -2574,7 +2574,7 @@ namespace CSGOTacticSimulator
                     case "射击":
                         string target = "";
                         target = ((MessageBox.ButtonList[1] as Grid).Children[0] as CheckBox).IsChecked == true ? ((MessageBox.ButtonList[1] as Grid).Children[1] as TextBox).Text : mapPoint.ToString();
-                        if(te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        if(te_editor.Text.Count() > 0 && te_editor.Text[te_editor.Text.Count() - 1] != '\n')
                         {
                             te_editor.Text += "\n";
                         }

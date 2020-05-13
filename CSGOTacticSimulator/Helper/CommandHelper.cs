@@ -156,7 +156,7 @@ namespace CSGOTacticSimulator.Helper
         }
 
         private static MouseEventHandler objMouseMove;
-        private static bool isFirstClick = true;
+        private static MouseButtonEventHandler objMouseMiddleDown;
 
         static public List<FrameworkElement> GetPreviewElements(string commandText, MainWindow mainWindow)
         {
@@ -204,15 +204,16 @@ namespace CSGOTacticSimulator.Helper
                         {
                             Point mousePosition = e.GetPosition(mainWindow.i_map);
                             mainWindow.mouseMovePathInPreview.Add(new Point((mousePosition.X / GlobalDictionary.imageRatio), (mousePosition.Y / GlobalDictionary.imageRatio)));
-
-                            if(Keyboard.IsKeyDown(Key.LeftCtrl) && isFirstClick)
+                        };
+                        objMouseMiddleDown = delegate (object sender, MouseButtonEventArgs e)
+                        {
+                            //if (e.MiddleButton == MouseButtonState.Pressed)
+                            //{
+                            //}
+                            if (e.ChangedButton == MouseButton.Middle)
                             {
+                                Point mousePosition = e.GetPosition(mainWindow.i_map);
                                 mainWindow.keyDownInPreview.Add(new Point((mousePosition.X / GlobalDictionary.imageRatio), (mousePosition.Y / GlobalDictionary.imageRatio)));
-                                isFirstClick = false;
-                            }
-                            if (Keyboard.IsKeyUp(Key.LeftCtrl))
-                            {
-                                isFirstClick = true;
                             }
                         };
                         characterImg.MouseLeftButtonDown += delegate (object sender, MouseButtonEventArgs e)
@@ -222,6 +223,7 @@ namespace CSGOTacticSimulator.Helper
                             mainWindow.mouseMovePathInPreview.Clear();
                             mainWindow.keyDownInPreview.Clear();
                             characterImg.MouseMove += objMouseMove;
+                            mainWindow.MouseDown += objMouseMiddleDown;
                         };
                         characterImg.MouseLeftButtonUp += delegate (object sender, MouseButtonEventArgs e)
                         {
@@ -230,15 +232,18 @@ namespace CSGOTacticSimulator.Helper
 
                             if (mainWindow.mouseMovePathInPreview.Count > 0)
                             {
-                                string tag = characterImg.Tag.ToString();
+                                string tag = ((Image)sender).Tag.ToString();
                                 int number = int.Parse(tag.Substring(tag.IndexOf("Number: ") + 8, tag.IndexOf("Posision: ") - (tag.IndexOf("Number: ") + 9)));
                                 mainWindow.CreateCommandInWindow(number, new Point(Math.Round((e.GetPosition(mainWindow.i_map).X / GlobalDictionary.imageRatio), 2), Math.Round((e.GetPosition(mainWindow.i_map).Y / GlobalDictionary.imageRatio), 2)));
                             }
+                            mainWindow.MouseDown -= objMouseMiddleDown;
                         };
                         
                         characterImg.MouseRightButtonDown += delegate (object sender, MouseButtonEventArgs e)
                         {
-                            mainWindow.CreateCommandInWindow(characterNumber, new Point());
+                            string tag = ((Image)sender).Tag.ToString();
+                            int number = int.Parse(tag.Substring(tag.IndexOf("Number: ") + 8, tag.IndexOf("Posision: ") - (tag.IndexOf("Number: ") + 9)));
+                            mainWindow.CreateCommandInWindow(number, new Point());
                         };
                         ++characterNumber;
                         previewElements.Add(characterImg);
