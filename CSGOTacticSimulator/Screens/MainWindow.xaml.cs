@@ -2520,13 +2520,27 @@ namespace CSGOTacticSimulator
                         string pointsStr = "";
                         if ((((MessageBox.ButtonList[1] as Grid).Children[0] as ComboBox).SelectedItem as ComboBoxItem).Content.ToString() == "使用完整路径")
                         {
-                            foreach(Point point in mouseMovePathInPreview)
+                            if (keyDownInPreview.Count == 0)
                             {
-                                pointsStr += point.ToString() + " ";
+                                foreach (Point point in mouseMovePathInPreview)
+                                {
+                                    pointsStr += point.ToString() + " ";
+                                }
+                                if (pointsStr.Count() > 0)
+                                {
+                                    pointsStr = pointsStr.Remove(pointsStr.Count() - 1, 1);
+                                }
                             }
-                            if (pointsStr.Count() > 0)
+                            else
                             {
-                                pointsStr = pointsStr.Remove(pointsStr.Count() - 1, 1);
+                                foreach (Point point in keyDownInPreview)
+                                {
+                                    pointsStr += point.ToString() + " ";
+                                }
+                                if (pointsStr.Count() > 0)
+                                {
+                                    pointsStr = pointsStr.Remove(pointsStr.Count() - 1, 1);
+                                }
                             }
                         }
                         else
