@@ -15,6 +15,12 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_071696564E41400C95388DFC93F91AB8"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_0725AD06090A4681BFFCAF1E9E193FD4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -57,6 +63,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_27F2F33D00A54DEDABB95A0316753767"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_2AD0808AF5F549ADA6408B2BC675440F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -77,6 +89,12 @@
         {
         "MsmKey" = "8:_3347DDC257394486A7E9804942D9B7ED"
         "OwnerKey" = "8:_AEDD4250BE3946FCBF9CFC237AA63EA9"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3595565756744892BB6C94149D60D6E3"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -135,6 +153,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_868D098C7CFC4274AE1F5394A61ECAF8"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_8E7A9501EE104D2DB73FE66C89A17E46"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -161,6 +185,12 @@
         {
         "MsmKey" = "8:_9F8667381FE9BD1959071F00D72593FE"
         "OwnerKey" = "8:_AEDD4250BE3946FCBF9CFC237AA63EA9"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A05E960882924E12AFE7419FC837ABCC"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -231,6 +261,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_D9B54D0F439A4C95BB1D28CEA3D1AB26"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_DEEC9AFB2ACB47E2AA7540587D0E6695"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -257,6 +293,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_AEDD4250BE3946FCBF9CFC237AA63EA9"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_868D098C7CFC4274AE1F5394A61ECAF8"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -372,6 +414,26 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_071696564E41400C95388DFC93F91AB8"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\warning.png"
+            "TargetName" = "8:warning.png"
+            "Tag" = "8:"
+            "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0725AD06090A4681BFFCAF1E9E193FD4"
             {
             "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\background.jpg"
@@ -512,6 +574,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_27F2F33D00A54DEDABB95A0316753767"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\question.png"
+            "TargetName" = "8:question.png"
+            "Tag" = "8:"
+            "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2AD0808AF5F549ADA6408B2BC675440F"
             {
             "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\missile_molotov.png"
@@ -601,6 +683,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3595565756744892BB6C94149D60D6E3"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\restore.png"
+            "TargetName" = "8:restore.png"
+            "Tag" = "8:"
+            "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_36C7896586144476A357FEA637209B67"
@@ -783,6 +885,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_868D098C7CFC4274AE1F5394A61ECAF8"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Sdl.MultiSelectComboBox, Version=1.0.16.0, Culture=neutral, PublicKeyToken=a6f9048fb51b33ed, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_868D098C7CFC4274AE1F5394A61ECAF8"
+                    {
+                    "Name" = "8:Sdl.MultiSelectComboBox.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\..\\Sdl.MultiSelectComboBox.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_60A820E0083B4F49A7D290508AAE14DB"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8E7A9501EE104D2DB73FE66C89A17E46"
             {
             "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\FRIENDLY_ALIVE_UPPER.png"
@@ -892,6 +1025,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A05E960882924E12AFE7419FC837ABCC"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\info.png"
+            "TargetName" = "8:info.png"
+            "Tag" = "8:"
+            "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A4C56E4D4BDA41119F69CE84C4589B28"
@@ -1109,6 +1262,26 @@
             {
             "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\save.png"
             "TargetName" = "8:save.png"
+            "Tag" = "8:"
+            "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D9B54D0F439A4C95BB1D28CEA3D1AB26"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\error.png"
+            "TargetName" = "8:error.png"
             "Tag" = "8:"
             "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
             "Condition" = "8:"
@@ -1349,15 +1522,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:CSGOTacticSimulator"
-        "ProductCode" = "8:{F7FAB169-9067-4C65-9E1D-7B00672E144E}"
-        "PackageCode" = "8:{1914ACC6-CF4D-46D0-906A-CAA15301F901}"
+        "ProductCode" = "8:{6653E3B4-0E56-4EF5-BB9C-D26D98C5A1B1}"
+        "PackageCode" = "8:{87D4FE6B-BE17-4E3A-A753-D0D1E2955DF1}"
         "UpgradeCode" = "8:{BFEFB412-4BF8-42C0-B55D-2D761BA55F79}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.4.1"
+        "ProductVersion" = "8:1.5.0"
         "Manufacturer" = "8:Default Company Name"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
