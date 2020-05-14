@@ -1207,17 +1207,27 @@ namespace CSGOTacticSimulator
                         if (VectorHelper.GetDistance(character.MapPoint, GetMapPoint(new Point(Canvas.GetLeft(c_runcanvas.Children[c_runcanvas.Children.IndexOf(obj)]), Canvas.GetTop(c_runcanvas.Children[c_runcanvas.Children.IndexOf(obj)])), ImgType.Props)) <= 50)
                         {
                             canDefuse = true;
+                            break;
                         }
                     }
                 }
             }
             if (!canDefuse)
             {
+                characters[characters.IndexOf(character)].IsRunningAnimation = false;
+                animations[animations.IndexOf(animation)].status = Helper.Status.Finished;
                 return;
             }
             Thread defuseThread = new Thread(() =>
             {
                 Thread.Sleep(defuseTime * 1000);
+
+                if (character.Status == Model.Status.Dead)
+                {
+                    characters[characters.IndexOf(character)].IsRunningAnimation = false;
+                    animations[animations.IndexOf(animation)].status = Helper.Status.Finished;
+                    return;
+                }
 
                 c_runcanvas.Dispatcher.Invoke(() =>
                 {
@@ -1235,15 +1245,6 @@ namespace CSGOTacticSimulator
             });
             defuseThread.Start();
             listThread.Add(defuseThread);
-
-
-            characters[characters.IndexOf(character)].IsRunningAnimation = false;
-            animations[animations.IndexOf(animation)].status = Helper.Status.Finished;
-
-            Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
-            {
-                TraversalAnimations();
-            }));
         }
 
         private void RunAnimationPlant(Character character, Animation animation)
@@ -1274,6 +1275,14 @@ namespace CSGOTacticSimulator
                 Thread plantThread = new Thread(() =>
                 {
                     Thread.Sleep(4000);
+
+                    if (character.Status == Model.Status.Dead)
+                    {
+                        characters[characters.IndexOf(character)].IsRunningAnimation = false;
+                        animations[animations.IndexOf(animation)].status = Helper.Status.Finished;
+                        return;
+                    }
+
                     c_runcanvas.Dispatcher.Invoke(() =>
                     {
                         Canvas.SetLeft(bombImage, bombWndPoint.X);
