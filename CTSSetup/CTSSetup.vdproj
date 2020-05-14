@@ -153,12 +153,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_868D098C7CFC4274AE1F5394A61ECAF8"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_8E7A9501EE104D2DB73FE66C89A17E46"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -167,6 +161,12 @@
         {
         "MsmKey" = "8:_9485FAAD4080423B954A5C166D0BDD62"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_967A69B3695B1220EF497D3722183593"
+        "OwnerKey" = "8:_AEDD4250BE3946FCBF9CFC237AA63EA9"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -298,7 +298,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_868D098C7CFC4274AE1F5394A61ECAF8"
+        "OwnerKey" = "8:_967A69B3695B1220EF497D3722183593"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -885,37 +885,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_868D098C7CFC4274AE1F5394A61ECAF8"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Sdl.MultiSelectComboBox, Version=1.0.16.0, Culture=neutral, PublicKeyToken=a6f9048fb51b33ed, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_868D098C7CFC4274AE1F5394A61ECAF8"
-                    {
-                    "Name" = "8:Sdl.MultiSelectComboBox.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\..\\Sdl.MultiSelectComboBox.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_60A820E0083B4F49A7D290508AAE14DB"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8E7A9501EE104D2DB73FE66C89A17E46"
             {
             "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\FRIENDLY_ALIVE_UPPER.png"
@@ -954,6 +923,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_967A69B3695B1220EF497D3722183593"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Sdl.MultiSelectComboBox, Version=1.0.16.0, Culture=neutral, PublicKeyToken=a6f9048fb51b33ed, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_967A69B3695B1220EF497D3722183593"
+                    {
+                    "Name" = "8:Sdl.MultiSelectComboBox.DLL"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Sdl.MultiSelectComboBox.DLL"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_60A820E0083B4F49A7D290508AAE14DB"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9B3F8A9A2A3B4822A5ABAA0DE3889E79"
@@ -1522,23 +1522,23 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:CSGOTacticSimulator"
-        "ProductCode" = "8:{6653E3B4-0E56-4EF5-BB9C-D26D98C5A1B1}"
-        "PackageCode" = "8:{87D4FE6B-BE17-4E3A-A753-D0D1E2955DF1}"
+        "ProductCode" = "8:{13A64103-6049-483D-B9F7-8A58B81ACF1A}"
+        "PackageCode" = "8:{52549C22-9655-46BD-A072-BA74648F1265}"
         "UpgradeCode" = "8:{BFEFB412-4BF8-42C0-B55D-2D761BA55F79}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.5.0"
+        "ProductVersion" = "8:1.5.1"
         "Manufacturer" = "8:Default Company Name"
         "ARPHELPTELEPHONE" = "8:"
-        "ARPHELPLINK" = "8:"
+        "ARPHELPLINK" = "8:https://github.com/ZjzMisaka/CSGOTacticSimulator"
         "Title" = "8:CTSSetup"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Default Company Name"
         "Keywords" = "8:"
-        "ARPCOMMENTS" = "8:"
+        "ARPCOMMENTS" = "8:CSGO战术模拟器"
         "ARPURLINFOABOUT" = "8:"
         "ARPPRODUCTICON" = "8:"
         "ARPIconIndex" = "3:0"
