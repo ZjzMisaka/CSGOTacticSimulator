@@ -213,7 +213,7 @@ namespace CSGOTacticSimulator.Helper
                             if (e.ChangedButton == MouseButton.Middle)
                             {
                                 Point mousePosition = e.GetPosition(mainWindow.i_map);
-                                mainWindow.keyDownInPreview.Add(new Point((mousePosition.X / GlobalDictionary.imageRatio), (mousePosition.Y / GlobalDictionary.imageRatio)));
+                                mainWindow.keyDownInPreview.Add(new Point(Math.Round((mousePosition.X / GlobalDictionary.imageRatio), 2), Math.Round((mousePosition.Y / GlobalDictionary.imageRatio), 2)));
                             }
                         };
                         characterImg.MouseLeftButtonDown += delegate (object sender, MouseButtonEventArgs e)
