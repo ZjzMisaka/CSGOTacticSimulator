@@ -111,7 +111,7 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="0, 5, 5, 0">
                     <Label x:Name="lb_point" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="坐标: " FontSize="20" Foreground="White"></Label>
                     <TextBox x:Name="tb_point" Width="160" Height="32" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" IsReadOnly="True"></TextBox>
                     <Button x:Name="btn_point" Style="{StaticResource Style.TextContentButton}" Width="50" Height="32" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="复制" FontSize="20" Click="btn_point_Click" ></Button>
