@@ -77,6 +77,8 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
+            <GridSplitter x:Name="gs_gridsplitter" Width="5" Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Background="Gray"  HorizontalAlignment="Right" Panel.ZIndex="100"/>
+
             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
                 <Label x:Name="lb_select_folder" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="设定文件夹: " FontSize="20" Foreground="White"></Label>
                 <TextBox x:Name="tb_select_folder" Width="200" Height="32" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" TextChanged="tb_select_folder_TextChanged"></TextBox>
@@ -97,12 +99,6 @@
                 <TextBlock x:Name="tb_timer" Visibility="Hidden" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="5" IsHitTestVisible="False" ></TextBlock>
             </Grid>
 
-            <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="0">
-                <Label x:Name="lb_point" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="坐标: " FontSize="20" Foreground="White"></Label>
-                <TextBox x:Name="tb_point" Width="160" Height="32" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" IsReadOnly="True"></TextBox>
-                <Button x:Name="btn_point" Style="{StaticResource Style.TextContentButton}" Width="50" Height="32" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="复制" FontSize="20" Click="btn_point_Click" ></Button>
-            </StackPanel>
-
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1">
                 <TextBox x:Name="tb_select_file" Width="200" Height="32" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="20"></TextBox>
                 <Button x:Name="btn_select_file" Style="{StaticResource Style.TextContentButton}" Width="50" Height="32" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Content="..." FontSize="20" Margin="0,0,0,3" Click="btn_select_file_Click" />
@@ -110,20 +106,32 @@
 
             <avalonEdit:TextEditor x:Name="te_editor" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" FontSize="20" Margin="5, 0, 0, 0" ShowLineNumbers="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
 
-            <Grid x:Name="g_controller_buttons" Grid.Row="3" Grid.Column="1"  Margin="5, 5, 0, 0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="btn_preview" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="0" Click="btn_preview_Click"></Button>
-                <Button x:Name="btn_run" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="1" Click="btn_run_Click"></Button>
-                <Button x:Name="btn_stop" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="2" Click="btn_stop_Click"></Button>
-                <Button x:Name="btn_save" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="3" Click="btn_save_Click"></Button>
-                <Button x:Name="btn_exit" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="4" Click="btn_exit_Click"></Button>
+                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+                    <Label x:Name="lb_point" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="坐标: " FontSize="20" Foreground="White"></Label>
+                    <TextBox x:Name="tb_point" Width="160" Height="32" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" IsReadOnly="True"></TextBox>
+                    <Button x:Name="btn_point" Style="{StaticResource Style.TextContentButton}" Width="50" Height="32" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="复制" FontSize="20" Click="btn_point_Click" ></Button>
+                </StackPanel>
+                <Grid x:Name="g_controller_buttons" Grid.Row="0" Grid.Column="1"  Margin="5, 5, 0, 0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="btn_preview" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="0" Click="btn_preview_Click"></Button>
+                    <Button x:Name="btn_run" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="1" Click="btn_run_Click"></Button>
+                    <Button x:Name="btn_stop" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="2" Click="btn_stop_Click"></Button>
+                    <Button x:Name="btn_save" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="3" Click="btn_save_Click"></Button>
+                    <Button x:Name="btn_exit" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="4" Click="btn_exit_Click"></Button>
+                </Grid>
             </Grid>
+            
         </Grid>
         <Canvas x:Name="c_runcanvas">
         </Canvas>

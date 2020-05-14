@@ -456,9 +456,11 @@ namespace CSGOTacticSimulator
 
             StartTimer();
 
-            ResizeMode = ResizeMode.NoResize;
-
             TraversalAnimations();
+
+            btn_restore.Visibility = Visibility.Collapsed;
+            gs_gridsplitter.IsEnabled = false;
+            ResizeMode = ResizeMode.NoResize;
         }
         private void ReCreateJson(Map map)
         {
@@ -1705,6 +1707,11 @@ namespace CSGOTacticSimulator
             GlobalDictionary.charatersNumber = 0;
             localSpeedController = -1;
 
+            if (WindowState == WindowState.Maximized)
+            {
+                btn_restore.Visibility = Visibility.Visible;
+            }
+            gs_gridsplitter.IsEnabled = true;
             ResizeMode = ResizeMode.CanResizeWithGrip;
         }
 
