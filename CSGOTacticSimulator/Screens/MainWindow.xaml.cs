@@ -253,14 +253,14 @@ namespace CSGOTacticSimulator
                 GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
             }
 
-            foreach (Character character in characters)
-            {
-                Point wndPoint = GetWndPoint(character.MapPoint, ImgType.Character);
-                c_runcanvas.Children.Remove(character.CharacterImg);
-                Canvas.SetLeft(character.CharacterImg, wndPoint.X);
-                Canvas.SetTop(character.CharacterImg, wndPoint.Y);
-                c_runcanvas.Children.Add(character.CharacterImg);
-            }
+            //foreach (Character character in characters)
+            //{
+            //    Point wndPoint = GetWndPoint(character.MapPoint, ImgType.Character);
+            //    c_runcanvas.Children.Remove(character.CharacterImg);
+            //    Canvas.SetLeft(character.CharacterImg, wndPoint.X);
+            //    Canvas.SetTop(character.CharacterImg, wndPoint.Y);
+            //    c_runcanvas.Children.Add(character.CharacterImg);
+            //}
         }
 
         private void Window_StateChanged(object sender, EventArgs e)
@@ -455,6 +455,8 @@ namespace CSGOTacticSimulator
             }
 
             StartTimer();
+
+            ResizeMode = ResizeMode.NoResize;
 
             TraversalAnimations();
         }
@@ -1702,6 +1704,8 @@ namespace CSGOTacticSimulator
             c_runcanvas.Children.Clear();
             GlobalDictionary.charatersNumber = 0;
             localSpeedController = -1;
+
+            ResizeMode = ResizeMode.CanResizeWithGrip;
         }
 
         void te_editor_TextArea_TextEntered(object sender, TextCompositionEventArgs e)
