@@ -243,7 +243,7 @@ namespace CSGOTacticSimulator.Helper
                         {
                             string tag = ((Image)sender).Tag.ToString();
                             int number = int.Parse(tag.Substring(tag.IndexOf("Number: ") + 8, tag.IndexOf("Posision: ") - (tag.IndexOf("Number: ") + 9)));
-                            mainWindow.CreateCommandInWindow(number, new Point());
+                            mainWindow.CreateCommandInWindow(number);
                         };
                         ++characterNumber;
                         previewElements.Add(characterImg);
