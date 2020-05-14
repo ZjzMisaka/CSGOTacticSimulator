@@ -142,6 +142,10 @@ namespace CSGOTacticSimulator
         private void i_map_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
+            if (i_map.Source != null)
+            {
+                GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
+            }
             Point pointInMap = new Point(Math.Round((e.GetPosition(i_map).X / GlobalDictionary.imageRatio), 2), Math.Round((e.GetPosition(i_map).Y / GlobalDictionary.imageRatio), 2));
             tb_point.Text = pointInMap.ToString();
         }
