@@ -2386,7 +2386,7 @@ namespace CSGOTacticSimulator
             buttonMove.Content = "移动";
             Button buttonAutoMove = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
             buttonAutoMove.Content = "寻路";
-            if(keyDownInPreview.Count < 2 || keyDownInPreview.Count > 2)
+            if(keyDownInPreview.Count < 2)
             {
                 buttonAutoMove.IsEnabled = false;
             }
@@ -2441,6 +2441,13 @@ namespace CSGOTacticSimulator
                 TextBox textBoxStartLayer = new TextBox() { FontSize = 20, Height = 32, Width = 50, HorizontalAlignment = HorizontalAlignment.Left, Name = "textBoxStartLayer" };
                 Label labelEndLayer = new Label() { Content = "结束层数", Foreground = new SolidColorBrush(Colors.White), FontSize = 20, Height = 32 };
                 TextBox textBoxEndLayer = new TextBox() { FontSize = 20, Height = 32, Width = 50, HorizontalAlignment = HorizontalAlignment.Left, Name = "textBoxEndLayer" };
+                if (keyDownInPreview.Count < 2 || keyDownInPreview.Count > 2)
+                {
+                    textBoxStartLayer.Text = "0";
+                    textBoxEndLayer.Text = "0";
+                    textBoxStartLayer.IsReadOnly = true;
+                    textBoxEndLayer.IsReadOnly = true;
+                }
 
                 ComboBox comboBoxVolumeLimit = new ComboBox();
                 comboBoxVolumeLimit.Height = 32;
@@ -2606,12 +2613,12 @@ namespace CSGOTacticSimulator
                     Grid grid = MessageBox.ButtonList[1] as Grid;
                     string textBoxStartLayer = "";
                     string textBoxEndLayer = "";
-                    foreach(UIElement ue in grid.Children)
+                    foreach (UIElement ue in grid.Children)
                     {
-                        if(ue is TextBox)
+                        if (ue is TextBox)
                         {
                             TextBox tb = (TextBox)ue;
-                            if(tb.Name == "textBoxStartLayer")
+                            if (tb.Name == "textBoxStartLayer")
                             {
                                 textBoxStartLayer = tb.Text;
                             }
@@ -2621,11 +2628,14 @@ namespace CSGOTacticSimulator
                             }
                         }
                     }
-                    if (te_editor.Text.Count() > 0 && te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                    for (int keyDownInPreviewIndex = 0; keyDownInPreview.Count > keyDownInPreviewIndex + 1; ++keyDownInPreviewIndex)
                     {
-                        te_editor.Text += "\n";
+                        if (te_editor.Text.Count() > 0 && te_editor.Text[te_editor.Text.Count() - 1] != '\n')
+                        {
+                            te_editor.Text += "\n";
+                        }
+                        te_editor.Text += "action character " + characterNumber + " from " + keyDownInPreview[keyDownInPreviewIndex] + " layer " + textBoxStartLayer + " auto move " + keyDownInPreview[keyDownInPreviewIndex + 1] + " layer " + textBoxEndLayer + " " + (MessageBox.ButtonList[2] as ComboBox).Text.ToLowerInvariant() + "\n";
                     }
-                    te_editor.Text += "action character " + characterNumber + " from " + keyDownInPreview[0] + " layer " + textBoxStartLayer + " auto move " + keyDownInPreview[1] + " layer " + textBoxEndLayer + " " + (MessageBox.ButtonList[2] as ComboBox).Text.ToLowerInvariant() + "\n";
                     break;
                 case "投掷":
                     string pointsMissilePathStr = "";
