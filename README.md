@@ -42,19 +42,19 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
         - Wait for / until the specified time
 - Click the preview button and drag the preview of the character with the left button
     - Moving
-        - Create the moving command, You can set to use the full path or just the start and end point, or set the movement mode. 
+        - Create the moving command, You can set to use the full path or just the start and end point, or set the movement mode
     - Throwing
         - Throw a missile
     - Shooting
         - Shoot to a point
-        - Shoot at a character, You can set whether the character being shot survives or not
+        - Shoot at a character, you can set whether the character being shot survives or not
 - Click the preview button and drag the preview of the character with the left button, And click the middle mouse button to create special points while mouse moving
     - Moving
-        - Create the moving command by using special points, You can set to use the full path or just the start and end point, or set the movement mode. 
-    - Pathfinding (If and only if there are two special points)
-        - Two special points are used as starting and ending points for automatic pathfinding, You can set the starting and ending layer number, or set the pathfinding mode
+        - Create the moving command by using special points, You can set to use the full path or just the start and end point, or set the movement mode
+    - Pathfinding
+        - The adjacent special points are used as the starting and ending points for automatic pathfinding. Way finding method can be set. If there are two special points, you can set the starting and ending layer number and wayfinding method
     - Throwing
-        - Throw a missile
+        - Throw a missile, with special points as the trajectory of the missile, simulate the rebound of the missile
     - Shooting
         - Shoot to a point
         - Shoot to a character, you can set whether the character being shot survives or not
