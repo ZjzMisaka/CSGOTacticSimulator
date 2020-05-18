@@ -1,10 +1,13 @@
 # CSGOTacticSimulator
 CSGO战术模拟器
+ ![CSGOTacticSimulator](https://www.iaders.com/wp-content/uploads/2020/05/CTS.png) <br />
+ ![WTFPL](http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl-badge-1.png) <br />
+ [English ReadMe](https://github.com/ZjzMisaka/CSGOTacticSimulator/blob/master/README.md) <br />
 ## 示例
 *(v1.1.0 gif)* </br>
 https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
-*(v1.2.0 screenshot)* </br>
-![screenshot](https://www.iaders.com/upload/2020/0312/v1.3.0.png)
+*(v1.6.1 screenshot)* </br>
+![screenshot](https://www.iaders.com/wp-content/uploads/2020/05/1.6.0.png)
 ## 提示
 - 支持自动寻路
 - 可以通过点击图片获得坐标. 

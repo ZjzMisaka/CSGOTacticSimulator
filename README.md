@@ -1,12 +1,13 @@
 # CSGOTacticSimulator
 CSGO Tactic Simulator <br />
+ ![CSGOTacticSimulator](https://www.iaders.com/wp-content/uploads/2020/05/CTS.png) <br />
  ![WTFPL](http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl-badge-1.png) <br />
  [中文ReadMe](https://github.com/ZjzMisaka/CSGOTacticSimulator/blob/master/README_CH.md) <br />
 ## EXAMPLE
 *(v1.1.0 gif)* </br>
 https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
-*(v1.2.0 screenshot)* </br>
-![screenshot](https://www.iaders.com/upload/2020/0312/v1.3.0.png)
+*(v1.6.1 screenshot)* </br>
+![screenshot](https://www.iaders.com/wp-content/uploads/2020/05/1.6.0.png)
 ## PROMPT
 - Program supports pathfinding. 
 - You can get the coordinates by clicking on the picture.
