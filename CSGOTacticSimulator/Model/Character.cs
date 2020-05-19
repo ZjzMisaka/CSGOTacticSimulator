@@ -31,6 +31,8 @@ namespace CSGOTacticSimulator.Model
 
     public class Character
     {
+        public string Name { get => name; set => name = value; }
+        private string name = "";
         public Weapon Weapon { get => weapon; set => weapon = value; }
         private Weapon weapon = Weapon.Knife;
         public List<Missile> Missiles { get => grenades; set => grenades = value; }
@@ -72,12 +74,18 @@ namespace CSGOTacticSimulator.Model
         public Image CharacterImg { get => characterImg; set => characterImg = value; }
         private Image characterImg = new Image();
 
-        public Character(bool isFriendly, bool isT, Point mapPoint, MainWindow wnd)
+        public Character(string name, bool isFriendly, bool isT, Point mapPoint, MainWindow wnd)
         {
             CharacterImg.MouseEnter += wnd.ShowCharacterInfos;
 
             CharacterImg.Width = GlobalDictionary.CharacterWidthAndHeight;
             CharacterImg.Height = GlobalDictionary.CharacterWidthAndHeight;
+
+            if (name != "")
+            {
+                this.Name = name;
+                CharacterHelper.AddIntoNameDic(name, CharacterHelper.GetCharacters().Count);
+            }
 
             this.IsFriendly = isFriendly;
             this.IsT = isT;
@@ -92,7 +100,8 @@ namespace CSGOTacticSimulator.Model
             }
 
             this.MapPoint = mapPoint;
-
+            
+            CharacterHelper.AddCharacter(this);
             wnd.NewCharacter(this, mapPoint);
         }
 

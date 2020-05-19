@@ -102,7 +102,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Global\GlobalDictionary.cs" />
-    <Compile Include="Helper\Animation.cs" />
+    <Compile Include="Model\Animation.cs" />
+    <Compile Include="Helper\CharacterHelper.cs" />
     <Compile Include="Helper\CommandHelper.cs" />
     <Compile Include="Helper\CompletionData.cs" />
     <Compile Include="Helper\IniHelper.cs" />

@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,6 +22,7 @@ namespace CSGOTacticSimulator.Helper
 {
     static public class CommandHelper
     {
+        static private Dictionary<string, int> characterNameDic = new Dictionary<string, int>();
         static public int previewCharactorCount = 0;
         static public List<string> commands = new List<string>();
         static public List<string> GetCommands(string commandsText)
@@ -160,6 +162,8 @@ namespace CSGOTacticSimulator.Helper
 
         static public List<FrameworkElement> GetPreviewElements(string commandText, MainWindow mainWindow)
         {
+            characterNameDic = new Dictionary<string, int>();
+
             List<FrameworkElement> previewElements = new List<FrameworkElement>();
 
             Dictionary<int, Point> charactorWndPoints = new Dictionary<int, Point>();
@@ -192,6 +196,11 @@ namespace CSGOTacticSimulator.Helper
                         else
                         {
                             characterImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/ENEMY_ALIVE_UPPER.png")));
+                        }
+                        if (splitedCmd.Count() == 6 && Regex.IsMatch(splitedCmd[5], "^[^0-9](.*)$"))
+                        {
+                            string name = splitedCmd[5];
+                            characterNameDic.Add(name, characterNumber);
                         }
                         characterImg.Width = GlobalDictionary.CharacterWidthAndHeight;
                         characterImg.Height = GlobalDictionary.CharacterWidthAndHeight;
@@ -262,9 +271,12 @@ namespace CSGOTacticSimulator.Helper
                         Point endMapPoint = new Point();
                         int endLayer;
                         VolumeLimit volumeLimit;
+                        if (!int.TryParse(splitedCmd[2], out characterNumber))
+                        {
+                            characterNumber = characterNameDic[splitedCmd[2]];
+                        }
                         if (!command.Contains("from"))
                         {
-                            characterNumber = int.Parse(splitedCmd[2]);
                             startMapPoint = charactorWndPoints[characterNumber];
                             startLayer = int.Parse(splitedCmd[4]);
                             endMapPoint = new Point(double.Parse(splitedCmd[7].Split(',')[0]), double.Parse(splitedCmd[7].Split(',')[1]));
@@ -273,7 +285,6 @@ namespace CSGOTacticSimulator.Helper
                         }
                         else
                         {
-                            characterNumber = int.Parse(splitedCmd[2]);
                             startLayer = int.Parse(splitedCmd[6]);
                             startMapPoint = PathfindingHelper.GetNearestNode(VectorHelper.Parse(splitedCmd[4]), startLayer, mapFrame).nodePoint;
                             endMapPoint = new Point(double.Parse(splitedCmd[9].Split(',')[0]), double.Parse(splitedCmd[9].Split(',')[1]));
@@ -322,7 +333,11 @@ namespace CSGOTacticSimulator.Helper
                     else if (AnalysisCommand(command) == Command.ActionCharacterMove)
                     {
                         string[] splitedCmd = command.Split(' ');
-                        int number = int.Parse(splitedCmd[2]);
+                        int number;
+                        if(!int.TryParse(splitedCmd[2], out number))
+                        {
+                            number = characterNameDic[splitedCmd[2]];
+                        }
                         List<Point> wndPoints = new List<Point>();
                         for (int i = 5; i < splitedCmd.Count(); ++i)
                         {

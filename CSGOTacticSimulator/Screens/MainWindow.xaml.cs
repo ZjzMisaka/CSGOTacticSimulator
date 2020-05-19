@@ -21,6 +21,7 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using Path = System.IO.Path;
 using Sdl.MultiSelectComboBox.Themes.Generic;
+using System.Text.RegularExpressions;
 
 namespace CSGOTacticSimulator
 {
@@ -29,7 +30,6 @@ namespace CSGOTacticSimulator
     /// </summary>
     public partial class MainWindow : Window
     {
-        public List<Character> characters = new List<Character>();
         public List<Animation> animations = new List<Animation>();
         private Camp currentCamp;
         private double localSpeedController = -1;
@@ -231,8 +231,6 @@ namespace CSGOTacticSimulator
         public void NewCharacter(Character character, Point mapPoint)
         {
             Point wndPoint = GetWndPoint(mapPoint, ImgType.Character);
-
-            characters.Add(character);
 
             Canvas.SetLeft(character.CharacterImg, wndPoint.X);
             Canvas.SetTop(character.CharacterImg, wndPoint.Y);
@@ -617,13 +615,20 @@ namespace CSGOTacticSimulator
             isT = splitedCmd[2] == "t" ? true : false;
             isFriendly = currentCamp.ToString().ToLower() == splitedCmd[2] ? true : false;
             mapPoint = new Point(Double.Parse(splitedCmd[3].Split(',')[0]), Double.Parse(splitedCmd[3].Split(',')[1]));
-            new Character(isFriendly, isT, mapPoint, this);
+
+            string name = "";
+            if(splitedCmd.Count() == 6 && Regex.IsMatch(splitedCmd[5], "^[^0-9](.*)$"))
+            {
+                name = splitedCmd[5];
+            }
+            new Character(name, isFriendly, isT, mapPoint, this);
         }
 
         private void SetCharacterStatus(string command)
         {
+            List<Character> characters = CharacterHelper.GetCharacters();
             string[] splitedCmd = command.Split(' ');
-            int number = int.Parse(splitedCmd[2]);
+            int number = CharacterHelper.GetCharacter(splitedCmd[2]).Number;
             Model.Status charactorStatus = Model.Status.Alive;
             for (int i = 0; i < characters.Count; ++i)
             {
@@ -643,10 +648,11 @@ namespace CSGOTacticSimulator
 
         private void SetCharacterVerticalPosition(string command)
         {
+            List<Character> characters = CharacterHelper.GetCharacters();
             string[] splitedCmd = command.Split(' ');
-            int number = int.Parse(splitedCmd[2]);
+            int number = CharacterHelper.GetCharacter(splitedCmd[2]).Number;
             Model.VerticalPosition charactorVerticalPosition = Model.VerticalPosition.Upper;
-            for (int i = 0; i < characters.Count; ++i)
+            for (int i = 0; i < CharacterHelper.GetCharacters().Count; ++i)
             {
                 if (characters[i].Number == number)
                 {
@@ -674,8 +680,9 @@ namespace CSGOTacticSimulator
         }
         private void GiveCharacterWeapon(string command)
         {
+            List<Character> characters = CharacterHelper.GetCharacters();
             string[] splitedCmd = command.Split(' ');
-            int number = int.Parse(splitedCmd[2]);
+            int number = CharacterHelper.GetCharacter(splitedCmd[2]).Number;
             string weaponStr = splitedCmd[4];
             for (int i = 0; i < characters.Count; ++i)
             {
@@ -693,8 +700,9 @@ namespace CSGOTacticSimulator
         }
         private void GiveCharacterMissile(string command)
         {
+            List<Character> characters = CharacterHelper.GetCharacters();
             string[] splitedCmd = command.Split(' ');
-            int number = int.Parse(splitedCmd[2]);
+            int number = CharacterHelper.GetCharacter(splitedCmd[2]).Number;
             List<Missile> missiles = new List<Missile>();
             for (int i = 4; i < splitedCmd.Count(); ++i)
             {
@@ -746,8 +754,9 @@ namespace CSGOTacticSimulator
 
         private void GiveCharacterProps(string command)
         {
+            List<Character> characters = CharacterHelper.GetCharacters();
             string[] splitedCmd = command.Split(' ');
-            int number = int.Parse(splitedCmd[2]);
+            int number = CharacterHelper.GetCharacter(splitedCmd[2]).Number;
             string propsStr = splitedCmd[4];
             for (int i = 0; i < characters.Count; ++i)
             {
@@ -765,8 +774,9 @@ namespace CSGOTacticSimulator
         }
         private void ActionCharacterShoot(string command)
         {
+            List<Character> characters = CharacterHelper.GetCharacters();
             string[] splitedCmd = command.Split(' ');
-            int number = int.Parse(splitedCmd[2]);
+            int number = CharacterHelper.GetCharacter(splitedCmd[2]).Number;
             Point toMapPoint = new Point();
             int targetNumber;
             if (int.TryParse(splitedCmd[4], out targetNumber))
@@ -790,21 +800,21 @@ namespace CSGOTacticSimulator
         private void ActionCharacterWaitUntil(string command)
         {
             string[] splitedCmd = command.Split(' ');
-            int number = int.Parse(splitedCmd[2]);
+            int number = CharacterHelper.GetCharacter(splitedCmd[2]).Number;
             double second = double.Parse(splitedCmd[5]);
             animations.Add(new Animation(number, Helper.Action.WaitUntil, new Point(), second));
         }
         private void ActionCharacterWaitFor(string command)
         {
             string[] splitedCmd = command.Split(' ');
-            int number = int.Parse(splitedCmd[2]);
+            int number = CharacterHelper.GetCharacter(splitedCmd[2]).Number;
             double second = double.Parse(splitedCmd[5]);
             animations.Add(new Animation(number, Helper.Action.WaitFor, new Point(), second));
         }
         private void ActionCharacterDo(string command)
         {
             string[] splitedCmd = command.Split(' ');
-            int number = int.Parse(splitedCmd[2]);
+            int number = CharacterHelper.GetCharacter(splitedCmd[2]).Number;
             string doWithPropsStr = splitedCmd[4];
             DoWithProps doWithProps = DoWithProps.Defuse;
             foreach (DoWithProps doWithPropsTemp in Enum.GetValues(typeof(DoWithProps)))
@@ -837,7 +847,7 @@ namespace CSGOTacticSimulator
                 return;
             }
             string[] splitedCmd = command.Split(' ');
-            int characterNumber;
+            int characterNumber = CharacterHelper.GetCharacter(splitedCmd[2]).Number;
             Point startMapPoint = new Point();
             Character character = null;
             int startLayer;
@@ -846,8 +856,7 @@ namespace CSGOTacticSimulator
             VolumeLimit volumeLimit;
             if (!command.Contains("from"))
             {
-                characterNumber = int.Parse(splitedCmd[2]);
-                foreach (Character characterTemp in characters)
+                foreach (Character characterTemp in CharacterHelper.GetCharacters())
                 {
                     if (characterTemp.Number == characterNumber)
                     {
@@ -862,8 +871,7 @@ namespace CSGOTacticSimulator
             }
             else
             {
-                characterNumber = int.Parse(splitedCmd[2]);
-                foreach (Character characterTemp in characters)
+                foreach (Character characterTemp in CharacterHelper.GetCharacters())
                 {
                     if (characterTemp.Number == characterNumber)
                     {
@@ -961,7 +969,7 @@ namespace CSGOTacticSimulator
         private void ActionCharacterMove(string command)
         {
             string[] splitedCmd = command.Split(' ');
-            int number = int.Parse(splitedCmd[2]);
+            int number = CharacterHelper.GetCharacter(splitedCmd[2]).Number;
             Helper.Action action = Helper.Action.Run;
             if (splitedCmd[4] == Helper.Action.Run.ToString().ToLower())
             {
@@ -998,7 +1006,7 @@ namespace CSGOTacticSimulator
         private void ActionCharacterThrow(string command)
         {
             string[] splitedCmd = command.Split(' ');
-            int number = int.Parse(splitedCmd[2]);
+            int number = CharacterHelper.GetCharacter(splitedCmd[2]).Number;
             string missileStr = splitedCmd[4];
             Helper.Action action = Helper.Action.Throw;
             Missile missile = Missile.Nothing;
@@ -1025,7 +1033,7 @@ namespace CSGOTacticSimulator
                     continue;
                 }
                 int ownerIndex = animation.ownerIndex;
-                foreach (Character character in characters)
+                foreach (Character character in CharacterHelper.GetCharacters())
                 {
                     if (character.Number == ownerIndex && character.IsRunningAnimation == false)
                     {
@@ -1087,6 +1095,8 @@ namespace CSGOTacticSimulator
                 return;
             }
 
+            List<Character> characters = CharacterHelper.GetCharacters();
+
             characters[characters.IndexOf(character)].IsRunningAnimation = true;
             animations[animations.IndexOf(animation)].status = Helper.Status.Running;
 
@@ -1123,6 +1133,8 @@ namespace CSGOTacticSimulator
                 return;
             }
 
+            List<Character> characters = CharacterHelper.GetCharacters();
+
             characters[characters.IndexOf(character)].IsRunningAnimation = true;
             animations[animations.IndexOf(animation)].status = Helper.Status.Running;
 
@@ -1149,6 +1161,8 @@ namespace CSGOTacticSimulator
                 return;
             }
 
+            List<Character> characters = CharacterHelper.GetCharacters();
+
             characters[characters.IndexOf(character)].IsRunningAnimation = true;
             animations[animations.IndexOf(animation)].status = Helper.Status.Running;
 
@@ -1168,6 +1182,8 @@ namespace CSGOTacticSimulator
             {
                 return;
             }
+
+            List<Character> characters = CharacterHelper.GetCharacters();
 
             characters[characters.IndexOf(character)].IsRunningAnimation = true;
             animations[animations.IndexOf(animation)].status = Helper.Status.Running;
@@ -1238,6 +1254,8 @@ namespace CSGOTacticSimulator
             {
                 return;
             }
+
+            List<Character> characters = CharacterHelper.GetCharacters();
 
             characters[characters.IndexOf(character)].IsRunningAnimation = true;
             animations[animations.IndexOf(animation)].status = Helper.Status.Running;
@@ -1317,6 +1335,8 @@ namespace CSGOTacticSimulator
         }
         private void RunAnimationChangeStatus(Character character, Animation animation)
         {
+            List<Character> characters = CharacterHelper.GetCharacters();
+
             characters[characters.IndexOf(character)].IsRunningAnimation = true;
             animations[animations.IndexOf(animation)].status = Helper.Status.Running;
 
@@ -1336,6 +1356,8 @@ namespace CSGOTacticSimulator
             {
                 return;
             }
+
+            List<Character> characters = CharacterHelper.GetCharacters();
 
             double speedController = localSpeedController != -1 ? localSpeedController : GlobalDictionary.speedController;
 
@@ -1404,6 +1426,8 @@ namespace CSGOTacticSimulator
             {
                 return;
             }
+
+            List<Character> characters = CharacterHelper.GetCharacters();
 
             double speedController = localSpeedController != -1 ? localSpeedController : GlobalDictionary.speedController;
 
@@ -1546,6 +1570,8 @@ namespace CSGOTacticSimulator
                 return;
             }
 
+            List<Character> characters = CharacterHelper.GetCharacters();
+
             Point fromMapPoint = character.MapPoint;
             Point fromWndPoint = GetWndPoint(fromMapPoint, ImgType.Nothing);
             Point toWndPoint = new Point();
@@ -1603,6 +1629,8 @@ namespace CSGOTacticSimulator
 
         public void ShowCharacterInfos(object sender, MouseEventArgs e)
         {
+            List<Character> characters = CharacterHelper.GetCharacters();
+
             foreach (Character character in characters)
             {
                 if (character.CharacterImg == sender)
@@ -1681,7 +1709,7 @@ namespace CSGOTacticSimulator
             ThreadHelper.StopAllThread();
             CommandHelper.commands.Clear();
             animations.Clear();
-            characters.Clear();
+            CharacterHelper.ClearCharacters();
             c_runcanvas.Children.Clear();
             GlobalDictionary.charatersNumber = 0;
             localSpeedController = -1;
@@ -1747,6 +1775,7 @@ namespace CSGOTacticSimulator
                 data.Add(new CompletionData("mode"));
                 data.Add(new CompletionData("distance"));
                 data.Add(new CompletionData("to"));
+                data.Add(new CompletionData("name"));
                 foreach (Props props in Enum.GetValues(typeof(Props)))
                 {
                     if (props == Props.Nothing)
