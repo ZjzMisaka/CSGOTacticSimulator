@@ -605,7 +605,7 @@ namespace CSGOTacticSimulator
                 }
             });
             timerThread.Start();
-            ThreadHelper.listThread.Add(timerThread);
+            ThreadHelper.AddThread(timerThread);
         }
 
         private void CreateCharacter(string command)

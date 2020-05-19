@@ -7,7 +7,7 @@ namespace CSGOTacticSimulator.Helper
 {
     static public class ThreadHelper
     {
-        static public List<Thread> listThread = new List<Thread>();
+        static private List<Thread> listThread = new List<Thread>();
 
         static public void StopAllThread()
         {
