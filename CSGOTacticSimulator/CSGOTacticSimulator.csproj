@@ -107,6 +107,7 @@
     <Compile Include="Helper\CompletionData.cs" />
     <Compile Include="Helper\IniHelper.cs" />
     <Compile Include="Helper\PathfindingHelper.cs" />
+    <Compile Include="Helper\ThreadHelper.cs" />
     <Compile Include="Helper\VectorHelper.cs" />
     <Compile Include="Model\Character.cs" />
     <Compile Include="Model\Map.cs" />
