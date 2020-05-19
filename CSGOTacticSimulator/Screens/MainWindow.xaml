@@ -123,12 +123,14 @@
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Button x:Name="btn_preview" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="0" Click="btn_preview_Click"></Button>
                     <Button x:Name="btn_run" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="1" Click="btn_run_Click"></Button>
-                    <Button x:Name="btn_stop" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="2" Click="btn_stop_Click"></Button>
-                    <Button x:Name="btn_save" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="3" Click="btn_save_Click"></Button>
-                    <Button x:Name="btn_exit" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="4" Click="btn_exit_Click"></Button>
+                    <Button x:Name="btn_pause" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="2" Click="btn_pause_Click"></Button>
+                    <Button x:Name="btn_stop" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="3" Click="btn_stop_Click"></Button>
+                    <Button x:Name="btn_save" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="4" Click="btn_save_Click"></Button>
+                    <Button x:Name="btn_exit" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="5" Click="btn_exit_Click"></Button>
                 </Grid>
             </Grid>
             

@@ -92,6 +92,11 @@ namespace CSGOTacticSimulator
             runBrush.Stretch = Stretch.Uniform;
             btn_run.Background = runBrush;
 
+            ImageBrush pauseBrush = new ImageBrush();
+            pauseBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.pausePath));
+            pauseBrush.Stretch = Stretch.Uniform;
+            btn_pause.Background = pauseBrush;
+
             ImageBrush stopBrush = new ImageBrush();
             stopBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.stopPath));
             stopBrush.Stretch = Stretch.Uniform;
@@ -134,9 +139,35 @@ namespace CSGOTacticSimulator
         {
             for (int i = listThread.Count - 1; i >= 0; --i)
             {
+                if(listThread[i].ThreadState == ThreadState.Suspended)
+                {
+                    listThread[i].Resume();
+                }
                 listThread[i].Abort();
             }
             listThread.Clear();
+        }
+
+        private void PauseAllThread()
+        {
+            for (int i = listThread.Count - 1; i >= 0; --i)
+            {
+                if (listThread[i].IsAlive)
+                {
+                    listThread[i].Suspend();
+                }
+            }
+        }
+
+        private void RestartAllThread()
+        {
+            for (int i = listThread.Count - 1; i >= 0; --i)
+            {
+                if (listThread[i].IsAlive && listThread[i].ThreadState == ThreadState.Suspended)
+                {
+                    listThread[i].Resume();
+                }
+            }
         }
 
         private void i_map_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -461,6 +492,25 @@ namespace CSGOTacticSimulator
             btn_restore.Visibility = Visibility.Collapsed;
             gs_gridsplitter.IsEnabled = false;
             ResizeMode = ResizeMode.NoResize;
+            btn_pause.Tag = "R";
+        }
+        private void btn_pause_Click(object sender, RoutedEventArgs e)
+        {
+            if (i_map.Source == null)
+            {
+                return;
+            }
+
+            if (btn_pause.Tag.ToString() == "R")
+            {
+                PauseAllThread();
+                btn_pause.Tag = "P";
+            }
+            else
+            {
+                RestartAllThread();
+                btn_pause.Tag = "R";
+            }
         }
         private void ReCreateJson(Map map)
         {
@@ -1055,6 +1105,7 @@ namespace CSGOTacticSimulator
                     {
                         character.IsRunningAnimation = true;
                         RunAnimation(character, animation);
+                        break;
                     }
                 }
             }
@@ -1695,6 +1746,8 @@ namespace CSGOTacticSimulator
         private void btn_stop_Click(object sender, RoutedEventArgs e)
         {
             Stop();
+            gs_gridsplitter.IsEnabled = true;
+            ResizeMode = ResizeMode.CanResizeWithGrip;
         }
 
         private void Stop()
@@ -1711,8 +1764,6 @@ namespace CSGOTacticSimulator
             {
                 btn_restore.Visibility = Visibility.Visible;
             }
-            gs_gridsplitter.IsEnabled = true;
-            ResizeMode = ResizeMode.CanResizeWithGrip;
         }
 
         void te_editor_TextArea_TextEntered(object sender, TextCompositionEventArgs e)
