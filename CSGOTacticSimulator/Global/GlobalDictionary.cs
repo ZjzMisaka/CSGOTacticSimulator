@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSGOTacticSimulator.Model;
 using CSGOTacticSimulator.Helper;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using CustomizableMessageBox;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace CSGOTacticSimulator.Global
 {
@@ -146,6 +144,17 @@ namespace CSGOTacticSimulator.Global
         static public string errorPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Error")).Replace("/", "\\");
         static public string minimizePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Minimize")).Replace("/", "\\");
         static public string restorePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Restore")).Replace("/", "\\");
+
+        static public ImageBrush backgroundBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.backgroundPath)), Stretch = Stretch.Fill };
+        static public ImageBrush minimizeBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.minimizePath)), Stretch = Stretch.Uniform };
+        static public ImageBrush restoreBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.restorePath)), Stretch = Stretch.Uniform };
+        static public ImageBrush previewBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.previewPath)), Stretch = Stretch.Uniform };
+        static public ImageBrush runBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.runPath)), Stretch = Stretch.Uniform };
+        static public ImageBrush pauseBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.pausePath)), Stretch = Stretch.Uniform };
+        static public ImageBrush resumeBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.resumePath)), Stretch = Stretch.Uniform };
+        static public ImageBrush stopBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.stopPath)), Stretch = Stretch.Uniform };
+        static public ImageBrush saveBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.savePath)), Stretch = Stretch.Uniform };
+        static public ImageBrush exitBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.exitPath)), Stretch = Stretch.Uniform };
 
         static public int firebombLifespan = int.Parse(IniHelper.ReadIni("Missile", "FirebombLifespan"));
         static public int smokeLifespan = int.Parse(IniHelper.ReadIni("Missile", "SmokeLifespan"));

@@ -2,17 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Resources;
 using System.Windows.Shapes;
 using CSGOTacticSimulator.Model;
 using CSGOTacticSimulator.Helper;
@@ -27,7 +21,6 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using Path = System.IO.Path;
 using Sdl.MultiSelectComboBox.Themes.Generic;
-using Sdl.MultiSelectComboBox.EventArgs;
 
 namespace CSGOTacticSimulator
 {
@@ -47,8 +40,6 @@ namespace CSGOTacticSimulator
         public List<Point> mouseMovePathInPreview = new List<Point>();
         public List<Point> keyDownInPreview = new List<Point>();
 
-        private List<Thread> listThread = new List<Thread>();
-
         public MainWindow()
         {
             InitializeComponent();
@@ -66,51 +57,16 @@ namespace CSGOTacticSimulator
 
             te_editor.TextArea.TextEntering += te_editor_TextArea_TextEntering;
             te_editor.TextArea.TextEntered += te_editor_TextArea_TextEntered;
-
-            ImageBrush backgroundBrush = new ImageBrush();
-            backgroundBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.backgroundPath));
-            backgroundBrush.Stretch = Stretch.Fill;
-            this.Background = backgroundBrush;
-
-            ImageBrush minimizeBrush = new ImageBrush();
-            minimizeBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.minimizePath));
-            minimizeBrush.Stretch = Stretch.Uniform;
-            btn_minimize.Background = minimizeBrush;
-
-            ImageBrush restoreBrush = new ImageBrush();
-            restoreBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.restorePath));
-            restoreBrush.Stretch = Stretch.Uniform;
-            btn_restore.Background = restoreBrush;
-
-            ImageBrush previewBrush = new ImageBrush();
-            previewBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.previewPath));
-            previewBrush.Stretch = Stretch.Uniform;
-            btn_preview.Background = previewBrush;
-
-            ImageBrush runBrush = new ImageBrush();
-            runBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.runPath));
-            runBrush.Stretch = Stretch.Uniform;
-            btn_run.Background = runBrush;
-
-            ImageBrush pauseBrush = new ImageBrush();
-            pauseBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.pausePath));
-            pauseBrush.Stretch = Stretch.Uniform;
-            btn_pause.Background = pauseBrush;
-
-            ImageBrush stopBrush = new ImageBrush();
-            stopBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.stopPath));
-            stopBrush.Stretch = Stretch.Uniform;
-            btn_stop.Background = stopBrush;
-
-            ImageBrush saveBrush = new ImageBrush();
-            saveBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.savePath));
-            saveBrush.Stretch = Stretch.Uniform;
-            btn_save.Background = saveBrush;
-
-            ImageBrush exitBrush = new ImageBrush();
-            exitBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.exitPath));
-            exitBrush.Stretch = Stretch.Uniform;
-            btn_exit.Background = exitBrush;
+            
+            this.Background = GlobalDictionary.backgroundBrush;
+            btn_minimize.Background = GlobalDictionary.minimizeBrush;
+            btn_restore.Background = GlobalDictionary.restoreBrush;
+            btn_preview.Background = GlobalDictionary.previewBrush;
+            btn_run.Background = GlobalDictionary.runBrush;
+            btn_pause.Background = GlobalDictionary.pauseBrush;
+            btn_stop.Background = GlobalDictionary.stopBrush;
+            btn_save.Background = GlobalDictionary.saveBrush;
+            btn_exit.Background = GlobalDictionary.exitBrush;
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -135,41 +91,7 @@ namespace CSGOTacticSimulator
             Application.Current.Shutdown(-1);
         }
 
-        private void StopAllThread()
-        {
-            for (int i = listThread.Count - 1; i >= 0; --i)
-            {
-                if(listThread[i].ThreadState == ThreadState.Suspended)
-                {
-                    listThread[i].Resume();
-                }
-                listThread[i].Abort();
-            }
-            listThread.Clear();
-        }
-
-        private void PauseAllThread()
-        {
-            for (int i = listThread.Count - 1; i >= 0; --i)
-            {
-                if (listThread[i].IsAlive)
-                {
-                    listThread[i].Suspend();
-                }
-            }
-        }
-
-        private void RestartAllThread()
-        {
-            for (int i = listThread.Count - 1; i >= 0; --i)
-            {
-                if (listThread[i].IsAlive && listThread[i].ThreadState == ThreadState.Suspended)
-                {
-                    listThread[i].Resume();
-                }
-            }
-        }
-
+        
         private void i_map_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
@@ -503,23 +425,17 @@ namespace CSGOTacticSimulator
 
             if (btn_pause.Tag.ToString() == "R")
             {
-                PauseAllThread();
+                ThreadHelper.PauseAllThread();
                 btn_pause.Tag = "P";
-
-                ImageBrush resumeBrush = new ImageBrush();
-                resumeBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.resumePath));
-                resumeBrush.Stretch = Stretch.Uniform;
-                btn_pause.Background = resumeBrush;
+                
+                btn_pause.Background = GlobalDictionary.resumeBrush;
             }
             else
             {
-                RestartAllThread();
+                ThreadHelper.RestartAllThread();
                 btn_pause.Tag = "R";
-
-                ImageBrush pauseBrush = new ImageBrush();
-                pauseBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.pausePath));
-                pauseBrush.Stretch = Stretch.Uniform;
-                btn_pause.Background = pauseBrush;
+                
+                btn_pause.Background = GlobalDictionary.pauseBrush;
             }
         }
         private void ReCreateJson(Map map)
@@ -689,7 +605,7 @@ namespace CSGOTacticSimulator
                 }
             });
             timerThread.Start();
-            listThread.Add(timerThread);
+            ThreadHelper.listThread.Add(timerThread);
         }
 
         private void CreateCharacter(string command)
@@ -1197,7 +1113,7 @@ namespace CSGOTacticSimulator
                 }));
             });
             waitUntilThread.Start();
-            listThread.Add(waitUntilThread);
+            ThreadHelper.AddThread(waitUntilThread);
         }
 
         private void RunAnimationWaitFor(Character character, Animation animation)
@@ -1224,7 +1140,7 @@ namespace CSGOTacticSimulator
                 }));
             });
             waitForThread.Start();
-            listThread.Add(waitForThread);
+            ThreadHelper.AddThread(waitForThread);
         }
         private void RunAnimationChangeVerticalPosition(Character character, Animation animation)
         {
@@ -1313,7 +1229,7 @@ namespace CSGOTacticSimulator
                 }));
             });
             defuseThread.Start();
-            listThread.Add(defuseThread);
+            ThreadHelper.AddThread(defuseThread);
         }
 
         private void RunAnimationPlant(Character character, Animation animation)
@@ -1393,10 +1309,10 @@ namespace CSGOTacticSimulator
                         });
                     });
                     explosionThread.Start();
-                    listThread.Add(explosionThread);
+                    ThreadHelper.AddThread(explosionThread);
                 });
                 plantThread.Start();
-                listThread.Add(plantThread);
+                ThreadHelper.AddThread(plantThread);
             }
         }
         private void RunAnimationChangeStatus(Character character, Animation animation)
@@ -1479,7 +1395,7 @@ namespace CSGOTacticSimulator
 
             });
             moveThread.Start();
-            listThread.Add(moveThread);
+            ThreadHelper.AddThread(moveThread);
         }
 
         private void RunAnimationThrow(Character character, Animation animation, double speed)
@@ -1613,7 +1529,7 @@ namespace CSGOTacticSimulator
                 });
             });
             throwThread.Start();
-            listThread.Add(throwThread);
+            ThreadHelper.AddThread(throwThread);
 
             characters[characters.IndexOf(character)].IsRunningAnimation = false;
             animations[animations.IndexOf(animation)].status = Helper.Status.Finished;
@@ -1674,7 +1590,7 @@ namespace CSGOTacticSimulator
                 });
             });
             shootThread.Start();
-            listThread.Add(shootThread);
+            ThreadHelper.AddThread(shootThread);
 
             characters[characters.IndexOf(character)].IsRunningAnimation = false;
             animations[animations.IndexOf(animation)].status = Helper.Status.Finished;
@@ -1762,7 +1678,7 @@ namespace CSGOTacticSimulator
 
         private void Stop()
         {
-            StopAllThread();
+            ThreadHelper.StopAllThread();
             CommandHelper.commands.Clear();
             animations.Clear();
             characters.Clear();
@@ -1774,11 +1690,8 @@ namespace CSGOTacticSimulator
             {
                 btn_restore.Visibility = Visibility.Visible;
             }
-
-            ImageBrush pauseBrush = new ImageBrush();
-            pauseBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.pausePath));
-            pauseBrush.Stretch = Stretch.Uniform;
-            btn_pause.Background = pauseBrush;
+            
+            btn_pause.Background = GlobalDictionary.pauseBrush;
         }
 
         void te_editor_TextArea_TextEntered(object sender, TextCompositionEventArgs e)
