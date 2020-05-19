@@ -136,6 +136,7 @@ namespace CSGOTacticSimulator.Global
         static public string previewPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Preview")).Replace("/", "\\");
         static public string runPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Run")).Replace("/", "\\");
         static public string pausePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Pause")).Replace("/", "\\");
+        static public string resumePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Resume")).Replace("/", "\\");
         static public string stopPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Stop")).Replace("/", "\\");
         static public string savePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Save")).Replace("/", "\\");
         static public string exitPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Exit")).Replace("/", "\\");

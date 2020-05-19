@@ -505,11 +505,21 @@ namespace CSGOTacticSimulator
             {
                 PauseAllThread();
                 btn_pause.Tag = "P";
+
+                ImageBrush resumeBrush = new ImageBrush();
+                resumeBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.resumePath));
+                resumeBrush.Stretch = Stretch.Uniform;
+                btn_pause.Background = resumeBrush;
             }
             else
             {
                 RestartAllThread();
                 btn_pause.Tag = "R";
+
+                ImageBrush pauseBrush = new ImageBrush();
+                pauseBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.pausePath));
+                pauseBrush.Stretch = Stretch.Uniform;
+                btn_pause.Background = pauseBrush;
             }
         }
         private void ReCreateJson(Map map)
@@ -1764,6 +1774,11 @@ namespace CSGOTacticSimulator
             {
                 btn_restore.Visibility = Visibility.Visible;
             }
+
+            ImageBrush pauseBrush = new ImageBrush();
+            pauseBrush.ImageSource = new BitmapImage(new Uri(GlobalDictionary.pausePath));
+            pauseBrush.Stretch = Stretch.Uniform;
+            btn_pause.Background = pauseBrush;
         }
 
         void te_editor_TextArea_TextEntered(object sender, TextCompositionEventArgs e)
