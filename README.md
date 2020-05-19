@@ -9,11 +9,11 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 *(v1.6.1 screenshot)* </br>
 ![screenshot](https://www.iaders.com/wp-content/uploads/2020/05/1.6.0.png)
 ## PROMPT
-- Program supports pathfinding. 
+- Pathfinding can be performed after selecting the map frame.
+- You can edit the map frame in the program (for pathfinding).
 - You can get the coordinates by clicking on the picture.
 - The coordinates have nothing to do with the zoom level of the picture in the window, you can change the window size without modifying the script. 
 - Move your mouse over the character's point to see the character information (number, item, coordinates).
-- You can edit the map frame in the program (for pathfinding).
 ## SCRIPT
 ### PROMPT
 - The input box is a full-fledged script editor (Thanks to AvalonEdit), and it is still being improved. It supports syntax highlighting, auto-completion, and searching.
@@ -99,9 +99,9 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |LControl + LShift|Eraser|
 |LControl + Z|Revoke|
 |LControl + C|Choose the color|
-|LControl + S|Choose a brush or eraser size|
+|LControl + S|Choose size of brush or eraser|
 |LControl + A|Choose transparency|
-|LControl + Delete|Clear canvas|
+|LControl + Delete|Clear whole canvas|
 ## TODO
 ## USE OF EXTERNAL RESOURCES
 |Resource|License|
