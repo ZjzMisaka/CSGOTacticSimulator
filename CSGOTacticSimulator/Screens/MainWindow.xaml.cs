@@ -1650,6 +1650,7 @@ namespace CSGOTacticSimulator
                     }
                     tb_infos.Text =
                         "Number: " + character.Number +
+                        "\nName: " + character.Name +
                         "\nPosisiion: " + character.MapPoint.ToString() +
                         "\nWeapon: " + character.Weapon.ToString() +
                         "\nMissile: " + missileListStr +

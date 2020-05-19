@@ -197,9 +197,10 @@ namespace CSGOTacticSimulator.Helper
                         {
                             characterImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/ENEMY_ALIVE_UPPER.png")));
                         }
+                        string name = "";
                         if (splitedCmd.Count() == 6 && Regex.IsMatch(splitedCmd[5], "^[^0-9](.*)$"))
                         {
-                            string name = splitedCmd[5];
+                            name = splitedCmd[5];
                             characterNameDic.Add(name, characterNumber);
                         }
                         characterImg.Width = GlobalDictionary.CharacterWidthAndHeight;
@@ -207,7 +208,7 @@ namespace CSGOTacticSimulator.Helper
                         Point charactorWndPoint = mainWindow.GetWndPoint(mapPoint, ImgType.Character);
                         Canvas.SetLeft(characterImg, charactorWndPoint.X);
                         Canvas.SetTop(characterImg, charactorWndPoint.Y);
-                        characterImg.Tag = "Number: " + characterNumber + "\n" + "Posision: " + mapPoint.ToString();
+                        characterImg.Tag = "Number: " + characterNumber + "\n" + "Name: " + name + "\n" + "Posision: " + mapPoint.ToString();
                         characterImg.MouseEnter += mainWindow.ShowCharacterImgInfos;
                         objMouseMove = delegate (object sender, MouseEventArgs e)
                         {
@@ -242,7 +243,7 @@ namespace CSGOTacticSimulator.Helper
                             if (mainWindow.mouseMovePathInPreview.Count > 0)
                             {
                                 string tag = ((Image)sender).Tag.ToString();
-                                int number = int.Parse(tag.Substring(tag.IndexOf("Number: ") + 8, tag.IndexOf("Posision: ") - (tag.IndexOf("Number: ") + 9)));
+                                int number = int.Parse(tag.Substring(tag.IndexOf("Number: ") + 8, tag.IndexOf("Name: ") - (tag.IndexOf("Number: ") + 9)));
                                 mainWindow.CreateCommandInWindow(number, new Point(Math.Round((e.GetPosition(mainWindow.i_map).X / GlobalDictionary.imageRatio), 2), Math.Round((e.GetPosition(mainWindow.i_map).Y / GlobalDictionary.imageRatio), 2)));
                             }
                             mainWindow.MouseDown -= objMouseMiddleDown;
@@ -251,7 +252,7 @@ namespace CSGOTacticSimulator.Helper
                         characterImg.MouseRightButtonDown += delegate (object sender, MouseButtonEventArgs e)
                         {
                             string tag = ((Image)sender).Tag.ToString();
-                            int number = int.Parse(tag.Substring(tag.IndexOf("Number: ") + 8, tag.IndexOf("Posision: ") - (tag.IndexOf("Number: ") + 9)));
+                            int number = int.Parse(tag.Substring(tag.IndexOf("Number: ") + 8, tag.IndexOf("Name: ") - (tag.IndexOf("Number: ") + 9)));
                             mainWindow.CreateCommandInWindow(number);
                         };
                         ++characterNumber;
