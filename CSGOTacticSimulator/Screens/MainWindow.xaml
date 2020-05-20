@@ -100,7 +100,7 @@
             </Grid>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1">
-                <TextBox x:Name="tb_select_file" Width="200" Height="32" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="20"></TextBox>
+                <TextBox x:Name="tb_select_file" Width="200" Height="32" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="20" KeyDown="Tb_select_file_KeyDown"></TextBox>
                 <Button x:Name="btn_select_file" Style="{StaticResource Style.TextContentButton}" Width="50" Height="32" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Content="..." FontSize="20" Margin="0,0,0,3" Click="btn_select_file_Click" />
             </StackPanel>
 

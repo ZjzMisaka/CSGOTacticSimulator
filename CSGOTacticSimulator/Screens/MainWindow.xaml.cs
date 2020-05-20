@@ -1695,6 +1695,20 @@ namespace CSGOTacticSimulator
             {
                 string filePath = ofd.FileName;
                 te_editor.Text = File.ReadAllText(filePath);
+                tb_select_file.Text = filePath;
+            }
+        }
+
+        private void Tb_select_file_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                string filePath = tb_select_file.Text;
+                if (File.Exists(filePath))
+                {
+                    te_editor.Text = File.ReadAllText(filePath);
+                    tb_select_file.Text = filePath;
+                }
             }
         }
 
