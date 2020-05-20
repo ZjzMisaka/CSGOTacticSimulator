@@ -65,7 +65,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |----|----|----|
 |set entirety speed {比率值}|设置当前脚本使用的整体速度比率值, 若不设定则使用默认值|√|
 |set camp [t, ct]|设置当前队伍|√|
-|create character [t, ct] {坐标} <name {名字}|在指定的坐标生成一名角色, 并取一个别名|√|
+|create character [t, ct] {坐标} <name {名字}>|在指定的坐标生成一名角色, 并取一个别名 (不能以数字开头)|√|
 |give character {角色编号} weapon {武器}|为某个角色配备指定武器|√|
 |give character {角色编号} missile {投掷物} <{投掷物} ...... {投掷物}>|为某个角色配备指定投掷物|√|
 |give character {角色编号} props [bomb / defusekit]|为某个角色配备炸弹 / 拆弹器|√|

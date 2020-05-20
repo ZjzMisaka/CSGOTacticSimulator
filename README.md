@@ -65,7 +65,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |----|----|----|
 |set entirety speed {Ratio value}|Sets the overall speed ratio value used by the current script. If not set, the default value is used.|√|
 |set camp [t, ct]|Set current team|√|
-|create character [t, ct] {Coordinate} <name {name}>|Generate a character at the specified coordinates, and take an alias|√|
+|create character [t, ct] {Coordinate} <name {name}>|Generate a character at the specified coordinates, and take an alias (do not start with a number)|√|
 |give character {Character number} weapon {Weapon}|Assign a weapon to a character|√|
 |give character {Character number} missile {missile} <{missile} ...... {missile}>|Assign missiles to a character|√|
 |give character {Character number} props [bomb / defusekit]|Equip a Character with a Bomb / Defusekit|√|
