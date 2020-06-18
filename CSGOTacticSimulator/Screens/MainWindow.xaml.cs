@@ -234,7 +234,15 @@ namespace CSGOTacticSimulator
 
             Canvas.SetLeft(character.CharacterImg, wndPoint.X);
             Canvas.SetTop(character.CharacterImg, wndPoint.Y);
+
+            Label name = new Label();
+            name.Foreground = new SolidColorBrush(Colors.White);
+            name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
+            Canvas.SetLeft(name, wndPoint.X);
+            Canvas.SetTop(name, wndPoint.Y + character.CharacterImg.Height);
+
             c_runcanvas.Children.Add(character.CharacterImg);
+            c_runcanvas.Children.Add(name);
         }
 
         public Point GetWndPoint(Point mapPoint, ImgType imgType)
@@ -1390,10 +1398,31 @@ namespace CSGOTacticSimulator
                         {
                             try
                             {
+                                Label label = null;
+                                foreach(FrameworkElement frameworkElement in c_runcanvas.Children)
+                                {
+                                    if (frameworkElement is Label)
+                                    {
+                                        if((frameworkElement as Label).Content.ToString() == (character.Name == "" ? character.Number.ToString() : character.Name))
+                                        {
+                                            label = (Label)frameworkElement;
+                                        }
+                                    }
+                                }
                                 c_runcanvas.Children.Remove(character.CharacterImg);
+                                c_runcanvas.Children.Remove(label);
+
                                 Canvas.SetLeft(character.CharacterImg, nowWndPoint.X);
                                 Canvas.SetTop(character.CharacterImg, nowWndPoint.Y);
+
+                                Label name = new Label();
+                                name.Foreground = new SolidColorBrush(Colors.White);
+                                name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
+                                Canvas.SetLeft(name, nowWndPoint.X);
+                                Canvas.SetTop(name, nowWndPoint.Y + character.CharacterImg.Height);
+
                                 c_runcanvas.Children.Add(character.CharacterImg);
+                                c_runcanvas.Children.Add(name);
                             }
                             catch
                             {

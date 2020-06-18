@@ -213,7 +213,7 @@ namespace CSGOTacticSimulator.Helper
                         objMouseMove = delegate (object sender, MouseEventArgs e)
                         {
                             Point mousePosition = e.GetPosition(mainWindow.i_map);
-                            mainWindow.mouseMovePathInPreview.Add(new Point((mousePosition.X / GlobalDictionary.imageRatio), (mousePosition.Y / GlobalDictionary.imageRatio)));
+                            mainWindow.mouseMovePathInPreview.Add(new Point(Math.Round((mousePosition.X / GlobalDictionary.imageRatio), 2), Math.Round((mousePosition.Y / GlobalDictionary.imageRatio), 2)));
                         };
                         objMouseMiddleDown = delegate (object sender, MouseButtonEventArgs e)
                         {
@@ -255,8 +255,16 @@ namespace CSGOTacticSimulator.Helper
                             int number = int.Parse(tag.Substring(tag.IndexOf("Number: ") + 8, tag.IndexOf("Name: ") - (tag.IndexOf("Number: ") + 9)));
                             mainWindow.CreateCommandInWindow(number);
                         };
-                        ++characterNumber;
                         previewElements.Add(characterImg);
+
+                        Label labelName = new Label();
+                        labelName.Foreground = new SolidColorBrush(Colors.White);
+                        labelName.Content = name == "" ? characterNumber.ToString() : name;
+                        Canvas.SetLeft(labelName, charactorWndPoint.X);
+                        Canvas.SetTop(labelName, charactorWndPoint.Y + characterImg.Height);
+                        previewElements.Add(labelName);
+
+                        ++characterNumber;
                         charactorWndPoints.Add(previewCharactorCount++, mainWindow.GetWndPoint(mapPoint, ImgType.Nothing));
                     }
                     else if (AnalysisCommand(command) == Command.ActionCharacterAutoMove)
