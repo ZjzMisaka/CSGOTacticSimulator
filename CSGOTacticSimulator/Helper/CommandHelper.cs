@@ -258,10 +258,12 @@ namespace CSGOTacticSimulator.Helper
                         previewElements.Add(characterImg);
 
                         Label labelName = new Label();
+                        labelName.IsHitTestVisible = false;
                         labelName.Foreground = new SolidColorBrush(Colors.White);
+                        labelName.FontSize *= GlobalDictionary.imageRatio * 1.3;
                         labelName.Content = name == "" ? characterNumber.ToString() : name;
                         Canvas.SetLeft(labelName, charactorWndPoint.X);
-                        Canvas.SetTop(labelName, charactorWndPoint.Y + characterImg.Height);
+                        Canvas.SetTop(labelName, charactorWndPoint.Y + characterImg.Height / 2);
                         previewElements.Add(labelName);
 
                         ++characterNumber;
@@ -332,6 +334,7 @@ namespace CSGOTacticSimulator.Helper
                             moveLine.Y2 = toWndPoint.Y;
                             moveLine.MouseEnter += delegate
                             {
+                                mainWindow.tb_infos.FontSize = 15 * GlobalDictionary.imageRatio * 1.3;
                                 mainWindow.tb_infos.Text = command;
                             };
                             previewElements.Add(moveLine);
@@ -367,6 +370,7 @@ namespace CSGOTacticSimulator.Helper
                             moveLine.Y2 = toWndPoint.Y;
                             moveLine.MouseEnter += delegate
                             {
+                                mainWindow.tb_infos.FontSize = 15 * GlobalDictionary.imageRatio * 1.3;
                                 mainWindow.tb_infos.Text = command;
                             };
                             previewElements.Add(moveLine);

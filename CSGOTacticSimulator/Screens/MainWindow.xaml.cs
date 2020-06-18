@@ -236,10 +236,12 @@ namespace CSGOTacticSimulator
             Canvas.SetTop(character.CharacterImg, wndPoint.Y);
 
             Label name = new Label();
+            name.IsHitTestVisible = false;
             name.Foreground = new SolidColorBrush(Colors.White);
+            name.FontSize *= GlobalDictionary.imageRatio * 1.3;
             name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
             Canvas.SetLeft(name, wndPoint.X);
-            Canvas.SetTop(name, wndPoint.Y + character.CharacterImg.Height);
+            Canvas.SetTop(name, wndPoint.Y + character.CharacterImg.Height / 2);
 
             c_runcanvas.Children.Add(character.CharacterImg);
             c_runcanvas.Children.Add(name);
@@ -1416,10 +1418,12 @@ namespace CSGOTacticSimulator
                                 Canvas.SetTop(character.CharacterImg, nowWndPoint.Y);
 
                                 Label name = new Label();
+                                name.IsHitTestVisible = false;
                                 name.Foreground = new SolidColorBrush(Colors.White);
+                                name.FontSize *= GlobalDictionary.imageRatio * 1.3;
                                 name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
                                 Canvas.SetLeft(name, nowWndPoint.X);
-                                Canvas.SetTop(name, nowWndPoint.Y + character.CharacterImg.Height);
+                                Canvas.SetTop(name, nowWndPoint.Y + character.CharacterImg.Height / 2);
 
                                 c_runcanvas.Children.Add(character.CharacterImg);
                                 c_runcanvas.Children.Add(name);
@@ -1677,6 +1681,7 @@ namespace CSGOTacticSimulator
                     {
                         missileListStr = "Nothing";
                     }
+                    tb_infos.FontSize = 15 * GlobalDictionary.imageRatio * 1.3;
                     tb_infos.Text =
                         "Number: " + character.Number +
                         "\nName: " + character.Name +
@@ -1691,6 +1696,7 @@ namespace CSGOTacticSimulator
         public void ShowCharacterImgInfos(object sender, MouseEventArgs e)
         {
             Image img = (Image)sender;
+            tb_infos.FontSize = 15 * GlobalDictionary.imageRatio * 1.3;
             tb_infos.Text = img.Tag.ToString();
         }
         private void btn_point_Click(object sender, RoutedEventArgs e)
