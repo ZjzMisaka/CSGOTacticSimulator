@@ -204,6 +204,7 @@ namespace CSGOTacticSimulator
             if (i_map.Source != null)
             {
                 GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
+                tb_infos.FontSize = 15 * GlobalDictionary.imageRatio * 1.3;
             }
 
             //foreach (Character character in characters)
