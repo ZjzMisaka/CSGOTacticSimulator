@@ -2046,7 +2046,7 @@ namespace CSGOTacticSimulator
                 {
                     PreviewAction();
                 }
-                else
+                else if (GlobalDictionary.mapDic.ContainsKey(cb_select_mapframe.Text))
                 {
                     PreviewFrame();
                 }
