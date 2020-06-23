@@ -13,7 +13,7 @@ namespace CSGOTacticSimulator.Helper
         {
             for (int i = listThread.Count - 1; i >= 0; --i)
             {
-                if (listThread[i].ThreadState == ThreadState.Suspended)
+                if (!((listThread[i].ThreadState & (ThreadState.Suspended | ThreadState.WaitSleepJoin)) == 0))
                 {
                     listThread[i].Resume();
                 }
