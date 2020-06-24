@@ -1073,6 +1073,10 @@ namespace CSGOTacticSimulator
                     runSpeed *= GlobalDictionary.squatToRunRatio;
                     RunAnimationMove(character, animation, runSpeed);
                     break;
+                case Helper.Action.Teleport:
+                    runSpeed = -1;
+                    RunAnimationMove(character, animation, runSpeed);
+                    break;
                 case Helper.Action.WaitUntil:
                     RunAnimationWaitUntil(character, animation);
                     break;
@@ -1383,63 +1387,46 @@ namespace CSGOTacticSimulator
                 endWndPointList.Add(GetWndPoint(endMapPoint, ImgType.Character));
             }
 
-            Point nowWndPoint = startWndPoint;
-            Thread moveThread = null;
-            moveThread = new Thread(() =>
+            if (speed == -1)
             {
-                foreach(Point endWndPoint in endWndPointList)
+                characters[characters.IndexOf(character)].IsRunningAnimation = true;
+                animations[animations.IndexOf(animation)].status = Helper.Status.Running;
+
+                try
                 {
-                    Point unitVector = VectorHelper.GetUnitVector(nowWndPoint, endWndPoint);
-
-                    characters[characters.IndexOf(character)].IsRunningAnimation = true;
-                    animations[animations.IndexOf(animation)].status = Helper.Status.Running;
-                    while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, endWndPoint), unitVector) < 1)
+                    Label label = null;
+                    foreach (FrameworkElement frameworkElement in c_runcanvas.Children)
                     {
-                        nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
-                        characters[characters.IndexOf(character)].MapPoint = GetMapPoint(nowWndPoint, ImgType.Character);
-                        c_runcanvas.Dispatcher.Invoke(() =>
+                        if (frameworkElement is Label)
                         {
-                            try
+                            if ((frameworkElement as Label).Content.ToString() == (character.Name == "" ? character.Number.ToString() : character.Name))
                             {
-                                Label label = null;
-                                foreach(FrameworkElement frameworkElement in c_runcanvas.Children)
-                                {
-                                    if (frameworkElement is Label)
-                                    {
-                                        if((frameworkElement as Label).Content.ToString() == (character.Name == "" ? character.Number.ToString() : character.Name))
-                                        {
-                                            label = (Label)frameworkElement;
-                                        }
-                                    }
-                                }
-                                c_runcanvas.Children.Remove(character.CharacterImg);
-                                c_runcanvas.Children.Remove(label);
-
-                                Canvas.SetLeft(character.CharacterImg, nowWndPoint.X);
-                                Canvas.SetTop(character.CharacterImg, nowWndPoint.Y);
-
-                                Label name = new Label();
-                                name.IsHitTestVisible = false;
-                                name.Foreground = new SolidColorBrush(Colors.White);
-                                name.FontSize *= GlobalDictionary.imageRatio * 1.3;
-                                name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
-                                Canvas.SetLeft(name, nowWndPoint.X);
-                                Canvas.SetTop(name, nowWndPoint.Y + character.CharacterImg.Height / 2);
-
-                                c_runcanvas.Children.Add(character.CharacterImg);
-                                c_runcanvas.Children.Add(name);
+                                label = (Label)frameworkElement;
                             }
-                            catch
-                            {
-                                Stop();
-                            }
-                        });
-
-                        Thread.Sleep(animationFreshTime);
+                        }
                     }
+                    c_runcanvas.Children.Remove(character.CharacterImg);
+                    c_runcanvas.Children.Remove(label);
 
+                    Canvas.SetLeft(character.CharacterImg, endWndPointList.Last().X);
+                    Canvas.SetTop(character.CharacterImg, endWndPointList.Last().Y);
 
-                    nowWndPoint = endWndPoint;
+                    Label name = new Label();
+                    name.IsHitTestVisible = false;
+                    name.Foreground = new SolidColorBrush(Colors.White);
+                    name.FontSize *= GlobalDictionary.imageRatio * 1.3;
+                    name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
+                    Canvas.SetLeft(name, endWndPointList.Last().X);
+                    Canvas.SetTop(name, endWndPointList.Last().Y + character.CharacterImg.Height / 2);
+
+                    c_runcanvas.Children.Add(character.CharacterImg);
+                    c_runcanvas.Children.Add(name);
+
+                    characters[characters.IndexOf(character)].MapPoint = GetMapPoint(endWndPointList.Last(), ImgType.Character);
+                }
+                catch
+                {
+                    Stop();
                 }
                 characters[characters.IndexOf(character)].IsRunningAnimation = false;
                 animations[animations.IndexOf(animation)].status = Helper.Status.Finished;
@@ -1448,10 +1435,79 @@ namespace CSGOTacticSimulator
                 {
                     TraversalAnimations();
                 }));
+            }
+            else
+            {
+                Point nowWndPoint = startWndPoint;
+                Thread moveThread = null;
+                moveThread = new Thread(() =>
+                {
+                    foreach (Point endWndPoint in endWndPointList)
+                    {
+                        Point unitVector = VectorHelper.GetUnitVector(nowWndPoint, endWndPoint);
 
-            });
-            moveThread.Start();
-            ThreadHelper.AddThread(moveThread);
+                        characters[characters.IndexOf(character)].IsRunningAnimation = true;
+                        animations[animations.IndexOf(animation)].status = Helper.Status.Running;
+                        while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, endWndPoint), unitVector) < 1)
+                        {
+                            nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
+                            characters[characters.IndexOf(character)].MapPoint = GetMapPoint(nowWndPoint, ImgType.Character);
+                            c_runcanvas.Dispatcher.Invoke(() =>
+                            {
+                                try
+                                {
+                                    Label label = null;
+                                    foreach (FrameworkElement frameworkElement in c_runcanvas.Children)
+                                    {
+                                        if (frameworkElement is Label)
+                                        {
+                                            if ((frameworkElement as Label).Content.ToString() == (character.Name == "" ? character.Number.ToString() : character.Name))
+                                            {
+                                                label = (Label)frameworkElement;
+                                            }
+                                        }
+                                    }
+                                    c_runcanvas.Children.Remove(character.CharacterImg);
+                                    c_runcanvas.Children.Remove(label);
+
+                                    Canvas.SetLeft(character.CharacterImg, nowWndPoint.X);
+                                    Canvas.SetTop(character.CharacterImg, nowWndPoint.Y);
+
+                                    Label name = new Label();
+                                    name.IsHitTestVisible = false;
+                                    name.Foreground = new SolidColorBrush(Colors.White);
+                                    name.FontSize *= GlobalDictionary.imageRatio * 1.3;
+                                    name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
+                                    Canvas.SetLeft(name, nowWndPoint.X);
+                                    Canvas.SetTop(name, nowWndPoint.Y + character.CharacterImg.Height / 2);
+
+                                    c_runcanvas.Children.Add(character.CharacterImg);
+                                    c_runcanvas.Children.Add(name);
+                                }
+                                catch
+                                {
+                                    Stop();
+                                }
+                            });
+
+                            Thread.Sleep(animationFreshTime);
+                        }
+
+
+                        nowWndPoint = endWndPoint;
+                    }
+                    characters[characters.IndexOf(character)].IsRunningAnimation = false;
+                    animations[animations.IndexOf(animation)].status = Helper.Status.Finished;
+
+                    Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+                    {
+                        TraversalAnimations();
+                    }));
+
+                });
+                moveThread.Start();
+                ThreadHelper.AddThread(moveThread);
+            }
         }
 
         private void RunAnimationThrow(Character character, Animation animation, double speed)
@@ -2140,12 +2196,50 @@ namespace CSGOTacticSimulator
                 ComboBox comboBox = new ComboBox();
                 comboBox.FontSize = 20;
                 comboBox.Width = 60;
+                comboBox.Height = 42;
                 comboBox.Margin = new Thickness(0, 10, 0, 10);
                 comboBox.VerticalContentAlignment = VerticalAlignment.Center;
                 comboBox.Items.Add(new ComboBoxItem() { Content = "T", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 comboBox.Items.Add(new ComboBoxItem() { Content = "CT", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 comboBox.SelectedIndex = 0;
-                MessageBox.ButtonList = new List<object> { new Label() { Content = "创建角色", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, new ButtonSpacer(200), "OK" };
+
+                TextBox textBoxName = new TextBox();
+                textBoxName.FontSize = 20;
+                textBoxName.Width = 60;
+                textBoxName.Margin = new Thickness(0, 10, 0, 10);
+                textBoxName.IsEnabled = false;
+                textBoxName.VerticalContentAlignment = VerticalAlignment.Center;
+                CheckBox checkBoxName = new CheckBox();
+                checkBoxName.FontSize = 20;
+                checkBoxName.Width = 60;
+                checkBoxName.Margin = new Thickness(0, 10, 0, 10);
+                checkBoxName.Content = "别名";
+                checkBoxName.Foreground = new SolidColorBrush(Colors.White);
+                checkBoxName.Click += delegate (object cbSender, RoutedEventArgs cbE)
+                {
+                    if (((CheckBox)cbSender).IsChecked == true)
+                    {
+                        textBoxName.IsEnabled = true;
+                    }
+                    else
+                    {
+                        textBoxName.Text = "";
+                        textBoxName.IsEnabled = false;
+                    }
+                };
+                Grid gridName = new Grid();
+                RowDefinition rowDefinitionR0 = new RowDefinition() { Height = new GridLength(42) };
+                RowDefinition rowDefinitionR1 = new RowDefinition() { Height = new GridLength(42) };
+                gridName.RowDefinitions.Add(rowDefinitionR0);
+                gridName.RowDefinitions.Add(rowDefinitionR1);
+                Grid.SetRow(checkBoxName, 0);
+                Grid.SetRow(textBoxName, 1);
+                gridName.Children.Add(checkBoxName);
+                gridName.Children.Add(textBoxName);
+                gridName.Height = 84;
+                gridName.Width = 150;
+
+                MessageBox.ButtonList = new List<object> { new Label() { Content = "创建角色", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, gridName, new ButtonSpacer(50), "OK" };
                 MessageBox.MessageBoxImageType = MessageBoxImage.None;
                 MessageBox.MessageText = "选择角色阵营和坐标";
             };
@@ -2178,7 +2272,15 @@ namespace CSGOTacticSimulator
                     {
                         te_editor.Text += "\n";
                     }
-                    te_editor.Text += "create character " + newCamp + " " + mapPoint + "\n";
+                    te_editor.Text += "create character " + newCamp + " " + mapPoint;
+
+                    TextBox textBox = (MessageBox.ButtonList[2] as Grid).Children[1] as TextBox;
+                    if (textBox.IsEnabled == true)
+                    {
+                        te_editor.Text += " name " + textBox.Text;
+                    }
+
+                    te_editor.Text += "\n";
                     break;
             }
         }
@@ -2472,8 +2574,20 @@ namespace CSGOTacticSimulator
                 comboBoxMove.Items.Add(new ComboBoxItem() { Content = "Run", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 comboBoxMove.Items.Add(new ComboBoxItem() { Content = "Walk", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 comboBoxMove.Items.Add(new ComboBoxItem() { Content = "Squat", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
-                // comboBoxMove.Items.Add(new ComboBoxItem() { Content = "Teleport", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBoxMove.Items.Add(new ComboBoxItem() { Content = "Teleport", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 comboBoxMove.SelectedIndex = 0;
+                comboBoxMove.SelectionChanged += delegate (object senderSelectionChanged, SelectionChangedEventArgs eSelectionChanged)
+                {
+                    if((senderSelectionChanged as ComboBox).SelectedIndex == 3)
+                    {
+                        comboBoxRecord.SelectedIndex = 1;
+                        comboBoxRecord.IsEnabled = false;
+                    }
+                    else
+                    {
+                        comboBoxRecord.IsEnabled = true;
+                    }
+                };
 
                 Grid grid = new Grid();
                 RowDefinition rowDefinitionR0 = new RowDefinition() { Height = new GridLength(42) };
