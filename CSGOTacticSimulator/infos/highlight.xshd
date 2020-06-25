@@ -9,6 +9,7 @@
   <Color name="Keywords" fontWeight="bold" foreground="#ff6699cc" />
   <Color name="Option" fontWeight="bold" foreground="#ff66cccc" />
   <Color name="Symbol" fontWeight="bold" foreground="#ff33aa33" />
+  <Color name="Name" foreground="#ffff00ff" fontWeight="bold" exampleText="# comment" />
 
   <RuleSet name="CommentMarkerSet">
     <Keywords fontWeight="bold" foreground="#fff2777a">
@@ -40,6 +41,10 @@
 
     <Span color="Comment" ruleSet="CommentMarkerSet">
       <Begin>-</Begin>
+    </Span>
+
+    <Span color="Name" ruleSet="CommentMarkerSet">
+      <Begin>@</Begin>
     </Span>
 
     <Keywords color="Keywords">
