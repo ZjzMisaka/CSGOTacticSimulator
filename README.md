@@ -103,11 +103,13 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |LControl + A|Choose transparency|
 |LControl + Delete|Clear whole canvas|
 ## TODO
+- Read & play the demo
 ## USE OF EXTERNAL RESOURCES
 |Resource|License|
 |----|----|
 |[icsharpcode/AvalonEdit](https://github.com/icsharpcode/AvalonEdit)|MIT|
 |[JamesNK/Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)|MIT|
 |[sdl/Multiselect-ComboBox](https://github.com/sdl/Multiselect-ComboBox)|Apache-2.0|
+|[StatsHelix/demoinfo](https://github.com/StatsHelix/demoinfo)|MIT|
 |[ZjzMisaka/CustomizableMessageBox](https://github.com/ZjzMisaka/CustomizableMessageBox)|WTFPL|
 |[simpleradar/CSGOMaps](http://simpleradar.com/)|Unknown|
