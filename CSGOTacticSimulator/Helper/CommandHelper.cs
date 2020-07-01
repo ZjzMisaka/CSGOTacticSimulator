@@ -191,16 +191,16 @@ namespace CSGOTacticSimulator.Helper
                         Image characterImg = new Image();
                         if (isFriendly)
                         {
-                            characterImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/FRIENDLY_ALIVE_UPPER.png")));
+                            characterImg.Source = new BitmapImage(new Uri(GlobalDictionary.friendlyAliveUpperPath));
                         }
                         else
                         {
-                            characterImg.Source = new BitmapImage(new Uri(System.IO.Path.Combine(GlobalDictionary.basePath, "img/ENEMY_ALIVE_UPPER.png")));
+                            characterImg.Source = new BitmapImage(new Uri(GlobalDictionary.enemyAliveUpperPath));
                         }
                         string name = "";
-                        if (splitedCmd.Count() == 6 && Regex.IsMatch(splitedCmd[5], "^[^0-9](.*)$"))
+                        if (splitedCmd.Count() >= 6 && splitedCmd[5].First() == '@')
                         {
-                            name = splitedCmd[5];
+                            name = command.Substring(command.IndexOf('@') + 1);
                             characterNameDic.Add(name, characterNumber);
                         }
                         characterImg.Width = GlobalDictionary.CharacterWidthAndHeight;
@@ -334,7 +334,7 @@ namespace CSGOTacticSimulator.Helper
                             moveLine.Y2 = toWndPoint.Y;
                             moveLine.MouseEnter += delegate
                             {
-                                mainWindow.tb_infos.FontSize = 15 * GlobalDictionary.imageRatio * 1.3;
+                                mainWindow.tb_infos.FontSize = (GlobalDictionary.imageRatio == 0) ? 1 : 15 * GlobalDictionary.imageRatio * 1.3;
                                 mainWindow.tb_infos.Text = command;
                             };
                             previewElements.Add(moveLine);
@@ -370,7 +370,7 @@ namespace CSGOTacticSimulator.Helper
                             moveLine.Y2 = toWndPoint.Y;
                             moveLine.MouseEnter += delegate
                             {
-                                mainWindow.tb_infos.FontSize = 15 * GlobalDictionary.imageRatio * 1.3;
+                                mainWindow.tb_infos.FontSize = (GlobalDictionary.imageRatio == 0) ? 1 : 15 * GlobalDictionary.imageRatio * 1.3;
                                 mainWindow.tb_infos.Text = command;
                             };
                             previewElements.Add(moveLine);

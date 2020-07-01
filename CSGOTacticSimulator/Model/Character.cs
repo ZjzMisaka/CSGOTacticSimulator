@@ -10,6 +10,7 @@ using CSGOTacticSimulator.Model;
 using CSGOTacticSimulator.Helper;
 using CSGOTacticSimulator.Global;
 using System.Windows.Media.Imaging;
+using DemoInfo;
 
 namespace CSGOTacticSimulator.Model
 {
@@ -33,8 +34,14 @@ namespace CSGOTacticSimulator.Model
     {
         public string Name { get => name; set => name = value; }
         private string name = "";
+        public long SteamId { get => steamId; set => steamId = value; }
+        private long steamId = 0;
+        public int Hp { get => hp; set => hp = value; }
+        private int hp = 0;
         public Weapon Weapon { get => weapon; set => weapon = value; }
         private Weapon weapon = Weapon.Knife;
+        public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
+        private List<Equipment> equipmentList = new List<Equipment>();
         public List<Missile> Missiles { get => grenades; set => grenades = value; }
         private List<Missile> grenades = new List<Missile>();
         public Props Props { get => props; set => props = value; }
@@ -73,8 +80,10 @@ namespace CSGOTacticSimulator.Model
         private int number = Global.GlobalDictionary.charatersNumber++;
         public Image CharacterImg { get => characterImg; set => characterImg = value; }
         private Image characterImg = new Image();
+        public Image OtherImg { get => otherImg; set => otherImg = value; }
+        private Image otherImg = new Image();
 
-        public Character(string name, bool isFriendly, bool isT, Point mapPoint, MainWindow wnd)
+        public Character(string name, long steamId, bool isFriendly, bool isT, Point mapPoint, MainWindow wnd)
         {
             CharacterImg.MouseEnter += wnd.ShowCharacterInfos;
 
@@ -87,16 +96,18 @@ namespace CSGOTacticSimulator.Model
                 CharacterHelper.AddIntoNameDic(name, CharacterHelper.GetCharacters().Count);
             }
 
+            this.steamId = steamId;
+
             this.IsFriendly = isFriendly;
             this.IsT = isT;
 
             if (isFriendly)
             {
-                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.basePath, "img/FRIENDLY_ALIVE_UPPER.png")));
+                CharacterImg.Source = new BitmapImage(new Uri(GlobalDictionary.friendlyAliveUpperPath));
             }
             else
             {
-                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.basePath, "img/ENEMY_ALIVE_UPPER.png")));
+                CharacterImg.Source = new BitmapImage(new Uri(GlobalDictionary.enemyAliveUpperPath));
             }
 
             this.MapPoint = mapPoint;
@@ -109,32 +120,32 @@ namespace CSGOTacticSimulator.Model
         {
             if (status  == Status.Alive && IsFriendly == true && verticalPosition == VerticalPosition.Upper)
             {
-                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.basePath, "img/FRIENDLY_ALIVE_UPPER.png")));
+                CharacterImg.Source = new BitmapImage(new Uri(GlobalDictionary.friendlyAliveUpperPath));
                 CharacterImg.Opacity = 1;
             }
             else if (status == Status.Alive && IsFriendly == false && verticalPosition == VerticalPosition.Upper)
             {
-                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.basePath, "img/ENEMY_ALIVE_UPPER.png"))); 
+                CharacterImg.Source = new BitmapImage(new Uri(GlobalDictionary.enemyAliveUpperPath)); 
                 CharacterImg.Opacity = 1;
             }
             else if (status == Status.Alive && IsFriendly == true && verticalPosition == VerticalPosition.Lower)
             {
-                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.basePath, "img/FRIENDLY_ALIVE_LOWER.png")));
+                CharacterImg.Source = new BitmapImage(new Uri(GlobalDictionary.friendlyAliveLowerPath));
                 CharacterImg.Opacity = 0.4;
             }
             else if (status == Status.Alive && IsFriendly == false && verticalPosition == VerticalPosition.Lower)
             {
-                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.basePath, "img/ENEMY_ALIVE_LOWER.png")));
+                CharacterImg.Source = new BitmapImage(new Uri(GlobalDictionary.enemyAliveLowerPath));
                 CharacterImg.Opacity = 0.4;
             }
             else if (status == Status.Dead && verticalPosition == VerticalPosition.Upper)
             {
-                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.basePath, "img/DEAD_UPPER.png")));
+                CharacterImg.Source = new BitmapImage(new Uri(GlobalDictionary.deadUpperPath));
                 CharacterImg.Opacity = 1;
             }
             else if (status == Status.Dead && verticalPosition == VerticalPosition.Lower)
             {
-                CharacterImg.Source = new BitmapImage(new Uri(Path.Combine(GlobalDictionary.basePath, "img/DEAD_LOWER.png")));
+                CharacterImg.Source = new BitmapImage(new Uri(GlobalDictionary.deadLowerPath));
                 CharacterImg.Opacity = 0.85;
             }
         }

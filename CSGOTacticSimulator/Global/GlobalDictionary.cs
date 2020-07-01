@@ -144,6 +144,25 @@ namespace CSGOTacticSimulator.Global
         static public string errorPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Error")).Replace("/", "\\");
         static public string minimizePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Minimize")).Replace("/", "\\");
         static public string restorePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Restore")).Replace("/", "\\");
+        static public string eyePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Eye")).Replace("/", "\\");
+        static public string bombPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Bomb")).Replace("/", "\\");
+        static public string defuseKitPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "DefuseKit")).Replace("/", "\\");
+        static public string explosionPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Explosion")).Replace("/", "\\");
+        static public string decoyPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Decoy")).Replace("/", "\\");
+        static public string molotovPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Molotov")).Replace("/", "\\");
+        static public string incgrenadePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Incgrenade")).Replace("/", "\\");
+        static public string fireEffectPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "FireEffect")).Replace("/", "\\");
+        static public string flashbangPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Flashbang")).Replace("/", "\\");
+        static public string flashEffectPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "FlashEffect")).Replace("/", "\\");
+        static public string hegrenadePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Hegrenade")).Replace("/", "\\");
+        static public string smokePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Smoke")).Replace("/", "\\");
+        static public string smokeEffectPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "SmokeEffect")).Replace("/", "\\");
+        static public string friendlyAliveUpperPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "FriendlyAliveUpper")).Replace("/", "\\");
+        static public string friendlyAliveLowerPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "FriendlyAliveLower")).Replace("/", "\\");
+        static public string enemyAliveUpperPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "EnemyAliveUpper")).Replace("/", "\\");
+        static public string enemyAliveLowerPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "EnemyAliveLower")).Replace("/", "\\");
+        static public string deadUpperPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "DeadUpper")).Replace("/", "\\");
+        static public string deadLowerPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "DeadLower")).Replace("/", "\\");
 
         static public ImageBrush backgroundBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.backgroundPath)), Stretch = Stretch.Fill };
         static public ImageBrush minimizeBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.minimizePath)), Stretch = Stretch.Uniform };
@@ -159,6 +178,14 @@ namespace CSGOTacticSimulator.Global
         static public int firebombLifespan = int.Parse(IniHelper.ReadIni("Missile", "FirebombLifespan"));
         static public int smokeLifespan = int.Parse(IniHelper.ReadIni("Missile", "SmokeLifespan"));
         static public int flashbangLifespan = int.Parse(IniHelper.ReadIni("Missile", "FlashbangLifespan"));
+
+        static public string mapCalibrationDust2 = IniHelper.ReadIni("MapCalibration", "Dust2");
+        static public string mapCalibrationNuke = IniHelper.ReadIni("MapCalibration", "Nuke");
+        static public string mapCalibrationTrain = IniHelper.ReadIni("MapCalibration", "Train");
+        static public string mapCalibrationInferno = IniHelper.ReadIni("MapCalibration", "Inferno");
+        static public string mapCalibrationMirage = IniHelper.ReadIni("MapCalibration", "Mirage");
+        static public string mapCalibrationVertigo = IniHelper.ReadIni("MapCalibration", "Vertigo");
+        static public string mapCalibrationOverpass = IniHelper.ReadIni("MapCalibration", "Overpass");
 
         static public Dictionary<string, Map> mapDic = new Dictionary<string, Map>();
 

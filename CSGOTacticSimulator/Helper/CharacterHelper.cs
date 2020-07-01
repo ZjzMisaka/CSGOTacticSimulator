@@ -27,7 +27,10 @@ namespace CSGOTacticSimulator.Helper
 
         static public void AddIntoNameDic(string name, int number)
         {
-            characterNameDic.Add(name, number);
+            if (!characterNameDic.ContainsKey(name))
+            {
+                characterNameDic.Add(name, number);
+            }
         }
         static public Character GetCharacter(string str)
         {
