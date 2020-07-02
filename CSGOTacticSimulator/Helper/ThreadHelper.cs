@@ -9,10 +9,14 @@ namespace CSGOTacticSimulator.Helper
     {
         static private List<Thread> listThread = new List<Thread>();
 
-        static public void StopAllThread()
+        static public void StopAllThread(List<string> threadNameList = null)
         {
             for (int i = listThread.Count - 1; i >= 0; --i)
             {
+                if(threadNameList != null && threadNameList.Contains(listThread[i].Name))
+                {
+                    continue;
+                }
                 if (!((listThread[i].ThreadState & (ThreadState.Suspended | ThreadState.WaitSleepJoin)) == 0))
                 {
                     try
@@ -25,8 +29,8 @@ namespace CSGOTacticSimulator.Helper
                     }
                 }
                 listThread[i].Abort();
+                listThread.RemoveAt(i);
             }
-            listThread.Clear();
         }
 
         static public void PauseAllThread()

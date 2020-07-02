@@ -1923,6 +1923,7 @@ namespace CSGOTacticSimulator
 
             parser.ParseHeader();
             float tickTime = -1;
+            float firstFreezetimeEndedTime = -1;
             if (float.IsNaN(parser.TickTime))
             {
                 int resTickTime = MessageBox.Show(propertiesSetter, new List<object> { new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10) }, new ButtonSpacer(200), "OK" }, "该demo是多少ticks的?", "未知ticks", MessageBoxImage.Information);
@@ -2009,6 +2010,16 @@ namespace CSGOTacticSimulator
             //};
             //parser.NadeReachedTarget += (parseSender, parseE) =>
             //{
+            //    if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+            //    {
+            //        return;
+            //    }
+            //    if (!isRoundAnnounceMatchStarted)
+            //    {
+            //        return;
+            //    }
+            //    DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
+            //    eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "NadeReachedTarget", dic[parseE.ThrownBy.SteamID]));
             //};
             parser.BombBeginPlant += (parseSender, parseE) =>
             {
@@ -2274,10 +2285,18 @@ namespace CSGOTacticSimulator
             //};
             parser.FreezetimeEnded += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (firstFreezetimeEndedTime == -1)
                 {
-                    return;
+                    if (tickTime != -1)
+                    {
+                        firstFreezetimeEndedTime = tickTime * parser.CurrentTick;
+                    }
+                    else
+                    {
+                        firstFreezetimeEndedTime = parser.CurrentTime;
+                    }
                 }
+
                 DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
                 eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "FreezetimeEnded", 0));
             };
@@ -2346,11 +2365,12 @@ namespace CSGOTacticSimulator
                         ++roundNumber;
                         if (roundNumber > (parser.TScore + parser.CTScore))
                         {
+                            Stop();
                             return;
                         }
 
                         Thread analizeDemoThread = new Thread(AnalizeDemo);
-                        analizeDemoThread.Start(new Tuple<List<Tuple<DemoParser, EventArgs, string, int>>, int, Dictionary<long, int>, float>(eventList, roundNumber, dic, tickTime));
+                        analizeDemoThread.Start(new Tuple<List<Tuple<DemoParser, EventArgs, string, int>>, int, Dictionary<long, int>, float, float>(eventList, roundNumber, dic, tickTime, firstFreezetimeEndedTime));
                         ThreadHelper.AddThread(analizeDemoThread);
                         analizeDemoThread.Join();
 
@@ -2363,7 +2383,7 @@ namespace CSGOTacticSimulator
                             {
                                 newCharactersTemp.Add(new Character(charactersTemp[i].Name, charactersTemp[i].SteamId, charactersTemp[i].IsFriendly, charactersTemp[i].IsT, charactersTemp[i].MapPoint, this));
                             }
-                            Stop();
+                            Stop(new List<string>() { "totalThread" });
                             for (int i = 0; i < newCharactersTemp.Count(); ++i)
                             {
                                 new Character(newCharactersTemp[i].Name, newCharactersTemp[i].SteamId, newCharactersTemp[i].IsFriendly, newCharactersTemp[i].IsT, newCharactersTemp[i].MapPoint, this);
@@ -2371,23 +2391,26 @@ namespace CSGOTacticSimulator
                         });
                     }
                 });
+                totalThread.Name = "totalThread";
                 totalThread.Start();
+                ThreadHelper.AddThread(totalThread);
             }
             else
             {
                 Thread analizeDemoThread = new Thread(AnalizeDemo);
-                analizeDemoThread.Start(new Tuple<List<Tuple<DemoParser, EventArgs, string, int>>, int, Dictionary<long, int>, float>(eventList, roundNumber, dic, tickTime));
+                analizeDemoThread.Start(new Tuple<List<Tuple<DemoParser, EventArgs, string, int>>, int, Dictionary<long, int>, float, float>(eventList, roundNumber, dic, tickTime, firstFreezetimeEndedTime));
                 ThreadHelper.AddThread(analizeDemoThread);
             }
         }
 
         private void AnalizeDemo(object obj)
         {
-            Tuple<List<Tuple<DemoParser, EventArgs, string, int>>, int, Dictionary<long, int>, float> tupleTemp = (Tuple<List<Tuple<DemoParser, EventArgs, string, int>>, int, Dictionary<long, int>, float>)obj;
+            Tuple<List<Tuple<DemoParser, EventArgs, string, int>>, int, Dictionary<long, int>, float, float> tupleTemp = (Tuple<List<Tuple<DemoParser, EventArgs, string, int>>, int, Dictionary<long, int>, float, float>)obj;
             List<Tuple<DemoParser, EventArgs, string, int>> eventList = tupleTemp.Item1;
             int roundNumber = tupleTemp.Item2;
             Dictionary<long, int> dic = tupleTemp.Item3;
             float tickTime = tupleTemp.Item4;
+            float firstFreezetimeEndedTime = tupleTemp.Item5;
             // double runSpeed = double.Parse(IniHelper.ReadIni("RunSpeed", character.Weapon.ToString()));
             //double missileSpeed = double.Parse(IniHelper.ReadIni("Missile", "Speed"));
 
@@ -2401,8 +2424,6 @@ namespace CSGOTacticSimulator
 
             float startTime = 0;
             float realCostTime = 0;
-
-            float firstFreezetimeEndedTime = 0;
 
             for (int i = 0; i < eventList.Count(); ++i)
             {
@@ -2622,18 +2643,6 @@ namespace CSGOTacticSimulator
                             continue;
                         }
 
-                        if (firstFreezetimeEndedTime == 0)
-                        {
-                            if (tickTime != -1)
-                            {
-                                firstFreezetimeEndedTime = tickTime * currentEvent.Item1.CurrentTick;
-                            }
-                            else
-                            {
-                                firstFreezetimeEndedTime = currentEvent.Item1.CurrentTime;
-                            }
-                        }
-
                         isFreezetimeEnded = true;
                     }
                 }
@@ -2664,6 +2673,10 @@ namespace CSGOTacticSimulator
 
                         for (int n = i + 1; n < eventList.Count(); ++n)
                         {
+                            if ((eventList[n].Item1.CTScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CTScore + currentEvent.Item1.TScore))
+                            {
+                                break;
+                            }
                             if (eventList[n].Item3 == "DecoyNadeEnded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
                             {
                                 usedMissileList.Add(n);
@@ -2675,7 +2688,7 @@ namespace CSGOTacticSimulator
                                 {
                                     costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 7;
                                 }
-                                decoyEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as SmokeEventArgs).Position);
+                                decoyEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as DecoyEventArgs).Position);
                                 break;
                             }
                         }
@@ -2788,6 +2801,10 @@ namespace CSGOTacticSimulator
 
                         for (int n = i + 1; n < eventList.Count(); ++n)
                         {
+                            if ((eventList[n].Item1.CTScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CTScore + currentEvent.Item1.TScore))
+                            {
+                                break;
+                            }
                             if (eventList[n].Item3 == "FireNadeEnded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
                             {
                                 usedMissileList.Add(n);
@@ -2940,6 +2957,10 @@ namespace CSGOTacticSimulator
 
                         for (int n = i + 1; n < eventList.Count(); ++n)
                         {
+                            if ((eventList[n].Item1.CTScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CTScore + currentEvent.Item1.TScore))
+                            {
+                                break;
+                            }
                             if (eventList[n].Item3 == "SmokeNadeEnded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
                             {
                                 usedMissileList.Add(n);
@@ -3077,7 +3098,11 @@ namespace CSGOTacticSimulator
 
                                 for (int n = i + 1; n < eventList.Count(); ++n)
                                 {
-                                    if (weapon == EquipmentElement.HE && eventList[n].Item3 == "ExplosiveNadeExploded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
+                                    if ((eventList[n].Item1.CTScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CTScore + currentEvent.Item1.TScore))
+                                    {
+                                        break;
+                                    }
+                                    if (weapon == EquipmentElement.HE && eventList[n].Item3 == "ExplosiveNadeExploded" && (eventList[n].Item2 as GrenadeEventArgs).NadeType == EquipmentElement.HE && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
                                     {
                                         usedMissileList.Add(n);
                                         if (tickTime != -1)
@@ -3131,9 +3156,9 @@ namespace CSGOTacticSimulator
                                     {
                                         missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.flashbangPath));
                                         missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.flashEffectPath));
+                                        effectLifeSpan = GlobalDictionary.flashbangLifespan;
                                     }
-
-                                    effectLifeSpan = GlobalDictionary.smokeLifespan;
+                                    
                                     missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
                                     missileImg.Height = GlobalDictionary.MissileWidthAndHeight;
 
@@ -3437,9 +3462,9 @@ namespace CSGOTacticSimulator
             ResizeMode = ResizeMode.CanResizeWithGrip;
         }
 
-        private void Stop()
+        private void Stop(List<string> threadNameList = null)
         {
-            ThreadHelper.StopAllThread();
+            ThreadHelper.StopAllThread(threadNameList);
             CommandHelper.commands.Clear();
             animations.Clear();
             CharacterHelper.ClearCharacters();
