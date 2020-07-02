@@ -9,11 +9,18 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 *(v1.6.1 screenshot)* </br>
 ![screenshot](https://www.iaders.com/wp-content/uploads/2020/05/1.6.0.png)
 ## PROMPT
+- You can read and watch the demo. When watching the demo, click the character point on the left map to play the pov corresponding to the current time. 
 - Pathfinding can be performed after selecting the map frame.
 - You can edit the map frame in the program (for pathfinding).
 - You can get the coordinates by clicking on the picture.
 - The coordinates have nothing to do with the zoom level of the picture in the window, you can change the window size without modifying the script. 
-- Move your mouse over the character's point to see the character information (number, item, coordinates).
+- Move your mouse over the character's point to see the character information (number, item, coordinates, etc).
+## WATCH DEMO&POV
+- Enter the path of the demo file into the file input box to load the demo file.
+- You can choose to watch a round or watch all rounds.
+- Click the character point on the left map when running the demo then you can watch the pov corresponding to the current time. 
+- The pov video file should be placed in the pov folder of the directory to which the demo file belongs, and the file name should contain the ID of the corresponding player. 
+- The pov video should start with the end of the freezing time of the first round. 
 ## SCRIPT
 ### PROMPT
 - The input box is a full-fledged script editor (Thanks to AvalonEdit), and it is still being improved. It supports syntax highlighting, auto-completion, and searching.
