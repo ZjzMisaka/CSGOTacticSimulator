@@ -2682,11 +2682,11 @@ namespace CSGOTacticSimulator
                                 usedMissileList.Add(n);
                                 if (tickTime == -1)
                                 {
-                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 7;
+                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 8;
                                 }
                                 else
                                 {
-                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 7;
+                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 8;
                                 }
                                 decoyEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as DecoyEventArgs).Position);
                                 break;
@@ -2810,11 +2810,11 @@ namespace CSGOTacticSimulator
                                 usedMissileList.Add(n);
                                 if (tickTime == -1)
                                 {
-                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 7;
+                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 8;
                                 }
                                 else
                                 {
-                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 7;
+                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 8;
                                 }
                                 fireEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FireEventArgs).Position);
                                 break;
@@ -2966,11 +2966,11 @@ namespace CSGOTacticSimulator
                                 usedMissileList.Add(n);
                                 if (tickTime == -1)
                                 {
-                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 7;
+                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 8;
                                 }
                                 else
                                 {
-                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 7;
+                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 8;
                                 }
                                 smokeEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as SmokeEventArgs).Position);
                                 break;
@@ -3107,11 +3107,11 @@ namespace CSGOTacticSimulator
                                         usedMissileList.Add(n);
                                         if (tickTime != -1)
                                         {
-                                            costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 7;
+                                            costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 8;
                                         }
                                         else
                                         {
-                                            costTime = (currentEvent.Item1.CurrentTime - demoParser.CurrentTime) / 7;
+                                            costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 8;
                                         }
                                         missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as GrenadeEventArgs).Position);
                                         break;
@@ -3121,11 +3121,11 @@ namespace CSGOTacticSimulator
                                         usedMissileList.Add(n);
                                         if (tickTime != -1)
                                         {
-                                            costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 7;
+                                            costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 8;
                                         }
                                         else
                                         {
-                                            costTime = (currentEvent.Item1.CurrentTime - demoParser.CurrentTime) / 7;
+                                            costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 8;
                                         }
                                         missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FlashEventArgs).Position);
                                         break;
