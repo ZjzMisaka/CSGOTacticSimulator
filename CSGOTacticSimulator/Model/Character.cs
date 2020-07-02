@@ -86,6 +86,7 @@ namespace CSGOTacticSimulator.Model
         public Character(string name, long steamId, bool isFriendly, bool isT, Point mapPoint, MainWindow wnd)
         {
             CharacterImg.MouseEnter += wnd.ShowCharacterInfos;
+            CharacterImg.MouseLeftButtonDown += wnd.ShowPov;
 
             CharacterImg.Width = GlobalDictionary.CharacterWidthAndHeight;
             CharacterImg.Height = GlobalDictionary.CharacterWidthAndHeight;

@@ -105,6 +105,7 @@
             </StackPanel>
 
             <avalonEdit:TextEditor x:Name="te_editor" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" FontSize="20" Margin="5, 0, 0, 0" ShowLineNumbers="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+            <MediaElement x:Name="me_pov" Panel.ZIndex="1000" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="5, 0, 0, 0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Hidden" />
 
             <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
                 <Grid.ColumnDefinitions>

@@ -114,6 +114,11 @@ namespace CSGOTacticSimulator
             }
             Point pointInMap = new Point(Math.Round((e.GetPosition(i_map).X / GlobalDictionary.imageRatio), 2), Math.Round((e.GetPosition(i_map).Y / GlobalDictionary.imageRatio), 2));
             tb_point.Text = pointInMap.ToString();
+            if (me_pov.Visibility == Visibility.Visible)
+            {
+                me_pov.Stop();
+                me_pov.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void btn_select_folder_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -451,6 +456,11 @@ namespace CSGOTacticSimulator
                 btn_pause.Tag = "P";
 
                 btn_pause.Background = GlobalDictionary.resumeBrush;
+
+                if (me_pov.Visibility == Visibility.Visible)
+                {
+                    me_pov.Pause();
+                }
             }
             else
             {
@@ -458,6 +468,11 @@ namespace CSGOTacticSimulator
                 btn_pause.Tag = "R";
 
                 btn_pause.Background = GlobalDictionary.pauseBrush;
+
+                if (me_pov.Visibility == Visibility.Visible)
+                {
+                    me_pov.Play();
+                }
             }
         }
         private void ReCreateJson(Map map)
@@ -1777,6 +1792,41 @@ namespace CSGOTacticSimulator
                         "\nEquipments: " + equipments +
                         "\nHP: " + character.Hp;
                     }
+
+                    break;
+                }
+            }
+        }
+
+        public void ShowPov(object sender, MouseEventArgs e)
+        {
+            List<Character> characters = CharacterHelper.GetCharacters();
+
+            foreach (Character character in characters)
+            {
+                if (character.CharacterImg == sender)
+                {
+                    List<string> files = new List<string>();
+                    string povsFolder = tb_select_file.Text;
+                    povsFolder = povsFolder.Replace(new FileInfo(povsFolder).Name, "");
+                    povsFolder = Path.Combine(povsFolder, "povs");
+                    DirectoryInfo povFolder = new DirectoryInfo(povsFolder);
+                    foreach (FileInfo file in povFolder.GetFiles())
+                    {
+                        if (character.Name.Contains(file.Name.Replace(file.Extension, "")))
+                        {
+                            me_pov.Visibility = Visibility.Visible;
+                            me_pov.LoadedBehavior = MediaState.Manual;
+                            me_pov.Source = new Uri(file.FullName);
+                            double currentTime = double.Parse(character.CharacterImg.Tag.ToString());
+                            
+                            me_pov.Play();
+                            me_pov.Position = new TimeSpan(0, 0, 0, 0, (int)(currentTime * 1000));
+                            break;
+                        }
+                    }
+
+                    break;
                 }
             }
         }
@@ -1845,7 +1895,7 @@ namespace CSGOTacticSimulator
 
             PropertiesSetter propertiesSetter = new PropertiesSetter(GlobalDictionary.propertiesSetter);
             propertiesSetter.EnableCloseButton = true;
-            int res = MessageBox.Show(propertiesSetter, new List<object> { new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10) }, new ButtonSpacer(200), "OK" }, "需要观看第几回合?", "选择回合数", MessageBoxImage.Question);
+            int res = MessageBox.Show(propertiesSetter, new List<object> { new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10) }, new ButtonSpacer(200), "OK" }, "需要观看第几回合? \n输入0观看所有回合", "选择回合数", MessageBoxImage.Question);
             int roundNumber = 0;
             if (res == -1)
             {
@@ -2344,6 +2394,8 @@ namespace CSGOTacticSimulator
             float startTime = 0;
             float realCostTime = 0;
 
+            float firstFreezetimeEndedTime = 0;
+
             for (int i = 0; i < eventList.Count(); ++i)
             {
                 Tuple<DemoParser, EventArgs, string, int> currentEvent = eventList[i];
@@ -2561,6 +2613,19 @@ namespace CSGOTacticSimulator
                         {
                             continue;
                         }
+
+                        if (firstFreezetimeEndedTime == 0)
+                        {
+                            if (tickTime != -1)
+                            {
+                                firstFreezetimeEndedTime = tickTime * currentEvent.Item1.CurrentTick;
+                            }
+                            else
+                            {
+                                firstFreezetimeEndedTime = currentEvent.Item1.CurrentTime;
+                            }
+                        }
+
                         isFreezetimeEnded = true;
                     }
                 }
@@ -3232,6 +3297,8 @@ namespace CSGOTacticSimulator
                                 endMapPoint = DemoPointToMapPoint(player.Position);
                                 endWndPoint = GetWndPoint(endMapPoint, ImgType.Character);
 
+                                character.CharacterImg.Tag = nowTime - firstFreezetimeEndedTime;
+
                                 Canvas.SetLeft(character.CharacterImg, endWndPoint.X);
                                 Canvas.SetTop(character.CharacterImg, endWndPoint.Y);
 
@@ -3351,6 +3418,12 @@ namespace CSGOTacticSimulator
             }
 
             btn_pause.Background = GlobalDictionary.pauseBrush;
+
+            if (me_pov.Visibility == Visibility.Visible)
+            {
+                me_pov.Stop();
+                me_pov.Visibility = Visibility.Collapsed;
+            }
         }
 
         void te_editor_TextArea_TextEntered(object sender, TextCompositionEventArgs e)
