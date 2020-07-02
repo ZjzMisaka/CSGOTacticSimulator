@@ -341,107 +341,115 @@ namespace CSGOTacticSimulator
                 return;
             }
 
-            string processedCommand = null;
-
-            GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
-
-            bombDefused = false;
-
             Stop();
 
-            CommandHelper.GetCommands(te_editor.Text);
-
-            try
+            string filePath = tb_select_file.Text;
+            if (Path.GetExtension(filePath) == ".txt")
             {
-                foreach (string command in CommandHelper.commands)
-                {
-                    processedCommand = command.Replace("\r", "").Trim();
-                    Command commandType = CommandHelper.AnalysisCommand(command);
-                    switch (commandType)
-                    {
-                        case Command.SetEntiretySpeed:
-                            SetEntiretySpeed(processedCommand);
-                            break;
-                        case Command.ActionCharacterDo:
-                            ActionCharacterDo(processedCommand);
-                            break;
-                        case Command.ActionCharacterAutoMove:
-                            ActionCharacterAutoMove(processedCommand);
-                            break;
-                        case Command.ActionCharacterMove:
-                            ActionCharacterMove(processedCommand);
-                            break;
-                        case Command.ActionCharacterShoot:
-                            ActionCharacterShoot(processedCommand);
-                            break;
-                        case Command.ActionCharacterThrow:
-                            ActionCharacterThrow(processedCommand);
-                            break;
-                        case Command.ActionCharacterWaitUntil:
-                            ActionCharacterWaitUntil(processedCommand);
-                            break;
-                        case Command.ActionCharacterWaitFor:
-                            ActionCharacterWaitFor(processedCommand);
-                            break;
-                        case Command.BadOrNotCommand:
-                            break;
-                        case Command.CreateCharacter:
-                            CreateCharacter(processedCommand);
-                            break;
-                        case Command.CreateComment:
-                            break;
-                        case Command.CreateTeam:
-                            break;
-                        case Command.GiveCharacterMissile:
-                            GiveCharacterMissile(processedCommand);
-                            break;
-                        case Command.GiveCharacterProps:
-                            GiveCharacterProps(processedCommand);
-                            break;
-                        case Command.GiveCharacterWeapon:
-                            GiveCharacterWeapon(processedCommand);
-                            break;
-                        case Command.SetCamp:
-                            SetCamp(processedCommand);
-                            break;
-                        case Command.SetCharacterStatus:
-                            SetCharacterStatus(processedCommand);
-                            break;
-                        case Command.SetCharacterVerticalPosition:
-                            SetCharacterVerticalPosition(processedCommand);
-                            break;
+                string processedCommand = null;
 
-                        case Command.CreateMap:
-                            CreateMap(processedCommand);
-                            break;
-                        case Command.CreateNode:
-                            CreateNode(processedCommand);
-                            break;
-                        case Command.CreatePath:
-                            CreatePath(processedCommand);
-                            break;
-                        case Command.DeleteNode:
-                            DeleteNode(processedCommand);
-                            break;
-                        case Command.DeletePath:
-                            DeletePath(processedCommand);
-                            break;
+                GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
+
+                bombDefused = false;
+
+                CommandHelper.GetCommands(te_editor.Text);
+
+                try
+                {
+                    foreach (string command in CommandHelper.commands)
+                    {
+                        processedCommand = command.Replace("\r", "").Trim();
+                        Command commandType = CommandHelper.AnalysisCommand(command);
+                        switch (commandType)
+                        {
+                            case Command.SetEntiretySpeed:
+                                SetEntiretySpeed(processedCommand);
+                                break;
+                            case Command.ActionCharacterDo:
+                                ActionCharacterDo(processedCommand);
+                                break;
+                            case Command.ActionCharacterAutoMove:
+                                ActionCharacterAutoMove(processedCommand);
+                                break;
+                            case Command.ActionCharacterMove:
+                                ActionCharacterMove(processedCommand);
+                                break;
+                            case Command.ActionCharacterShoot:
+                                ActionCharacterShoot(processedCommand);
+                                break;
+                            case Command.ActionCharacterThrow:
+                                ActionCharacterThrow(processedCommand);
+                                break;
+                            case Command.ActionCharacterWaitUntil:
+                                ActionCharacterWaitUntil(processedCommand);
+                                break;
+                            case Command.ActionCharacterWaitFor:
+                                ActionCharacterWaitFor(processedCommand);
+                                break;
+                            case Command.BadOrNotCommand:
+                                break;
+                            case Command.CreateCharacter:
+                                CreateCharacter(processedCommand);
+                                break;
+                            case Command.CreateComment:
+                                break;
+                            case Command.CreateTeam:
+                                break;
+                            case Command.GiveCharacterMissile:
+                                GiveCharacterMissile(processedCommand);
+                                break;
+                            case Command.GiveCharacterProps:
+                                GiveCharacterProps(processedCommand);
+                                break;
+                            case Command.GiveCharacterWeapon:
+                                GiveCharacterWeapon(processedCommand);
+                                break;
+                            case Command.SetCamp:
+                                SetCamp(processedCommand);
+                                break;
+                            case Command.SetCharacterStatus:
+                                SetCharacterStatus(processedCommand);
+                                break;
+                            case Command.SetCharacterVerticalPosition:
+                                SetCharacterVerticalPosition(processedCommand);
+                                break;
+
+                            case Command.CreateMap:
+                                CreateMap(processedCommand);
+                                break;
+                            case Command.CreateNode:
+                                CreateNode(processedCommand);
+                                break;
+                            case Command.CreatePath:
+                                CreatePath(processedCommand);
+                                break;
+                            case Command.DeleteNode:
+                                DeleteNode(processedCommand);
+                                break;
+                            case Command.DeletePath:
+                                DeletePath(processedCommand);
+                                break;
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(GlobalDictionary.propertiesSetter, new List<object> { new ButtonSpacer(250), "确定" }, "解析命令 \"" + processedCommand + "\" 时出错\n错误信息: " + ex.Message, "错误", MessageBoxImage.Error);
+                }
+
+                StartTimer();
+
+                TraversalAnimations();
+
+                btn_restore.Visibility = Visibility.Collapsed;
+                gs_gridsplitter.IsEnabled = false;
+                ResizeMode = ResizeMode.NoResize;
+                btn_pause.Tag = "R";
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(GlobalDictionary.propertiesSetter, new List<object> { new ButtonSpacer(250), "确定" }, "解析命令 \"" + processedCommand + "\" 时出错\n错误信息: " + ex.Message, "错误", MessageBoxImage.Error);
+                ReadDemo(filePath);
             }
-
-            StartTimer();
-
-            TraversalAnimations();
-
-            btn_restore.Visibility = Visibility.Collapsed;
-            gs_gridsplitter.IsEnabled = false;
-            ResizeMode = ResizeMode.NoResize;
-            btn_pause.Tag = "R";
         }
         private void btn_pause_Click(object sender, RoutedEventArgs e)
         {
@@ -2659,7 +2667,14 @@ namespace CSGOTacticSimulator
                             if (eventList[n].Item3 == "DecoyNadeEnded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
                             {
                                 usedMissileList.Add(n);
-                                costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 10;
+                                if (tickTime == -1)
+                                {
+                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 7;
+                                }
+                                else
+                                {
+                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 7;
+                                }
                                 decoyEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as SmokeEventArgs).Position);
                                 break;
                             }
@@ -2776,7 +2791,14 @@ namespace CSGOTacticSimulator
                             if (eventList[n].Item3 == "FireNadeEnded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
                             {
                                 usedMissileList.Add(n);
-                                costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 10;
+                                if (tickTime == -1)
+                                {
+                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 7;
+                                }
+                                else
+                                {
+                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 7;
+                                }
                                 fireEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FireEventArgs).Position);
                                 break;
                             }
@@ -2809,7 +2831,6 @@ namespace CSGOTacticSimulator
                                 missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.fireEffectPath));
                             }
                             effectLifeSpan = GlobalDictionary.firebombLifespan;
-                            missileImg = new Image();
                             missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
                             missileImg.Height = GlobalDictionary.MissileWidthAndHeight;
 
@@ -2924,11 +2945,11 @@ namespace CSGOTacticSimulator
                                 usedMissileList.Add(n);
                                 if (tickTime == -1)
                                 {
-                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 10;
+                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 7;
                                 }
                                 else
                                 {
-                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 10;
+                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 7;
                                 }
                                 smokeEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as SmokeEventArgs).Position);
                                 break;
@@ -3059,14 +3080,28 @@ namespace CSGOTacticSimulator
                                     if (weapon == EquipmentElement.HE && eventList[n].Item3 == "ExplosiveNadeExploded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
                                     {
                                         usedMissileList.Add(n);
-                                        costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 10;
+                                        if (tickTime != -1)
+                                        {
+                                            costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 7;
+                                        }
+                                        else
+                                        {
+                                            costTime = (currentEvent.Item1.CurrentTime - demoParser.CurrentTime) / 7;
+                                        }
                                         missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as GrenadeEventArgs).Position);
                                         break;
                                     }
                                     if (weapon == EquipmentElement.Flash && eventList[n].Item3 == "FlashNadeExploded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
                                     {
                                         usedMissileList.Add(n);
-                                        costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 10;
+                                        if (tickTime != -1)
+                                        {
+                                            costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 7;
+                                        }
+                                        else
+                                        {
+                                            costTime = (currentEvent.Item1.CurrentTime - demoParser.CurrentTime) / 7;
+                                        }
                                         missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FlashEventArgs).Position);
                                         break;
                                     }
