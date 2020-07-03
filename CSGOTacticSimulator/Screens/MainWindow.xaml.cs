@@ -2543,9 +2543,10 @@ namespace CSGOTacticSimulator
                             explosionImage.Source = new BitmapImage(new Uri(GlobalDictionary.explosionPath));
                             explosionImage.Width = GlobalDictionary.ExplosionEffectWidthAndHeight;
                             explosionImage.Height = GlobalDictionary.ExplosionEffectWidthAndHeight;
-                            Point explosionWndPoint = new Point(Canvas.GetLeft(bombImage), Canvas.GetTop(bombImage));
+                            Point explosionWndPoint = GetMapPoint(new Point(Canvas.GetLeft(bombImage), Canvas.GetTop(bombImage)), ImgType.Props);
                             c_runcanvas.Children.Remove(bombImage);
 
+                            explosionWndPoint = GetWndPoint(explosionWndPoint, ImgType.ExplosionEffect);
                             Canvas.SetLeft(explosionImage, explosionWndPoint.X);
                             Canvas.SetTop(explosionImage, explosionWndPoint.Y);
                             c_runcanvas.Children.Add(explosionImage);
