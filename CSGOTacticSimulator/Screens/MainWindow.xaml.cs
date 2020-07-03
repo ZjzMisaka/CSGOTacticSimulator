@@ -1903,15 +1903,27 @@ namespace CSGOTacticSimulator
 
             PropertiesSetter propertiesSetter = new PropertiesSetter(GlobalDictionary.propertiesSetter);
             propertiesSetter.EnableCloseButton = true;
-            int res = MessageBox.Show(propertiesSetter, new List<object> { new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10) }, new ButtonSpacer(200), "OK" }, "需要观看第几回合? \n输入0观看所有回合", "选择回合数", MessageBoxImage.Question);
+            int res = MessageBox.Show(propertiesSetter, new List<object> {
+                new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50 },
+                new CheckBox() { Content = "包括之后所有回合" , VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 150, Foreground = new SolidColorBrush(Colors.White), IsChecked = true},
+                new ButtonSpacer(200),
+                "OK" }, "需要观看第几回合? ", "选择回合数", MessageBoxImage.Question);
             int roundNumber = 0;
+            bool isAnalizeToLastRound = true;
             if (res == -1)
             {
                 return;
             }
             else
             {
-                roundNumber = int.Parse((MessageBox.ButtonList[0] as TextBox).Text);
+                if (!int.TryParse((MessageBox.ButtonList[0] as TextBox).Text, out roundNumber))
+                {
+                    PropertiesSetter newPropertiesSetter = new PropertiesSetter(propertiesSetter);
+                    newPropertiesSetter.CloseTimer = new MessageBoxCloseTimer(3, 0);
+                    MessageBox.Show(newPropertiesSetter, "请输入数字", "错误", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+                isAnalizeToLastRound = (MessageBox.ButtonList[1] as CheckBox).IsChecked == true ? true : false;
             }
 
             List<Tuple<DemoParser, EventArgs, string, int>> eventList = new List<Tuple<DemoParser, EventArgs, string, int>>();
@@ -1926,19 +1938,30 @@ namespace CSGOTacticSimulator
             float firstFreezetimeEndedTime = -1;
             if (float.IsNaN(parser.TickTime))
             {
-                int resTickTime = MessageBox.Show(propertiesSetter, new List<object> { new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10) }, new ButtonSpacer(200), "OK" }, "该demo是多少ticks的?", "未知ticks", MessageBoxImage.Information);
+                int resTickTime = MessageBox.Show(propertiesSetter, new List<object> { new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50 }, new ButtonSpacer(350), "OK" }, "该demo是多少ticks的?", "未知ticks", MessageBoxImage.Information);
                 if (resTickTime == -1)
                 {
                     return;
                 }
                 else
                 {
-                    tickTime = 1 / (float)int.Parse((MessageBox.ButtonList[0] as TextBox).Text);
+                    int result;
+                    if(int.TryParse((MessageBox.ButtonList[0] as TextBox).Text, out result))
+                    {
+                        tickTime = 1 / (float)result;
+                    }
+                    else
+                    {
+                        PropertiesSetter newPropertiesSetter = new PropertiesSetter(propertiesSetter);
+                        newPropertiesSetter.CloseTimer = new MessageBoxCloseTimer(3, 0);
+                        MessageBox.Show(newPropertiesSetter, "请输入数字", "错误", MessageBoxButton.OK, MessageBoxImage.Information);
+                        return;
+                    }                   
                 }
             }
             parser.DecoyNadeEnded += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -1954,7 +1977,7 @@ namespace CSGOTacticSimulator
             //};
             parser.FireNadeWithOwnerStarted += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -1968,7 +1991,7 @@ namespace CSGOTacticSimulator
             };
             parser.FireNadeEnded += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -1981,7 +2004,7 @@ namespace CSGOTacticSimulator
             };
             parser.ExplosiveNadeExploded += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -1994,7 +2017,7 @@ namespace CSGOTacticSimulator
             };
             parser.FlashNadeExploded += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -2010,7 +2033,7 @@ namespace CSGOTacticSimulator
             //};
             //parser.NadeReachedTarget += (parseSender, parseE) =>
             //{
-            //    if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+            //    if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
             //    {
             //        return;
             //    }
@@ -2023,7 +2046,7 @@ namespace CSGOTacticSimulator
             //};
             parser.BombBeginPlant += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -2037,7 +2060,7 @@ namespace CSGOTacticSimulator
             };
             parser.BombAbortPlant += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -2051,7 +2074,7 @@ namespace CSGOTacticSimulator
             };
             parser.BombExploded += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -2065,7 +2088,7 @@ namespace CSGOTacticSimulator
             };
             parser.BombDefused += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -2079,7 +2102,7 @@ namespace CSGOTacticSimulator
             };
             parser.BombBeginDefuse += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -2093,7 +2116,7 @@ namespace CSGOTacticSimulator
             };
             parser.BombAbortDefuse += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -2117,7 +2140,7 @@ namespace CSGOTacticSimulator
             //};
             parser.DecoyNadeStarted += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -2131,7 +2154,7 @@ namespace CSGOTacticSimulator
             };
             parser.Blind += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -2150,7 +2173,7 @@ namespace CSGOTacticSimulator
             //};
             parser.BombPlanted += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -2164,7 +2187,7 @@ namespace CSGOTacticSimulator
             };
             parser.SmokeNadeEnded += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -2180,7 +2203,7 @@ namespace CSGOTacticSimulator
             //};
             parser.WeaponFired += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -2241,7 +2264,7 @@ namespace CSGOTacticSimulator
             };
             parser.SmokeNadeStarted += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -2261,7 +2284,7 @@ namespace CSGOTacticSimulator
             //};
             parser.RoundEnd += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -2302,7 +2325,7 @@ namespace CSGOTacticSimulator
             };
             parser.TickDone += (parseSender, parseE) =>
             {
-                if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -2319,7 +2342,7 @@ namespace CSGOTacticSimulator
             };
             //parser.PlayerKilled += (parseSender, parseE) =>
             //{
-            //    if (roundNumber != 0 && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+            //    if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
             //    {
             //        return;
             //    }
@@ -2353,54 +2376,51 @@ namespace CSGOTacticSimulator
             }
 
             btn_pause.Tag = "R";
-
-            if (roundNumber == 0)
+            
+            Thread totalThread = new Thread(() =>
             {
-
-
-                Thread totalThread = new Thread(() =>
+                bool isAnalized = false;
+                while (isAnalizeToLastRound || (!isAnalizeToLastRound && !isAnalized))
                 {
-                    while (true)
+                    this.Dispatcher.Invoke(() =>
                     {
-                        ++roundNumber;
-                        if (roundNumber > (parser.TScore + parser.CTScore))
+                        tb_timer.Text = (roundNumber).ToString();
+                    });
+
+                    Thread analizeDemoThread = new Thread(AnalizeDemo);
+                    analizeDemoThread.Start(new Tuple<List<Tuple<DemoParser, EventArgs, string, int>>, int, Dictionary<long, int>, float, float>(eventList, roundNumber, dic, tickTime, firstFreezetimeEndedTime));
+                    ThreadHelper.AddThread(analizeDemoThread);
+                    analizeDemoThread.Join();
+
+                    List<Character> charactersTemp = CharacterHelper.GetCharacters();
+                    List<Character> newCharactersTemp = new List<Character>();
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        int count = charactersTemp.Count();
+                        for (int i = 0; i < count; ++i)
                         {
-                            Stop();
-                            return;
+                            newCharactersTemp.Add(new Character(charactersTemp[i].Name, charactersTemp[i].SteamId, charactersTemp[i].IsFriendly, charactersTemp[i].IsT, charactersTemp[i].MapPoint, this));
                         }
-
-                        Thread analizeDemoThread = new Thread(AnalizeDemo);
-                        analizeDemoThread.Start(new Tuple<List<Tuple<DemoParser, EventArgs, string, int>>, int, Dictionary<long, int>, float, float>(eventList, roundNumber, dic, tickTime, firstFreezetimeEndedTime));
-                        ThreadHelper.AddThread(analizeDemoThread);
-                        analizeDemoThread.Join();
-
-                        List<Character> charactersTemp = CharacterHelper.GetCharacters();
-                        List<Character> newCharactersTemp = new List<Character>();
-                        this.Dispatcher.Invoke(() =>
+                        Stop(new List<string>() { "totalThread" });
+                        for (int i = 0; i < newCharactersTemp.Count(); ++i)
                         {
-                            int count = charactersTemp.Count();
-                            for (int i = 0; i < count; ++i)
-                            {
-                                newCharactersTemp.Add(new Character(charactersTemp[i].Name, charactersTemp[i].SteamId, charactersTemp[i].IsFriendly, charactersTemp[i].IsT, charactersTemp[i].MapPoint, this));
-                            }
-                            Stop(new List<string>() { "totalThread" });
-                            for (int i = 0; i < newCharactersTemp.Count(); ++i)
-                            {
-                                new Character(newCharactersTemp[i].Name, newCharactersTemp[i].SteamId, newCharactersTemp[i].IsFriendly, newCharactersTemp[i].IsT, newCharactersTemp[i].MapPoint, this);
-                            }
-                        });
+                            new Character(newCharactersTemp[i].Name, newCharactersTemp[i].SteamId, newCharactersTemp[i].IsFriendly, newCharactersTemp[i].IsT, newCharactersTemp[i].MapPoint, this);
+                        }
+                    });
+
+                    isAnalized = true;
+
+                    ++roundNumber;
+                    if (roundNumber > (parser.TScore + parser.CTScore))
+                    {
+                        Stop();
+                        return;
                     }
-                });
-                totalThread.Name = "totalThread";
-                totalThread.Start();
-                ThreadHelper.AddThread(totalThread);
-            }
-            else
-            {
-                Thread analizeDemoThread = new Thread(AnalizeDemo);
-                analizeDemoThread.Start(new Tuple<List<Tuple<DemoParser, EventArgs, string, int>>, int, Dictionary<long, int>, float, float>(eventList, roundNumber, dic, tickTime, firstFreezetimeEndedTime));
-                ThreadHelper.AddThread(analizeDemoThread);
-            }
+                }
+            });
+            totalThread.Name = "totalThread";
+            totalThread.Start();
+            ThreadHelper.AddThread(totalThread);
         }
 
         private void AnalizeDemo(object obj)
@@ -2438,7 +2458,7 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "RoundStart")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2449,7 +2469,7 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "RoundEnd")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2459,7 +2479,7 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "Blind")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2495,7 +2515,7 @@ namespace CSGOTacticSimulator
 
                     if (currentEvent.Item3 == "BombBeginPlant")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2508,7 +2528,7 @@ namespace CSGOTacticSimulator
                     }
                     else if (currentEvent.Item3 == "BombAbortPlant")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2519,7 +2539,7 @@ namespace CSGOTacticSimulator
                     }
                     else if (currentEvent.Item3 == "BombExploded")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2554,7 +2574,7 @@ namespace CSGOTacticSimulator
                     }
                     else if (currentEvent.Item3 == "BombDefused")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2583,7 +2603,7 @@ namespace CSGOTacticSimulator
                     }
                     else if (currentEvent.Item3 == "BombPlanted")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2613,7 +2633,7 @@ namespace CSGOTacticSimulator
                     Character character = CharacterHelper.GetCharacter(characterNumber);
                     if (currentEvent.Item3 == "BombBeginDefuse")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2625,7 +2645,7 @@ namespace CSGOTacticSimulator
                     }
                     else if (currentEvent.Item3 == "BombAbortDefuse")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2639,7 +2659,7 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "FreezetimeEnded")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2651,7 +2671,7 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "DecoyNadeStarted")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
                         {
                             continue;
                         }
@@ -2683,11 +2703,11 @@ namespace CSGOTacticSimulator
                                 usedMissileList.Add(n);
                                 if (tickTime == -1)
                                 {
-                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 8;
+                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 5;
                                 }
                                 else
                                 {
-                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 8;
+                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 5;
                                 }
                                 decoyEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as DecoyEventArgs).Position);
                                 break;
@@ -2784,7 +2804,7 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "FireNadeWithOwnerStarted")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
                         {
                             continue;
                         }
@@ -2811,11 +2831,11 @@ namespace CSGOTacticSimulator
                                 usedMissileList.Add(n);
                                 if (tickTime == -1)
                                 {
-                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 8;
+                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 5;
                                 }
                                 else
                                 {
-                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 8;
+                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 5;
                                 }
                                 fireEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FireEventArgs).Position);
                                 break;
@@ -2921,7 +2941,7 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "BombBeginPlant")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
                         {
                             continue;
                         }
@@ -2931,7 +2951,7 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "BombBeginDefuse")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
                         {
                             continue;
                         }
@@ -2941,7 +2961,7 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "SmokeNadeStarted")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
                         {
                             continue;
                         }
@@ -2967,11 +2987,11 @@ namespace CSGOTacticSimulator
                                 usedMissileList.Add(n);
                                 if (tickTime == -1)
                                 {
-                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 8;
+                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 13;
                                 }
                                 else
                                 {
-                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 8;
+                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 13;
                                 }
                                 smokeEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as SmokeEventArgs).Position);
                                 break;
@@ -3069,7 +3089,7 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "WeaponFired")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
                         {
                             continue;
                         }
@@ -3108,11 +3128,11 @@ namespace CSGOTacticSimulator
                                         usedMissileList.Add(n);
                                         if (tickTime != -1)
                                         {
-                                            costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 8;
+                                            costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 1;
                                         }
                                         else
                                         {
-                                            costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 8;
+                                            costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 1;
                                         }
                                         missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as GrenadeEventArgs).Position);
                                         break;
@@ -3122,11 +3142,11 @@ namespace CSGOTacticSimulator
                                         usedMissileList.Add(n);
                                         if (tickTime != -1)
                                         {
-                                            costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 8;
+                                            costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 1;
                                         }
                                         else
                                         {
-                                            costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 8;
+                                            costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 1;
                                         }
                                         missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FlashEventArgs).Position);
                                         break;
@@ -3289,7 +3309,7 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "TickDone")
                     {
-                        if (roundNumber != 0 && (demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
+                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
                         {
                             continue;
                         }
