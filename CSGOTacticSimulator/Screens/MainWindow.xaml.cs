@@ -3301,6 +3301,8 @@ namespace CSGOTacticSimulator
                                 direction = new Point(0, -1);
                             }
 
+                            direction = VectorHelper.GetUnitVector(new Point(0, 0), direction);
+
                             Point toWndPoint = GetWndPoint(DemoPointToMapPoint(player.Position + new DemoInfo.Vector((float)(direction.X * 1000), (float)(direction.Y * 1000), 0)), ImgType.Nothing);
                             bulletLine.X1 = fromWndPoint.X;
                             bulletLine.Y1 = fromWndPoint.Y;
