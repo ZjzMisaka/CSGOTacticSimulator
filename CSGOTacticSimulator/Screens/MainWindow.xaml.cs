@@ -3526,8 +3526,7 @@ namespace CSGOTacticSimulator
             {
                 splitList[i] = double.Parse(splitListStr[i]);
             }
-           // return new Point((demoPoint.X + 2450) * 0.23, (demoPoint.Y * (-1) + 3225) * 0.23);
-            return new Point((demoPoint.X + splitList[0]) * splitList[2], (demoPoint.Y * (-1) + splitList[1]) * splitList[2]);
+            return new Point((demoPoint.X - splitList[0]) / splitList[2], (demoPoint.Y * (-1) + splitList[1]) / splitList[2]);
         }
 
         private void Tb_select_file_KeyDown(object sender, KeyEventArgs e)
