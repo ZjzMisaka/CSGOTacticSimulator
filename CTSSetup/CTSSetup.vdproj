@@ -15,13 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_071696564E41400C95388DFC93F91AB8"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_0725AD06090A4681BFFCAF1E9E193FD4"
+        "MsmKey" = "8:_02C4B93013F743C7A744981204DDE0EA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -33,49 +27,31 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_09E47CF17AED4EA2B59342FA5006122F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_0DE8671BBAD540A78E91507E48DC1902"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_0E597282C213477EB89F55469C2C4E77"
+        "MsmKey" = "8:_0ECC51B4927D42008817527A84A9AD46"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_1B67C6DF019145CF8E964AEF8B4E194F"
+        "MsmKey" = "8:_15A2A05AE7A145E69E6D72CDA3B667EF"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_1DEFA15BEB0E4D13B2F8C278A5F3850C"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_21AA475A97DD412ABCD537F1FA3271B9"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_27F2F33D00A54DEDABB95A0316753767"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2AD0808AF5F549ADA6408B2BC675440F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2C63D2A47A1F4BF487EF2F2BC48487D9"
+        "MsmKey" = "8:_19A7C52FD21145FB8683515F54B7991D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -87,31 +63,31 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_302D57FDB6084547A635707E5DA9FEAF"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_3347DDC257394486A7E9804942D9B7ED"
-        "OwnerKey" = "8:_722D8E40F68D4748B49510A3A0EF235F"
+        "OwnerKey" = "8:_79AC61553E6C4F00BD7FB5DE823844A2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_3595565756744892BB6C94149D60D6E3"
+        "MsmKey" = "8:_358208DDFA4C4C388DBAB832051F9ED0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_36C7896586144476A357FEA637209B67"
+        "MsmKey" = "8:_418DC2FA1F0E44D38E6AF92E44B7BCC4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_3947387C89D3456BA9E2B1A15495C924"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_43EDC8121EA145B5A6DD5C4782197F62"
+        "MsmKey" = "8:_44DA586D7A284E19852FAD635F726D55"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -123,7 +99,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4F7F09E738844E368A18035BCE09B701"
+        "MsmKey" = "8:_4B3B97CFDBBB467DAD6384E6C253C60F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_51E0294084D04B4EB21E8F5B213B2E76"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_53DC878EC6AA4AAD905162E3C786B606"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -135,43 +123,49 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_6060CE39CE2F4D67BFE3027DCD586D52"
+        "MsmKey" = "8:_58C2BB555DAA4BBC9B09832C46293CAB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_722D8E40F68D4748B49510A3A0EF235F"
+        "MsmKey" = "8:_5B9635BCAAD747C096F4EB06C7430108"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_75859D233D864C99B1BAA920DF5D2017"
+        "MsmKey" = "8:_62115F35E6BC45A0B91C8DBC8DE2E653"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_79454F0BB3254395A6BC89035456732C"
+        "MsmKey" = "8:_71AE3AC027E94973B2A28283F4CE217D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_7AA1028A28DE4552A1D0939A2AAD3818"
+        "MsmKey" = "8:_75F334AD714C48A7BDFA0AD6437F818A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_857DD56FA04C4E91BA2672D5C22A6111"
+        "MsmKey" = "8:_79AC61553E6C4F00BD7FB5DE823844A2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_8E7A9501EE104D2DB73FE66C89A17E46"
+        "MsmKey" = "8:_7EB1461D01194663953F552E9C09CE39"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_92029043455D4670B3A2B86FD83DC5B8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -184,36 +178,30 @@
         "Entry"
         {
         "MsmKey" = "8:_967A69B3695B1220EF497D3722183593"
-        "OwnerKey" = "8:_722D8E40F68D4748B49510A3A0EF235F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9B3F8A9A2A3B4822A5ABAA0DE3889E79"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9D94DC4A056647088934815F60C4A0EE"
-        "OwnerKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_79AC61553E6C4F00BD7FB5DE823844A2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_9F8667381FE9BD1959071F00D72593FE"
-        "OwnerKey" = "8:_722D8E40F68D4748B49510A3A0EF235F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A05E960882924E12AFE7419FC837ABCC"
-        "OwnerKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_79AC61553E6C4F00BD7FB5DE823844A2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_A4C56E4D4BDA41119F69CE84C4589B28"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A51AFC3AEA494F27ACFA25F802F56848"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A7A7900014BD4AB5B1BE9D681221A051"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -225,19 +213,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_ABD882A8A7844CA796DC40D6B8EABC49"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B94BF4CA32F640BDA9697A43407D21B6"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_BB6D1A15EA9442BE8A1092488D8A2C17"
+        "MsmKey" = "8:_BEAA7081878C4750BD1467C82CEDC735"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -249,55 +225,97 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_C1AD47D6088C4118A2229FA4F759260E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_C23F2F9081714A1885DBE8E788F61194"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_C95E3C8B7F5F4B6FB5B965909AD05146"
+        "MsmKey" = "8:_C3E287CDB27448F494C166171374053B"
+        "OwnerKey" = "8:_79AC61553E6C4F00BD7FB5DE823844A2"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C3FA845207514EF28C1480A53C64125A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_CA83FEF5A9AA4B8FA607B2D049FF6619"
+        "MsmKey" = "8:_C81696494287467692A870D0E34B6D40"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_D8835F492F8045B3B5D508C0FE5B8049"
+        "MsmKey" = "8:_D279D955BA2D44A69001D9B41E538132"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_D9B54D0F439A4C95BB1D28CEA3D1AB26"
+        "MsmKey" = "8:_DA406B6AF72946D0A4B97F872D8D6F70"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_DEEC9AFB2ACB47E2AA7540587D0E6695"
+        "MsmKey" = "8:_DAA10950DD674F46B13710B08B3F0D13"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F0B5E81C18AF42E780DE92B756D93575"
+        "MsmKey" = "8:_DD16F9C4C0BF4508869AE31404605D6E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E0517F124AA6479E871B8E97A9541747"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_EC0B44610CF34FAC9A99D80C7BE120A6"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_F2FFB379251762A0B8FCFFE51EDC5EAF"
-        "OwnerKey" = "8:_722D8E40F68D4748B49510A3A0EF235F"
+        "OwnerKey" = "8:_79AC61553E6C4F00BD7FB5DE823844A2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_F411BED4A0AD4BA09266369ABB936EB4"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F61DB5931D434F1DA6D8C0B297EED867"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F86BF5EE70264D05A140E00317034700"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FCD68CC20BB84238918AD447A1FCBB20"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -310,7 +328,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_722D8E40F68D4748B49510A3A0EF235F"
+        "OwnerKey" = "8:_79AC61553E6C4F00BD7FB5DE823844A2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -329,6 +347,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_F2FFB379251762A0B8FCFFE51EDC5EAF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_C3E287CDB27448F494C166171374053B"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -426,32 +450,12 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_071696564E41400C95388DFC93F91AB8"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_02C4B93013F743C7A744981204DDE0EA"
             {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\warning.png"
-            "TargetName" = "8:warning.png"
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\missile_flashbang.png"
+            "TargetName" = "8:missile_flashbang.png"
             "Tag" = "8:"
-            "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0725AD06090A4681BFFCAF1E9E193FD4"
-            {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\background.jpg"
-            "TargetName" = "8:background.jpg"
-            "Tag" = "8:"
-            "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
+            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -486,6 +490,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_09E47CF17AED4EA2B59342FA5006122F"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\enemy_alive_upper.png"
+            "TargetName" = "8:enemy_alive_upper.png"
+            "Tag" = "8:"
+            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0DE8671BBAD540A78E91507E48DC1902"
             {
             "SourcePath" = "8:..\\CSGOTacticSimulator\\infos\\highlight.xshd"
@@ -506,67 +530,7 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0E597282C213477EB89F55469C2C4E77"
-            {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\missile_flashbang.png"
-            "TargetName" = "8:missile_flashbang.png"
-            "Tag" = "8:"
-            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1B67C6DF019145CF8E964AEF8B4E194F"
-            {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\exit.png"
-            "TargetName" = "8:exit.png"
-            "Tag" = "8:"
-            "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1DEFA15BEB0E4D13B2F8C278A5F3850C"
-            {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\preview.png"
-            "TargetName" = "8:preview.png"
-            "Tag" = "8:"
-            "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_21AA475A97DD412ABCD537F1FA3271B9"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0ECC51B4927D42008817527A84A9AD46"
             {
             "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\missile_hegrenade.png"
             "TargetName" = "8:missile_hegrenade.png"
@@ -586,10 +550,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_27F2F33D00A54DEDABB95A0316753767"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_15A2A05AE7A145E69E6D72CDA3B667EF"
             {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\question.png"
-            "TargetName" = "8:question.png"
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\warning.png"
+            "TargetName" = "8:warning.png"
             "Tag" = "8:"
             "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
             "Condition" = "8:"
@@ -606,32 +570,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2AD0808AF5F549ADA6408B2BC675440F"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_19A7C52FD21145FB8683515F54B7991D"
             {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\missile_molotov.png"
-            "TargetName" = "8:missile_molotov.png"
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\run.png"
+            "TargetName" = "8:run.png"
             "Tag" = "8:"
-            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2C63D2A47A1F4BF487EF2F2BC48487D9"
-            {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\FRIENDLY_ALIVE_LOWER.png"
-            "TargetName" = "8:FRIENDLY_ALIVE_LOWER.png"
-            "Tag" = "8:"
-            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
+            "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -652,6 +596,26 @@
             "TargetName" = "8:de_inferno_radar_spectate.dds"
             "Tag" = "8:"
             "Folder" = "8:_8B6F0A3A3B174E73B58CAB72F5B96B41"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_302D57FDB6084547A635707E5DA9FEAF"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\eye.png"
+            "TargetName" = "8:eye.png"
+            "Tag" = "8:"
+            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -697,30 +661,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3595565756744892BB6C94149D60D6E3"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_358208DDFA4C4C388DBAB832051F9ED0"
             {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\restore.png"
-            "TargetName" = "8:restore.png"
-            "Tag" = "8:"
-            "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_36C7896586144476A357FEA637209B67"
-            {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\DEAD_LOWER.png"
-            "TargetName" = "8:DEAD_LOWER.png"
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\friendly_alive_lower.png"
+            "TargetName" = "8:friendly_alive_lower.png"
             "Tag" = "8:"
             "Folder" = "8:_4D9420242187461B9A723964FF32526E"
             "Condition" = "8:"
@@ -737,10 +681,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3947387C89D3456BA9E2B1A15495C924"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_418DC2FA1F0E44D38E6AF92E44B7BCC4"
             {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\ENEMY_ALIVE_UPPER.png"
-            "TargetName" = "8:ENEMY_ALIVE_UPPER.png"
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\effect_fire.png"
+            "TargetName" = "8:effect_fire.png"
             "Tag" = "8:"
             "Folder" = "8:_4D9420242187461B9A723964FF32526E"
             "Condition" = "8:"
@@ -757,10 +701,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_43EDC8121EA145B5A6DD5C4782197F62"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_44DA586D7A284E19852FAD635F726D55"
             {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\missile_smokegrenade.png"
-            "TargetName" = "8:missile_smokegrenade.png"
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\missile_incgrenade.png"
+            "TargetName" = "8:missile_incgrenade.png"
             "Tag" = "8:"
             "Folder" = "8:_4D9420242187461B9A723964FF32526E"
             "Condition" = "8:"
@@ -797,12 +741,52 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4F7F09E738844E368A18035BCE09B701"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4B3B97CFDBBB467DAD6384E6C253C60F"
             {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\CTS.ico"
-            "TargetName" = "8:CTS.ico"
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\enemy_alive_lower.png"
+            "TargetName" = "8:enemy_alive_lower.png"
             "Tag" = "8:"
-            "Folder" = "8:_60A820E0083B4F49A7D290508AAE14DB"
+            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_51E0294084D04B4EB21E8F5B213B2E76"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\save.png"
+            "TargetName" = "8:save.png"
+            "Tag" = "8:"
+            "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_53DC878EC6AA4AAD905162E3C786B606"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\friendly_alive_upper.png"
+            "TargetName" = "8:friendly_alive_upper.png"
+            "Tag" = "8:"
+            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -837,10 +821,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6060CE39CE2F4D67BFE3027DCD586D52"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_58C2BB555DAA4BBC9B09832C46293CAB"
             {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\DEAD_UPPER.png"
-            "TargetName" = "8:DEAD_UPPER.png"
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\props_defusekit.png"
+            "TargetName" = "8:props_defusekit.png"
             "Tag" = "8:"
             "Folder" = "8:_4D9420242187461B9A723964FF32526E"
             "Condition" = "8:"
@@ -857,14 +841,94 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_722D8E40F68D4748B49510A3A0EF235F"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5B9635BCAAD747C096F4EB06C7430108"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\CTS.ico"
+            "TargetName" = "8:CTS.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_60A820E0083B4F49A7D290508AAE14DB"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_62115F35E6BC45A0B91C8DBC8DE2E653"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\resume.png"
+            "TargetName" = "8:resume.png"
+            "Tag" = "8:"
+            "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_71AE3AC027E94973B2A28283F4CE217D"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\dead_upper.png"
+            "TargetName" = "8:dead_upper.png"
+            "Tag" = "8:"
+            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_75F334AD714C48A7BDFA0AD6437F818A"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\effect_flash.png"
+            "TargetName" = "8:effect_flash.png"
+            "Tag" = "8:"
+            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_79AC61553E6C4F00BD7FB5DE823844A2"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:CSGOTacticSimulator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_722D8E40F68D4748B49510A3A0EF235F"
+                    "_79AC61553E6C4F00BD7FB5DE823844A2"
                     {
                     "Name" = "8:CSGOTacticSimulator.exe"
                     "Attributes" = "3:512"
@@ -888,10 +952,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_75859D233D864C99B1BAA920DF5D2017"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7EB1461D01194663953F552E9C09CE39"
             {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\pause.png"
-            "TargetName" = "8:pause.png"
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\preview.png"
+            "TargetName" = "8:preview.png"
             "Tag" = "8:"
             "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
             "Condition" = "8:"
@@ -908,72 +972,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_79454F0BB3254395A6BC89035456732C"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_92029043455D4670B3A2B86FD83DC5B8"
             {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\missile_incgrenade.png"
-            "TargetName" = "8:missile_incgrenade.png"
-            "Tag" = "8:"
-            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7AA1028A28DE4552A1D0939A2AAD3818"
-            {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\effect_fire.png"
-            "TargetName" = "8:effect_fire.png"
-            "Tag" = "8:"
-            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_857DD56FA04C4E91BA2672D5C22A6111"
-            {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\resume.png"
-            "TargetName" = "8:resume.png"
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\question.png"
+            "TargetName" = "8:question.png"
             "Tag" = "8:"
             "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8E7A9501EE104D2DB73FE66C89A17E46"
-            {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\FRIENDLY_ALIVE_UPPER.png"
-            "TargetName" = "8:FRIENDLY_ALIVE_UPPER.png"
-            "Tag" = "8:"
-            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1039,46 +1043,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9B3F8A9A2A3B4822A5ABAA0DE3889E79"
-            {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\props_bomb.png"
-            "TargetName" = "8:props_bomb.png"
-            "Tag" = "8:"
-            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9D94DC4A056647088934815F60C4A0EE"
-            {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\effect_smoke.png"
-            "TargetName" = "8:effect_smoke.png"
-            "Tag" = "8:"
-            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9F8667381FE9BD1959071F00D72593FE"
             {
             "AssemblyRegister" = "3:1"
@@ -1110,10 +1074,30 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A05E960882924E12AFE7419FC837ABCC"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A4C56E4D4BDA41119F69CE84C4589B28"
             {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\info.png"
-            "TargetName" = "8:info.png"
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\maps\\mapframe\\Mirage.json"
+            "TargetName" = "8:Mirage.json"
+            "Tag" = "8:"
+            "Folder" = "8:_60F0D64E83574972B2793ADFB906169F"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A51AFC3AEA494F27ACFA25F802F56848"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\restore.png"
+            "TargetName" = "8:restore.png"
             "Tag" = "8:"
             "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
             "Condition" = "8:"
@@ -1130,12 +1114,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A4C56E4D4BDA41119F69CE84C4589B28"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A7A7900014BD4AB5B1BE9D681221A051"
             {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\maps\\mapframe\\Mirage.json"
-            "TargetName" = "8:Mirage.json"
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\missile_molotov.png"
+            "TargetName" = "8:missile_molotov.png"
             "Tag" = "8:"
-            "Folder" = "8:_60F0D64E83574972B2793ADFB906169F"
+            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1170,50 +1154,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_ABD882A8A7844CA796DC40D6B8EABC49"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BEAA7081878C4750BD1467C82CEDC735"
             {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\stop.png"
-            "TargetName" = "8:stop.png"
-            "Tag" = "8:"
-            "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B94BF4CA32F640BDA9697A43407D21B6"
-            {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\ENEMY_ALIVE_LOWER.png"
-            "TargetName" = "8:ENEMY_ALIVE_LOWER.png"
-            "Tag" = "8:"
-            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BB6D1A15EA9442BE8A1092488D8A2C17"
-            {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\minimize.png"
-            "TargetName" = "8:minimize.png"
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\pause.png"
+            "TargetName" = "8:pause.png"
             "Tag" = "8:"
             "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
             "Condition" = "8:"
@@ -1250,6 +1194,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C1AD47D6088C4118A2229FA4F759260E"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\explosion.png"
+            "TargetName" = "8:explosion.png"
+            "Tag" = "8:"
+            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C23F2F9081714A1885DBE8E788F61194"
             {
             "SourcePath" = "8:..\\CSGOTacticSimulator\\maps\\mapimg\\de_nuke_radar_spectate.dds"
@@ -1270,12 +1234,23 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C95E3C8B7F5F4B6FB5B965909AD05146"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C3E287CDB27448F494C166171374053B"
             {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\effect_flash.png"
-            "TargetName" = "8:effect_flash.png"
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:DemoInfo, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_C3E287CDB27448F494C166171374053B"
+                    {
+                    "Name" = "8:DemoInfo.DLL"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:DemoInfo.DLL"
+            "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
+            "Folder" = "8:_60A820E0083B4F49A7D290508AAE14DB"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1287,33 +1262,13 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CA83FEF5A9AA4B8FA607B2D049FF6619"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C3FA845207514EF28C1480A53C64125A"
             {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\missile_decoy.png"
-            "TargetName" = "8:missile_decoy.png"
-            "Tag" = "8:"
-            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D8835F492F8045B3B5D508C0FE5B8049"
-            {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\save.png"
-            "TargetName" = "8:save.png"
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\exit.png"
+            "TargetName" = "8:exit.png"
             "Tag" = "8:"
             "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
             "Condition" = "8:"
@@ -1330,7 +1285,87 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D9B54D0F439A4C95BB1D28CEA3D1AB26"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C81696494287467692A870D0E34B6D40"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\effect_smoke.png"
+            "TargetName" = "8:effect_smoke.png"
+            "Tag" = "8:"
+            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D279D955BA2D44A69001D9B41E538132"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\dead_lower.png"
+            "TargetName" = "8:dead_lower.png"
+            "Tag" = "8:"
+            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DA406B6AF72946D0A4B97F872D8D6F70"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\missile_smokegrenade.png"
+            "TargetName" = "8:missile_smokegrenade.png"
+            "Tag" = "8:"
+            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DAA10950DD674F46B13710B08B3F0D13"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\stop.png"
+            "TargetName" = "8:stop.png"
+            "Tag" = "8:"
+            "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DD16F9C4C0BF4508869AE31404605D6E"
             {
             "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\error.png"
             "TargetName" = "8:error.png"
@@ -1350,10 +1385,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DEEC9AFB2ACB47E2AA7540587D0E6695"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E0517F124AA6479E871B8E97A9541747"
             {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\explosion.png"
-            "TargetName" = "8:explosion.png"
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\props_bomb.png"
+            "TargetName" = "8:props_bomb.png"
             "Tag" = "8:"
             "Folder" = "8:_4D9420242187461B9A723964FF32526E"
             "Condition" = "8:"
@@ -1370,10 +1405,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F0B5E81C18AF42E780DE92B756D93575"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_EC0B44610CF34FAC9A99D80C7BE120A6"
             {
-            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\run.png"
-            "TargetName" = "8:run.png"
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\minimize.png"
+            "TargetName" = "8:minimize.png"
             "Tag" = "8:"
             "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
             "Condition" = "8:"
@@ -1427,6 +1462,66 @@
             "TargetName" = "8:de_mirage_radar_spectate.dds"
             "Tag" = "8:"
             "Folder" = "8:_8B6F0A3A3B174E73B58CAB72F5B96B41"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F61DB5931D434F1DA6D8C0B297EED867"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\background.jpg"
+            "TargetName" = "8:background.jpg"
+            "Tag" = "8:"
+            "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F86BF5EE70264D05A140E00317034700"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\img\\missile_decoy.png"
+            "TargetName" = "8:missile_decoy.png"
+            "Tag" = "8:"
+            "Folder" = "8:_4D9420242187461B9A723964FF32526E"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FCD68CC20BB84238918AD447A1FCBB20"
+            {
+            "SourcePath" = "8:..\\CSGOTacticSimulator\\background\\info.png"
+            "TargetName" = "8:info.png"
+            "Tag" = "8:"
+            "Folder" = "8:_DFFFAD93A15B4C18A05A2B38DEDF33CC"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1574,15 +1669,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:CSGOTacticSimulator"
-        "ProductCode" = "8:{FB39B88A-1676-4DC6-9C52-2A7E8C534BBC}"
-        "PackageCode" = "8:{96BF9878-61F5-4688-A077-37C8D9FD9465}"
+        "ProductCode" = "8:{989A55C2-C6FB-4A31-991F-34913BE22703}"
+        "PackageCode" = "8:{B9A39AC8-0987-4B1C-826E-D94D314552E1}"
         "UpgradeCode" = "8:{BFEFB412-4BF8-42C0-B55D-2D761BA55F79}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.8.0"
+        "ProductVersion" = "8:2.0.0"
         "Manufacturer" = "8:ZjzMisaka"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/ZjzMisaka/CSGOTacticSimulator"
@@ -1695,7 +1790,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_4175F7DCB3864FF89380938A77121BC6"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_08FC64F5F8B74B4989D97BE07F39CE64"
             {
             "Name" = "8:CSGOTacticSimulator.exe"
             "Arguments" = "8:"
@@ -1703,10 +1798,10 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_722D8E40F68D4748B49510A3A0EF235F"
+            "Target" = "8:_79AC61553E6C4F00BD7FB5DE823844A2"
             "Folder" = "8:_95B4AF9A1287480C9E507AF4055B1001"
             "WorkingFolder" = "8:_60A820E0083B4F49A7D290508AAE14DB"
-            "Icon" = "8:_4F7F09E738844E368A18035BCE09B701"
+            "Icon" = "8:_5B9635BCAAD747C096F4EB06C7430108"
             "Feature" = "8:"
             }
         }
