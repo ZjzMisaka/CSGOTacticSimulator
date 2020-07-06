@@ -47,7 +47,8 @@ namespace CSGOTacticSimulator
         private Selector selector = null;
         public List<Point> mouseMovePathInPreview = new List<Point>();
         public List<Point> keyDownInPreview = new List<Point>();
-        Stopwatch stopWatch = null;
+        public Stopwatch stopWatch = null;
+        public List<string> mapList = null;
 
         public MainWindow()
         {
@@ -159,19 +160,19 @@ namespace CSGOTacticSimulator
             DirectoryInfo frameDirD = frameDir as DirectoryInfo;
             FileSystemInfo[] frameFiles = frameDirD.GetFileSystemInfos();
 
-            List<string> maps = new List<string>();
+            mapList = new List<string>();
             string line;
             System.IO.StreamReader file = new System.IO.StreamReader(GlobalDictionary.mapListPath);
             while ((line = file.ReadLine()) != null)
             {
-                maps.Add(line);
+                mapList.Add(line);
             }
             foreach (FileSystemInfo fileSystemInfo in imgFiles)
             {
                 FileInfo fileInfo = fileSystemInfo as FileInfo;
                 if (fileInfo != null)
                 {
-                    foreach (string map in maps)
+                    foreach (string map in mapList)
                     {
                         if (fileInfo.Name.ToUpper().IndexOf(map.ToUpper()) != -1)
                         {
@@ -2270,7 +2271,7 @@ namespace CSGOTacticSimulator
                     {
                         continue;
                     }
-                    Point mapPoint = DemoPointToMapPoint(player.Position);
+                    Point mapPoint = DemoPointToMapPoint(player.Position, demoParser.Map);
                     bool camp = false;
                     if (player.Team == Team.Terrorist)
                     {
@@ -2719,7 +2720,7 @@ namespace CSGOTacticSimulator
                         //lastActionTime = demoParser.CurrentTime;
 
                         double costTime = 0;
-                        Point decoyStartMapPoint = DemoPointToMapPoint(player.Position);
+                        Point decoyStartMapPoint = DemoPointToMapPoint(player.Position, demoParser.Map);
                         Point decoyEndMapPoint = new Point();
 
                         for (int n = i + 1; n < eventList.Count(); ++n)
@@ -2739,7 +2740,7 @@ namespace CSGOTacticSimulator
                                 {
                                     costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 5;
                                 }
-                                decoyEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as DecoyEventArgs).Position);
+                                decoyEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as DecoyEventArgs).Position, demoParser.Map);
                                 break;
                             }
                         }
@@ -2852,7 +2853,7 @@ namespace CSGOTacticSimulator
                         //lastActionTime = demoParser.CurrentTime;
 
                         double costTime = 0;
-                        Point fireStartMapPoint = DemoPointToMapPoint(player.Position);
+                        Point fireStartMapPoint = DemoPointToMapPoint(player.Position, demoParser.Map);
                         Point fireEndMapPoint = new Point();
 
                         for (int n = i + 1; n < eventList.Count(); ++n)
@@ -2872,7 +2873,7 @@ namespace CSGOTacticSimulator
                                 {
                                     costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 5;
                                 }
-                                fireEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FireEventArgs).Position);
+                                fireEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FireEventArgs).Position, demoParser.Map);
                                 break;
                             }
                         }
@@ -3013,7 +3014,7 @@ namespace CSGOTacticSimulator
                         //lastActionTime = demoParser.CurrentTime;
 
                         double costTime = 0;
-                        Point smokeStartMapPoint = DemoPointToMapPoint(player.Position);
+                        Point smokeStartMapPoint = DemoPointToMapPoint(player.Position, demoParser.Map);
                         Point smokeEndMapPoint = new Point();
 
                         for (int n = i + 1; n < eventList.Count(); ++n)
@@ -3033,7 +3034,7 @@ namespace CSGOTacticSimulator
                                 {
                                     costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 13;
                                 }
-                                smokeEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as SmokeEventArgs).Position);
+                                smokeEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as SmokeEventArgs).Position, demoParser.Map);
                                 break;
                             }
                         }
@@ -3163,7 +3164,7 @@ namespace CSGOTacticSimulator
                                 //lastActionTime = demoParser.CurrentTime;
 
                                 double costTime = 0;
-                                Point missileStartMapPoint = DemoPointToMapPoint(playerThrow.Position);
+                                Point missileStartMapPoint = DemoPointToMapPoint(playerThrow.Position, demoParser.Map);
                                 Point missileEndMapPoint = new Point();
 
                                 for (int n = i + 1; n < eventList.Count(); ++n)
@@ -3183,7 +3184,7 @@ namespace CSGOTacticSimulator
                                         {
                                             costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 1;
                                         }
-                                        missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as GrenadeEventArgs).Position);
+                                        missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as GrenadeEventArgs).Position, demoParser.Map);
                                         break;
                                     }
                                     if (weapon == EquipmentElement.Flash && eventList[n].Item3 == "FlashNadeExploded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
@@ -3197,7 +3198,7 @@ namespace CSGOTacticSimulator
                                         {
                                             costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 1;
                                         }
-                                        missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FlashEventArgs).Position);
+                                        missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FlashEventArgs).Position, demoParser.Map);
                                         break;
                                     }
                                 }
@@ -3317,7 +3318,7 @@ namespace CSGOTacticSimulator
                             bulletLine.StrokeDashCap = PenLineCap.Triangle;
                             bulletLine.StrokeEndLineCap = PenLineCap.Triangle;
                             bulletLine.StrokeStartLineCap = PenLineCap.Square;
-                            Point fromWndPoint = GetWndPoint(DemoPointToMapPoint(player.Position), ImgType.Nothing);
+                            Point fromWndPoint = GetWndPoint(DemoPointToMapPoint(player.Position, demoParser.Map), ImgType.Nothing);
                             WeaponFiredEventArgs weaponFiredEventArgs = currentEvent.Item2 as WeaponFiredEventArgs;
 
                             double tan = Math.Tan(player.ViewDirectionX * Math.PI / 180);
@@ -3341,7 +3342,7 @@ namespace CSGOTacticSimulator
 
                             direction = VectorHelper.GetUnitVector(new Point(0, 0), direction);
 
-                            Point toWndPoint = GetWndPoint(DemoPointToMapPoint(player.Position + new DemoInfo.Vector((float)(direction.X * 1000), (float)(direction.Y * 1000), 0)), ImgType.Nothing);
+                            Point toWndPoint = GetWndPoint(DemoPointToMapPoint(player.Position + new DemoInfo.Vector((float)(direction.X * 1000), (float)(direction.Y * 1000), 0), demoParser.Map), ImgType.Nothing);
                             bulletLine.X1 = fromWndPoint.X;
                             bulletLine.Y1 = fromWndPoint.Y;
                             bulletLine.X2 = toWndPoint.X;
@@ -3431,7 +3432,7 @@ namespace CSGOTacticSimulator
                                     c_runcanvas.Children.Remove(character.OtherImg);
                                 }
 
-                                endMapPoint = DemoPointToMapPoint(player.Position);
+                                endMapPoint = DemoPointToMapPoint(player.Position, demoParser.Map);
                                 endWndPoint = GetWndPoint(endMapPoint, ImgType.Character);
 
                                 character.CharacterImg.Tag = nowTime - firstFreezetimeEndedTime;
@@ -3518,9 +3519,26 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private Point DemoPointToMapPoint(DemoInfo.Vector demoPoint)
+        private Point DemoPointToMapPoint(DemoInfo.Vector demoPoint, string mapName)
         {
-            string[] splitListStr = GlobalDictionary.mapCalibrationDust2.Split(',');
+            string[] splitListStr = null;
+            foreach (string map in mapList)
+            {
+                if(mapName.Contains(map.ToLowerInvariant()))
+                {
+                    string[] mapCalibrationDatas = GlobalDictionary.mapCalibrationDatas;
+                    foreach(string mapData in mapCalibrationDatas)
+                    {
+                        string[] mapCalibrationData = mapData.Split(':');
+                        if(mapCalibrationData[0].ToLowerInvariant() == map.ToLowerInvariant())
+                        {
+                            splitListStr = mapCalibrationData[1].Split(',');
+                            break;
+                        }
+                    }
+                }
+            }
+
             double[] splitList = new double[3];
             for (int i = 0; i < splitListStr.Count(); ++i)
             {

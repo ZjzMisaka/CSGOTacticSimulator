@@ -179,13 +179,7 @@ namespace CSGOTacticSimulator.Global
         static public int smokeLifespan = int.Parse(IniHelper.ReadIni("Missile", "SmokeLifespan"));
         static public int flashbangLifespan = int.Parse(IniHelper.ReadIni("Missile", "FlashbangLifespan"));
 
-        static public string mapCalibrationDust2 = IniHelper.ReadIni("MapCalibration", "Dust2");
-        static public string mapCalibrationNuke = IniHelper.ReadIni("MapCalibration", "Nuke");
-        static public string mapCalibrationTrain = IniHelper.ReadIni("MapCalibration", "Train");
-        static public string mapCalibrationInferno = IniHelper.ReadIni("MapCalibration", "Inferno");
-        static public string mapCalibrationMirage = IniHelper.ReadIni("MapCalibration", "Mirage");
-        static public string mapCalibrationVertigo = IniHelper.ReadIni("MapCalibration", "Vertigo");
-        static public string mapCalibrationOverpass = IniHelper.ReadIni("MapCalibration", "Overpass");
+        static public string[] mapCalibrationDatas = IniHelper.ReadIni("MapCalibration", "Data").Split('|');
 
         static public Dictionary<string, Map> mapDic = new Dictionary<string, Map>();
 
