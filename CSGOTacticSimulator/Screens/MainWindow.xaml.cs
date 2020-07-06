@@ -2730,6 +2730,11 @@ namespace CSGOTacticSimulator
                             }
                         }
 
+                        if (decoyEndMapPoint.X == 0 && decoyEndMapPoint.Y == 0)
+                        {
+                            continue;
+                        }
+
                         Point decoyStartWndPoint = GetWndPoint(decoyStartMapPoint, ImgType.Missile);
                         Point decoyEndWndPoint = GetWndPoint(decoyEndMapPoint, ImgType.Missile);
 
@@ -2856,6 +2861,11 @@ namespace CSGOTacticSimulator
                                 fireEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FireEventArgs).Position);
                                 break;
                             }
+                        }
+
+                        if (fireEndMapPoint.X == 0 && fireEndMapPoint.Y == 0)
+                        {
+                            continue;
                         }
 
                         Point fireStartWndPoint = GetWndPoint(fireStartMapPoint, ImgType.Missile);
@@ -3014,6 +3024,11 @@ namespace CSGOTacticSimulator
                             }
                         }
 
+                        if (smokeEndMapPoint.X == 0 && smokeEndMapPoint.Y == 0)
+                        {
+                            continue;
+                        }
+
                         Point smokeStartWndPoint = GetWndPoint(smokeStartMapPoint, ImgType.Missile);
                         Point smokeEndWndPoint = GetWndPoint(smokeEndMapPoint, ImgType.Missile);
 
@@ -3167,6 +3182,11 @@ namespace CSGOTacticSimulator
                                         missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FlashEventArgs).Position);
                                         break;
                                     }
+                                }
+
+                                if(missileEndMapPoint.X == 0 && missileEndMapPoint.Y == 0)
+                                {
+                                    continue;
                                 }
 
                                 Point missileStartWndPoint = GetWndPoint(missileStartMapPoint, ImgType.Missile);
