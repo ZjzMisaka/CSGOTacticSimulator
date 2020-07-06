@@ -3150,6 +3150,10 @@ namespace CSGOTacticSimulator
                             if ((currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Flash ||
                                 (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.HE)
                             {
+                                if ((currentEvent.Item2 as WeaponFiredEventArgs).Weapon.AmmoInMagazine == -1)
+                                {
+                                    continue;
+                                }
                                 EquipmentElement weapon = (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon;
                                 Character characterThrow = CharacterHelper.GetCharacter(characterNumber);
 
