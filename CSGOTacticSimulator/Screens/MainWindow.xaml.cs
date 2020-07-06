@@ -1889,6 +1889,13 @@ namespace CSGOTacticSimulator
                 string filePath = ofd.FileName;
                 if (Path.GetExtension(filePath) == ".txt")
                 {
+                    if(!File.Exists(filePath))
+                    {
+                        PropertiesSetter newPropertiesSetter = new PropertiesSetter(GlobalDictionary.propertiesSetter);
+                        newPropertiesSetter.CloseTimer = new MessageBoxCloseTimer(3, 0);
+                        MessageBox.Show(newPropertiesSetter, "文件\n" + filePath + "\n不存在", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
                     tb_select_file.Text = filePath;
                     te_editor.Text = File.ReadAllText(filePath);
                 }
@@ -1904,6 +1911,13 @@ namespace CSGOTacticSimulator
         {
             if (i_map.Source == null)
             {
+                return;
+            }
+            if (!File.Exists(filePath))
+            {
+                PropertiesSetter newPropertiesSetter = new PropertiesSetter(GlobalDictionary.propertiesSetter);
+                newPropertiesSetter.CloseTimer = new MessageBoxCloseTimer(3, 0);
+                MessageBox.Show(newPropertiesSetter, "文件\n" + filePath + "\n不存在", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
