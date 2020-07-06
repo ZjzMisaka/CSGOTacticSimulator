@@ -322,12 +322,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3347DDC257394486A7E9804942D9B7ED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_79AC61553E6C4F00BD7FB5DE823844A2"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -353,6 +347,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_C3E287CDB27448F494C166171374053B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_3347DDC257394486A7E9804942D9B7ED"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -1669,15 +1669,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:CSGOTacticSimulator"
-        "ProductCode" = "8:{17A67EAC-2690-4E51-AEBB-5832CD5D1945}"
-        "PackageCode" = "8:{68DEBDE8-2A1D-47D3-8515-69DD85411F0B}"
+        "ProductCode" = "8:{DECBC872-0BE5-4AA6-BD11-0332F8D43520}"
+        "PackageCode" = "8:{4E3A0AB1-808A-4DFA-8276-1D64388C4FB9}"
         "UpgradeCode" = "8:{BFEFB412-4BF8-42C0-B55D-2D761BA55F79}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:2.0.1"
+        "ProductVersion" = "8:2.1.0"
         "Manufacturer" = "8:ZjzMisaka"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/ZjzMisaka/CSGOTacticSimulator"
