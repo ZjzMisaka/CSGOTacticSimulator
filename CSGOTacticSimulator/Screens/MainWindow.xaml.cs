@@ -47,6 +47,7 @@ namespace CSGOTacticSimulator
         private Selector selector = null;
         public List<Point> mouseMovePathInPreview = new List<Point>();
         public List<Point> keyDownInPreview = new List<Point>();
+        Stopwatch stopWatch = null;
 
         public MainWindow()
         {
@@ -464,6 +465,8 @@ namespace CSGOTacticSimulator
                 ThreadHelper.PauseAllThread();
                 btn_pause.Tag = "P";
 
+                stopWatch.Stop();
+
                 btn_pause.Background = GlobalDictionary.resumeBrush;
 
                 if (me_pov.Visibility == Visibility.Visible)
@@ -475,6 +478,8 @@ namespace CSGOTacticSimulator
             {
                 ThreadHelper.RestartAllThread();
                 btn_pause.Tag = "R";
+
+                stopWatch.Start();
 
                 btn_pause.Background = GlobalDictionary.pauseBrush;
 
@@ -2446,7 +2451,7 @@ namespace CSGOTacticSimulator
             float startTime = 0;
             float realCostTime = 0;
 
-            Stopwatch stopWatch = new Stopwatch();
+            stopWatch = new Stopwatch();
             stopWatch.Start();
             float elapsedTimeMillisecondInDemo = 0;
 
