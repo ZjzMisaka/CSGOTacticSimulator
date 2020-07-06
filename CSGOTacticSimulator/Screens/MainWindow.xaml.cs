@@ -455,17 +455,20 @@ namespace CSGOTacticSimulator
         }
         private void btn_pause_Click(object sender, RoutedEventArgs e)
         {
-            if (i_map.Source == null)
+            if (i_map.Source == null || btn_pause.Tag == null)
             {
                 return;
             }
-
+            
             if (btn_pause.Tag.ToString() == "R")
             {
                 ThreadHelper.PauseAllThread();
                 btn_pause.Tag = "P";
 
-                stopWatch.Stop();
+                if (stopWatch != null)
+                {
+                    stopWatch.Stop();
+                }
 
                 btn_pause.Background = GlobalDictionary.resumeBrush;
 
@@ -479,7 +482,10 @@ namespace CSGOTacticSimulator
                 ThreadHelper.RestartAllThread();
                 btn_pause.Tag = "R";
 
-                stopWatch.Start();
+                if (stopWatch != null)
+                {
+                    stopWatch.Start();
+                }
 
                 btn_pause.Background = GlobalDictionary.pauseBrush;
 
