@@ -29,6 +29,7 @@ using System.Reflection;
 using System.Xml.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
+using System.Diagnostics;
 
 namespace CSGOTacticSimulator
 {
@@ -2445,6 +2446,10 @@ namespace CSGOTacticSimulator
             float startTime = 0;
             float realCostTime = 0;
 
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            float elapsedTimeMillisecondInDemo = 0;
+
             for (int i = 0; i < eventList.Count(); ++i)
             {
                 Tuple<DemoParser, EventArgs, string, int> currentEvent = eventList[i];
@@ -3421,6 +3426,16 @@ namespace CSGOTacticSimulator
                         {
                             nowTimeEnd = currentEvent.Item1.CurrentTime;
                         }
+
+                        if (tickTime != -1)
+                        {
+                            elapsedTimeMillisecondInDemo += tickTime * 1000;
+                        }
+                        else
+                        {
+                            elapsedTimeMillisecondInDemo += currentEvent.Item1.TickTime * 1000;
+                        }
+
                         float costTimeEnd = (nowTimeEnd - startTime) * 1000;
                         if (costTimeEnd > realCostTime)
                         {
@@ -3436,7 +3451,15 @@ namespace CSGOTacticSimulator
                                 }
                             }
                             realCostTime += GlobalDictionary.animationFreshTime;
-                            Thread.Sleep(animationFreshTime);
+
+
+                            long elapsedTimeMillisecond = stopWatch.ElapsedMilliseconds;
+                            int sleepTime = (int)(animationFreshTime - (elapsedTimeMillisecond - elapsedTimeMillisecondInDemo));
+                            if (sleepTime < 0)
+                            {
+                                sleepTime = 0;
+                            }
+                            Thread.Sleep(sleepTime);
                         }
                     }
 
