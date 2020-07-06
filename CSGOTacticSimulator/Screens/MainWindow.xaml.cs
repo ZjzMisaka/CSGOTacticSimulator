@@ -220,24 +220,6 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (i_map.Source != null)
-            {
-                GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
-                tb_infos.FontSize = (GlobalDictionary.imageRatio == 0) ? 1 : 15 * GlobalDictionary.imageRatio * 1.3;
-            }
-
-            //foreach (Character character in characters)
-            //{
-            //    Point wndPoint = GetWndPoint(character.MapPoint, ImgType.Character);
-            //    c_runcanvas.Children.Remove(character.CharacterImg);
-            //    Canvas.SetLeft(character.CharacterImg, wndPoint.X);
-            //    Canvas.SetTop(character.CharacterImg, wndPoint.Y);
-            //    c_runcanvas.Children.Add(character.CharacterImg);
-            //}
-        }
-
         private void Window_StateChanged(object sender, EventArgs e)
         {
             if (WindowState == WindowState.Normal)
@@ -4618,6 +4600,15 @@ namespace CSGOTacticSimulator
                 GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
             }
             CreateCommandInWindow(new Point(Math.Round((e.GetPosition(i_map).X / GlobalDictionary.imageRatio), 2), Math.Round((e.GetPosition(i_map).Y / GlobalDictionary.imageRatio), 2)));
+        }
+
+        private void i_map_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (i_map.Source != null)
+            {
+                GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
+                tb_infos.FontSize = (GlobalDictionary.imageRatio == 0) ? 1 : 15 * GlobalDictionary.imageRatio * 1.3;
+            }
         }
     }
 }
