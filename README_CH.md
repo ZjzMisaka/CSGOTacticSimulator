@@ -6,6 +6,9 @@ CSGO战术模拟器 <br />
 ## 示例
 *(v1.1.0 gif)* </br>
 https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
+*(v2.1.1 screenshot)* </br>
+![screenshot](https://www.iaders.com/upload/2020/0707/01.png)
+![screenshot](https://www.iaders.com/upload/2020/0707/02.png) </br>
 *(v1.6.1 screenshot)* </br>
 ![screenshot](https://www.iaders.com/wp-content/uploads/2020/05/1.6.0.png)
 ## 提示
