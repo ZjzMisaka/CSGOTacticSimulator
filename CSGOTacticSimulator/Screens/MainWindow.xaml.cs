@@ -48,6 +48,7 @@ namespace CSGOTacticSimulator
         public List<Point> mouseMovePathInPreview = new List<Point>();
         public List<Point> keyDownInPreview = new List<Point>();
         public Stopwatch stopWatch = null;
+        public Stopwatch stopWatchThisRound = null;
         public List<string> mapList = null;
 
         public MainWindow()
@@ -452,6 +453,10 @@ namespace CSGOTacticSimulator
                 {
                     stopWatch.Stop();
                 }
+                if (stopWatchThisRound != null)
+                {
+                    stopWatchThisRound.Stop();
+                }
 
                 btn_pause.Background = GlobalDictionary.resumeBrush;
 
@@ -468,6 +473,10 @@ namespace CSGOTacticSimulator
                 if (stopWatch != null)
                 {
                     stopWatch.Start();
+                }
+                if (stopWatchThisRound != null)
+                {
+                    stopWatchThisRound.Start();
                 }
 
                 btn_pause.Background = GlobalDictionary.pauseBrush;
@@ -1810,10 +1819,34 @@ namespace CSGOTacticSimulator
                 if (character.CharacterImg == sender)
                 {
                     List<string> files = new List<string>();
+
                     string povsFolder = tb_select_file.Text;
+                    DirectoryInfo povFolder = null;
+                    povsFolder = povsFolder.Replace(new FileInfo(povsFolder).Name, "");
+                    povsFolder = Path.Combine(povsFolder, "povs", tb_timer.Text);
+                    if (Directory.Exists(povsFolder))
+                    {
+                        povFolder = new DirectoryInfo(povsFolder);
+                        foreach (FileInfo file in povFolder.GetFiles())
+                        {
+                            if (character.Name.Contains(file.Name.Replace(file.Extension, "")))
+                            {
+                                me_pov.Visibility = Visibility.Visible;
+                                me_pov.LoadedBehavior = MediaState.Manual;
+                                me_pov.Source = new Uri(file.FullName);
+                                double currentTime = double.Parse(character.CharacterImg.Tag.ToString().Split('|')[1]);
+
+                                me_pov.Play();
+                                me_pov.Position = new TimeSpan(0, 0, 0, 0, (int)(currentTime * 1000));
+                                return;
+                            }
+                        }
+                    }
+
+                    povsFolder = tb_select_file.Text;
                     povsFolder = povsFolder.Replace(new FileInfo(povsFolder).Name, "");
                     povsFolder = Path.Combine(povsFolder, "povs");
-                    DirectoryInfo povFolder = new DirectoryInfo(povsFolder);
+                    povFolder = new DirectoryInfo(povsFolder);
                     foreach (FileInfo file in povFolder.GetFiles())
                     {
                         if (character.Name.Contains(file.Name.Replace(file.Extension, "")))
@@ -1821,11 +1854,11 @@ namespace CSGOTacticSimulator
                             me_pov.Visibility = Visibility.Visible;
                             me_pov.LoadedBehavior = MediaState.Manual;
                             me_pov.Source = new Uri(file.FullName);
-                            double currentTime = double.Parse(character.CharacterImg.Tag.ToString());
-                            
+                            double currentTime = double.Parse(character.CharacterImg.Tag.ToString().Split('|')[0]);
+
                             me_pov.Play();
                             me_pov.Position = new TimeSpan(0, 0, 0, 0, (int)(currentTime * 1000));
-                            break;
+                            return;
                         }
                     }
 
@@ -2448,7 +2481,7 @@ namespace CSGOTacticSimulator
             List<int> usedMissileList = new List<int>();
 
             //double lastActionTime = 0;
-
+            
             bool isFreezetimeEnded = false;
 
             float startTime = 0;
@@ -2677,6 +2710,8 @@ namespace CSGOTacticSimulator
                             continue;
                         }
 
+                        stopWatchThisRound = new Stopwatch();
+                        stopWatchThisRound.Start();
                         isFreezetimeEnded = true;
                     }
                 }
@@ -3417,7 +3452,7 @@ namespace CSGOTacticSimulator
                                 endMapPoint = DemoPointToMapPoint(player.Position, demoParser.Map);
                                 endWndPoint = GetWndPoint(endMapPoint, ImgType.Character);
 
-                                character.CharacterImg.Tag = nowTime - firstFreezetimeEndedTime;
+                                character.CharacterImg.Tag = (nowTime - firstFreezetimeEndedTime) + "|" + (stopWatchThisRound.ElapsedMilliseconds / 1000.0);
 
                                 Canvas.SetLeft(character.CharacterImg, endWndPoint.X);
                                 Canvas.SetTop(character.CharacterImg, endWndPoint.Y);
