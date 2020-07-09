@@ -22,8 +22,11 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 - Enter the path of the demo file into the file input box to load the demo file.
 - You can choose to watch a round or watch all rounds.
 - Click the character point on the left map when running the demo then you can watch the pov corresponding to the current time. 
-- The pov video file should be placed in the pov folder of the directory to which the demo file belongs, and the file name should contain the ID of the corresponding player. 
-- The pov video should start with the end of the freezing time of the first round. 
+- Pov is divided into the whole game POV or one round POV. If you want to watch only one round, you can only record the POV video of that round. If you want to watch the whole game, you can record the whole game POV video.
+- The pov file name should be the same as the player name (case insensitive).
+- The whole game POV video files should be placed in the povs folder of the directory to which the demo file belongs, the one round POV video files should be placed in the round number folder in the povs folder of the directory to which the demo file belongs. </br>
+![directory](https://www.iaders.com/upload/2020/0709/directory.png)
+- The whole game POV video should start with the end of the freezing time of the first round. the one round POV video should start with the end of the freezing time of this round.
 ## SCRIPT
 ### PROMPT
 - The input box is a full-fledged script editor (Thanks to AvalonEdit), and it is still being improved. It supports syntax highlighting, auto-completion, and searching.
@@ -31,7 +34,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 - Each script performs an action on behalf of a character, such as buying (instantly), moving (time-consuming), waiting.
 - The order between the characters in the script does not affect the final effect. For example, you can write the scripts of the actions of one character at the same time, or you can write the scripts of multiple characters at the same time.
 - You can add "-" before the script command and other statements to comment the content after this line.
-### Create scripts visually
+### CREATE SCRIPTS VISUALLY
 - Right-click the map
     - Set the speed
         - Sets the overall speed ratio value
@@ -82,7 +85,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |set character {Character number} status [alive / dead]|Set the survival status of a role|√|
 |set character {Character number} vertical position [upper / lower]|Set to show a character above or below the 3D map|√|
 |action character {Character number} <from {Coordinate}> layer {Starting layer} auto move {Finishing coordinate} layer {Finishing layer} [quietly / noisily]|Pathfinding|√|
-|action character {Character number} move [run / walk / squat / teleport] {Coordinate} <{Coordinate} ...... {Coordinate}>|Move character to a place|√ (Except teleport)|
+|action character {Character number} move [run / walk / squat / teleport] {Coordinate} <{Coordinate} ...... {Coordinate}>|Move character to a place|√|
 |action character {Character number} throw [smoke / grenade / flashbang / firebomb / decoy] {Coordinate} <{Coordinate} ...... {Coordinate}>|Throw a missile to a certain coordinate|√|
 |action character {Character number} shoot [{Coordinate} / {Goal number} [die / live]]|Shoot to a coordinate or target|√|
 |action character {Character number} do [plant, defuse]|Plant / defuse|√|
@@ -113,7 +116,6 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |LControl + A|Choose transparency|
 |LControl + Delete|Clear whole canvas|
 ## TODO
-- Read & play the demo
 ## USE OF EXTERNAL RESOURCES
 |Resource|License|
 |----|----|

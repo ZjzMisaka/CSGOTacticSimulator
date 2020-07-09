@@ -22,8 +22,11 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 - 在文件输入框中输入demo文件的路径可加载demo文件. 
 - 可以选择观看回合数或观看全部回合. 
 - 观看中点击左边地图上的点时可播放对应玩家当前时刻的pov. 
-- pov视频文件应放在demo文件所属目录的pov文件夹中, 文件名中应包含对应玩家的ID. 
-- pov视频应以第一局冷冻时间结束瞬间作为开始. 
+- pov分为整局pov或某回合pov, 如果只想看一回合就只录这一回合的pov视频, 如果想看一整局的可以录整局pov视频. 
+- pov文件名应和对应玩家名一致 (不区分大小写). 
+- 整局pov视频文件应放在demo文件所属目录的povs文件夹中, 某回合pov视频文件应放在demo文件所属目录的povs文件夹中的回合数文件夹中. </br>
+![directory](https://www.iaders.com/upload/2020/0709/directory.png)
+- 整局pov视频应以第一局冷冻时间结束瞬间作为开始, 某回合pov视频应以这一回合冷冻时间结束瞬间作为开始. 
 ## 脚本
 ### 提示
 - 右侧输入框是一个完善的脚本编辑器 (感谢AvalonEdit), 它支持语法高亮, 自动补全和搜索. 
@@ -82,7 +85,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |set character {角色编号} status [alive / dead]|设定某个角色的存活状态|√|
 |set character {角色编号} vertical position [upper / lower]|设定显示某个角色处于三维地图的上方或下方|√|
 |action character {角色编号} <from {坐标}> layer {起始层数} auto move {终点坐标} layer {终点层数} [quietly / noisily]|自动寻路|√|
-|action character {角色编号} move [run / walk / squat / teleport] {坐标} <{坐标} ...... {坐标}>|将角色移动到某一地点|√ (除了teleport)|
+|action character {角色编号} move [run / walk / squat / teleport] {坐标} <{坐标} ...... {坐标}>|将角色移动到某一地点|√|
 |action character {角色编号} throw [smoke / grenade / flashbang / firebomb / decoy] {坐标} <{坐标} ...... {坐标}>|让角色投掷投掷物到某一坐标 |√|
 |action character {角色编号} shoot [{坐标} / {目标编号} [die / live]]|让角色向某坐标或某目标射击|√|
 |action character {角色编号} do [plant, defuse]|让角色下 / 拆包|√|
