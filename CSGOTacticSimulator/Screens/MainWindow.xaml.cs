@@ -1829,7 +1829,7 @@ namespace CSGOTacticSimulator
                         povFolder = new DirectoryInfo(povsFolder);
                         foreach (FileInfo file in povFolder.GetFiles())
                         {
-                            if (character.Name.Contains(file.Name.Replace(file.Extension, "")))
+                            if (character.Name.ToLowerInvariant() == file.Name.Replace(file.Extension, "").ToLowerInvariant())
                             {
                                 me_pov.Visibility = Visibility.Visible;
                                 me_pov.LoadedBehavior = MediaState.Manual;
@@ -1849,7 +1849,7 @@ namespace CSGOTacticSimulator
                     povFolder = new DirectoryInfo(povsFolder);
                     foreach (FileInfo file in povFolder.GetFiles())
                     {
-                        if (character.Name.Contains(file.Name.Replace(file.Extension, "")))
+                        if (character.Name.ToLowerInvariant() == file.Name.Replace(file.Extension, "").ToLowerInvariant())
                         {
                             me_pov.Visibility = Visibility.Visible;
                             me_pov.LoadedBehavior = MediaState.Manual;
