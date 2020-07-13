@@ -1831,6 +1831,12 @@ namespace CSGOTacticSimulator
             {
                 if (character.CharacterImg == sender)
                 {
+                    if (me_pov.Source != null && me_pov.Source.AbsolutePath.ToLowerInvariant().Contains(character.Name.ToLowerInvariant()))
+                    {
+                        me_pov.Play();
+                        return;
+                    }
+
                     List<string> files = new List<string>();
 
                     string povsFolder = tb_select_file.Text;
@@ -2411,8 +2417,37 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
+                if(parseE.Weapon.Weapon == EquipmentElement.Molotov || parseE.Weapon.Weapon == EquipmentElement.HE || parseE.Weapon.Weapon == EquipmentElement.Flash || parseE.Weapon.Weapon == EquipmentElement.Decoy || parseE.Weapon.Weapon == EquipmentElement.Smoke || parseE.Weapon.Weapon == EquipmentElement.Incendiary)
+                {
+                    return;
+                }
                 int thisIndex = eventList.Count - 1;
-                eventList.Insert((thisIndex + lastPlayerKilledIndex) / 2, new Tuple<DemoParser, EventArgs, string, int>(null, parseE, null, -1));
+                int middleIndex = (thisIndex + lastPlayerKilledIndex) / 2;
+                int ticksCount = 0;
+                for (int i = middleIndex; i < thisIndex; ++i)
+                {
+                    Tuple<DemoParser, EventArgs, string, int> currentEvent = eventList[i];
+
+                    EventArgs eventArgs = currentEvent.Item2;
+                    if(eventArgs is TickDoneEventArgs)
+                    {
+                        ++ticksCount;
+                    }
+                }
+                double costTime = 0;
+                if (tickTime == -1)
+                {
+                    costTime = ((parseSender as DemoParser).TickTime * ticksCount);
+                }
+                else
+                {
+                    costTime = tickTime * ticksCount;
+                }
+                if (costTime < 1)
+                {
+                    return;
+                }
+                eventList.Insert(middleIndex, new Tuple<DemoParser, EventArgs, string, int>(null, parseE, null, -1));
                 lastPlayerKilledIndex = eventList.Count - 1;
             };
             //parser.PlayerTeam += (parseSender, parseE) =>
@@ -2513,6 +2548,7 @@ namespace CSGOTacticSimulator
             isBackward = false;
 
             bool isNeedRefreshPov = false;
+            isNeedAutomaticGuidance = false;
 
             for (int i = 0; i < eventList.Count(); ++i)
             {
