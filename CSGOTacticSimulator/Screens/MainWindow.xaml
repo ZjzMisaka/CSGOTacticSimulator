@@ -105,7 +105,15 @@
             </StackPanel>
 
             <avalonEdit:TextEditor x:Name="te_editor" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" FontSize="20" Margin="5, 0, 0, 0" ShowLineNumbers="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
-            <MediaElement x:Name="me_pov" Panel.ZIndex="1000" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="5, 0, 0, 0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Hidden" />
+            <MediaElement x:Name="me_pov" Panel.ZIndex="1000" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="5, 0, 0, 0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" />
+            <Grid x:Name="g_povcontroller" Panel.ZIndex="1000" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="5, 0, 0, 0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="LightGray" Width="100" Height="50" Visibility="Collapsed" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button x:Name="btn_backward" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="0" Click="Btn_backward_Click"></Button>
+                <Button x:Name="btn_forward" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="20" Grid.Column="1" Click="Btn_forward_Click"></Button>
+            </Grid>
 
             <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
                 <Grid.ColumnDefinitions>

@@ -49,6 +49,9 @@ namespace CSGOTacticSimulator
         public List<Point> keyDownInPreview = new List<Point>();
         public Stopwatch stopWatch = null;
         public Stopwatch stopWatchThisRound = null;
+        public int offset = 0;
+        public bool isForward = false;
+        public bool isBackward = false;
         public List<string> mapList = null;
 
         public MainWindow()
@@ -81,6 +84,8 @@ namespace CSGOTacticSimulator
             btn_stop.Background = GlobalDictionary.stopBrush;
             btn_save.Background = GlobalDictionary.saveBrush;
             btn_exit.Background = GlobalDictionary.exitBrush;
+            btn_forward.Background = GlobalDictionary.forwardBrush;
+            btn_backward.Background = GlobalDictionary.backwardBrush;
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -122,6 +127,7 @@ namespace CSGOTacticSimulator
             {
                 me_pov.Stop();
                 me_pov.Visibility = Visibility.Collapsed;
+                g_povcontroller.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -1831,13 +1837,9 @@ namespace CSGOTacticSimulator
                         {
                             if (character.Name.ToLowerInvariant() == file.Name.Replace(file.Extension, "").ToLowerInvariant())
                             {
-                                me_pov.Visibility = Visibility.Visible;
-                                me_pov.LoadedBehavior = MediaState.Manual;
-                                me_pov.Source = new Uri(file.FullName);
                                 double currentTime = double.Parse(character.CharacterImg.Tag.ToString().Split('|')[1]);
-
-                                me_pov.Play();
-                                me_pov.Position = new TimeSpan(0, 0, 0, 0, (int)(currentTime * 1000));
+                                me_pov.Tag = 1;
+                                PlayPov(file, currentTime);
                                 return;
                             }
                         }
@@ -1851,13 +1853,9 @@ namespace CSGOTacticSimulator
                     {
                         if (character.Name.ToLowerInvariant() == file.Name.Replace(file.Extension, "").ToLowerInvariant())
                         {
-                            me_pov.Visibility = Visibility.Visible;
-                            me_pov.LoadedBehavior = MediaState.Manual;
-                            me_pov.Source = new Uri(file.FullName);
                             double currentTime = double.Parse(character.CharacterImg.Tag.ToString().Split('|')[0]);
-
-                            me_pov.Play();
-                            me_pov.Position = new TimeSpan(0, 0, 0, 0, (int)(currentTime * 1000));
+                            me_pov.Tag = 0;
+                            PlayPov(file, currentTime);
                             return;
                         }
                     }
@@ -1865,6 +1863,18 @@ namespace CSGOTacticSimulator
                     break;
                 }
             }
+        }
+
+        private void PlayPov(FileInfo file, double currentTime)
+        {
+            me_pov.Visibility = Visibility.Visible;
+            g_povcontroller.Visibility = Visibility.Visible;
+            me_pov.LoadedBehavior = MediaState.Manual;
+            me_pov.Source = new Uri(file.FullName);
+
+            me_pov.Play();
+            me_pov.Position = new TimeSpan(0, 0, 0, 0, (int)(currentTime * 1000));
+            return;
         }
 
         public void ShowCharacterImgInfos(object sender, MouseEventArgs e)
@@ -2491,6 +2501,13 @@ namespace CSGOTacticSimulator
             stopWatch.Start();
             float elapsedTimeMillisecondInDemo = 0;
 
+            int thisOffset = 0;
+            offset = 0;
+            isForward = false;
+            isBackward = false;
+
+            bool isNeedRefreshPov = false;
+
             for (int i = 0; i < eventList.Count(); ++i)
             {
                 Tuple<DemoParser, EventArgs, string, int> currentEvent = eventList[i];
@@ -2499,6 +2516,71 @@ namespace CSGOTacticSimulator
                 EventArgs eventArgs = currentEvent.Item2;
                 string eventName = currentEvent.Item3;
                 int characterNumber = currentEvent.Item4;
+
+                if (isForward)
+                {
+                    if (thisOffset < GlobalDictionary.forwardTimeSpan)
+                    {
+                        if (eventList[i].Item2 is TickDoneEventArgs)
+                        {
+                            if (tickTime == -1)
+                            {
+                                thisOffset += (int)(demoParser.TickTime * 1000);
+                            }
+                            else
+                            {
+                                thisOffset += (int)(tickTime * 1000);
+                            }
+                        }
+                        continue;
+                    }
+                    else
+                    {
+                        thisOffset = 0;
+                        isForward = false;
+                        isNeedRefreshPov = true;
+                        offset += GlobalDictionary.forwardTimeSpan;
+                    }
+                }
+                if (isBackward)
+                {
+                    long elapsedMilliseconds = stopWatchThisRound.ElapsedMilliseconds;
+                    if (elapsedMilliseconds + offset - 1000/* 防止计算误差造成的崩溃的魔数 */ <= GlobalDictionary.backwardTimeSpan)
+                    {
+                        thisOffset = 0;
+                        isBackward = false;
+                    }
+                    if (isBackward)
+                    {
+                        if (thisOffset < GlobalDictionary.backwardTimeSpan)
+                        {
+                            i -= 2;
+                            if (eventList[i].Item2 is TickDoneEventArgs)
+                            {
+                                if (tickTime == -1)
+                                {
+                                    thisOffset += (int)(demoParser.TickTime * 1000);
+                                }
+                                else
+                                {
+                                    thisOffset += (int)(tickTime * 1000);
+                                }
+                            }
+                            if (usedMissileList.Contains(i))
+                            {
+                                usedMissileList.Remove(i);
+                            }
+                            continue;
+                        }
+                        else
+                        {
+                            thisOffset = 0;
+                            isBackward = false;
+                            isNeedRefreshPov = true;
+                            offset -= GlobalDictionary.backwardTimeSpan;
+                        }
+                    }
+                }
 
                 if (currentEvent.Item2 is RoundStartedEventArgs)
                 {
@@ -3400,7 +3482,7 @@ namespace CSGOTacticSimulator
                                 nowTime = currentEvent.Item1.CurrentTime;
                             }
                             float costTime = (nowTime - startTime) * 1000;
-                            if (costTime < realCostTime)
+                            if (costTime < realCostTime + offset)
                             {
                                 break;
                             }
@@ -3452,7 +3534,15 @@ namespace CSGOTacticSimulator
                                 endMapPoint = DemoPointToMapPoint(player.Position, demoParser.Map);
                                 endWndPoint = GetWndPoint(endMapPoint, ImgType.Character);
 
-                                character.CharacterImg.Tag = (nowTime - firstFreezetimeEndedTime) + "|" + (stopWatchThisRound.ElapsedMilliseconds / 1000.0);
+                                character.CharacterImg.Tag = (nowTime - firstFreezetimeEndedTime) + "|" + (stopWatchThisRound.ElapsedMilliseconds / 1000.0 + offset / 1000);
+
+                                if (isNeedRefreshPov)
+                                {
+                                    double currentTime = double.Parse(CharacterHelper.GetCharacter(characterNumber).CharacterImg.Tag.ToString().Split('|')[(int)me_pov.Tag]);
+                                    string filePath = me_pov.Source.LocalPath;
+                                    PlayPov(new FileInfo(filePath), currentTime);
+                                    isNeedRefreshPov = false;
+                                }
 
                                 Canvas.SetLeft(character.CharacterImg, endWndPoint.X);
                                 Canvas.SetTop(character.CharacterImg, endWndPoint.Y);
@@ -3506,7 +3596,7 @@ namespace CSGOTacticSimulator
                         }
 
                         float costTimeEnd = (nowTimeEnd - startTime) * 1000;
-                        if (costTimeEnd > realCostTime)
+                        if (costTimeEnd > realCostTime + offset)
                         {
                             if (startTime == 0)
                             {
@@ -3612,6 +3702,7 @@ namespace CSGOTacticSimulator
             {
                 me_pov.Stop();
                 me_pov.Visibility = Visibility.Collapsed;
+                g_povcontroller.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -4649,6 +4740,24 @@ namespace CSGOTacticSimulator
                     character.CharacterImg.Width = GlobalDictionary.CharacterWidthAndHeight;
                     character.CharacterImg.Height = GlobalDictionary.CharacterWidthAndHeight;
                 }
+            }
+        }
+
+        private void Btn_forward_Click(object sender, RoutedEventArgs e)
+        {
+            string filePath = tb_select_file.Text;
+            if (Path.GetExtension(filePath) == ".dem" && btn_pause.Tag != null && btn_pause.Tag.ToString() == "R")
+            {
+                isForward = true;
+            }
+        }
+
+        private void Btn_backward_Click(object sender, RoutedEventArgs e)
+        {
+            string filePath = tb_select_file.Text;
+            if (Path.GetExtension(filePath) == ".dem" && btn_pause.Tag != null && btn_pause.Tag.ToString() == "R")
+            {
+                isBackward = true;
             }
         }
     }

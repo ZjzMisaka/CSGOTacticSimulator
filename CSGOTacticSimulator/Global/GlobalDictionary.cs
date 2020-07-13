@@ -115,7 +115,11 @@ namespace CSGOTacticSimulator.Global
         private static int propsWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "Props"));
         private static int missileEffectWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "MissileEffect"));
         private static int explosionEffectWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "ExplosionEffect"));
+
         static public int animationFreshTime = int.Parse(IniHelper.ReadIni("Setting", "AnimationFreshTime"));   // 刷新间隔
+        static public int forwardTimeSpan = (int)(double.Parse(IniHelper.ReadIni("Setting", "ForwardTimeSpan")) * 1000);
+        static public int backwardTimeSpan = (int)(double.Parse(IniHelper.ReadIni("Setting", "BackwardTimeSpan")) * 1000);
+
         static public double walkToRunRatio = double.Parse(IniHelper.ReadIni("Ratio", "WalkToRun"));
         static public double squatToRunRatio = double.Parse(IniHelper.ReadIni("Ratio", "SquatToRun"));
         static public double speedController = double.Parse(IniHelper.ReadIni("Ratio", "Entirety"));
@@ -144,6 +148,8 @@ namespace CSGOTacticSimulator.Global
         static public string errorPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Error")).Replace("/", "\\");
         static public string minimizePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Minimize")).Replace("/", "\\");
         static public string restorePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Restore")).Replace("/", "\\");
+        static public string forwardPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Forward")).Replace("/", "\\");
+        static public string backwardPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Backward")).Replace("/", "\\");
         static public string eyePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Eye")).Replace("/", "\\");
         static public string bombPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Bomb")).Replace("/", "\\");
         static public string defuseKitPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "DefuseKit")).Replace("/", "\\");
@@ -167,6 +173,8 @@ namespace CSGOTacticSimulator.Global
         static public ImageBrush backgroundBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.backgroundPath)), Stretch = Stretch.Fill };
         static public ImageBrush minimizeBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.minimizePath)), Stretch = Stretch.Uniform };
         static public ImageBrush restoreBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.restorePath)), Stretch = Stretch.Uniform };
+        static public ImageBrush forwardBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.forwardPath)), Stretch = Stretch.Uniform };
+        static public ImageBrush backwardBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.backwardPath)), Stretch = Stretch.Uniform };
         static public ImageBrush previewBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.previewPath)), Stretch = Stretch.Uniform };
         static public ImageBrush runBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.runPath)), Stretch = Stretch.Uniform };
         static public ImageBrush pauseBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.pausePath)), Stretch = Stretch.Uniform };
