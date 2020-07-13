@@ -123,13 +123,21 @@ namespace CSGOTacticSimulator.Global
         static public double walkToRunRatio = double.Parse(IniHelper.ReadIni("Ratio", "WalkToRun"));
         static public double squatToRunRatio = double.Parse(IniHelper.ReadIni("Ratio", "SquatToRun"));
         static public double speedController = double.Parse(IniHelper.ReadIni("Ratio", "Entirety"));
-        static public double imageRatio = 1;
+        private static double imageRatio = 1;
 
-        public static int CharacterWidthAndHeight { get => (int)(characterWidthAndHeight * imageRatio); set => characterWidthAndHeight = value; }
-        public static int MissileWidthAndHeight { get => (int)(missileWidthAndHeight * imageRatio); set => missileWidthAndHeight = value; }
-        public static int PropsWidthAndHeight { get => (int)(propsWidthAndHeight * imageRatio); set => propsWidthAndHeight = value; }
-        public static int MissileEffectWidthAndHeight { get => (int)(missileEffectWidthAndHeight * imageRatio); set => missileEffectWidthAndHeight = value; }
-        public static int ExplosionEffectWidthAndHeight { get => (int)(explosionEffectWidthAndHeight * imageRatio); set => explosionEffectWidthAndHeight = value; }
+        public static int CharacterWidthAndHeight { get => (int)(characterWidthAndHeight * ImageRatio); set => characterWidthAndHeight = value; }
+        public static int MissileWidthAndHeight { get => (int)(missileWidthAndHeight * ImageRatio); set => missileWidthAndHeight = value; }
+        public static int PropsWidthAndHeight { get => (int)(propsWidthAndHeight * ImageRatio); set => propsWidthAndHeight = value; }
+        public static int MissileEffectWidthAndHeight { get => (int)(missileEffectWidthAndHeight * ImageRatio); set => missileEffectWidthAndHeight = value; }
+        public static int ExplosionEffectWidthAndHeight { get => (int)(explosionEffectWidthAndHeight * ImageRatio); set => explosionEffectWidthAndHeight = value; }
+        public static double ImageRatio
+        {
+            get => imageRatio;
+            set
+            {
+                imageRatio = value == 0 ? 0.1 : value;
+            }
+        }
 
         static public string mapListPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "MapList")).Replace("/", "\\");
         static public string highlightPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Highlight")).Replace("/", "\\");
@@ -150,6 +158,7 @@ namespace CSGOTacticSimulator.Global
         static public string restorePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Restore")).Replace("/", "\\");
         static public string forwardPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Forward")).Replace("/", "\\");
         static public string backwardPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Backward")).Replace("/", "\\");
+        static public string autoPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Auto")).Replace("/", "\\");
         static public string eyePath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Eye")).Replace("/", "\\");
         static public string bombPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "Bomb")).Replace("/", "\\");
         static public string defuseKitPath = System.IO.Path.Combine(Global.GlobalDictionary.basePath, IniHelper.ReadIni("Path", "DefuseKit")).Replace("/", "\\");
@@ -175,6 +184,7 @@ namespace CSGOTacticSimulator.Global
         static public ImageBrush restoreBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.restorePath)), Stretch = Stretch.Uniform };
         static public ImageBrush forwardBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.forwardPath)), Stretch = Stretch.Uniform };
         static public ImageBrush backwardBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.backwardPath)), Stretch = Stretch.Uniform };
+        static public ImageBrush autoBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.autoPath)), Stretch = Stretch.Uniform };
         static public ImageBrush previewBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.previewPath)), Stretch = Stretch.Uniform };
         static public ImageBrush runBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.runPath)), Stretch = Stretch.Uniform };
         static public ImageBrush pauseBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.pausePath)), Stretch = Stretch.Uniform };

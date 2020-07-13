@@ -53,6 +53,7 @@ namespace CSGOTacticSimulator
         public bool isForward = false;
         public bool isBackward = false;
         public List<string> mapList = null;
+        public bool isNeedAutomaticGuidance = false;
 
         public MainWindow()
         {
@@ -86,6 +87,7 @@ namespace CSGOTacticSimulator
             btn_exit.Background = GlobalDictionary.exitBrush;
             btn_forward.Background = GlobalDictionary.forwardBrush;
             btn_backward.Background = GlobalDictionary.backwardBrush;
+            btn_auto.Background = GlobalDictionary.autoBrush;
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -119,9 +121,9 @@ namespace CSGOTacticSimulator
             e.Handled = true;
             if (i_map.Source != null)
             {
-                GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
+                GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
             }
-            Point pointInMap = new Point(Math.Round((e.GetPosition(i_map).X / GlobalDictionary.imageRatio), 2), Math.Round((e.GetPosition(i_map).Y / GlobalDictionary.imageRatio), 2));
+            Point pointInMap = new Point(Math.Round((e.GetPosition(i_map).X / GlobalDictionary.ImageRatio), 2), Math.Round((e.GetPosition(i_map).Y / GlobalDictionary.ImageRatio), 2));
             tb_point.Text = pointInMap.ToString();
             if (me_pov.Visibility == Visibility.Visible)
             {
@@ -249,7 +251,7 @@ namespace CSGOTacticSimulator
             Label name = new Label();
             name.IsHitTestVisible = false;
             name.Foreground = new SolidColorBrush(Colors.White);
-            name.FontSize *= GlobalDictionary.imageRatio * 1.3;
+            name.FontSize *= GlobalDictionary.ImageRatio * 1.3;
             name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
             Canvas.SetLeft(name, wndPoint.X);
             Canvas.SetTop(name, wndPoint.Y + character.CharacterImg.Height / 2);
@@ -260,7 +262,7 @@ namespace CSGOTacticSimulator
 
         public Point GetWndPoint(Point mapPoint, ImgType imgType)
         {
-            Point scaledMapPoint = new Point(mapPoint.X * GlobalDictionary.imageRatio, mapPoint.Y * GlobalDictionary.imageRatio);
+            Point scaledMapPoint = new Point(mapPoint.X * GlobalDictionary.ImageRatio, mapPoint.Y * GlobalDictionary.ImageRatio);
             Point wndPoint = new Point();
             i_map.Dispatcher.Invoke(() =>
             {
@@ -322,7 +324,7 @@ namespace CSGOTacticSimulator
             {
                 scaledMapPoint = this.TranslatePoint(wndPoint, i_map);
             });
-            Point mapPoint = new Point(scaledMapPoint.X / GlobalDictionary.imageRatio, scaledMapPoint.Y / GlobalDictionary.imageRatio);
+            Point mapPoint = new Point(scaledMapPoint.X / GlobalDictionary.ImageRatio, scaledMapPoint.Y / GlobalDictionary.ImageRatio);
             return mapPoint;
         }
 
@@ -340,7 +342,7 @@ namespace CSGOTacticSimulator
             {
                 string processedCommand = null;
 
-                GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
+                GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
 
                 bombDefused = false;
 
@@ -971,7 +973,7 @@ namespace CSGOTacticSimulator
                         runSpeed *= GlobalDictionary.walkToRunRatio;
                     }
 
-                    double pixelPerFresh = runSpeed / (1000 / GlobalDictionary.animationFreshTime) * GlobalDictionary.imageRatio * speedController;
+                    double pixelPerFresh = runSpeed / (1000 / GlobalDictionary.animationFreshTime) * GlobalDictionary.ImageRatio * speedController;
                     double climbTime = (wayInfo.distance / pixelPerFresh) * (GlobalDictionary.animationFreshTime / 1000.0);
                     currentCommand = "action character" + " " + characterNumber + " " + "wait for" + " " + climbTime;
                     ActionCharacterWaitFor(currentCommand);
@@ -1423,7 +1425,7 @@ namespace CSGOTacticSimulator
             double speedController = localSpeedController != -1 ? localSpeedController : GlobalDictionary.speedController;
 
             int animationFreshTime = GlobalDictionary.animationFreshTime;
-            double pixelPerFresh = speed / (1000 / GlobalDictionary.animationFreshTime) * GlobalDictionary.imageRatio * speedController;
+            double pixelPerFresh = speed / (1000 / GlobalDictionary.animationFreshTime) * GlobalDictionary.ImageRatio * speedController;
             Point startWndPoint = GetWndPoint(character.MapPoint, ImgType.Character);
             // Point endWndPoint = GetWndPoint(animation.endMapPoint, ImgType.Character);
             List<Point> endMapPointList = (List<Point>)animation.objectPara[0];
@@ -1460,7 +1462,7 @@ namespace CSGOTacticSimulator
                     Label name = new Label();
                     name.IsHitTestVisible = false;
                     name.Foreground = new SolidColorBrush(Colors.White);
-                    name.FontSize *= GlobalDictionary.imageRatio * 1.3;
+                    name.FontSize *= GlobalDictionary.ImageRatio * 1.3;
                     name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
                     Canvas.SetLeft(name, endWndPointList.Last().X);
                     Canvas.SetTop(name, endWndPointList.Last().Y + character.CharacterImg.Height / 2);
@@ -1522,7 +1524,7 @@ namespace CSGOTacticSimulator
                                     Label name = new Label();
                                     name.IsHitTestVisible = false;
                                     name.Foreground = new SolidColorBrush(Colors.White);
-                                    name.FontSize *= GlobalDictionary.imageRatio * 1.3;
+                                    name.FontSize *= GlobalDictionary.ImageRatio * 1.3;
                                     name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
                                     Canvas.SetLeft(name, nowWndPoint.X);
                                     Canvas.SetTop(name, nowWndPoint.Y + character.CharacterImg.Height / 2);
@@ -1568,7 +1570,7 @@ namespace CSGOTacticSimulator
             double speedController = localSpeedController != -1 ? localSpeedController : GlobalDictionary.speedController;
 
             int animationFreshTime = GlobalDictionary.animationFreshTime;
-            double pixelPerFresh = speed / (1000 / GlobalDictionary.animationFreshTime) * GlobalDictionary.imageRatio * speedController;
+            double pixelPerFresh = speed / (1000 / GlobalDictionary.animationFreshTime) * GlobalDictionary.ImageRatio * speedController;
             Point startWndPoint = GetWndPoint(character.MapPoint, ImgType.Character);
             Missile missile = (Missile)animation.objectPara[0];
             List<Point> mapPoints = (List<Point>)animation.objectPara[1];
@@ -1784,7 +1786,7 @@ namespace CSGOTacticSimulator
                     {
                         missileListStr = "Nothing";
                     }
-                    tb_infos.FontSize = (GlobalDictionary.imageRatio == 0) ? 1 : 15 * GlobalDictionary.imageRatio * 1.3;
+                    tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
                     if(character.EquipmentList.Count == 0)
                     {
                         tb_infos.Text =
@@ -1819,6 +1821,11 @@ namespace CSGOTacticSimulator
         public void ShowPov(object sender, MouseEventArgs e)
         {
             List<Character> characters = CharacterHelper.GetCharacters();
+
+            if(e != null)
+            {
+                isNeedAutomaticGuidance = false;
+            }
 
             foreach (Character character in characters)
             {
@@ -1880,7 +1887,7 @@ namespace CSGOTacticSimulator
         public void ShowCharacterImgInfos(object sender, MouseEventArgs e)
         {
             Image img = (Image)sender;
-            tb_infos.FontSize = (GlobalDictionary.imageRatio == 0) ? 1 : 15 * GlobalDictionary.imageRatio * 1.3;
+            tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
             tb_infos.Text = img.Tag.ToString();
         }
         private void btn_point_Click(object sender, RoutedEventArgs e)
@@ -1946,8 +1953,8 @@ namespace CSGOTacticSimulator
                 MessageBox.Show(newPropertiesSetter, "文件\n" + filePath + "\n不存在", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
-            tb_infos.FontSize = (GlobalDictionary.imageRatio == 0) ? 1 : 15 * GlobalDictionary.imageRatio * 1.3;
+            GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
+            tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
 
             var setting = new JsonSerializerSettings();
             setting.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -1988,6 +1995,8 @@ namespace CSGOTacticSimulator
             parser.ParseHeader();
             float tickTime = -1;
             float firstFreezetimeEndedTime = -1;
+
+            int lastPlayerKilledIndex = 0;
             if (float.IsNaN(parser.TickTime))
             {
                 int resTickTime = MessageBox.Show(propertiesSetter, new List<object> { new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50 }, new ButtonSpacer(350), "OK" }, "该demo是多少ticks的?", "未知ticks", MessageBoxImage.Information);
@@ -2392,23 +2401,20 @@ namespace CSGOTacticSimulator
                 DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
                 eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "TickDone", 0));
             };
-            //parser.PlayerKilled += (parseSender, parseE) =>
-            //{
-            //    if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
-            //    {
-            //        return;
-            //    }
-            //    if (!isRoundAnnounceMatchStarted)
-            //    {
-            //        return;
-            //    }
-            //    //if (parseE.Victim != null)
-            //    //{
-            //    //    dic[parseE.Victim.SteamID].Add(new Tuple<DemoParser, EventArgs, string>(parseSender as DemoParser, parseE, "PlayerKilled"));
-            //    //}
-            //    DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
-            //    eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "PlayerKilled", dic[parseE.Victim.SteamID]));
-            //};
+            parser.PlayerKilled += (parseSender, parseE) =>
+            {
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                {
+                    return;
+                }
+                if (!isRoundAnnounceMatchStarted)
+                {
+                    return;
+                }
+                int thisIndex = eventList.Count - 1;
+                eventList.Insert((thisIndex + lastPlayerKilledIndex) / 2, new Tuple<DemoParser, EventArgs, string, int>(null, parseE, null, -1));
+                lastPlayerKilledIndex = eventList.Count - 1;
+            };
             //parser.PlayerTeam += (parseSender, parseE) =>
             //{
             //};
@@ -2582,7 +2588,15 @@ namespace CSGOTacticSimulator
                     }
                 }
 
-                if (currentEvent.Item2 is RoundStartedEventArgs)
+                if(currentEvent.Item1 == null && currentEvent.Item2 is PlayerKilledEventArgs && isNeedAutomaticGuidance)
+                {
+                    long steamID = (currentEvent.Item2 as PlayerKilledEventArgs).Killer.SteamID;
+                    Character character = CharacterHelper.GetCharacter(dic[steamID]);
+                    this.Dispatcher.Invoke(() => {
+                        ShowPov(character.CharacterImg, null);
+                    });
+                }
+                else if (currentEvent.Item2 is RoundStartedEventArgs)
                 {
                     if (currentEvent.Item3 == "RoundStart")
                     {
@@ -2824,6 +2838,10 @@ namespace CSGOTacticSimulator
 
                         for (int n = i + 1; n < eventList.Count(); ++n)
                         {
+                            if (eventList[n].Item1 == null)
+                            {
+                                continue;
+                            }
                             if ((eventList[n].Item1.CTScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CTScore + currentEvent.Item1.TScore))
                             {
                                 break;
@@ -2957,6 +2975,10 @@ namespace CSGOTacticSimulator
 
                         for (int n = i + 1; n < eventList.Count(); ++n)
                         {
+                            if (eventList[n].Item1 == null)
+                            {
+                                continue;
+                            }
                             if ((eventList[n].Item1.CTScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CTScore + currentEvent.Item1.TScore))
                             {
                                 break;
@@ -3118,6 +3140,10 @@ namespace CSGOTacticSimulator
 
                         for (int n = i + 1; n < eventList.Count(); ++n)
                         {
+                            if (eventList[n].Item1 == null)
+                            {
+                                continue;
+                            }
                             if ((eventList[n].Item1.CTScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CTScore + currentEvent.Item1.TScore))
                             {
                                 break;
@@ -3268,6 +3294,10 @@ namespace CSGOTacticSimulator
 
                                 for (int n = i + 1; n < eventList.Count(); ++n)
                                 {
+                                    if (eventList[n].Item1 == null)
+                                    {
+                                        continue;
+                                    }
                                     if ((eventList[n].Item1.CTScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CTScore + currentEvent.Item1.TScore))
                                     {
                                         break;
@@ -3550,7 +3580,7 @@ namespace CSGOTacticSimulator
                                 Label name = new Label();
                                 name.IsHitTestVisible = false;
                                 name.Foreground = new SolidColorBrush(Colors.White);
-                                name.FontSize *= GlobalDictionary.imageRatio * 1.3;
+                                name.FontSize *= GlobalDictionary.ImageRatio * 1.3;
                                 name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
                                 name.Content += " [" + player.HP + "]";
                                 Canvas.SetLeft(name, endWndPoint.X);
@@ -3971,7 +4001,7 @@ namespace CSGOTacticSimulator
                 return;
             }
 
-            GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
+            GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
 
             if (c_previewcanvas.Children.Count == 0)
             {
@@ -4723,17 +4753,17 @@ namespace CSGOTacticSimulator
         {
             if (i_map.Source != null)
             {
-                GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
+                GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
             }
-            CreateCommandInWindow(new Point(Math.Round((e.GetPosition(i_map).X / GlobalDictionary.imageRatio), 2), Math.Round((e.GetPosition(i_map).Y / GlobalDictionary.imageRatio), 2)));
+            CreateCommandInWindow(new Point(Math.Round((e.GetPosition(i_map).X / GlobalDictionary.ImageRatio), 2), Math.Round((e.GetPosition(i_map).Y / GlobalDictionary.ImageRatio), 2)));
         }
 
         private void i_map_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (i_map.Source != null)
             {
-                GlobalDictionary.imageRatio = i_map.ActualWidth / i_map.Source.Width;
-                tb_infos.FontSize = (GlobalDictionary.imageRatio == 0) ? 1 : 15 * GlobalDictionary.imageRatio * 1.3;
+                GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
+                tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
 
                 foreach (Character character in CharacterHelper.GetCharacters())
                 {
@@ -4759,6 +4789,11 @@ namespace CSGOTacticSimulator
             {
                 isBackward = true;
             }
+        }
+
+        private void Btn_auto_Click(object sender, RoutedEventArgs e)
+        {
+            isNeedAutomaticGuidance = true;
         }
     }
 }

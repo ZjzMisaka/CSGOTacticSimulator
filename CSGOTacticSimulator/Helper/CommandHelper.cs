@@ -213,7 +213,7 @@ namespace CSGOTacticSimulator.Helper
                         objMouseMove = delegate (object sender, MouseEventArgs e)
                         {
                             Point mousePosition = e.GetPosition(mainWindow.i_map);
-                            mainWindow.mouseMovePathInPreview.Add(new Point(Math.Round((mousePosition.X / GlobalDictionary.imageRatio), 2), Math.Round((mousePosition.Y / GlobalDictionary.imageRatio), 2)));
+                            mainWindow.mouseMovePathInPreview.Add(new Point(Math.Round((mousePosition.X / GlobalDictionary.ImageRatio), 2), Math.Round((mousePosition.Y / GlobalDictionary.ImageRatio), 2)));
                         };
                         objMouseMiddleDown = delegate (object sender, MouseButtonEventArgs e)
                         {
@@ -223,7 +223,7 @@ namespace CSGOTacticSimulator.Helper
                             if (e.ChangedButton == MouseButton.Middle)
                             {
                                 Point mousePosition = e.GetPosition(mainWindow.i_map);
-                                mainWindow.keyDownInPreview.Add(new Point(Math.Round((mousePosition.X / GlobalDictionary.imageRatio), 2), Math.Round((mousePosition.Y / GlobalDictionary.imageRatio), 2)));
+                                mainWindow.keyDownInPreview.Add(new Point(Math.Round((mousePosition.X / GlobalDictionary.ImageRatio), 2), Math.Round((mousePosition.Y / GlobalDictionary.ImageRatio), 2)));
                             }
                         };
                         characterImg.MouseLeftButtonDown += delegate (object sender, MouseButtonEventArgs e)
@@ -244,7 +244,7 @@ namespace CSGOTacticSimulator.Helper
                             {
                                 string tag = ((Image)sender).Tag.ToString();
                                 int number = int.Parse(tag.Substring(tag.IndexOf("Number: ") + 8, tag.IndexOf("Name: ") - (tag.IndexOf("Number: ") + 9)));
-                                mainWindow.CreateCommandInWindow(number, new Point(Math.Round((e.GetPosition(mainWindow.i_map).X / GlobalDictionary.imageRatio), 2), Math.Round((e.GetPosition(mainWindow.i_map).Y / GlobalDictionary.imageRatio), 2)));
+                                mainWindow.CreateCommandInWindow(number, new Point(Math.Round((e.GetPosition(mainWindow.i_map).X / GlobalDictionary.ImageRatio), 2), Math.Round((e.GetPosition(mainWindow.i_map).Y / GlobalDictionary.ImageRatio), 2)));
                             }
                             mainWindow.MouseDown -= objMouseMiddleDown;
                         };
@@ -260,7 +260,7 @@ namespace CSGOTacticSimulator.Helper
                         Label labelName = new Label();
                         labelName.IsHitTestVisible = false;
                         labelName.Foreground = new SolidColorBrush(Colors.White);
-                        labelName.FontSize *= GlobalDictionary.imageRatio * 1.3;
+                        labelName.FontSize *= GlobalDictionary.ImageRatio * 1.3;
                         labelName.Content = name == "" ? characterNumber.ToString() : name;
                         Canvas.SetLeft(labelName, charactorWndPoint.X);
                         Canvas.SetTop(labelName, charactorWndPoint.Y + characterImg.Height / 2);
@@ -334,7 +334,7 @@ namespace CSGOTacticSimulator.Helper
                             moveLine.Y2 = toWndPoint.Y;
                             moveLine.MouseEnter += delegate
                             {
-                                mainWindow.tb_infos.FontSize = (GlobalDictionary.imageRatio == 0) ? 1 : 15 * GlobalDictionary.imageRatio * 1.3;
+                                mainWindow.tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
                                 mainWindow.tb_infos.Text = command;
                             };
                             previewElements.Add(moveLine);
@@ -370,7 +370,7 @@ namespace CSGOTacticSimulator.Helper
                             moveLine.Y2 = toWndPoint.Y;
                             moveLine.MouseEnter += delegate
                             {
-                                mainWindow.tb_infos.FontSize = (GlobalDictionary.imageRatio == 0) ? 1 : 15 * GlobalDictionary.imageRatio * 1.3;
+                                mainWindow.tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
                                 mainWindow.tb_infos.Text = command;
                             };
                             previewElements.Add(moveLine);
