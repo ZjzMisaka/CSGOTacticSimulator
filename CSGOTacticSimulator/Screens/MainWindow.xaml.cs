@@ -4113,11 +4113,11 @@ namespace CSGOTacticSimulator
             // set entirety speed
             // set camp
             // create character
-            Button buttonSpeed = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+            Button buttonSpeed = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
             buttonSpeed.Content = "设置速度";
-            Button buttonCamp = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+            Button buttonCamp = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
             buttonCamp.Content = "设置阵营";
-            Button buttonCreateCharacter = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+            Button buttonCreateCharacter = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
             buttonCreateCharacter.Content = "创建角色";
             buttonSpeed.Click += delegate (object sender, RoutedEventArgs e)
             {
@@ -4245,13 +4245,13 @@ namespace CSGOTacticSimulator
             // do
             // wait for
             // wait until
-            Button buttonGive = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+            Button buttonGive = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
             buttonGive.Content = "装备";
-            Button buttonSet = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+            Button buttonSet = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
             buttonSet.Content = "设置";
-            Button buttonDo = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+            Button buttonDo = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
             buttonDo.Content = "动作";
-            Button buttonWait = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+            Button buttonWait = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
             buttonWait.Content = "等待";
 
             buttonGive.Click += delegate (object sender, RoutedEventArgs e)
@@ -4491,17 +4491,17 @@ namespace CSGOTacticSimulator
             // automove
             // throw
             // shoot
-            Button buttonMove = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+            Button buttonMove = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
             buttonMove.Content = "移动";
-            Button buttonAutoMove = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+            Button buttonAutoMove = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
             buttonAutoMove.Content = "寻路";
             if (keyDownInPreview.Count < 2)
             {
                 buttonAutoMove.IsEnabled = false;
             }
-            Button buttonThrow = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+            Button buttonThrow = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
             buttonThrow.Content = "投掷";
-            Button buttonShoot = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20, Style = MessageBox.ButtonStyleList[0] };
+            Button buttonShoot = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
             buttonShoot.Content = "射击";
             buttonMove.Click += delegate (object sender, RoutedEventArgs e)
             {
