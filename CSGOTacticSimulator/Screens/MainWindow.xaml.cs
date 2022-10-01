@@ -2278,6 +2278,10 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
+                if (parseE.Weapon.Weapon == EquipmentElement.Knife)
+                {
+                    return;
+                }
                 DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
                 parseE.Shooter = parseE.Shooter.Copy();
                 eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "WeaponFired", dic[parseE.Shooter.SteamID]));
