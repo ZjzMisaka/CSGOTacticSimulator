@@ -30,6 +30,7 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using System.Diagnostics;
+using static CustomizableMessageBox.MessageBox;
 
 namespace CSGOTacticSimulator
 {
@@ -98,7 +99,7 @@ namespace CSGOTacticSimulator
 
         private void btn_exit_Click(object sender, RoutedEventArgs e)
         {
-            int resultIndex = MessageBox.Show(GlobalDictionary.propertiesSetter, new List<object> { "保存后退出", "直接退出", new ButtonSpacer(100), "取消" }, "是否另存战术脚本", "正在退出程序", MessageBoxImage.Warning);
+            int resultIndex = MessageBox.Show(GlobalDictionary.propertiesSetter, new RefreshList { "保存后退出", "直接退出", new ButtonSpacer(100), "取消" }, "是否另存战术脚本", "正在退出程序", MessageBoxImage.Warning);
             if (MessageBox.ButtonList[resultIndex].ToString() == "取消")
             {
                 return;
@@ -428,7 +429,7 @@ namespace CSGOTacticSimulator
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(GlobalDictionary.propertiesSetter, new List<object> { new ButtonSpacer(250), "确定" }, "解析命令 \"" + processedCommand + "\" 时出错\n错误信息: " + ex.Message, "错误", MessageBoxImage.Error);
+                    MessageBox.Show(GlobalDictionary.propertiesSetter, new RefreshList { new ButtonSpacer(250), "确定" }, "解析命令 \"" + processedCommand + "\" 时出错\n错误信息: " + ex.Message, "错误", MessageBoxImage.Error);
                 }
 
                 StartTimer();
@@ -1637,7 +1638,7 @@ namespace CSGOTacticSimulator
                 Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
                 {
                     Stop();
-                    MessageBox.Show(GlobalDictionary.propertiesSetter, new List<object> { new ButtonSpacer(250), "确定" }, "角色" + character.Number + "未持有道具" + missile.ToString() + ", 可能是没有配备, 或已经被扔出, 因此无法投掷. ", "错误", MessageBoxImage.Warning);
+                    MessageBox.Show(GlobalDictionary.propertiesSetter, new RefreshList { new ButtonSpacer(250), "确定" }, "角色" + character.Number + "未持有道具" + missile.ToString() + ", 可能是没有配备, 或已经被扔出, 因此无法投掷. ", "错误", MessageBoxImage.Warning);
                 }));
 
             }
@@ -1968,7 +1969,7 @@ namespace CSGOTacticSimulator
 
             PropertiesSetter propertiesSetter = new PropertiesSetter(GlobalDictionary.propertiesSetter);
             propertiesSetter.EnableCloseButton = true;
-            int res = MessageBox.Show(propertiesSetter, new List<object> {
+            int res = MessageBox.Show(propertiesSetter, new RefreshList {
                 new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50 },
                 new CheckBox() { Content = "包括之后所有回合" , VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 150, Foreground = new SolidColorBrush(Colors.White), IsChecked = true},
                 new ButtonSpacer(200),
@@ -2005,7 +2006,7 @@ namespace CSGOTacticSimulator
             int lastPlayerKilledIndex = 0;
             if (float.IsNaN(parser.TickTime))
             {
-                int resTickTime = MessageBox.Show(propertiesSetter, new List<object> { new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50 }, new ButtonSpacer(350), "OK" }, "该demo是多少ticks的?", "未知ticks", MessageBoxImage.Information);
+                int resTickTime = MessageBox.Show(propertiesSetter, new RefreshList { new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50 }, new ButtonSpacer(350), "OK" }, "该demo是多少ticks的?", "未知ticks", MessageBoxImage.Information);
                 if (resTickTime == -1)
                 {
                     return;
@@ -4120,7 +4121,7 @@ namespace CSGOTacticSimulator
             buttonCreateCharacter.Content = "创建角色";
             buttonSpeed.Click += delegate (object sender, RoutedEventArgs e)
             {
-                MessageBox.ButtonList = new List<object> { new Label() { Content = "设置速度", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, new TextBox() { Width = 60, FontSize = 20, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 10, 0, 10) }, new ButtonSpacer(200), "OK" };
+                MessageBox.ButtonList = new RefreshList { new Label() { Content = "设置速度", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, new TextBox() { Width = 60, FontSize = 20, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 10, 0, 10) }, new ButtonSpacer(200), "OK" };
                 MessageBox.MessageBoxImageType = MessageBoxImage.None;
                 MessageBox.MessageText = "填写速度比率";
             };
@@ -4134,7 +4135,7 @@ namespace CSGOTacticSimulator
                 comboBox.Items.Add(new ComboBoxItem() { Content = "T", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 comboBox.Items.Add(new ComboBoxItem() { Content = "CT", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 comboBox.SelectedIndex = 0;
-                MessageBox.ButtonList = new List<object> { new Label() { Content = "设置阵营", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, new ButtonSpacer(200), "OK" };
+                MessageBox.ButtonList = new RefreshList { new Label() { Content = "设置阵营", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, new ButtonSpacer(200), "OK" };
                 MessageBox.MessageBoxImageType = MessageBoxImage.None;
                 MessageBox.MessageText = "选择主视角阵营";
             };
@@ -4186,11 +4187,11 @@ namespace CSGOTacticSimulator
                 gridName.Height = 84;
                 gridName.Width = 150;
 
-                MessageBox.ButtonList = new List<object> { new Label() { Content = "创建角色", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, gridName, new ButtonSpacer(50), "OK" };
+                MessageBox.ButtonList = new RefreshList { new Label() { Content = "创建角色", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, gridName, new ButtonSpacer(50), "OK" };
                 MessageBox.MessageBoxImageType = MessageBoxImage.None;
                 MessageBox.MessageText = "选择角色阵营和坐标";
             };
-            int res = MessageBox.Show(propertiesSetter, new List<object> { buttonSpeed, buttonCamp, buttonCreateCharacter }, "选择命令的种类", "创建命令", MessageBoxImage.Question);
+            int res = MessageBox.Show(propertiesSetter, new RefreshList { buttonSpeed, buttonCamp, buttonCreateCharacter }, "选择命令的种类", "创建命令", MessageBoxImage.Question);
             if (res == -1)
             {
                 return;
@@ -4316,7 +4317,7 @@ namespace CSGOTacticSimulator
                 grid.Height = 126;
                 grid.Width = 350;
 
-                MessageBox.ButtonList = new List<object> {
+                MessageBox.ButtonList = new RefreshList {
                     new Label() { Content = "装备", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
                     grid,
                     "OK"
@@ -4361,7 +4362,7 @@ namespace CSGOTacticSimulator
                 grid.Children.Add(comboBoxStatus);
                 grid.Height = 84;
 
-                MessageBox.ButtonList = new List<object> {
+                MessageBox.ButtonList = new RefreshList {
                     new Label() { Content = "设置", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
                     grid,
                     "OK"
@@ -4382,7 +4383,7 @@ namespace CSGOTacticSimulator
                     comboBox.Items.Add(new ComboBoxItem() { Content = doWithProps.ToString().ToLower(), FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 }
                 comboBox.SelectedIndex = 0;
-                MessageBox.ButtonList = new List<object> { new Label() { Content = "动作", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, new ButtonSpacer(200), "OK" };
+                MessageBox.ButtonList = new RefreshList { new Label() { Content = "动作", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, new ButtonSpacer(200), "OK" };
                 MessageBox.MessageBoxImageType = MessageBoxImage.None;
                 MessageBox.MessageText = "选择要进行的动作";
             };
@@ -4397,7 +4398,7 @@ namespace CSGOTacticSimulator
                 comboBox.Items.Add(new ComboBoxItem() { Content = "等待", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 comboBox.Items.Add(new ComboBoxItem() { Content = "等待至", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 comboBox.SelectedIndex = 0;
-                MessageBox.ButtonList = new List<object>
+                MessageBox.ButtonList = new RefreshList
                 {
                     new Label() { Content = "等待", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
                     comboBox,
@@ -4409,7 +4410,7 @@ namespace CSGOTacticSimulator
                 MessageBox.MessageBoxImageType = MessageBoxImage.None;
                 MessageBox.MessageText = "选择要进行的动作";
             };
-            int res = MessageBox.Show(propertiesSetter, new List<object> { buttonGive, buttonSet, buttonDo, buttonWait }, "选择命令的种类", "创建命令", MessageBoxImage.Question);
+            int res = MessageBox.Show(propertiesSetter, new RefreshList { buttonGive, buttonSet, buttonDo, buttonWait }, "选择命令的种类", "创建命令", MessageBoxImage.Question);
             if (res == -1)
             {
                 return;
@@ -4547,7 +4548,7 @@ namespace CSGOTacticSimulator
                 grid.Children.Add(comboBoxMove);
                 grid.Height = 84;
 
-                MessageBox.ButtonList = new List<object> {
+                MessageBox.ButtonList = new RefreshList {
                     new Label() { Content = "移动", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
                     grid,
                     "OK"
@@ -4605,7 +4606,7 @@ namespace CSGOTacticSimulator
                 grid.Children.Add(textBoxEndLayer);
                 grid.Height = 84;
 
-                MessageBox.ButtonList = new List<object> {
+                MessageBox.ButtonList = new RefreshList {
                     new Label() { Content = "寻路", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
                     grid,
                     comboBoxVolumeLimit,
@@ -4629,7 +4630,7 @@ namespace CSGOTacticSimulator
                 }
                 comboBoxMissile.SelectedIndex = 0;
 
-                MessageBox.ButtonList = new List<object> {
+                MessageBox.ButtonList = new RefreshList {
                     new Label() { Content = "投掷", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
                     comboBoxMissile,
                     "OK"
@@ -4676,7 +4677,7 @@ namespace CSGOTacticSimulator
                 comboBox.Height = 32;
                 comboBox.SelectedIndex = 0;
 
-                MessageBox.ButtonList = new List<object> {
+                MessageBox.ButtonList = new RefreshList {
                     new Label() { Content = "射击", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
                     grid,
                     comboBox,
@@ -4685,7 +4686,7 @@ namespace CSGOTacticSimulator
                 MessageBox.MessageBoxImageType = MessageBoxImage.None;
                 MessageBox.MessageText = "射击设置";
             };
-            int res = MessageBox.Show(propertiesSetter, new List<object> { buttonMove, buttonAutoMove, buttonThrow, buttonShoot }, "选择命令的种类", "创建命令", MessageBoxImage.Question);
+            int res = MessageBox.Show(propertiesSetter, new RefreshList { buttonMove, buttonAutoMove, buttonThrow, buttonShoot }, "选择命令的种类", "创建命令", MessageBoxImage.Question);
             if (res == -1)
             {
                 return;

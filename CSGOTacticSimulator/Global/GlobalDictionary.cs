@@ -223,6 +223,7 @@ namespace CSGOTacticSimulator.Global
             WarningIcon = new System.Windows.Media.Imaging.BitmapImage(new Uri(GlobalDictionary.warningPath)),
             QuestionIcon = new System.Windows.Media.Imaging.BitmapImage(new Uri(GlobalDictionary.questionPath)),
             ErrorIcon = new System.Windows.Media.Imaging.BitmapImage(new Uri(GlobalDictionary.errorPath)),
+            ButtonStyleList = new List<Style> { CustomizableMessageBox.Prefab.GetButtonStyle(ButtonStyleName.White) },
         };
     }
 }

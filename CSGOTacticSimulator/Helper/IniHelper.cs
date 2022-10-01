@@ -15,7 +15,7 @@ namespace CSGOTacticSimulator.Helper
 {
     class IniHelper
     {
-        private static string IniFilePath = Path.Combine(Global.GlobalDictionary.basePath, "infos/setting.ini");
+        private static string IniFilePath = Path.Combine(Global.GlobalDictionary.exePath, "infos/setting.ini");
 
         /// <summary>
         /// 写操作

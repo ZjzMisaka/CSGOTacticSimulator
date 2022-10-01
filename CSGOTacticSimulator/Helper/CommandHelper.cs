@@ -16,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static CustomizableMessageBox.MessageBox;
 using MessageBox = CustomizableMessageBox.MessageBox;
 
 namespace CSGOTacticSimulator.Helper
@@ -381,7 +382,7 @@ namespace CSGOTacticSimulator.Helper
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(GlobalDictionary.propertiesSetter, new List<object> { new ButtonSpacer(250), "确定" }, "解析命令 \"" + command + "\" 时出错\n错误信息: " + ex.Message, "错误", MessageBoxImage.Error);
+                    MessageBox.Show(GlobalDictionary.propertiesSetter, new RefreshList { new ButtonSpacer(250), "确定" }, "解析命令 \"" + command + "\" 时出错\n错误信息: " + ex.Message, "错误", MessageBoxImage.Error);
                 }
             }
             return previewElements;
