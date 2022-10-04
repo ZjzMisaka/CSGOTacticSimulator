@@ -31,6 +31,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using System.Diagnostics;
 using static CustomizableMessageBox.MessageBox;
+using System.Collections;
 
 namespace CSGOTacticSimulator
 {
@@ -1992,7 +1993,7 @@ namespace CSGOTacticSimulator
                 isAnalizeToLastRound = (MessageBox.ButtonList[1] as CheckBox).IsChecked == true ? true : false;
             }
 
-            List<Tuple<DemoParser, EventArgs, string, int>> eventList = new List<Tuple<DemoParser, EventArgs, string, int>>();
+            List<Tuple<CurrentInfo, EventArgs, string, int>> eventList = new List<Tuple<CurrentInfo, EventArgs, string, int>>();
             DemoParser parser = new DemoParser(File.OpenRead(filePath));
 
             bool isRoundAnnounceMatchStarted = false;
@@ -2037,8 +2038,14 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "DecoyNadeEnded", dic[parseE.ThrownBy.SteamID]));
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "DecoyNadeEnded", dic[parseE.ThrownBy.SteamID]));
             };
             //parser.FireNadeStarted += (parseSender, parseE) =>
             //{
@@ -2053,9 +2060,15 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.ThrownBy = parseE.ThrownBy.Copy();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "FireNadeWithOwnerStarted", dic[parseE.ThrownBy.SteamID]));
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "FireNadeWithOwnerStarted", dic[parseE.ThrownBy.SteamID]));
             };
             parser.FireNadeEnded += (parseSender, parseE) =>
             {
@@ -2067,8 +2080,14 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "FireNadeEnded", dic[parseE.ThrownBy.SteamID]));
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "FireNadeEnded", dic[parseE.ThrownBy.SteamID]));
             };
             parser.ExplosiveNadeExploded += (parseSender, parseE) =>
             {
@@ -2080,8 +2099,14 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "ExplosiveNadeExploded", dic[parseE.ThrownBy.SteamID]));
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "ExplosiveNadeExploded", dic[parseE.ThrownBy.SteamID]));
             };
             parser.FlashNadeExploded += (parseSender, parseE) =>
             {
@@ -2093,8 +2118,14 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "FlashNadeExploded", dic[parseE.ThrownBy.SteamID]));
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "FlashNadeExploded", dic[parseE.ThrownBy.SteamID]));
             };
             //parser.ExplosiveNadeExploded += (parseSender, parseE) =>
             //{
@@ -2110,7 +2141,7 @@ namespace CSGOTacticSimulator
             //        return;
             //    }
             //    DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
-            //    eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "NadeReachedTarget", dic[parseE.ThrownBy.SteamID]));
+            //    eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "NadeReachedTarget", dic[parseE.ThrownBy.SteamID]));
             //};
             parser.BombBeginPlant += (parseSender, parseE) =>
             {
@@ -2122,9 +2153,15 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.Player = parseE.Player.Copy();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "BombBeginPlant", dic[parseE.Player.SteamID]));
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "BombBeginPlant", dic[parseE.Player.SteamID]));
             };
             parser.BombAbortPlant += (parseSender, parseE) =>
             {
@@ -2136,9 +2173,15 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.Player = parseE.Player.Copy();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "BombAbortPlant", dic[parseE.Player.SteamID]));
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "BombAbortPlant", dic[parseE.Player.SteamID]));
             };
             parser.BombExploded += (parseSender, parseE) =>
             {
@@ -2150,9 +2193,15 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.Player = parseE.Player.Copy();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "BombExploded", dic[parseE.Player.SteamID]));
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "BombExploded", dic[parseE.Player.SteamID]));
             };
             parser.BombDefused += (parseSender, parseE) =>
             {
@@ -2164,9 +2213,15 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.Player = parseE.Player.Copy();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "BombDefused", dic[parseE.Player.SteamID]));
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "BombDefused", dic[parseE.Player.SteamID]));
             };
             parser.BombBeginDefuse += (parseSender, parseE) =>
             {
@@ -2178,9 +2233,15 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.Player = parseE.Player.Copy();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "BombBeginDefuse", dic[parseE.Player.SteamID]));
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "BombBeginDefuse", dic[parseE.Player.SteamID]));
             };
             parser.BombAbortDefuse += (parseSender, parseE) =>
             {
@@ -2192,9 +2253,15 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.Player = parseE.Player.Copy();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "BombAbortDefuse", dic[parseE.Player.SteamID]));
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "BombAbortDefuse", dic[parseE.Player.SteamID]));
             };
             //parser.SayText += (parseSender, parseE) =>
             //{
@@ -2216,9 +2283,15 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.ThrownBy = parseE.ThrownBy.Copy();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "DecoyNadeStarted", dic[parseE.ThrownBy.SteamID]));
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "DecoyNadeStarted", dic[parseE.ThrownBy.SteamID]));
             };
             parser.Blind += (parseSender, parseE) =>
             {
@@ -2230,10 +2303,16 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.Player = parseE.Player.Copy();
                 parseE.Attacker = parseE.Attacker.Copy();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "Blind", dic[parseE.Player.SteamID]));
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "Blind", dic[parseE.Player.SteamID]));
             };
             //parser.PlayerHurt += (parseSender, parseE) =>
             //{
@@ -2249,9 +2328,15 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.Player = parseE.Player.Copy();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "BombPlanted", dic[parseE.Player.SteamID]));
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "BombPlanted", dic[parseE.Player.SteamID]));
             };
             parser.SmokeNadeEnded += (parseSender, parseE) =>
             {
@@ -2263,8 +2348,14 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "SmokeNadeEnded", dic[parseE.ThrownBy.SteamID]));
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "SmokeNadeEnded", dic[parseE.ThrownBy.SteamID]));
             };
             //parser.RoundOfficiallyEnd += (parseSender, parseE) =>
             //{
@@ -2283,9 +2374,16 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.Shooter = parseE.Shooter.Copy();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "WeaponFired", dic[parseE.Shooter.SteamID]));
+                parseE.Weapon = new Equipment(parseE.Weapon.OriginalString);
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "WeaponFired", dic[parseE.Shooter.SteamID]));
             };
             //parser.HeaderParsed += (parseSender, parseE) =>
             //{
@@ -2331,8 +2429,14 @@ namespace CSGOTacticSimulator
                 }
                 // 一局开始
 
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "RoundStart", 0));
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "RoundStart", 0));
             };
             parser.SmokeNadeStarted += (parseSender, parseE) =>
             {
@@ -2344,9 +2448,15 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.ThrownBy = parseE.ThrownBy.Copy();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "SmokeNadeStarted", dic[parseE.ThrownBy.SteamID]));
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "SmokeNadeStarted", dic[parseE.ThrownBy.SteamID]));
             };
             //parser.WinPanelMatch += (parseSender, parseE) =>
             //{
@@ -2366,8 +2476,14 @@ namespace CSGOTacticSimulator
                     return;
                 }
 
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "RoundEnd", 0));
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "RoundEnd", 0));
             };
             //parser.SayText2 += (parseSender, parseE) =>
             //{
@@ -2392,8 +2508,14 @@ namespace CSGOTacticSimulator
                     }
                 }
 
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "FreezetimeEnded", 0));
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "FreezetimeEnded", 0));
             };
             parser.TickDone += (parseSender, parseE) =>
             {
@@ -2407,10 +2529,16 @@ namespace CSGOTacticSimulator
                 }
                 //for (int i = 1; i < parser.Participants.Count(); ++i)
                 //{
-                //    dic[parser.Participants.ElementAt(i).SteamID].Add(new Tuple<DemoParser, EventArgs, string>(parseSender as DemoParser, parseE, "TickDone"));
+                //    dic[parser.Participants.ElementAt(i).SteamID].Add(new Tuple<DemoParser, EventArgs, string>(parseSenderClone, parseE, "TickDone"));
                 //}
-                DemoParser parseSenderClone = (parseSender as DemoParser).Clone();
-                eventList.Add(new Tuple<DemoParser, EventArgs, string, int>(parseSenderClone, parseE, "TickDone", 0));
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "TickDone", 0));
             };
             parser.PlayerKilled += (parseSender, parseE) =>
             {
@@ -2431,7 +2559,7 @@ namespace CSGOTacticSimulator
                 int ticksCount = 0;
                 for (int i = middleIndex; i < thisIndex; ++i)
                 {
-                    Tuple<DemoParser, EventArgs, string, int> currentEvent = eventList[i];
+                    Tuple<CurrentInfo, EventArgs, string, int> currentEvent = eventList[i];
 
                     EventArgs eventArgs = currentEvent.Item2;
                     if(eventArgs is TickDoneEventArgs)
@@ -2452,7 +2580,7 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                eventList.Insert(middleIndex, new Tuple<DemoParser, EventArgs, string, int>(null, parseE, null, -1));
+                eventList.Insert(middleIndex, new Tuple<CurrentInfo, EventArgs, string, int>(null, parseE, null, -1));
                 lastPlayerKilledIndex = eventList.Count - 1;
             };
             //parser.PlayerTeam += (parseSender, parseE) =>
@@ -2486,7 +2614,7 @@ namespace CSGOTacticSimulator
                     });
 
                     Thread analizeDemoThread = new Thread(AnalizeDemo);
-                    analizeDemoThread.Start(new Tuple<List<Tuple<DemoParser, EventArgs, string, int>>, int, Dictionary<long, int>, float, float>(eventList, roundNumber, dic, tickTime, firstFreezetimeEndedTime));
+                    analizeDemoThread.Start(new Tuple<List<Tuple<CurrentInfo, EventArgs, string, int>>, int, Dictionary<long, int>, float, float>(eventList, roundNumber, dic, tickTime, firstFreezetimeEndedTime));
                     ThreadHelper.AddThread(analizeDemoThread);
                     analizeDemoThread.Join();
 
@@ -2523,8 +2651,8 @@ namespace CSGOTacticSimulator
 
         private void AnalizeDemo(object obj)
         {
-            Tuple<List<Tuple<DemoParser, EventArgs, string, int>>, int, Dictionary<long, int>, float, float> tupleTemp = (Tuple<List<Tuple<DemoParser, EventArgs, string, int>>, int, Dictionary<long, int>, float, float>)obj;
-            List<Tuple<DemoParser, EventArgs, string, int>> eventList = tupleTemp.Item1;
+            Tuple<List<Tuple<CurrentInfo, EventArgs, string, int>>, int, Dictionary<long, int>, float, float> tupleTemp = (Tuple<List<Tuple<CurrentInfo, EventArgs, string, int>>, int, Dictionary<long, int>, float, float>)obj;
+            List<Tuple<CurrentInfo, EventArgs, string, int>> eventList = tupleTemp.Item1;
             int roundNumber = tupleTemp.Item2;
             Dictionary<long, int> dic = tupleTemp.Item3;
             float tickTime = tupleTemp.Item4;
@@ -2557,9 +2685,9 @@ namespace CSGOTacticSimulator
 
             for (int i = 0; i < eventList.Count(); ++i)
             {
-                Tuple<DemoParser, EventArgs, string, int> currentEvent = eventList[i];
+                Tuple<CurrentInfo, EventArgs, string, int> currentEvent = eventList[i];
 
-                DemoParser demoParser = currentEvent.Item1;
+                CurrentInfo currentInfo = currentEvent.Item1;
                 EventArgs eventArgs = currentEvent.Item2;
                 string eventName = currentEvent.Item3;
                 int characterNumber = currentEvent.Item4;
@@ -2572,7 +2700,7 @@ namespace CSGOTacticSimulator
                         {
                             if (tickTime == -1)
                             {
-                                thisOffset += (int)(demoParser.TickTime * 1000);
+                                thisOffset += (int)(currentInfo.TickTime * 1000);
                             }
                             else
                             {
@@ -2606,7 +2734,7 @@ namespace CSGOTacticSimulator
                             {
                                 if (tickTime == -1)
                                 {
-                                    thisOffset += (int)(demoParser.TickTime * 1000);
+                                    thisOffset += (int)(currentInfo.TickTime * 1000);
                                 }
                                 else
                                 {
@@ -2629,11 +2757,12 @@ namespace CSGOTacticSimulator
                     }
                 }
 
-                if(currentEvent.Item1 == null && currentEvent.Item2 is PlayerKilledEventArgs && isNeedAutomaticGuidance)
+                if (currentEvent.Item1 == null && currentEvent.Item2 is PlayerKilledEventArgs && isNeedAutomaticGuidance)
                 {
                     long steamID = (currentEvent.Item2 as PlayerKilledEventArgs).Killer.SteamID;
                     Character character = CharacterHelper.GetCharacter(dic[steamID]);
-                    this.Dispatcher.Invoke(() => {
+                    this.Dispatcher.Invoke(() =>
+                    {
                         ShowPov(character.CharacterImg, null);
                     });
                 }
@@ -2641,7 +2770,7 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "RoundStart")
                     {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2652,7 +2781,7 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "RoundEnd")
                     {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2662,13 +2791,13 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "Blind")
                     {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber)
                         {
                             continue;
                         }
 
                         Character character = CharacterHelper.GetCharacter(characterNumber);
-                        if(character.Status == Model.Status.Dead)
+                        if (character.Status == Model.Status.Dead)
                         {
                             continue;
                         }
@@ -2678,8 +2807,9 @@ namespace CSGOTacticSimulator
                             character.OtherImg.Visibility = Visibility.Visible;
                             character.OtherImg.Source = new BitmapImage(new Uri(GlobalDictionary.eyePath));
                         });
-                        
-                        Thread blindThread = new Thread(() => {
+
+                        Thread blindThread = new Thread(() =>
+                        {
                             Thread.Sleep((int)((currentEvent.Item2 as BlindEventArgs).FlashDuration * 1000));
                             this.Dispatcher.Invoke(() =>
                             {
@@ -2698,7 +2828,7 @@ namespace CSGOTacticSimulator
 
                     if (currentEvent.Item3 == "BombBeginPlant")
                     {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2711,7 +2841,7 @@ namespace CSGOTacticSimulator
                     }
                     else if (currentEvent.Item3 == "BombAbortPlant")
                     {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2722,7 +2852,7 @@ namespace CSGOTacticSimulator
                     }
                     else if (currentEvent.Item3 == "BombExploded")
                     {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2730,14 +2860,14 @@ namespace CSGOTacticSimulator
                         c_runcanvas.Dispatcher.Invoke(() =>
                         {
                             Image bombImage = null;
-                            foreach(FrameworkElement frameworkElement in c_runcanvas.Children)
+                            foreach (FrameworkElement frameworkElement in c_runcanvas.Children)
                             {
-                                if(frameworkElement is Image && frameworkElement.Tag != null && frameworkElement.Tag.ToString() == "Bomb")
+                                if (frameworkElement is Image && frameworkElement.Tag != null && frameworkElement.Tag.ToString() == "Bomb")
                                 {
                                     bombImage = frameworkElement as Image;
                                 }
                             }
-                            if(bombImage == null)
+                            if (bombImage == null)
                             {
                                 return;
                             }
@@ -2757,7 +2887,7 @@ namespace CSGOTacticSimulator
                     }
                     else if (currentEvent.Item3 == "BombDefused")
                     {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2786,7 +2916,7 @@ namespace CSGOTacticSimulator
                     }
                     else if (currentEvent.Item3 == "BombPlanted")
                     {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2802,7 +2932,7 @@ namespace CSGOTacticSimulator
                             Point bombWndPoint = GetWndPoint(character.MapPoint, ImgType.Props);
 
                             character.OtherImg.Visibility = Visibility.Collapsed;
-                        
+
                             Canvas.SetLeft(bombImage, bombWndPoint.X);
                             Canvas.SetTop(bombImage, bombWndPoint.Y);
                             c_runcanvas.Children.Add(bombImage);
@@ -2816,7 +2946,7 @@ namespace CSGOTacticSimulator
                     Character character = CharacterHelper.GetCharacter(characterNumber);
                     if (currentEvent.Item3 == "BombBeginDefuse")
                     {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2828,7 +2958,7 @@ namespace CSGOTacticSimulator
                     }
                     else if (currentEvent.Item3 == "BombAbortDefuse")
                     {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2842,7 +2972,7 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "FreezetimeEnded")
                     {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber)
+                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber)
                         {
                             continue;
                         }
@@ -2852,299 +2982,299 @@ namespace CSGOTacticSimulator
                         isFreezetimeEnded = true;
                     }
                 }
-                else if (currentEvent.Item2 is DecoyEventArgs)
-                {
-                    if (currentEvent.Item3 == "DecoyNadeStarted")
-                    {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
-                        {
-                            continue;
-                        }
-                        Character character = CharacterHelper.GetCharacter(characterNumber);
+                //else if (currentEvent.Item2 is DecoyEventArgs)
+                //{
+                //    if (currentEvent.Item3 == "DecoyNadeStarted")
+                //    {
+                //        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber || !isFreezetimeEnded)
+                //        {
+                //            continue;
+                //        }
+                //        Character character = CharacterHelper.GetCharacter(characterNumber);
 
-                        Player player = (currentEvent.Item2 as DecoyEventArgs).ThrownBy;
-                        //foreach (Player playerTemp in demoParser.Participants)
-                        //{
-                        //    if (playerTemp.SteamID == character.SteamId)
-                        //    {
-                        //        player = playerTemp;
-                        //    }
-                        //}
-                        //double waitTime = demoParser.CurrentTime - lastActionTime;
-                        //lastActionTime = demoParser.CurrentTime;
+                //        Player player = (currentEvent.Item2 as DecoyEventArgs).ThrownBy;
+                //        //foreach (Player playerTemp in demoParser.Participants)
+                //        //{
+                //        //    if (playerTemp.SteamID == character.SteamId)
+                //        //    {
+                //        //        player = playerTemp;
+                //        //    }
+                //        //}
+                //        //double waitTime = demoParser.CurrentTime - lastActionTime;
+                //        //lastActionTime = demoParser.CurrentTime;
 
-                        double costTime = 0;
-                        Point decoyStartMapPoint = DemoPointToMapPoint(player.Position, demoParser.Map);
-                        Point decoyEndMapPoint = new Point();
+                //        double costTime = 0;
+                //        Point decoyStartMapPoint = DemoPointToMapPoint(player.Position, currentInfo.Map);
+                //        Point decoyEndMapPoint = new Point();
 
-                        for (int n = i + 1; n < eventList.Count(); ++n)
-                        {
-                            if (eventList[n].Item1 == null)
-                            {
-                                continue;
-                            }
-                            if ((eventList[n].Item1.CTScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CTScore + currentEvent.Item1.TScore))
-                            {
-                                break;
-                            }
-                            if (eventList[n].Item3 == "DecoyNadeEnded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
-                            {
-                                usedMissileList.Add(n);
-                                if (tickTime == -1)
-                                {
-                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 5;
-                                }
-                                else
-                                {
-                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 5;
-                                }
-                                decoyEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as DecoyEventArgs).Position, demoParser.Map);
-                                break;
-                            }
-                        }
+                //        for (int n = i + 1; n < eventList.Count(); ++n)
+                //        {
+                //            if (eventList[n].Item1 == null)
+                //            {
+                //                continue;
+                //            }
+                //            if ((eventList[n].Item1.CtScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CtScore + currentEvent.Item1.TScore))
+                //            {
+                //                break;
+                //            }
+                //            if (eventList[n].Item3 == "DecoyNadeEnded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
+                //            {
+                //                usedMissileList.Add(n);
+                //                if (tickTime == -1)
+                //                {
+                //                    costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime) / 5;
+                //                }
+                //                else
+                //                {
+                //                    costTime = tickTime * (eventList[n].Item1.CurrentTick - currentInfo.CurrentTick) / 5;
+                //                }
+                //                decoyEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as DecoyEventArgs).Position, currentInfo.Map);
+                //                break;
+                //            }
+                //        }
 
-                        if (decoyEndMapPoint.X == 0 && decoyEndMapPoint.Y == 0)
-                        {
-                            continue;
-                        }
+                //        if (decoyEndMapPoint.X == 0 && decoyEndMapPoint.Y == 0)
+                //        {
+                //            continue;
+                //        }
 
-                        Point decoyStartWndPoint = GetWndPoint(decoyStartMapPoint, ImgType.Missile);
-                        Point decoyEndWndPoint = GetWndPoint(decoyEndMapPoint, ImgType.Missile);
+                //        Point decoyStartWndPoint = GetWndPoint(decoyStartMapPoint, ImgType.Missile);
+                //        Point decoyEndWndPoint = GetWndPoint(decoyEndMapPoint, ImgType.Missile);
 
-                        double pixelPerFresh = VectorHelper.GetDistance(decoyStartWndPoint, decoyEndWndPoint) / ((1000 / GlobalDictionary.animationFreshTime) * costTime);
-
-
-
-                        List<Character> characters = CharacterHelper.GetCharacters();
-
-                        Image missileImg = null;
-                        Image missileEffectImg = null;
-                        int effectLifeSpan = 0;
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            missileImg = new Image();
-                            missileEffectImg = new Image();
-                            missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.decoyPath));
-                            effectLifeSpan = GlobalDictionary.smokeLifespan;
-                            missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
-                            missileImg.Height = GlobalDictionary.MissileWidthAndHeight;
-
-                            if (missileEffectImg != null)
-                            {
-                                missileEffectImg.Opacity = 0.85;
-                                missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
-                                missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
-                            }
-                        });
-
-
-                        //Thread.Sleep((int)(waitTime * 1000));
-                        Thread throwThread = new Thread(() =>
-                        {
-                            Point nowWndPoint = decoyStartWndPoint;
-                            Point unitVector = VectorHelper.GetUnitVector(decoyStartWndPoint, decoyEndWndPoint);
-                            while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, decoyEndWndPoint), unitVector) < 1)
-                            {
-                                nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
-
-                                if (double.IsInfinity(nowWndPoint.X) || double.IsInfinity(nowWndPoint.Y))
-                                {
-                                    break;
-                                }
-
-                                c_runcanvas.Dispatcher.Invoke(() =>
-                                {
-                                    if (c_runcanvas.Children.Contains(missileImg))
-                                    {
-                                        c_runcanvas.Children.Remove(missileImg);
-                                    }
-                                    Canvas.SetLeft(missileImg, nowWndPoint.X);
-                                    Canvas.SetTop(missileImg, nowWndPoint.Y);
-                                    c_runcanvas.Children.Add(missileImg);
-                                });
-
-                                Thread.Sleep(animationFreshTime);
-                            }
-                            decoyStartWndPoint = nowWndPoint;
-                            c_runcanvas.Dispatcher.Invoke(() =>
-                            {
-                                if (c_runcanvas.Children.Contains(missileImg))
-                                {
-                                    c_runcanvas.Children.Remove(missileImg);
-                                }
-                            });
-
-                            nowWndPoint = GetWndPoint(GetMapPoint(nowWndPoint, ImgType.Missile), ImgType.MissileEffect);
-                            c_runcanvas.Dispatcher.Invoke(() =>
-                            {
-                                Canvas.SetLeft(missileEffectImg, decoyEndWndPoint.X);
-                                Canvas.SetTop(missileEffectImg, decoyEndWndPoint.Y);
-                                c_runcanvas.Children.Add(missileEffectImg);
-                            });
-                            Thread.Sleep(effectLifeSpan * 1000);
-                            c_runcanvas.Dispatcher.Invoke(() =>
-                            {
-                                if (c_runcanvas.Children.Contains(missileEffectImg))
-                                {
-                                    c_runcanvas.Children.Remove(missileEffectImg);
-                                }
-                            });
-                        });
-                        throwThread.Start();
-                        ThreadHelper.AddThread(throwThread);
-                    }
-                }
-                else if (currentEvent.Item2 is FireEventArgs)
-                {
-                    if (currentEvent.Item3 == "FireNadeWithOwnerStarted")
-                    {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
-                        {
-                            continue;
-                        }
-
-                        Character character = CharacterHelper.GetCharacter(characterNumber);
-
-                        Player player = (currentEvent.Item2 as FireEventArgs).ThrownBy;
-
-                        //double waitTime = demoParser.CurrentTime - lastActionTime;
-                        //lastActionTime = demoParser.CurrentTime;
-
-                        double costTime = 0;
-                        Point fireStartMapPoint = DemoPointToMapPoint(player.Position, demoParser.Map);
-                        Point fireEndMapPoint = new Point();
-
-                        for (int n = i + 1; n < eventList.Count(); ++n)
-                        {
-                            if (eventList[n].Item1 == null)
-                            {
-                                continue;
-                            }
-                            if ((eventList[n].Item1.CTScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CTScore + currentEvent.Item1.TScore))
-                            {
-                                break;
-                            }
-                            if (eventList[n].Item3 == "FireNadeEnded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
-                            {
-                                usedMissileList.Add(n);
-                                if (tickTime == -1)
-                                {
-                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 5;
-                                }
-                                else
-                                {
-                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 5;
-                                }
-                                fireEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FireEventArgs).Position, demoParser.Map);
-                                break;
-                            }
-                        }
-
-                        if (fireEndMapPoint.X == 0 && fireEndMapPoint.Y == 0)
-                        {
-                            continue;
-                        }
-
-                        Point fireStartWndPoint = GetWndPoint(fireStartMapPoint, ImgType.Missile);
-                        Point fireEndWndPoint = GetWndPoint(fireEndMapPoint, ImgType.Missile);
-
-                        double pixelPerFresh = VectorHelper.GetDistance(fireStartWndPoint, fireEndWndPoint) / ((1000 / GlobalDictionary.animationFreshTime) * costTime);
+                //        double pixelPerFresh = VectorHelper.GetDistance(decoyStartWndPoint, decoyEndWndPoint) / ((1000 / GlobalDictionary.animationFreshTime) * costTime);
 
 
 
-                        List<Character> characters = CharacterHelper.GetCharacters();
+                //        List<Character> characters = CharacterHelper.GetCharacters();
 
-                        Image missileImg = null;
-                        Image missileEffectImg = null;
-                        int effectLifeSpan = 0;
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            missileImg = new Image();
-                            missileEffectImg = new Image();
-                            if (character.IsT)
-                            {
-                                missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.molotovPath));
-                                missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.fireEffectPath));
-                            }
-                            else
-                            {
-                                missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.incgrenadePath));
-                                missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.fireEffectPath));
-                            }
-                            effectLifeSpan = GlobalDictionary.firebombLifespan;
-                            missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
-                            missileImg.Height = GlobalDictionary.MissileWidthAndHeight;
+                //        Image missileImg = null;
+                //        Image missileEffectImg = null;
+                //        int effectLifeSpan = 0;
+                //        this.Dispatcher.Invoke(() =>
+                //        {
+                //            missileImg = new Image();
+                //            missileEffectImg = new Image();
+                //            missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.decoyPath));
+                //            effectLifeSpan = GlobalDictionary.smokeLifespan;
+                //            missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
+                //            missileImg.Height = GlobalDictionary.MissileWidthAndHeight;
 
-                            if (missileEffectImg != null)
-                            {
-                                missileEffectImg.Opacity = 0.85;
-                                missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
-                                missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
-                            }
-                        });
+                //            if (missileEffectImg != null)
+                //            {
+                //                missileEffectImg.Opacity = 0.85;
+                //                missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
+                //                missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
+                //            }
+                //        });
 
 
-                        //Thread.Sleep((int)(waitTime * 1000));
-                        Thread throwThread = new Thread(() =>
-                        {
-                            Point nowWndPoint = fireStartWndPoint;
-                            Point unitVector = VectorHelper.GetUnitVector(fireStartWndPoint, fireEndWndPoint);
-                            while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, fireEndWndPoint), unitVector) < 1)
-                            {
-                                nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
+                //        //Thread.Sleep((int)(waitTime * 1000));
+                //        Thread throwThread = new Thread(() =>
+                //        {
+                //            Point nowWndPoint = decoyStartWndPoint;
+                //            Point unitVector = VectorHelper.GetUnitVector(decoyStartWndPoint, decoyEndWndPoint);
+                //            while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, decoyEndWndPoint), unitVector) < 1)
+                //            {
+                //                nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
 
-                                if (double.IsInfinity(nowWndPoint.X) || double.IsInfinity(nowWndPoint.Y))
-                                {
-                                    break;
-                                }
+                //                if (double.IsInfinity(nowWndPoint.X) || double.IsInfinity(nowWndPoint.Y))
+                //                {
+                //                    break;
+                //                }
 
-                                c_runcanvas.Dispatcher.Invoke(() =>
-                                {
-                                    if (c_runcanvas.Children.Contains(missileImg))
-                                    {
-                                        c_runcanvas.Children.Remove(missileImg);
-                                    }
-                                    Canvas.SetLeft(missileImg, nowWndPoint.X);
-                                    Canvas.SetTop(missileImg, nowWndPoint.Y);
-                                    c_runcanvas.Children.Add(missileImg);
-                                });
+                //                c_runcanvas.Dispatcher.Invoke(() =>
+                //                {
+                //                    if (c_runcanvas.Children.Contains(missileImg))
+                //                    {
+                //                        c_runcanvas.Children.Remove(missileImg);
+                //                    }
+                //                    Canvas.SetLeft(missileImg, nowWndPoint.X);
+                //                    Canvas.SetTop(missileImg, nowWndPoint.Y);
+                //                    c_runcanvas.Children.Add(missileImg);
+                //                });
 
-                                Thread.Sleep(animationFreshTime);
-                            }
-                            fireStartWndPoint = nowWndPoint;
-                            c_runcanvas.Dispatcher.Invoke(() =>
-                            {
-                                if (c_runcanvas.Children.Contains(missileImg))
-                                {
-                                    c_runcanvas.Children.Remove(missileImg);
-                                }
-                            });
+                //                Thread.Sleep(animationFreshTime);
+                //            }
+                //            decoyStartWndPoint = nowWndPoint;
+                //            c_runcanvas.Dispatcher.Invoke(() =>
+                //            {
+                //                if (c_runcanvas.Children.Contains(missileImg))
+                //                {
+                //                    c_runcanvas.Children.Remove(missileImg);
+                //                }
+                //            });
 
-                            nowWndPoint = GetWndPoint(GetMapPoint(nowWndPoint, ImgType.Missile), ImgType.MissileEffect);
-                            c_runcanvas.Dispatcher.Invoke(() =>
-                            {
-                                Canvas.SetLeft(missileEffectImg, fireEndWndPoint.X);
-                                Canvas.SetTop(missileEffectImg, fireEndWndPoint.Y);
-                                c_runcanvas.Children.Add(missileEffectImg);
-                            });
-                            Thread.Sleep(effectLifeSpan * 1000);
-                            c_runcanvas.Dispatcher.Invoke(() =>
-                            {
-                                if (c_runcanvas.Children.Contains(missileEffectImg))
-                                {
-                                    c_runcanvas.Children.Remove(missileEffectImg);
-                                }
-                            });
-                        });
-                        throwThread.Start();
-                        ThreadHelper.AddThread(throwThread);
-                    }
-                }
+                //            nowWndPoint = GetWndPoint(GetMapPoint(nowWndPoint, ImgType.Missile), ImgType.MissileEffect);
+                //            c_runcanvas.Dispatcher.Invoke(() =>
+                //            {
+                //                Canvas.SetLeft(missileEffectImg, decoyEndWndPoint.X);
+                //                Canvas.SetTop(missileEffectImg, decoyEndWndPoint.Y);
+                //                c_runcanvas.Children.Add(missileEffectImg);
+                //            });
+                //            Thread.Sleep(effectLifeSpan * 1000);
+                //            c_runcanvas.Dispatcher.Invoke(() =>
+                //            {
+                //                if (c_runcanvas.Children.Contains(missileEffectImg))
+                //                {
+                //                    c_runcanvas.Children.Remove(missileEffectImg);
+                //                }
+                //            });
+                //        });
+                //        throwThread.Start();
+                //        ThreadHelper.AddThread(throwThread);
+                //    }
+                //}
+                //else if (currentEvent.Item2 is FireEventArgs)
+                //{
+                //    if (currentEvent.Item3 == "FireNadeWithOwnerStarted")
+                //    {
+                //        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber || !isFreezetimeEnded)
+                //        {
+                //            continue;
+                //        }
+
+                //        Character character = CharacterHelper.GetCharacter(characterNumber);
+
+                //        Player player = (currentEvent.Item2 as FireEventArgs).ThrownBy;
+
+                //        //double waitTime = demoParser.CurrentTime - lastActionTime;
+                //        //lastActionTime = demoParser.CurrentTime;
+
+                //        double costTime = 0;
+                //        Point fireStartMapPoint = DemoPointToMapPoint(player.Position, currentInfo.Map);
+                //        Point fireEndMapPoint = new Point();
+
+                //        for (int n = i + 1; n < eventList.Count(); ++n)
+                //        {
+                //            if (eventList[n].Item1 == null)
+                //            {
+                //                continue;
+                //            }
+                //            if ((eventList[n].Item1.CtScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CtScore + currentEvent.Item1.TScore))
+                //            {
+                //                break;
+                //            }
+                //            if (eventList[n].Item3 == "FireNadeEnded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
+                //            {
+                //                usedMissileList.Add(n);
+                //                if (tickTime == -1)
+                //                {
+                //                    costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime) / 5;
+                //                }
+                //                else
+                //                {
+                //                    costTime = tickTime * (eventList[n].Item1.CurrentTick - currentInfo.CurrentTick) / 5;
+                //                }
+                //                fireEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FireEventArgs).Position, currentInfo.Map);
+                //                break;
+                //            }
+                //        }
+
+                //        if (fireEndMapPoint.X == 0 && fireEndMapPoint.Y == 0)
+                //        {
+                //            continue;
+                //        }
+
+                //        Point fireStartWndPoint = GetWndPoint(fireStartMapPoint, ImgType.Missile);
+                //        Point fireEndWndPoint = GetWndPoint(fireEndMapPoint, ImgType.Missile);
+
+                //        double pixelPerFresh = VectorHelper.GetDistance(fireStartWndPoint, fireEndWndPoint) / ((1000 / GlobalDictionary.animationFreshTime) * costTime);
+
+
+
+                //        List<Character> characters = CharacterHelper.GetCharacters();
+
+                //        Image missileImg = null;
+                //        Image missileEffectImg = null;
+                //        int effectLifeSpan = 0;
+                //        this.Dispatcher.Invoke(() =>
+                //        {
+                //            missileImg = new Image();
+                //            missileEffectImg = new Image();
+                //            if (character.IsT)
+                //            {
+                //                missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.molotovPath));
+                //                missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.fireEffectPath));
+                //            }
+                //            else
+                //            {
+                //                missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.incgrenadePath));
+                //                missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.fireEffectPath));
+                //            }
+                //            effectLifeSpan = GlobalDictionary.firebombLifespan;
+                //            missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
+                //            missileImg.Height = GlobalDictionary.MissileWidthAndHeight;
+
+                //            if (missileEffectImg != null)
+                //            {
+                //                missileEffectImg.Opacity = 0.85;
+                //                missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
+                //                missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
+                //            }
+                //        });
+
+
+                //        //Thread.Sleep((int)(waitTime * 1000));
+                //        Thread throwThread = new Thread(() =>
+                //        {
+                //            Point nowWndPoint = fireStartWndPoint;
+                //            Point unitVector = VectorHelper.GetUnitVector(fireStartWndPoint, fireEndWndPoint);
+                //            while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, fireEndWndPoint), unitVector) < 1)
+                //            {
+                //                nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
+
+                //                if (double.IsInfinity(nowWndPoint.X) || double.IsInfinity(nowWndPoint.Y))
+                //                {
+                //                    break;
+                //                }
+
+                //                c_runcanvas.Dispatcher.Invoke(() =>
+                //                {
+                //                    if (c_runcanvas.Children.Contains(missileImg))
+                //                    {
+                //                        c_runcanvas.Children.Remove(missileImg);
+                //                    }
+                //                    Canvas.SetLeft(missileImg, nowWndPoint.X);
+                //                    Canvas.SetTop(missileImg, nowWndPoint.Y);
+                //                    c_runcanvas.Children.Add(missileImg);
+                //                });
+
+                //                Thread.Sleep(animationFreshTime);
+                //            }
+                //            fireStartWndPoint = nowWndPoint;
+                //            c_runcanvas.Dispatcher.Invoke(() =>
+                //            {
+                //                if (c_runcanvas.Children.Contains(missileImg))
+                //                {
+                //                    c_runcanvas.Children.Remove(missileImg);
+                //                }
+                //            });
+
+                //            nowWndPoint = GetWndPoint(GetMapPoint(nowWndPoint, ImgType.Missile), ImgType.MissileEffect);
+                //            c_runcanvas.Dispatcher.Invoke(() =>
+                //            {
+                //                Canvas.SetLeft(missileEffectImg, fireEndWndPoint.X);
+                //                Canvas.SetTop(missileEffectImg, fireEndWndPoint.Y);
+                //                c_runcanvas.Children.Add(missileEffectImg);
+                //            });
+                //            Thread.Sleep(effectLifeSpan * 1000);
+                //            c_runcanvas.Dispatcher.Invoke(() =>
+                //            {
+                //                if (c_runcanvas.Children.Contains(missileEffectImg))
+                //                {
+                //                    c_runcanvas.Children.Remove(missileEffectImg);
+                //                }
+                //            });
+                //        });
+                //        throwThread.Start();
+                //        ThreadHelper.AddThread(throwThread);
+                //    }
+                //}
                 else if (currentEvent.Item2 is BombEventArgs)
                 {
                     if (currentEvent.Item3 == "BombBeginPlant")
                     {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
+                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber || !isFreezetimeEnded)
                         {
                             continue;
                         }
@@ -3154,325 +3284,523 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "BombBeginDefuse")
                     {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
+                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber || !isFreezetimeEnded)
                         {
                             continue;
                         }
                     }
                 }
-                else if (currentEvent.Item2 is SmokeEventArgs)
-                {
-                    if (currentEvent.Item3 == "SmokeNadeStarted")
-                    {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
-                        {
-                            continue;
-                        }
-                        Character character = CharacterHelper.GetCharacter(characterNumber);
+                //else if (currentEvent.Item2 is SmokeEventArgs)
+                //{
+                //    if (currentEvent.Item3 == "SmokeNadeStarted")
+                //    {
+                //        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber || !isFreezetimeEnded)
+                //        {
+                //            continue;
+                //        }
+                //        Character character = CharacterHelper.GetCharacter(characterNumber);
 
-                        Player player = (currentEvent.Item2 as SmokeEventArgs).ThrownBy;
+                //        Player player = (currentEvent.Item2 as SmokeEventArgs).ThrownBy;
 
-                        //double waitTime = demoParser.CurrentTime - lastActionTime;
-                        //lastActionTime = demoParser.CurrentTime;
+                //        //double waitTime = demoParser.CurrentTime - lastActionTime;
+                //        //lastActionTime = demoParser.CurrentTime;
 
-                        double costTime = 0;
-                        Point smokeStartMapPoint = DemoPointToMapPoint(player.Position, demoParser.Map);
-                        Point smokeEndMapPoint = new Point();
+                //        double costTime = 0;
+                //        Point smokeStartMapPoint = DemoPointToMapPoint(player.Position, currentInfo.Map);
+                //        Point smokeEndMapPoint = new Point();
 
-                        for (int n = i + 1; n < eventList.Count(); ++n)
-                        {
-                            if (eventList[n].Item1 == null)
-                            {
-                                continue;
-                            }
-                            if ((eventList[n].Item1.CTScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CTScore + currentEvent.Item1.TScore))
-                            {
-                                break;
-                            }
-                            if (eventList[n].Item3 == "SmokeNadeEnded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
-                            {
-                                usedMissileList.Add(n);
-                                if (tickTime == -1)
-                                {
-                                    costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 13;
-                                }
-                                else
-                                {
-                                    costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 13;
-                                }
-                                smokeEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as SmokeEventArgs).Position, demoParser.Map);
-                                break;
-                            }
-                        }
+                //        for (int n = i + 1; n < eventList.Count(); ++n)
+                //        {
+                //            if (eventList[n].Item1 == null)
+                //            {
+                //                continue;
+                //            }
+                //            if ((eventList[n].Item1.CtScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CtScore + currentEvent.Item1.TScore))
+                //            {
+                //                break;
+                //            }
+                //            if (eventList[n].Item3 == "SmokeNadeEnded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
+                //            {
+                //                usedMissileList.Add(n);
+                //                if (tickTime == -1)
+                //                {
+                //                    costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime)/ 10;
+                //                }
+                //                else
+                //                {
+                //                    costTime = tickTime * (eventList[n].Item1.CurrentTick - currentInfo.CurrentTick)/ 10;
+                //                }
+                //                smokeEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as SmokeEventArgs).Position, currentInfo.Map);
+                //                break;
+                //            }
+                //        }
 
-                        if (smokeEndMapPoint.X == 0 && smokeEndMapPoint.Y == 0)
-                        {
-                            continue;
-                        }
+                //        if (smokeEndMapPoint.X == 0 && smokeEndMapPoint.Y == 0)
+                //        {
+                //            continue;
+                //        }
 
-                        Point smokeStartWndPoint = GetWndPoint(smokeStartMapPoint, ImgType.Missile);
-                        Point smokeEndWndPoint = GetWndPoint(smokeEndMapPoint, ImgType.Missile);
+                //        Point smokeStartWndPoint = GetWndPoint(smokeStartMapPoint, ImgType.Missile);
+                //        Point smokeEndWndPoint = GetWndPoint(smokeEndMapPoint, ImgType.Missile);
 
-                        double pixelPerFresh = VectorHelper.GetDistance(smokeStartWndPoint, smokeEndWndPoint) / ((1000 / GlobalDictionary.animationFreshTime) * costTime);
-
-
-
-                        List<Character> characters = CharacterHelper.GetCharacters();
-
-                        Image missileImg = null;
-                        Image missileEffectImg = null;
-                        int effectLifeSpan = 0;
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            missileImg = new Image();
-                            missileEffectImg = new Image();
-                            missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.smokePath));
-                            missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.smokeEffectPath));
-                            effectLifeSpan = GlobalDictionary.smokeLifespan;
-                            missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
-                            missileImg.Height = GlobalDictionary.MissileWidthAndHeight;
-
-                            if (missileEffectImg != null)
-                            {
-                                missileEffectImg.Opacity = 0.85;
-                                missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
-                                missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
-                            }
-                        });
+                //        double pixelPerFresh = VectorHelper.GetDistance(smokeStartWndPoint, smokeEndWndPoint) / ((1000 / GlobalDictionary.animationFreshTime) * costTime);
 
 
-                        //Thread.Sleep((int)(waitTime * 1000));
-                        Thread throwThread = new Thread(() =>
-                        {
-                            Point nowWndPoint = smokeStartWndPoint;
-                            Point unitVector = VectorHelper.GetUnitVector(smokeStartWndPoint, smokeEndWndPoint);
-                            while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, smokeEndWndPoint), unitVector) < 1)
-                            {
-                                nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
 
-                                if (double.IsInfinity(nowWndPoint.X) || double.IsInfinity(nowWndPoint.Y))
-                                {
-                                    break;
-                                }
+                //        List<Character> characters = CharacterHelper.GetCharacters();
 
-                                c_runcanvas.Dispatcher.Invoke(() =>
-                                {
-                                    if (c_runcanvas.Children.Contains(missileImg))
-                                    {
-                                        c_runcanvas.Children.Remove(missileImg);
-                                    }
-                                    Canvas.SetLeft(missileImg, nowWndPoint.X);
-                                    Canvas.SetTop(missileImg, nowWndPoint.Y);
-                                    c_runcanvas.Children.Add(missileImg);
-                                });
+                //        Image missileImg = null;
+                //        Image missileEffectImg = null;
+                //        int effectLifeSpan = 0;
+                //        this.Dispatcher.Invoke(() =>
+                //        {
+                //            missileImg = new Image();
+                //            missileEffectImg = new Image();
+                //            missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.smokePath));
+                //            missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.smokeEffectPath));
+                //            effectLifeSpan = GlobalDictionary.smokeLifespan;
+                //            missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
+                //            missileImg.Height = GlobalDictionary.MissileWidthAndHeight;
 
-                                Thread.Sleep(animationFreshTime);
-                            }
-                            smokeStartWndPoint = nowWndPoint;
-                            c_runcanvas.Dispatcher.Invoke(() =>
-                            {
-                                if (c_runcanvas.Children.Contains(missileImg))
-                                {
-                                    c_runcanvas.Children.Remove(missileImg);
-                                }
-                            });
+                //            if (missileEffectImg != null)
+                //            {
+                //                missileEffectImg.Opacity = 0.85;
+                //                missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
+                //                missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
+                //            }
+                //        });
 
-                            nowWndPoint = GetWndPoint(GetMapPoint(nowWndPoint, ImgType.Missile), ImgType.MissileEffect);
-                            c_runcanvas.Dispatcher.Invoke(() =>
-                            {
-                                Canvas.SetLeft(missileEffectImg, smokeEndWndPoint.X);
-                                Canvas.SetTop(missileEffectImg, smokeEndWndPoint.Y);
-                                c_runcanvas.Children.Add(missileEffectImg);
-                            });
-                            Thread.Sleep(effectLifeSpan * 1000);
-                            c_runcanvas.Dispatcher.Invoke(() =>
-                            {
-                                if (c_runcanvas.Children.Contains(missileEffectImg))
-                                {
-                                    c_runcanvas.Children.Remove(missileEffectImg);
-                                }
-                            });
-                        });
-                        throwThread.Start();
-                        ThreadHelper.AddThread(throwThread);
-                    }
-                }
+
+                //        //Thread.Sleep((int)(waitTime * 1000));
+                //        Thread throwThread = new Thread(() =>
+                //        {
+                //            Point nowWndPoint = smokeStartWndPoint;
+                //            Point unitVector = VectorHelper.GetUnitVector(smokeStartWndPoint, smokeEndWndPoint);
+                //            while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, smokeEndWndPoint), unitVector) < 1)
+                //            {
+                //                nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
+
+                //                if (double.IsInfinity(nowWndPoint.X) || double.IsInfinity(nowWndPoint.Y))
+                //                {
+                //                    break;
+                //                }
+
+                //                c_runcanvas.Dispatcher.Invoke(() =>
+                //                {
+                //                    if (c_runcanvas.Children.Contains(missileImg))
+                //                    {
+                //                        c_runcanvas.Children.Remove(missileImg);
+                //                    }
+                //                    Canvas.SetLeft(missileImg, nowWndPoint.X);
+                //                    Canvas.SetTop(missileImg, nowWndPoint.Y);
+                //                    c_runcanvas.Children.Add(missileImg);
+                //                });
+
+                //                Thread.Sleep(animationFreshTime);
+                //            }
+                //            smokeStartWndPoint = nowWndPoint;
+                //            c_runcanvas.Dispatcher.Invoke(() =>
+                //            {
+                //                if (c_runcanvas.Children.Contains(missileImg))
+                //                {
+                //                    c_runcanvas.Children.Remove(missileImg);
+                //                }
+                //            });
+
+                //            nowWndPoint = GetWndPoint(GetMapPoint(nowWndPoint, ImgType.Missile), ImgType.MissileEffect);
+                //            c_runcanvas.Dispatcher.Invoke(() =>
+                //            {
+                //                Canvas.SetLeft(missileEffectImg, smokeEndWndPoint.X);
+                //                Canvas.SetTop(missileEffectImg, smokeEndWndPoint.Y);
+                //                c_runcanvas.Children.Add(missileEffectImg);
+                //            });
+                //            Thread.Sleep(effectLifeSpan * 1000);
+                //            c_runcanvas.Dispatcher.Invoke(() =>
+                //            {
+                //                if (c_runcanvas.Children.Contains(missileEffectImg))
+                //                {
+                //                    c_runcanvas.Children.Remove(missileEffectImg);
+                //                }
+                //            });
+                //        });
+                //        throwThread.Start();
+                //        ThreadHelper.AddThread(throwThread);
+                //    }
+                //}
                 else if (currentEvent.Item2 is WeaponFiredEventArgs)
                 {
                     if (currentEvent.Item3 == "WeaponFired")
                     {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
+                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber || !isFreezetimeEnded)
                         {
                             continue;
                         }
 
-                        if ((currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Knife ||
-                            (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Molotov ||
-                            (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Incendiary ||
-                            (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Smoke ||
-                            (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Flash ||
-                            (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.HE ||
-                            (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Decoy)
+                        if ((currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Flash ||
+                                (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.HE ||
+                                (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Smoke ||
+                                (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Molotov ||
+                                (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Incendiary ||
+                                (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Decoy)
                         {
-                            if ((currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Flash ||
-                                (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.HE)
+                            EquipmentElement weapon = (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon;
+                            Character characterThrow = CharacterHelper.GetCharacter(characterNumber);
+
+                            Player playerThrow = (currentEvent.Item2 as WeaponFiredEventArgs).Shooter;
+
+                            //Player player1 = null;
+                            //Player player2 = null;
+                            //for (int n = i - 100; n < i - 1; ++n)
+                            //{
+                            //    if (eventList[n].Item3 == "TickDone")
+                            //    {
+                            //        foreach (Player nextTickPlayer in eventList[n].Item1.Participants)
+                            //        {
+                            //            if (nextTickPlayer.SteamID == playerThrow.SteamID)
+                            //            {
+                            //                player1 = nextTickPlayer;
+                            //                break;
+                            //            }
+                            //        }
+                            //        break;
+                            //    }
+                            //}
+                            //for (int n = i + 100; n < eventList.Count(); ++n)
+                            //{
+                            //    if (eventList[n].Item3 == "TickDone")
+                            //    {
+                            //        foreach (Player nextTickPlayer in eventList[n].Item1.Participants)
+                            //        {
+                            //            if (nextTickPlayer.SteamID == playerThrow.SteamID)
+                            //            {
+                            //                player2 = nextTickPlayer;
+                            //                break;
+                            //            }
+                            //        }
+                            //        break;
+                            //    }
+                            //}
+                            //if (player1.Weapons.Count() == player2.Weapons.Count())
+                            //{
+                            //    continue;
+                            //}
+
+                            //double waitTime = demoParser.CurrentTime - lastActionTime;
+                            //lastActionTime = demoParser.CurrentTime;
+
+                            double effectTime = 0;
+                            double costTime = 0;
+                            Point missileStartMapPoint = DemoPointToMapPoint(playerThrow.Position, currentInfo.Map);
+                            Point missileEndMapPoint = new Point();
+
+                            for (int n = i + 1; n < eventList.Count(); ++n)
                             {
-                                if ((currentEvent.Item2 as WeaponFiredEventArgs).Weapon.AmmoInMagazine == -1)
+                                if (eventList[n].Item1 == null)
                                 {
                                     continue;
                                 }
-                                EquipmentElement weapon = (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon;
-                                Character characterThrow = CharacterHelper.GetCharacter(characterNumber);
-
-                                Player playerThrow = (currentEvent.Item2 as WeaponFiredEventArgs).Shooter;
-
-                                //double waitTime = demoParser.CurrentTime - lastActionTime;
-                                //lastActionTime = demoParser.CurrentTime;
-
-                                double costTime = 0;
-                                Point missileStartMapPoint = DemoPointToMapPoint(playerThrow.Position, demoParser.Map);
-                                Point missileEndMapPoint = new Point();
-
-                                for (int n = i + 1; n < eventList.Count(); ++n)
+                                if ((eventList[n].Item1.CtScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CtScore + currentEvent.Item1.TScore))
                                 {
-                                    if (eventList[n].Item1 == null)
-                                    {
-                                        continue;
-                                    }
-                                    if ((eventList[n].Item1.CTScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CTScore + currentEvent.Item1.TScore))
-                                    {
-                                        break;
-                                    }
-                                    if (weapon == EquipmentElement.HE && eventList[n].Item3 == "ExplosiveNadeExploded" && (eventList[n].Item2 as GrenadeEventArgs).NadeType == EquipmentElement.HE && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
-                                    {
-                                        usedMissileList.Add(n);
-                                        if (tickTime != -1)
-                                        {
-                                            costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 1;
-                                        }
-                                        else
-                                        {
-                                            costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 1;
-                                        }
-                                        missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as GrenadeEventArgs).Position, demoParser.Map);
-                                        break;
-                                    }
-                                    if (weapon == EquipmentElement.Flash && eventList[n].Item3 == "FlashNadeExploded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
-                                    {
-                                        usedMissileList.Add(n);
-                                        if (tickTime != -1)
-                                        {
-                                            costTime = tickTime * (eventList[n].Item1.CurrentTick - demoParser.CurrentTick) / 1;
-                                        }
-                                        else
-                                        {
-                                            costTime = (eventList[n].Item1.CurrentTime - demoParser.CurrentTime) / 1;
-                                        }
-                                        missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FlashEventArgs).Position, demoParser.Map);
-                                        break;
-                                    }
+                                    break;
                                 }
-
-                                if(missileEndMapPoint.X == 0 && missileEndMapPoint.Y == 0)
+                                if (usedMissileList.Contains(n))
                                 {
                                     continue;
                                 }
-
-                                Point missileStartWndPoint = GetWndPoint(missileStartMapPoint, ImgType.Missile);
-                                Point missileEndWndPoint = GetWndPoint(missileEndMapPoint, ImgType.Missile);
-
-                                double pixelPerFresh = VectorHelper.GetDistance(missileStartWndPoint, missileEndWndPoint) / ((1000 / GlobalDictionary.animationFreshTime) * costTime);
-
-
-
-                                List<Character> characters = CharacterHelper.GetCharacters();
-
-                                Image missileImg = null;
-                                Image missileEffectImg = null;
-                                int effectLifeSpan = 0;
-                                this.Dispatcher.Invoke(() =>
+                                if (eventList[n].Item4 != characterNumber)
                                 {
-                                    missileImg = new Image();
-                                    missileEffectImg = new Image();
-                                    if (weapon == EquipmentElement.HE)
-                                    {
-                                        missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.hegrenadePath));
-                                    }
-                                    else if (weapon == EquipmentElement.Flash)
-                                    {
-                                        missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.flashbangPath));
-                                        missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.flashEffectPath));
-                                        effectLifeSpan = GlobalDictionary.flashbangLifespan;
-                                    }
-                                    
-                                    missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
-                                    missileImg.Height = GlobalDictionary.MissileWidthAndHeight;
-
-                                    if (missileEffectImg != null)
-                                    {
-                                        missileEffectImg.Opacity = 0.85;
-                                        missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
-                                        missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
-                                    }
-                                });
-
-
-                                //Thread.Sleep((int)(waitTime * 1000));
-                                Thread throwThread = new Thread(() =>
+                                    continue;
+                                }
+                                if (weapon == EquipmentElement.HE && eventList[n].Item3 == "ExplosiveNadeExploded")
                                 {
-                                    Point nowWndPoint = missileStartWndPoint;
-                                    Point unitVector = VectorHelper.GetUnitVector(missileStartWndPoint, missileEndWndPoint);
-                                    while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, missileEndWndPoint), unitVector) < 1)
+                                    usedMissileList.Add(n);
+                                    if (tickTime == -1)
                                     {
-                                        nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
+                                        costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime);
+                                    }
+                                    else
+                                    {
+                                        costTime = tickTime * (eventList[n].Item1.CurrentTick - currentInfo.CurrentTick);
+                                    }
+                                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as GrenadeEventArgs).Position, currentInfo.Map);
+                                    break;
+                                }
+                                else if (weapon == EquipmentElement.Flash && eventList[n].Item3 == "FlashNadeExploded")
+                                {
+                                    usedMissileList.Add(n);
+                                    if (tickTime == -1)
+                                    {
+                                        costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime);
+                                    }
+                                    else
+                                    {
+                                        costTime = tickTime * (eventList[n].Item1.CurrentTick - currentInfo.CurrentTick);
+                                    }
+                                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FlashEventArgs).Position, currentInfo.Map);
+                                    break;
+                                }
+                                else if (weapon == EquipmentElement.Smoke && eventList[n].Item3 == "SmokeNadeStarted")
+                                {
+                                    usedMissileList.Add(n);
+                                    if (tickTime == -1)
+                                    {
+                                        costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime);
+                                    }
+                                    else
+                                    {
+                                        costTime = tickTime * (eventList[n].Item1.CurrentTick - currentInfo.CurrentTick);
+                                    }
+                                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as SmokeEventArgs).Position, currentInfo.Map);
 
-                                        if (double.IsInfinity(nowWndPoint.X) || double.IsInfinity(nowWndPoint.Y))
+                                    for (int m = n + 1; m < eventList.Count(); ++m)
+                                    {
+                                        if (eventList[m].Item1 == null)
+                                        {
+                                            continue;
+                                        }
+                                        if ((eventList[m].Item1.CtScore + eventList[m].Item1.TScore) != (currentEvent.Item1.CtScore + currentEvent.Item1.TScore))
                                         {
                                             break;
                                         }
-
-                                        c_runcanvas.Dispatcher.Invoke(() =>
+                                        if (usedMissileList.Contains(m))
                                         {
-                                            if (c_runcanvas.Children.Contains(missileImg))
-                                            {
-                                                c_runcanvas.Children.Remove(missileImg);
-                                            }
-                                            Canvas.SetLeft(missileImg, nowWndPoint.X);
-                                            Canvas.SetTop(missileImg, nowWndPoint.Y);
-                                            c_runcanvas.Children.Add(missileImg);
-                                        });
+                                            continue;
+                                        }
+                                        if (eventList[m].Item4 != characterNumber)
+                                        {
+                                            continue;
+                                        }
 
-                                        Thread.Sleep(animationFreshTime);
+                                        if (eventList[m].Item3 == "SmokeNadeEnded")
+                                        {
+                                            if (tickTime == -1)
+                                            {
+                                                effectTime = eventList[m].Item1.CurrentTime - eventList[n].Item1.CurrentTime;
+                                            }
+                                            else
+                                            {
+                                                effectTime = tickTime * (eventList[m].Item1.CurrentTick - eventList[n].Item1.CurrentTick);
+                                            }
+                                        }
                                     }
-                                    missileStartWndPoint = nowWndPoint;
+
+                                    break;
+                                }
+                                else if ((weapon == EquipmentElement.Incendiary || weapon == EquipmentElement.Molotov) && eventList[n].Item3 == "FireNadeWithOwnerStarted")
+                                {
+                                    usedMissileList.Add(n);
+                                    if (tickTime == -1)
+                                    {
+                                        costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime);
+                                    }
+                                    else
+                                    {
+                                        costTime = tickTime * (eventList[n].Item1.CurrentTick - currentInfo.CurrentTick);
+                                    }
+                                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FireEventArgs).Position, currentInfo.Map);
+
+                                    for (int m = n + 1; m < eventList.Count(); ++m)
+                                    {
+                                        if (eventList[m].Item1 == null)
+                                        {
+                                            continue;
+                                        }
+                                        if ((eventList[m].Item1.CtScore + eventList[m].Item1.TScore) != (currentEvent.Item1.CtScore + currentEvent.Item1.TScore))
+                                        {
+                                            break;
+                                        }
+                                        if (usedMissileList.Contains(m))
+                                        {
+                                            continue;
+                                        }
+                                        if (eventList[m].Item4 != characterNumber)
+                                        {
+                                            continue;
+                                        }
+
+                                        if (eventList[m].Item3 == "FireNadeEnded")
+                                        {
+                                            if (tickTime == -1)
+                                            {
+                                                effectTime = eventList[m].Item1.CurrentTime - eventList[n].Item1.CurrentTime;
+                                            }
+                                            else
+                                            {
+                                                effectTime = tickTime * (eventList[m].Item1.CurrentTick - eventList[n].Item1.CurrentTick);
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                                else if (weapon == EquipmentElement.Decoy && eventList[n].Item3 == "DecoyNadeStarted")
+                                {
+                                    usedMissileList.Add(n);
+                                    if (tickTime == -1)
+                                    {
+                                        costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime);
+                                    }
+                                    else
+                                    {
+                                        costTime = tickTime * (eventList[n].Item1.CurrentTick - currentInfo.CurrentTick);
+                                    }
+                                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as DecoyEventArgs).Position, currentInfo.Map);
+
+                                    for (int m = n + 1; m < eventList.Count(); ++m)
+                                    {
+                                        if (eventList[m].Item1 == null)
+                                        {
+                                            continue;
+                                        }
+                                        if ((eventList[m].Item1.CtScore + eventList[m].Item1.TScore) != (currentEvent.Item1.CtScore + currentEvent.Item1.TScore))
+                                        {
+                                            break;
+                                        }
+                                        if (usedMissileList.Contains(m))
+                                        {
+                                            continue;
+                                        }
+                                        if (eventList[m].Item4 != characterNumber)
+                                        {
+                                            continue;
+                                        }
+
+                                        if (eventList[m].Item3 == "DecoyNadeEnded")
+                                        {
+                                            if (tickTime == -1)
+                                            {
+                                                effectTime = eventList[m].Item1.CurrentTime - eventList[n].Item1.CurrentTime;
+                                            }
+                                            else
+                                            {
+                                                effectTime = tickTime * (eventList[m].Item1.CurrentTick - eventList[n].Item1.CurrentTick);
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+
+                            if (missileEndMapPoint.X == 0 && missileEndMapPoint.Y == 0)
+                            {
+                                continue;
+                            }
+
+                            Point missileStartWndPoint = GetWndPoint(missileStartMapPoint, ImgType.Missile);
+                            Point missileEndWndPoint = GetWndPoint(missileEndMapPoint, ImgType.Missile);
+
+                            double pixelPerFresh = VectorHelper.GetDistance(missileStartWndPoint, missileEndWndPoint) / ((1000 / GlobalDictionary.animationFreshTime) * costTime);
+
+
+
+                            List<Character> characters = CharacterHelper.GetCharacters();
+
+                            Image missileImg = null;
+                            Image missileEffectImg = null;
+                            double effectLifeSpan = 0;
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                missileImg = new Image();
+                                missileEffectImg = new Image();
+                                if (weapon == EquipmentElement.HE)
+                                {
+                                    missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.hegrenadePath));
+                                }
+                                else if (weapon == EquipmentElement.Flash)
+                                {
+                                    missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.flashbangPath));
+                                    missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.flashEffectPath));
+                                    effectLifeSpan = effectTime == 0 ? GlobalDictionary.flashbangLifespan : effectTime;
+                                }
+                                else if (weapon == EquipmentElement.Smoke)
+                                {
+                                    missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.smokePath));
+                                    missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.smokeEffectPath));
+                                    effectLifeSpan = effectTime == 0 ? GlobalDictionary.smokeLifespan : effectTime;
+                                }
+                                else if (weapon == EquipmentElement.Incendiary || weapon == EquipmentElement.Molotov)
+                                {
+                                    if (weapon == EquipmentElement.Incendiary)
+                                    {
+                                        missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.incgrenadePath));
+                                    }
+                                    else
+                                    {
+                                        missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.molotovPath));
+                                    }
+                                    missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.fireEffectPath));
+                                    effectLifeSpan = effectTime == 0 ? GlobalDictionary.firebombLifespan : effectTime;
+                                }
+                                else if (weapon == EquipmentElement.Decoy)
+                                {
+                                    missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.decoyPath));
+                                }
+
+                                missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
+                                missileImg.Height = GlobalDictionary.MissileWidthAndHeight;
+
+                                if (missileEffectImg != null)
+                                {
+                                    missileEffectImg.Opacity = 0.85;
+                                    missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
+                                    missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
+                                }
+                            });
+
+
+                            //Thread.Sleep((int)(waitTime * 1000));
+                            Thread throwThread = new Thread(() =>
+                            {
+                                Point nowWndPoint = missileStartWndPoint;
+                                Point unitVector = VectorHelper.GetUnitVector(missileStartWndPoint, missileEndWndPoint);
+                                while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, missileEndWndPoint), unitVector) < 1)
+                                {
+                                    nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
+
+                                    if (double.IsInfinity(nowWndPoint.X) || double.IsInfinity(nowWndPoint.Y))
+                                    {
+                                        break;
+                                    }
+
                                     c_runcanvas.Dispatcher.Invoke(() =>
                                     {
                                         if (c_runcanvas.Children.Contains(missileImg))
                                         {
                                             c_runcanvas.Children.Remove(missileImg);
                                         }
+                                        Canvas.SetLeft(missileImg, nowWndPoint.X);
+                                        Canvas.SetTop(missileImg, nowWndPoint.Y);
+                                        c_runcanvas.Children.Add(missileImg);
                                     });
 
-                                    nowWndPoint = GetWndPoint(GetMapPoint(nowWndPoint, ImgType.Missile), ImgType.MissileEffect);
-                                    c_runcanvas.Dispatcher.Invoke(() =>
+                                    Thread.Sleep(animationFreshTime);
+                                }
+                                missileStartWndPoint = nowWndPoint;
+                                c_runcanvas.Dispatcher.Invoke(() =>
+                                {
+                                    if (c_runcanvas.Children.Contains(missileImg))
                                     {
-                                        Canvas.SetLeft(missileEffectImg, missileEndWndPoint.X);
-                                        Canvas.SetTop(missileEffectImg, missileEndWndPoint.Y);
-                                        c_runcanvas.Children.Add(missileEffectImg);
-                                    });
-                                    Thread.Sleep(effectLifeSpan * 1000);
-                                    c_runcanvas.Dispatcher.Invoke(() =>
-                                    {
-                                        if (c_runcanvas.Children.Contains(missileEffectImg))
-                                        {
-                                            c_runcanvas.Children.Remove(missileEffectImg);
-                                        }
-                                    });
+                                        c_runcanvas.Children.Remove(missileImg);
+                                    }
                                 });
-                                throwThread.Start();
-                                ThreadHelper.AddThread(throwThread);
-                            }
-                            continue;
+
+                                nowWndPoint = GetWndPoint(GetMapPoint(nowWndPoint, ImgType.Missile), ImgType.MissileEffect);
+                                c_runcanvas.Dispatcher.Invoke(() =>
+                                {
+                                    Canvas.SetLeft(missileEffectImg, missileEndWndPoint.X);
+                                    Canvas.SetTop(missileEffectImg, missileEndWndPoint.Y);
+                                    c_runcanvas.Children.Add(missileEffectImg);
+                                });
+                                Thread.Sleep((int)(effectLifeSpan * 1000));
+                                c_runcanvas.Dispatcher.Invoke(() =>
+                                {
+                                    if (c_runcanvas.Children.Contains(missileEffectImg))
+                                    {
+                                        c_runcanvas.Children.Remove(missileEffectImg);
+                                    }
+                                });
+                            });
+                            throwThread.Start();
+                            ThreadHelper.AddThread(throwThread);
                         }
 
                         Character character = CharacterHelper.GetCharacter(characterNumber);
@@ -3488,7 +3816,7 @@ namespace CSGOTacticSimulator
                             bulletLine.StrokeDashCap = PenLineCap.Triangle;
                             bulletLine.StrokeEndLineCap = PenLineCap.Triangle;
                             bulletLine.StrokeStartLineCap = PenLineCap.Square;
-                            Point fromWndPoint = GetWndPoint(DemoPointToMapPoint(player.Position, demoParser.Map), ImgType.Nothing);
+                            Point fromWndPoint = GetWndPoint(DemoPointToMapPoint(player.Position, currentInfo.Map), ImgType.Nothing);
                             WeaponFiredEventArgs weaponFiredEventArgs = currentEvent.Item2 as WeaponFiredEventArgs;
 
                             double tan = Math.Tan(player.ViewDirectionX * Math.PI / 180);
@@ -3512,7 +3840,7 @@ namespace CSGOTacticSimulator
 
                             direction = VectorHelper.GetUnitVector(new Point(0, 0), direction);
 
-                            Point toWndPoint = GetWndPoint(DemoPointToMapPoint(player.Position + new DemoInfo.Vector((float)(direction.X * 1000), (float)(direction.Y * 1000), 0), demoParser.Map), ImgType.Nothing);
+                            Point toWndPoint = GetWndPoint(DemoPointToMapPoint(player.Position + new DemoInfo.Vector((float)(direction.X * 1000), (float)(direction.Y * 1000), 0), currentInfo.Map), ImgType.Nothing);
                             bulletLine.X1 = fromWndPoint.X;
                             bulletLine.Y1 = fromWndPoint.Y;
                             bulletLine.X2 = toWndPoint.X;
@@ -3536,7 +3864,7 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "TickDone")
                     {
-                        if ((demoParser.TScore + demoParser.CTScore + 1) != roundNumber || !isFreezetimeEnded)
+                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber || !isFreezetimeEnded)
                         {
                             continue;
                         }
@@ -3564,6 +3892,10 @@ namespace CSGOTacticSimulator
                             }
 
                             Label label = null;
+                            if (!dic.ContainsKey(player.SteamID))
+                            {
+                                continue;
+                            }
                             Character character = CharacterHelper.GetCharacter(dic[player.SteamID]);
 
                             Point endMapPoint = new Point();
@@ -3602,7 +3934,7 @@ namespace CSGOTacticSimulator
                                     c_runcanvas.Children.Remove(character.OtherImg);
                                 }
 
-                                endMapPoint = DemoPointToMapPoint(player.Position, demoParser.Map);
+                                endMapPoint = DemoPointToMapPoint(player.Position, currentInfo.Map);
                                 endWndPoint = GetWndPoint(endMapPoint, ImgType.Character);
 
                                 character.CharacterImg.Tag = (nowTime - firstFreezetimeEndedTime) + "|" + (stopWatchThisRound.ElapsedMilliseconds / 1000.0 + offset / 1000);
