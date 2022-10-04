@@ -3709,7 +3709,7 @@ namespace CSGOTacticSimulator
                                 {
                                     missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.flashbangPath));
                                     missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.flashEffectPath));
-                                    effectLifeSpan = effectTime == 0 ? GlobalDictionary.flashbangLifespan : effectTime;
+                                    effectLifeSpan = GlobalDictionary.flashbangLifespan;
                                 }
                                 else if (weapon == EquipmentElement.Smoke)
                                 {
