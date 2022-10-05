@@ -142,6 +142,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Content Include="img\effect_he.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="infos\highlight.xshd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

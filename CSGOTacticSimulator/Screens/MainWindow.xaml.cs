@@ -3323,6 +3323,8 @@ namespace CSGOTacticSimulator
                                 if (weapon == EquipmentElement.HE)
                                 {
                                     missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.hegrenadePath));
+                                    missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.heEffectPath));
+                                    effectLifeSpan = GlobalDictionary.heLifespan;
                                 }
                                 else if (weapon == EquipmentElement.Flash)
                                 {
@@ -3352,6 +3354,8 @@ namespace CSGOTacticSimulator
                                 else if (weapon == EquipmentElement.Decoy)
                                 {
                                     missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.decoyPath));
+                                    missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.decoyPath));
+                                    effectLifeSpan = effectTime == 0 ? GlobalDictionary.decoyLifespan : effectTime;
                                 }
 
                                 missileImg.Width = GlobalDictionary.MissileWidthAndHeight;

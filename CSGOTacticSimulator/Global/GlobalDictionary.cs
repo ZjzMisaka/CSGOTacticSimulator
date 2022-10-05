@@ -169,6 +169,7 @@ namespace CSGOTacticSimulator.Global
         static public string flashbangPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "Flashbang")).Replace("/", "\\");
         static public string flashEffectPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "FlashEffect")).Replace("/", "\\");
         static public string hegrenadePath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "Hegrenade")).Replace("/", "\\");
+        static public string heEffectPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "HeEffect")).Replace("/", "\\");
         static public string smokePath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "Smoke")).Replace("/", "\\");
         static public string smokeEffectPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "SmokeEffect")).Replace("/", "\\");
         static public string friendlyAliveUpperPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "FriendlyAliveUpper")).Replace("/", "\\");
@@ -192,9 +193,11 @@ namespace CSGOTacticSimulator.Global
         static public ImageBrush saveBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.savePath)), Stretch = Stretch.Uniform };
         static public ImageBrush exitBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.exitPath)), Stretch = Stretch.Uniform };
 
+        static public int heLifespan = int.Parse(IniHelper.ReadIni("Missile", "HeLifespan"));
         static public int firebombLifespan = int.Parse(IniHelper.ReadIni("Missile", "FirebombLifespan"));
         static public int smokeLifespan = int.Parse(IniHelper.ReadIni("Missile", "SmokeLifespan"));
         static public int flashbangLifespan = int.Parse(IniHelper.ReadIni("Missile", "FlashbangLifespan"));
+        static public int decoyLifespan = int.Parse(IniHelper.ReadIni("Missile", "DecoyLifespan"));
 
         static public string[] mapCalibrationDatas = IniHelper.ReadIni("MapCalibration", "Data").Split('|');
 
