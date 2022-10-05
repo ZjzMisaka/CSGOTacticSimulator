@@ -2373,7 +2373,17 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                Dictionary<long, List<Equipment>> equipDic = new Dictionary<long, List<Equipment>>();
+                List<Equipment> equipList = new List<Equipment>();
+                foreach (Equipment weapon in parseE.Shooter.Weapons)
+                {
+                    for (int n = 1; n <= weapon.ReserveAmmo; ++n)
+                    {
+                        equipList.Add(new Equipment(weapon.OriginalString));
+                    }
+                }
+                equipDic[parseE.Shooter.SteamID] = equipList;
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants, equipDic);
                 parseE.Shooter = parseE.Shooter.Copy();
                 parseE.Weapon = new Equipment(parseE.Weapon.OriginalString);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "WeaponFired", dic[parseE.Shooter.SteamID]));
@@ -2526,11 +2536,25 @@ namespace CSGOTacticSimulator
                 //}
                 DemoParser nowParser = (parseSender as DemoParser);
                 List<Player> nowParticipants = new List<Player>();
+
+                Dictionary<long, List<Equipment>> equipDic = new Dictionary<long, List<Equipment>>();
+                
                 foreach (Player playingParticipant in nowParser.PlayingParticipants)
                 {
                     nowParticipants.Add(playingParticipant.Copy());
+
+                    List<Equipment> equipList = new List<Equipment>();
+                    foreach (Equipment weapon in playingParticipant.Weapons)
+                    {
+                        for (int n = 1; n <= weapon.ReserveAmmo; ++n)
+                        {
+                            equipList.Add(new Equipment(weapon.OriginalString));
+                        }
+                    }
+                    equipDic[playingParticipant.SteamID] = equipList;
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants, equipDic);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "TickDone", 0));
             };
             parser.PlayerKilled += (parseSender, parseE) =>
@@ -3026,45 +3050,29 @@ namespace CSGOTacticSimulator
 
                             Player playerThrow = (currentEvent.Item2 as WeaponFiredEventArgs).Shooter;
 
-                            //Player player1 = null;
-                            //Player player2 = null;
-                            //for (int n = i - 100; n < i - 1; ++n)
-                            //{
-                            //    if (eventList[n].Item3 == "TickDone")
-                            //    {
-                            //        foreach (Player nextTickPlayer in eventList[n].Item1.Participants)
-                            //        {
-                            //            if (nextTickPlayer.SteamID == playerThrow.SteamID)
-                            //            {
-                            //                player1 = nextTickPlayer;
-                            //                break;
-                            //            }
-                            //        }
-                            //        break;
-                            //    }
-                            //}
-                            //for (int n = i + 100; n < eventList.Count(); ++n)
-                            //{
-                            //    if (eventList[n].Item3 == "TickDone")
-                            //    {
-                            //        foreach (Player nextTickPlayer in eventList[n].Item1.Participants)
-                            //        {
-                            //            if (nextTickPlayer.SteamID == playerThrow.SteamID)
-                            //            {
-                            //                player2 = nextTickPlayer;
-                            //                break;
-                            //            }
-                            //        }
-                            //        break;
-                            //    }
-                            //}
-                            //if (player1.Weapons.Count() == player2.Weapons.Count())
-                            //{
-                            //    continue;
-                            //}
-
-                            //double waitTime = demoParser.CurrentTime - lastActionTime;
-                            //lastActionTime = demoParser.CurrentTime;
+                            // 判断取消投掷
+                            List<Equipment> equipList = currentInfo.equipDic[playerThrow.SteamID];
+                            List<Equipment> equipListNext = null;
+                            for (int n = i + 100; n < eventList.Count(); ++n)
+                            {
+                                if (eventList[n].Item1 == null)
+                                {
+                                    continue;
+                                }
+                                if ((eventList[n].Item1.CtScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CtScore + currentEvent.Item1.TScore))
+                                {
+                                    break;
+                                }
+                                if (eventList[n].Item3 == "TickDone")
+                                {
+                                    equipListNext = eventList[n].Item1.equipDic[playerThrow.SteamID];
+                                    break;
+                                }
+                            }
+                            if (equipList.Count() == equipListNext.Count())
+                            {
+                                continue;
+                            }
 
                             double effectTime = 0;
                             double costTime = 0;
