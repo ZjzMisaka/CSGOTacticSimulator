@@ -1,37 +1,30 @@
-﻿using System;
+﻿using CSGOTacticSimulator.Global;
+using CSGOTacticSimulator.Helper;
+using CSGOTacticSimulator.Model;
+using CustomizableMessageBox;
+using DemoInfo;
+using ICSharpCode.AvalonEdit.CodeCompletion;
+using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using ICSharpCode.AvalonEdit.Search;
+using Newtonsoft.Json;
+using Sdl.MultiSelectComboBox.Themes.Generic;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using CSGOTacticSimulator.Model;
-using CSGOTacticSimulator.Helper;
-using CSGOTacticSimulator.Global;
-using CustomizableMessageBox;
-using MessageBox = CustomizableMessageBox.MessageBox;
-using System.Threading;
-using ICSharpCode.AvalonEdit.Search;
 using System.Xml;
-using ICSharpCode.AvalonEdit.Highlighting.Xshd;
-using ICSharpCode.AvalonEdit.Highlighting;
-using ICSharpCode.AvalonEdit.CodeCompletion;
-using Path = System.IO.Path;
-using Sdl.MultiSelectComboBox.Themes.Generic;
-using System.Text.RegularExpressions;
-using DemoInfo;
-using System.Text;
-using Newtonsoft.Json;
-using System.Reflection;
-using System.Xml.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
-using System.Diagnostics;
 using static CustomizableMessageBox.MessageBox;
-using System.Collections;
+using MessageBox = CustomizableMessageBox.MessageBox;
+using Path = System.IO.Path;
 
 namespace CSGOTacticSimulator
 {
@@ -2404,7 +2397,7 @@ namespace CSGOTacticSimulator
 
                 //CharacterHelper.ClearCharacters();
 
-                foreach (Player player in demoParser.Participants)
+                foreach (Player player in demoParser.PlayingParticipants)
                 {
                     if (player.Team == Team.Spectate)
                     {
@@ -2680,6 +2673,8 @@ namespace CSGOTacticSimulator
             isForward = false;
             isBackward = false;
 
+            Dictionary<long, float> viewDirectionDic = null;
+
             bool isNeedRefreshPov = false;
             isNeedAutomaticGuidance = false;
 
@@ -2774,7 +2769,6 @@ namespace CSGOTacticSimulator
                         {
                             continue;
                         }
-
                     }
                 }
                 else if (currentEvent.Item2 is RoundEndedEventArgs)
@@ -2984,291 +2978,9 @@ namespace CSGOTacticSimulator
                 }
                 //else if (currentEvent.Item2 is DecoyEventArgs)
                 //{
-                //    if (currentEvent.Item3 == "DecoyNadeStarted")
-                //    {
-                //        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber || !isFreezetimeEnded)
-                //        {
-                //            continue;
-                //        }
-                //        Character character = CharacterHelper.GetCharacter(characterNumber);
-
-                //        Player player = (currentEvent.Item2 as DecoyEventArgs).ThrownBy;
-                //        //foreach (Player playerTemp in demoParser.Participants)
-                //        //{
-                //        //    if (playerTemp.SteamID == character.SteamId)
-                //        //    {
-                //        //        player = playerTemp;
-                //        //    }
-                //        //}
-                //        //double waitTime = demoParser.CurrentTime - lastActionTime;
-                //        //lastActionTime = demoParser.CurrentTime;
-
-                //        double costTime = 0;
-                //        Point decoyStartMapPoint = DemoPointToMapPoint(player.Position, currentInfo.Map);
-                //        Point decoyEndMapPoint = new Point();
-
-                //        for (int n = i + 1; n < eventList.Count(); ++n)
-                //        {
-                //            if (eventList[n].Item1 == null)
-                //            {
-                //                continue;
-                //            }
-                //            if ((eventList[n].Item1.CtScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CtScore + currentEvent.Item1.TScore))
-                //            {
-                //                break;
-                //            }
-                //            if (eventList[n].Item3 == "DecoyNadeEnded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
-                //            {
-                //                usedMissileList.Add(n);
-                //                if (tickTime == -1)
-                //                {
-                //                    costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime) / 5;
-                //                }
-                //                else
-                //                {
-                //                    costTime = tickTime * (eventList[n].Item1.CurrentTick - currentInfo.CurrentTick) / 5;
-                //                }
-                //                decoyEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as DecoyEventArgs).Position, currentInfo.Map);
-                //                break;
-                //            }
-                //        }
-
-                //        if (decoyEndMapPoint.X == 0 && decoyEndMapPoint.Y == 0)
-                //        {
-                //            continue;
-                //        }
-
-                //        Point decoyStartWndPoint = GetWndPoint(decoyStartMapPoint, ImgType.Missile);
-                //        Point decoyEndWndPoint = GetWndPoint(decoyEndMapPoint, ImgType.Missile);
-
-                //        double pixelPerFresh = VectorHelper.GetDistance(decoyStartWndPoint, decoyEndWndPoint) / ((1000 / GlobalDictionary.animationFreshTime) * costTime);
-
-
-
-                //        List<Character> characters = CharacterHelper.GetCharacters();
-
-                //        Image missileImg = null;
-                //        Image missileEffectImg = null;
-                //        int effectLifeSpan = 0;
-                //        this.Dispatcher.Invoke(() =>
-                //        {
-                //            missileImg = new Image();
-                //            missileEffectImg = new Image();
-                //            missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.decoyPath));
-                //            effectLifeSpan = GlobalDictionary.smokeLifespan;
-                //            missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
-                //            missileImg.Height = GlobalDictionary.MissileWidthAndHeight;
-
-                //            if (missileEffectImg != null)
-                //            {
-                //                missileEffectImg.Opacity = 0.85;
-                //                missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
-                //                missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
-                //            }
-                //        });
-
-
-                //        //Thread.Sleep((int)(waitTime * 1000));
-                //        Thread throwThread = new Thread(() =>
-                //        {
-                //            Point nowWndPoint = decoyStartWndPoint;
-                //            Point unitVector = VectorHelper.GetUnitVector(decoyStartWndPoint, decoyEndWndPoint);
-                //            while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, decoyEndWndPoint), unitVector) < 1)
-                //            {
-                //                nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
-
-                //                if (double.IsInfinity(nowWndPoint.X) || double.IsInfinity(nowWndPoint.Y))
-                //                {
-                //                    break;
-                //                }
-
-                //                c_runcanvas.Dispatcher.Invoke(() =>
-                //                {
-                //                    if (c_runcanvas.Children.Contains(missileImg))
-                //                    {
-                //                        c_runcanvas.Children.Remove(missileImg);
-                //                    }
-                //                    Canvas.SetLeft(missileImg, nowWndPoint.X);
-                //                    Canvas.SetTop(missileImg, nowWndPoint.Y);
-                //                    c_runcanvas.Children.Add(missileImg);
-                //                });
-
-                //                Thread.Sleep(animationFreshTime);
-                //            }
-                //            decoyStartWndPoint = nowWndPoint;
-                //            c_runcanvas.Dispatcher.Invoke(() =>
-                //            {
-                //                if (c_runcanvas.Children.Contains(missileImg))
-                //                {
-                //                    c_runcanvas.Children.Remove(missileImg);
-                //                }
-                //            });
-
-                //            nowWndPoint = GetWndPoint(GetMapPoint(nowWndPoint, ImgType.Missile), ImgType.MissileEffect);
-                //            c_runcanvas.Dispatcher.Invoke(() =>
-                //            {
-                //                Canvas.SetLeft(missileEffectImg, decoyEndWndPoint.X);
-                //                Canvas.SetTop(missileEffectImg, decoyEndWndPoint.Y);
-                //                c_runcanvas.Children.Add(missileEffectImg);
-                //            });
-                //            Thread.Sleep(effectLifeSpan * 1000);
-                //            c_runcanvas.Dispatcher.Invoke(() =>
-                //            {
-                //                if (c_runcanvas.Children.Contains(missileEffectImg))
-                //                {
-                //                    c_runcanvas.Children.Remove(missileEffectImg);
-                //                }
-                //            });
-                //        });
-                //        throwThread.Start();
-                //        ThreadHelper.AddThread(throwThread);
-                //    }
                 //}
                 //else if (currentEvent.Item2 is FireEventArgs)
                 //{
-                //    if (currentEvent.Item3 == "FireNadeWithOwnerStarted")
-                //    {
-                //        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber || !isFreezetimeEnded)
-                //        {
-                //            continue;
-                //        }
-
-                //        Character character = CharacterHelper.GetCharacter(characterNumber);
-
-                //        Player player = (currentEvent.Item2 as FireEventArgs).ThrownBy;
-
-                //        //double waitTime = demoParser.CurrentTime - lastActionTime;
-                //        //lastActionTime = demoParser.CurrentTime;
-
-                //        double costTime = 0;
-                //        Point fireStartMapPoint = DemoPointToMapPoint(player.Position, currentInfo.Map);
-                //        Point fireEndMapPoint = new Point();
-
-                //        for (int n = i + 1; n < eventList.Count(); ++n)
-                //        {
-                //            if (eventList[n].Item1 == null)
-                //            {
-                //                continue;
-                //            }
-                //            if ((eventList[n].Item1.CtScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CtScore + currentEvent.Item1.TScore))
-                //            {
-                //                break;
-                //            }
-                //            if (eventList[n].Item3 == "FireNadeEnded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
-                //            {
-                //                usedMissileList.Add(n);
-                //                if (tickTime == -1)
-                //                {
-                //                    costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime) / 5;
-                //                }
-                //                else
-                //                {
-                //                    costTime = tickTime * (eventList[n].Item1.CurrentTick - currentInfo.CurrentTick) / 5;
-                //                }
-                //                fireEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FireEventArgs).Position, currentInfo.Map);
-                //                break;
-                //            }
-                //        }
-
-                //        if (fireEndMapPoint.X == 0 && fireEndMapPoint.Y == 0)
-                //        {
-                //            continue;
-                //        }
-
-                //        Point fireStartWndPoint = GetWndPoint(fireStartMapPoint, ImgType.Missile);
-                //        Point fireEndWndPoint = GetWndPoint(fireEndMapPoint, ImgType.Missile);
-
-                //        double pixelPerFresh = VectorHelper.GetDistance(fireStartWndPoint, fireEndWndPoint) / ((1000 / GlobalDictionary.animationFreshTime) * costTime);
-
-
-
-                //        List<Character> characters = CharacterHelper.GetCharacters();
-
-                //        Image missileImg = null;
-                //        Image missileEffectImg = null;
-                //        int effectLifeSpan = 0;
-                //        this.Dispatcher.Invoke(() =>
-                //        {
-                //            missileImg = new Image();
-                //            missileEffectImg = new Image();
-                //            if (character.IsT)
-                //            {
-                //                missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.molotovPath));
-                //                missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.fireEffectPath));
-                //            }
-                //            else
-                //            {
-                //                missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.incgrenadePath));
-                //                missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.fireEffectPath));
-                //            }
-                //            effectLifeSpan = GlobalDictionary.firebombLifespan;
-                //            missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
-                //            missileImg.Height = GlobalDictionary.MissileWidthAndHeight;
-
-                //            if (missileEffectImg != null)
-                //            {
-                //                missileEffectImg.Opacity = 0.85;
-                //                missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
-                //                missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
-                //            }
-                //        });
-
-
-                //        //Thread.Sleep((int)(waitTime * 1000));
-                //        Thread throwThread = new Thread(() =>
-                //        {
-                //            Point nowWndPoint = fireStartWndPoint;
-                //            Point unitVector = VectorHelper.GetUnitVector(fireStartWndPoint, fireEndWndPoint);
-                //            while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, fireEndWndPoint), unitVector) < 1)
-                //            {
-                //                nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
-
-                //                if (double.IsInfinity(nowWndPoint.X) || double.IsInfinity(nowWndPoint.Y))
-                //                {
-                //                    break;
-                //                }
-
-                //                c_runcanvas.Dispatcher.Invoke(() =>
-                //                {
-                //                    if (c_runcanvas.Children.Contains(missileImg))
-                //                    {
-                //                        c_runcanvas.Children.Remove(missileImg);
-                //                    }
-                //                    Canvas.SetLeft(missileImg, nowWndPoint.X);
-                //                    Canvas.SetTop(missileImg, nowWndPoint.Y);
-                //                    c_runcanvas.Children.Add(missileImg);
-                //                });
-
-                //                Thread.Sleep(animationFreshTime);
-                //            }
-                //            fireStartWndPoint = nowWndPoint;
-                //            c_runcanvas.Dispatcher.Invoke(() =>
-                //            {
-                //                if (c_runcanvas.Children.Contains(missileImg))
-                //                {
-                //                    c_runcanvas.Children.Remove(missileImg);
-                //                }
-                //            });
-
-                //            nowWndPoint = GetWndPoint(GetMapPoint(nowWndPoint, ImgType.Missile), ImgType.MissileEffect);
-                //            c_runcanvas.Dispatcher.Invoke(() =>
-                //            {
-                //                Canvas.SetLeft(missileEffectImg, fireEndWndPoint.X);
-                //                Canvas.SetTop(missileEffectImg, fireEndWndPoint.Y);
-                //                c_runcanvas.Children.Add(missileEffectImg);
-                //            });
-                //            Thread.Sleep(effectLifeSpan * 1000);
-                //            c_runcanvas.Dispatcher.Invoke(() =>
-                //            {
-                //                if (c_runcanvas.Children.Contains(missileEffectImg))
-                //                {
-                //                    c_runcanvas.Children.Remove(missileEffectImg);
-                //                }
-                //            });
-                //        });
-                //        throwThread.Start();
-                //        ThreadHelper.AddThread(throwThread);
-                //    }
                 //}
                 else if (currentEvent.Item2 is BombEventArgs)
                 {
@@ -3292,140 +3004,6 @@ namespace CSGOTacticSimulator
                 }
                 //else if (currentEvent.Item2 is SmokeEventArgs)
                 //{
-                //    if (currentEvent.Item3 == "SmokeNadeStarted")
-                //    {
-                //        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber || !isFreezetimeEnded)
-                //        {
-                //            continue;
-                //        }
-                //        Character character = CharacterHelper.GetCharacter(characterNumber);
-
-                //        Player player = (currentEvent.Item2 as SmokeEventArgs).ThrownBy;
-
-                //        //double waitTime = demoParser.CurrentTime - lastActionTime;
-                //        //lastActionTime = demoParser.CurrentTime;
-
-                //        double costTime = 0;
-                //        Point smokeStartMapPoint = DemoPointToMapPoint(player.Position, currentInfo.Map);
-                //        Point smokeEndMapPoint = new Point();
-
-                //        for (int n = i + 1; n < eventList.Count(); ++n)
-                //        {
-                //            if (eventList[n].Item1 == null)
-                //            {
-                //                continue;
-                //            }
-                //            if ((eventList[n].Item1.CtScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CtScore + currentEvent.Item1.TScore))
-                //            {
-                //                break;
-                //            }
-                //            if (eventList[n].Item3 == "SmokeNadeEnded" && eventList[n].Item4 == characterNumber && !usedMissileList.Contains(n))
-                //            {
-                //                usedMissileList.Add(n);
-                //                if (tickTime == -1)
-                //                {
-                //                    costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime)/ 10;
-                //                }
-                //                else
-                //                {
-                //                    costTime = tickTime * (eventList[n].Item1.CurrentTick - currentInfo.CurrentTick)/ 10;
-                //                }
-                //                smokeEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as SmokeEventArgs).Position, currentInfo.Map);
-                //                break;
-                //            }
-                //        }
-
-                //        if (smokeEndMapPoint.X == 0 && smokeEndMapPoint.Y == 0)
-                //        {
-                //            continue;
-                //        }
-
-                //        Point smokeStartWndPoint = GetWndPoint(smokeStartMapPoint, ImgType.Missile);
-                //        Point smokeEndWndPoint = GetWndPoint(smokeEndMapPoint, ImgType.Missile);
-
-                //        double pixelPerFresh = VectorHelper.GetDistance(smokeStartWndPoint, smokeEndWndPoint) / ((1000 / GlobalDictionary.animationFreshTime) * costTime);
-
-
-
-                //        List<Character> characters = CharacterHelper.GetCharacters();
-
-                //        Image missileImg = null;
-                //        Image missileEffectImg = null;
-                //        int effectLifeSpan = 0;
-                //        this.Dispatcher.Invoke(() =>
-                //        {
-                //            missileImg = new Image();
-                //            missileEffectImg = new Image();
-                //            missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.smokePath));
-                //            missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.smokeEffectPath));
-                //            effectLifeSpan = GlobalDictionary.smokeLifespan;
-                //            missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
-                //            missileImg.Height = GlobalDictionary.MissileWidthAndHeight;
-
-                //            if (missileEffectImg != null)
-                //            {
-                //                missileEffectImg.Opacity = 0.85;
-                //                missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
-                //                missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
-                //            }
-                //        });
-
-
-                //        //Thread.Sleep((int)(waitTime * 1000));
-                //        Thread throwThread = new Thread(() =>
-                //        {
-                //            Point nowWndPoint = smokeStartWndPoint;
-                //            Point unitVector = VectorHelper.GetUnitVector(smokeStartWndPoint, smokeEndWndPoint);
-                //            while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, smokeEndWndPoint), unitVector) < 1)
-                //            {
-                //                nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
-
-                //                if (double.IsInfinity(nowWndPoint.X) || double.IsInfinity(nowWndPoint.Y))
-                //                {
-                //                    break;
-                //                }
-
-                //                c_runcanvas.Dispatcher.Invoke(() =>
-                //                {
-                //                    if (c_runcanvas.Children.Contains(missileImg))
-                //                    {
-                //                        c_runcanvas.Children.Remove(missileImg);
-                //                    }
-                //                    Canvas.SetLeft(missileImg, nowWndPoint.X);
-                //                    Canvas.SetTop(missileImg, nowWndPoint.Y);
-                //                    c_runcanvas.Children.Add(missileImg);
-                //                });
-
-                //                Thread.Sleep(animationFreshTime);
-                //            }
-                //            smokeStartWndPoint = nowWndPoint;
-                //            c_runcanvas.Dispatcher.Invoke(() =>
-                //            {
-                //                if (c_runcanvas.Children.Contains(missileImg))
-                //                {
-                //                    c_runcanvas.Children.Remove(missileImg);
-                //                }
-                //            });
-
-                //            nowWndPoint = GetWndPoint(GetMapPoint(nowWndPoint, ImgType.Missile), ImgType.MissileEffect);
-                //            c_runcanvas.Dispatcher.Invoke(() =>
-                //            {
-                //                Canvas.SetLeft(missileEffectImg, smokeEndWndPoint.X);
-                //                Canvas.SetTop(missileEffectImg, smokeEndWndPoint.Y);
-                //                c_runcanvas.Children.Add(missileEffectImg);
-                //            });
-                //            Thread.Sleep(effectLifeSpan * 1000);
-                //            c_runcanvas.Dispatcher.Invoke(() =>
-                //            {
-                //                if (c_runcanvas.Children.Contains(missileEffectImg))
-                //                {
-                //                    c_runcanvas.Children.Remove(missileEffectImg);
-                //                }
-                //            });
-                //        });
-                //        throwThread.Start();
-                //        ThreadHelper.AddThread(throwThread);
-                //    }
                 //}
                 else if (currentEvent.Item2 is WeaponFiredEventArgs)
                 {
@@ -3966,6 +3544,8 @@ namespace CSGOTacticSimulator
                                     Canvas.SetLeft(character.OtherImg, endWndPoint.X - character.CharacterImg.Width * 3 / 8);
                                     Canvas.SetTop(character.OtherImg, endWndPoint.Y - character.CharacterImg.Height);
                                 }
+
+                                character.CharacterImg.RenderTransform = new RotateTransform(360 - player.ViewDirectionX, character.CharacterImg.Width / 2, character.CharacterImg.Height / 2);
 
                                 c_runcanvas.Children.Add(character.CharacterImg);
                                 c_runcanvas.Children.Add(name);
