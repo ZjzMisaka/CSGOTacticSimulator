@@ -200,6 +200,11 @@ namespace CSGOTacticSimulator
                     cb_select_mapframe.Items.Add(cbItem);
                 }
             }
+
+            if (cb_select_mapimg.Items.Count > 0)
+            {
+                cb_select_mapimg.SelectedIndex = 0;
+            }
         }
 
         private void cb_select_mapimg_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1994,10 +1999,23 @@ namespace CSGOTacticSimulator
             Dictionary<long, int> dic = new Dictionary<long, int>();
 
             parser.ParseHeader();
+            if (!parser.Map.ToUpper().Contains(cb_select_mapimg.SelectedValue.ToString().ToUpper()))
+            {
+                foreach (ComboBoxItem item in cb_select_mapimg.Items)
+                {
+                    if (parser.Map.ToUpper().Contains(item.Content.ToString().ToUpper()))
+                    {
+                        cb_select_mapimg.SelectedItem = item;
+                    }
+                }
+            }
+
             float tickTime = -1;
             float firstFreezetimeEndedTime = -1;
 
             int lastPlayerKilledIndex = 0;
+
+            te_editor.Text = "";
             if (float.IsNaN(parser.TickTime))
             {
                 int resTickTime = MessageBox.Show(propertiesSetter, new RefreshList { new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50 }, new ButtonSpacer(350), "OK" }, "该demo是多少ticks的?", "未知ticks", MessageBoxImage.Information);
@@ -2120,9 +2138,25 @@ namespace CSGOTacticSimulator
                 CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "FlashNadeExploded", dic[parseE.ThrownBy.SteamID]));
             };
-            //parser.ExplosiveNadeExploded += (parseSender, parseE) =>
-            //{
-            //};
+            parser.ExplosiveNadeExploded += (parseSender, parseE) =>
+            {
+                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                {
+                    return;
+                }
+                if (!isRoundAnnounceMatchStarted)
+                {
+                    return;
+                }
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "ExplosiveNadeExploded", dic[parseE.ThrownBy.SteamID]));
+            };
             //parser.NadeReachedTarget += (parseSender, parseE) =>
             //{
             //    if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
@@ -2391,10 +2425,9 @@ namespace CSGOTacticSimulator
             //parser.HeaderParsed += (parseSender, parseE) =>
             //{
             //};
-            parser.MatchStarted += (parseSender, parseE) =>
-            {
-
-            };
+            //parser.MatchStarted += (parseSender, parseE) =>
+            //{
+            //};
             parser.RoundAnnounceMatchStarted += (parseSender, parseE) =>
             {
                 isRoundAnnounceMatchStarted = true;
