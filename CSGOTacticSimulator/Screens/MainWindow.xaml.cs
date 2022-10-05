@@ -1904,7 +1904,7 @@ namespace CSGOTacticSimulator
         private void SaveFile()
         {
             System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
-            sfd.InitialDirectory = Global.GlobalDictionary.basePath;
+            sfd.InitialDirectory = Global.GlobalDictionary.exePath;
             sfd.Filter = "txt file|*.txt";
             if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -1915,7 +1915,7 @@ namespace CSGOTacticSimulator
         private void btn_select_file_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
-            ofd.InitialDirectory = GlobalDictionary.basePath;
+            ofd.InitialDirectory = GlobalDictionary.exePath;
             ofd.DefaultExt = ".txt";
             ofd.Filter = "脚本或demo (*.txt, *.dem)|*.txt; *.dem";
             if (ofd.ShowDialog() == true)
