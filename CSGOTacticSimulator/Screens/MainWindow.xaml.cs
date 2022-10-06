@@ -1842,7 +1842,7 @@ namespace CSGOTacticSimulator
                     string povsFolder = tb_select_file.Text;
                     DirectoryInfo povFolder = null;
                     povsFolder = povsFolder.Replace(new FileInfo(povsFolder).Name, "");
-                    povsFolder = Path.Combine(povsFolder, "povs", tb_timer.Text);
+                    povsFolder = Path.Combine(povsFolder, "povs", tb_timer.Tag.ToString());
                     if (Directory.Exists(povsFolder))
                     {
                         povFolder = new DirectoryInfo(povsFolder);
@@ -2660,7 +2660,8 @@ namespace CSGOTacticSimulator
                 {
                     this.Dispatcher.Invoke(() =>
                     {
-                        tb_timer.Text = (roundNumber).ToString();
+                        tb_timer.Text = "Round: " + (roundNumber).ToString();
+                        tb_timer.Tag = (roundNumber).ToString();
                     });
 
                     Thread analizeDemoThread = new Thread(AnalizeDemo);
@@ -4101,8 +4102,6 @@ namespace CSGOTacticSimulator
                 ComboBox comboBox = new ComboBox();
                 comboBox.FontSize = 20;
                 comboBox.Width = 60;
-                comboBox.Height = 42;
-                comboBox.Margin = new Thickness(0, 10, 0, 10);
                 comboBox.VerticalContentAlignment = VerticalAlignment.Center;
                 comboBox.Items.Add(new ComboBoxItem() { Content = "T", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 comboBox.Items.Add(new ComboBoxItem() { Content = "CT", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
@@ -4111,13 +4110,11 @@ namespace CSGOTacticSimulator
                 TextBox textBoxName = new TextBox();
                 textBoxName.FontSize = 20;
                 textBoxName.Width = 60;
-                textBoxName.Margin = new Thickness(0, 10, 0, 10);
                 textBoxName.IsEnabled = false;
                 textBoxName.VerticalContentAlignment = VerticalAlignment.Center;
                 CheckBox checkBoxName = new CheckBox();
                 checkBoxName.FontSize = 20;
                 checkBoxName.Width = 60;
-                checkBoxName.Margin = new Thickness(0, 10, 0, 10);
                 checkBoxName.Content = "别名";
                 checkBoxName.Foreground = new SolidColorBrush(Colors.White);
                 checkBoxName.Click += delegate (object cbSender, RoutedEventArgs cbE)
@@ -4133,16 +4130,16 @@ namespace CSGOTacticSimulator
                     }
                 };
                 Grid gridName = new Grid();
-                RowDefinition rowDefinitionR0 = new RowDefinition() { Height = new GridLength(42) };
-                RowDefinition rowDefinitionR1 = new RowDefinition() { Height = new GridLength(42) };
+                RowDefinition rowDefinitionR0 = new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) };
+                RowDefinition rowDefinitionR1 = new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) };
                 gridName.RowDefinitions.Add(rowDefinitionR0);
                 gridName.RowDefinitions.Add(rowDefinitionR1);
                 Grid.SetRow(checkBoxName, 0);
                 Grid.SetRow(textBoxName, 1);
                 gridName.Children.Add(checkBoxName);
                 gridName.Children.Add(textBoxName);
-                gridName.Height = 84;
                 gridName.Width = 150;
+                gridName.Height = 50;
 
                 MessageBox.ButtonList = new RefreshList { new Label() { Content = "创建角色", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, gridName, new ButtonSpacer(50), "OK" };
                 MessageBox.MessageBoxImageType = MessageBoxImage.None;
