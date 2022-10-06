@@ -1800,16 +1800,29 @@ namespace CSGOTacticSimulator
                     else
                     {
                         string equipments = "";
-                        foreach(Equipment equipment in character.EquipmentList)
+                        string missileEquipments = "";
+                        foreach (Equipment equipment in character.EquipmentList)
                         {
                             equipments += equipment.Weapon.ToString() + " ";
                         }
-                        equipments.Remove(equipments.Count() - 1, 1);
+                        foreach (Equipment equipment in character.MissileEquipList)
+                        {
+                            missileEquipments += equipment.Weapon.ToString() + " ";
+                        }
+                        if (equipments.Length >= 1)
+                        {
+                            equipments.Remove(equipments.Length - 1, 1);
+                        }
+                        if (missileEquipments.Length >= 1)
+                        {
+                            missileEquipments.Remove(missileEquipments.Length - 1, 1);
+                        }
 
                         tb_infos.Text =
                         "Number: " + character.Number +
                         "\nName: " + character.Name +
                         "\nEquipments: " + equipments +
+                        "\nMissiles: " + missileEquipments +
                         "\nHP: " + character.Hp;
                     }
 
@@ -3085,7 +3098,7 @@ namespace CSGOTacticSimulator
                             Player playerThrow = (currentEvent.Item2 as WeaponFiredEventArgs).Shooter;
 
                             // 判断取消投掷
-                            List<Equipment> equipList = currentInfo.equipDic[playerThrow.SteamID];
+                            List<Equipment> equipList = currentInfo.missileEquipDic[playerThrow.SteamID];
                             List<Equipment> equipListNext = null;
                             for (int n = i + 100; n < eventList.Count(); ++n)
                             {
@@ -3099,7 +3112,7 @@ namespace CSGOTacticSimulator
                                 }
                                 if (eventList[n].Item3 == "TickDone")
                                 {
-                                    equipListNext = eventList[n].Item1.equipDic[playerThrow.SteamID];
+                                    equipListNext = eventList[n].Item1.missileEquipDic[playerThrow.SteamID];
                                     break;
                                 }
                             }
@@ -3540,6 +3553,7 @@ namespace CSGOTacticSimulator
 
                                 if (player.IsAlive == false)
                                 {
+                                    label.Content = character.Name == "" ? character.Number.ToString() : character.Name + " [" + 0 + "]";
                                     character.Status = Model.Status.Dead;
                                     return;
                                 }
@@ -3548,7 +3562,22 @@ namespace CSGOTacticSimulator
                                     character.Status = Model.Status.Alive;
                                 }
 
-                                character.EquipmentList = player.Weapons.ToList();
+                                List<Equipment> missileEquipList = new List<Equipment>();
+                                List<Equipment> equipList = new List<Equipment>();
+                                foreach (Equipment weapon in player.Weapons)
+                                {
+                                    if (weapon.Class != EquipmentClass.Grenade)
+                                    {
+                                        equipList.Add(new Equipment(weapon.OriginalString));
+                                    }
+                                }
+                                foreach (Equipment equipment in currentEvent.Item1.missileEquipDic[player.SteamID])
+                                {
+                                    missileEquipList.Add(new Equipment(equipment.OriginalString));
+                                }
+                                
+                                character.MissileEquipList = missileEquipList;
+                                character.EquipmentList = equipList;
                                 character.Hp = player.HP;
 
                                 c_runcanvas.Children.Remove(character.CharacterImg);
