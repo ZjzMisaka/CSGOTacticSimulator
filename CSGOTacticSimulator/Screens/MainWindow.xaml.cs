@@ -1787,7 +1787,7 @@ namespace CSGOTacticSimulator
                         missileListStr = "Nothing";
                     }
                     tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
-                    if(character.EquipmentList.Count == 0)
+                    if(Path.GetExtension(tb_select_file.Text) != ".dem")
                     {
                         tb_infos.Text =
                         "Number: " + character.Number +
@@ -2583,24 +2583,34 @@ namespace CSGOTacticSimulator
                 DemoParser nowParser = (parseSender as DemoParser);
                 List<Player> nowParticipants = new List<Player>();
 
-                Dictionary<long, List<Equipment>> equipDic = new Dictionary<long, List<Equipment>>();
-                
+                Dictionary<long, List<Equipment>> missileEquipDic = new Dictionary<long, List<Equipment>>();
+                Dictionary<long, List<Equipment>> weaponEquipDic = new Dictionary<long, List<Equipment>>();
+
                 foreach (Player playingParticipant in nowParser.PlayingParticipants)
                 {
                     nowParticipants.Add(playingParticipant.Copy());
 
-                    List<Equipment> equipList = new List<Equipment>();
+                    List<Equipment> missileEquipList = new List<Equipment>();
+                    List<Equipment> weaponEquipList = new List<Equipment>();
                     foreach (Equipment weapon in playingParticipant.Weapons)
                     {
-                        for (int n = 1; n <= weapon.ReserveAmmo; ++n)
+                        if (weapon.Class != EquipmentClass.Grenade)
                         {
-                            equipList.Add(new Equipment(weapon.OriginalString));
+                            weaponEquipList.Add(new Equipment(weapon.OriginalString));
+                        }
+                        else
+                        {
+                            for (int n = 1; n <= weapon.ReserveAmmo; ++n)
+                            {
+                                missileEquipList.Add(new Equipment(weapon.OriginalString));
+                            }
                         }
                     }
-                    equipDic[playingParticipant.SteamID] = equipList;
+                    missileEquipDic[playingParticipant.SteamID] = missileEquipList;
+                    weaponEquipDic[playingParticipant.SteamID] = weaponEquipList;
                 }
                 
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants, equipDic);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants, missileEquipDic, weaponEquipDic);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "TickDone", 0));
             };
             parser.PlayerKilled += (parseSender, parseE) =>
@@ -2743,8 +2753,6 @@ namespace CSGOTacticSimulator
             offset = 0;
             isForward = false;
             isBackward = false;
-
-            Dictionary<long, float> viewDirectionDic = null;
 
             bool isNeedRefreshPov = false;
             isNeedAutomaticGuidance = false;
@@ -3098,7 +3106,7 @@ namespace CSGOTacticSimulator
                             Player playerThrow = (currentEvent.Item2 as WeaponFiredEventArgs).Shooter;
 
                             // 判断取消投掷
-                            List<Equipment> equipList = currentInfo.missileEquipDic[playerThrow.SteamID];
+                            List<Equipment> equipList = currentInfo.MissileEquipDic[playerThrow.SteamID];
                             List<Equipment> equipListNext = null;
                             for (int n = i + 100; n < eventList.Count(); ++n)
                             {
@@ -3112,7 +3120,7 @@ namespace CSGOTacticSimulator
                                 }
                                 if (eventList[n].Item3 == "TickDone")
                                 {
-                                    equipListNext = eventList[n].Item1.missileEquipDic[playerThrow.SteamID];
+                                    equipListNext = eventList[n].Item1.MissileEquipDic[playerThrow.SteamID];
                                     break;
                                 }
                             }
@@ -3553,7 +3561,10 @@ namespace CSGOTacticSimulator
 
                                 if (player.IsAlive == false)
                                 {
-                                    label.Content = character.Name == "" ? character.Number.ToString() : character.Name + " [" + 0 + "]";
+                                    if (label != null)
+                                    {
+                                        label.Content = character.Name == "" ? character.Number.ToString() : character.Name + " [" + 0 + "]";
+                                    }
                                     character.Status = Model.Status.Dead;
                                     return;
                                 }
@@ -3564,14 +3575,11 @@ namespace CSGOTacticSimulator
 
                                 List<Equipment> missileEquipList = new List<Equipment>();
                                 List<Equipment> equipList = new List<Equipment>();
-                                foreach (Equipment weapon in player.Weapons)
+                                foreach (Equipment equipment in currentEvent.Item1.EquipDic[player.SteamID])
                                 {
-                                    if (weapon.Class != EquipmentClass.Grenade)
-                                    {
-                                        equipList.Add(new Equipment(weapon.OriginalString));
-                                    }
+                                    equipList.Add(new Equipment(equipment.OriginalString));
                                 }
-                                foreach (Equipment equipment in currentEvent.Item1.missileEquipDic[player.SteamID])
+                                foreach (Equipment equipment in currentEvent.Item1.MissileEquipDic[player.SteamID])
                                 {
                                     missileEquipList.Add(new Equipment(equipment.OriginalString));
                                 }
