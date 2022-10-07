@@ -33,6 +33,14 @@ namespace CSGOTacticSimulator
     /// </summary>
     public partial class MainWindow : Window
     {
+        private enum RunningType
+        {
+            TXT,
+            DEM,
+            NONE
+        }
+
+        RunningType nowRunningType = RunningType.NONE;
         public List<Animation> animations = new List<Animation>();
         private Camp currentCamp;
         private double localSpeedController = -1;
@@ -340,6 +348,8 @@ namespace CSGOTacticSimulator
             string filePath = tb_select_file.Text;
             if (Path.GetExtension(filePath) == ".txt")
             {
+                nowRunningType = RunningType.TXT;
+
                 string processedCommand = null;
 
                 GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
@@ -1787,7 +1797,7 @@ namespace CSGOTacticSimulator
                         missileListStr = "Nothing";
                     }
                     tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
-                    if(Path.GetExtension(tb_select_file.Text) != ".dem")
+                    if (nowRunningType == RunningType.TXT)
                     {
                         tb_infos.Text =
                         "Number: " + character.Number +
@@ -1797,7 +1807,7 @@ namespace CSGOTacticSimulator
                         "\nMissile: " + missileListStr +
                         "\nprops: " + character.Props.ToString();
                     }
-                    else
+                    else if (nowRunningType == RunningType.DEM)
                     {
                         string equipments = "";
                         string missileEquipments = "";
@@ -1961,6 +1971,8 @@ namespace CSGOTacticSimulator
 
         private void ReadDemo(string filePath)
         {
+            nowRunningType = RunningType.DEM;
+
             if (i_map.Source == null)
             {
                 return;
