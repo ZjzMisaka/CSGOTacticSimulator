@@ -2023,6 +2023,8 @@ namespace CSGOTacticSimulator
 
             Dictionary<long, int> dic = new Dictionary<long, int>();
 
+            Dictionary<int, int> roundDic = new Dictionary<int, int>();
+
             parser.ParseHeader();
             if (!parser.Map.ToUpper().Contains(cb_select_mapimg.SelectedValue.ToString().ToUpper()))
             {
@@ -2456,6 +2458,33 @@ namespace CSGOTacticSimulator
             parser.RoundAnnounceMatchStarted += (parseSender, parseE) =>
             {
                 isRoundAnnounceMatchStarted = true;
+
+                DemoParser demoParser = parseSender as DemoParser;
+
+                roundDic[demoParser.TScore + demoParser.CTScore + 1] = eventList.Count;
+                foreach (Player player in demoParser.PlayingParticipants)
+                {
+                    if (player.Team == Team.Spectate)
+                    {
+                        continue;
+                    }
+                    if (dic.ContainsKey(player.SteamID))
+                    {
+                        continue;
+                    }
+                    Point mapPoint = DemoPointToMapPoint(player.Position, demoParser.Map);
+                    bool camp = false;
+                    if (player.Team == Team.Terrorist)
+                    {
+                        camp = false;
+                    }
+                    else
+                    {
+                        camp = true;
+                    }
+                    Character character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
+                    dic.Add(character.SteamId, character.Number);
+                }
             };
             parser.RoundStart += (parseSender, parseE) =>
             {
@@ -2463,6 +2492,7 @@ namespace CSGOTacticSimulator
 
                 te_editor.Text += "- Round " + (demoParser.TScore + demoParser.CTScore + 1) + " -- T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "\n";
 
+                roundDic[demoParser.TScore + demoParser.CTScore + 1] = eventList.Count;
                 //CharacterHelper.ClearCharacters();
 
                 foreach (Player player in demoParser.PlayingParticipants)
@@ -2700,7 +2730,7 @@ namespace CSGOTacticSimulator
                     });
 
                     Thread analizeDemoThread = new Thread(AnalizeDemo);
-                    analizeDemoThread.Start(new Tuple<List<Tuple<CurrentInfo, EventArgs, string, int>>, int, Dictionary<long, int>, float, float>(eventList, roundNumber, dic, tickTime, firstFreezetimeEndedTime));
+                    analizeDemoThread.Start(new Tuple<List<Tuple<CurrentInfo, EventArgs, string, int>>, int, Dictionary<long, int>, float, float, Dictionary<int, int>>(eventList, roundNumber, dic, tickTime, firstFreezetimeEndedTime, roundDic));
                     ThreadHelper.AddThread(analizeDemoThread);
                     analizeDemoThread.Join();
 
@@ -2737,12 +2767,13 @@ namespace CSGOTacticSimulator
 
         private void AnalizeDemo(object obj)
         {
-            Tuple<List<Tuple<CurrentInfo, EventArgs, string, int>>, int, Dictionary<long, int>, float, float> tupleTemp = (Tuple<List<Tuple<CurrentInfo, EventArgs, string, int>>, int, Dictionary<long, int>, float, float>)obj;
+            Tuple<List<Tuple<CurrentInfo, EventArgs, string, int>>, int, Dictionary<long, int>, float, float, Dictionary<int, int>> tupleTemp = (Tuple<List<Tuple<CurrentInfo, EventArgs, string, int>>, int, Dictionary<long, int>, float, float, Dictionary<int, int>>)obj;
             List<Tuple<CurrentInfo, EventArgs, string, int>> eventList = tupleTemp.Item1;
             int roundNumber = tupleTemp.Item2;
             Dictionary<long, int> dic = tupleTemp.Item3;
             float tickTime = tupleTemp.Item4;
             float firstFreezetimeEndedTime = tupleTemp.Item5;
+            Dictionary<int, int> roundDic = tupleTemp.Item6;
             // double runSpeed = double.Parse(IniHelper.ReadIni("RunSpeed", character.Weapon.ToString()));
             //double missileSpeed = double.Parse(IniHelper.ReadIni("Missile", "Speed"));
 
@@ -2769,7 +2800,16 @@ namespace CSGOTacticSimulator
             bool isNeedRefreshPov = false;
             isNeedAutomaticGuidance = false;
 
-            for (int i = 0; i < eventList.Count(); ++i)
+            int endIndex = -1;
+            if (roundDic.ContainsKey(roundNumber + 1))
+            {
+                endIndex = roundDic[roundNumber + 1];
+            }
+            else
+            {
+                endIndex = eventList.Count;
+            }
+            for (int i = roundDic[roundNumber]; i < endIndex; ++i)
             {
                 Tuple<CurrentInfo, EventArgs, string, int> currentEvent = eventList[i];
 
