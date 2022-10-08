@@ -3160,7 +3160,8 @@ namespace CSGOTacticSimulator
                             // 判断取消投掷
                             List<Equipment> equipList = currentInfo.MissileEquipDic[playerThrow.SteamID];
                             List<Equipment> equipListNext = null;
-                            for (int n = i + 100; n < eventList.Count(); ++n)
+                            int getTickDoneCount = 0;
+                            for (int n = i + 1; n < eventList.Count(); ++n)
                             {
                                 if (eventList[n].Item1 == null)
                                 {
@@ -3172,8 +3173,15 @@ namespace CSGOTacticSimulator
                                 }
                                 if (eventList[n].Item3 == "TickDone")
                                 {
-                                    equipListNext = eventList[n].Item1.MissileEquipDic[playerThrow.SteamID];
-                                    break;
+                                    if (getTickDoneCount <= 10)
+                                    {
+                                        ++getTickDoneCount;
+                                    }
+                                    else
+                                    {
+                                        equipListNext = eventList[n].Item1.MissileEquipDic[playerThrow.SteamID];
+                                        break;
+                                    }
                                 }
                             }
                             if (equipList.Count() == equipListNext.Count())
