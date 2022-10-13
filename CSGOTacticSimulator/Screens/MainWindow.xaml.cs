@@ -2016,14 +2016,73 @@ namespace CSGOTacticSimulator
                 isAnalizeToLastRound = (MessageBox.ButtonList[1] as CheckBox).IsChecked == true ? true : false;
             }
 
+            Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>> eventDic = new Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>();
             List<Tuple<CurrentInfo, EventArgs, string, int>> eventList = new List<Tuple<CurrentInfo, EventArgs, string, int>>();
             DemoParser parser = new DemoParser(File.OpenRead(filePath));
 
             bool isRoundAnnounceMatchStarted = false;
+            float tickTime = -1;
+            float firstFreezetimeEndedTime = -1;
 
             Dictionary<long, int> dic = new Dictionary<long, int>();
 
-            Dictionary<int, int> roundDic = new Dictionary<int, int>();
+            int nowCanRun = -1;
+
+
+
+
+            btn_pause.Tag = "R";
+            Thread totalThread = new Thread(() =>
+            {
+                bool isAnalized = false;
+                while (isAnalizeToLastRound || (!isAnalizeToLastRound && !isAnalized))
+                {
+                    while (nowCanRun != roundNumber)
+                    {
+                        Thread.Sleep(GlobalDictionary.animationFreshTime);
+                    }
+
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        tb_timer.Text = "Round: " + (roundNumber).ToString();
+                        tb_timer.Tag = (roundNumber).ToString();
+                    });
+
+                    Thread analizeDemoThread = new Thread(AnalizeDemo);
+                    analizeDemoThread.Start(new Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float>(eventDic, roundNumber, dic, tickTime, firstFreezetimeEndedTime));
+                    ThreadHelper.AddThread(analizeDemoThread);
+                    analizeDemoThread.Join();
+
+                    List<Character> charactersTemp = CharacterHelper.GetCharacters();
+                    List<Character> newCharactersTemp = new List<Character>();
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        int count = charactersTemp.Count();
+                        for (int i = 0; i < count; ++i)
+                        {
+                            newCharactersTemp.Add(new Character(charactersTemp[i].Name, charactersTemp[i].SteamId, charactersTemp[i].IsFriendly, charactersTemp[i].IsT, charactersTemp[i].MapPoint, this));
+                        }
+                        Stop(new List<string>() { "totalThread" });
+                        for (int i = 0; i < newCharactersTemp.Count(); ++i)
+                        {
+                            new Character(newCharactersTemp[i].Name, newCharactersTemp[i].SteamId, newCharactersTemp[i].IsFriendly, newCharactersTemp[i].IsT, newCharactersTemp[i].MapPoint, this);
+                        }
+                    });
+
+                    isAnalized = true;
+
+                    ++roundNumber;
+                }
+
+                roundNumber = -1;
+            });
+            totalThread.Name = "totalThread";
+            totalThread.Start();
+            ThreadHelper.AddThread(totalThread);
+
+
+
+
 
             parser.ParseHeader();
             if (!parser.Map.ToUpper().Contains(cb_select_mapimg.SelectedValue.ToString().ToUpper()))
@@ -2036,9 +2095,6 @@ namespace CSGOTacticSimulator
                     }
                 }
             }
-
-            float tickTime = -1;
-            float firstFreezetimeEndedTime = -1;
 
             int lastPlayerKilledIndex = 0;
 
@@ -2068,6 +2124,10 @@ namespace CSGOTacticSimulator
             }
             parser.DecoyNadeEnded += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
                 if (!isRoundAnnounceMatchStarted)
                 {
                     return;
@@ -2086,6 +2146,10 @@ namespace CSGOTacticSimulator
             //};
             parser.FireNadeWithOwnerStarted += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
                 if (!isRoundAnnounceMatchStarted)
                 {
                     return;
@@ -2102,6 +2166,10 @@ namespace CSGOTacticSimulator
             };
             parser.FireNadeEnded += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
                 if (!isRoundAnnounceMatchStarted)
                 {
                     return;
@@ -2117,6 +2185,10 @@ namespace CSGOTacticSimulator
             };
             parser.ExplosiveNadeExploded += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
                 if (!isRoundAnnounceMatchStarted)
                 {
                     return;
@@ -2132,6 +2204,10 @@ namespace CSGOTacticSimulator
             };
             parser.FlashNadeExploded += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
                 if (!isRoundAnnounceMatchStarted)
                 {
                     return;
@@ -2147,6 +2223,10 @@ namespace CSGOTacticSimulator
             };
             parser.ExplosiveNadeExploded += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
                 if (!isRoundAnnounceMatchStarted)
                 {
                     return;
@@ -2175,6 +2255,10 @@ namespace CSGOTacticSimulator
             //};
             parser.BombBeginPlant += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
                 if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
@@ -2195,7 +2279,7 @@ namespace CSGOTacticSimulator
             };
             parser.BombAbortPlant += (parseSender, parseE) =>
             {
-                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
                 {
                     return;
                 }
@@ -2215,7 +2299,7 @@ namespace CSGOTacticSimulator
             };
             parser.BombExploded += (parseSender, parseE) =>
             {
-                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
                 {
                     return;
                 }
@@ -2235,7 +2319,7 @@ namespace CSGOTacticSimulator
             };
             parser.BombDefused += (parseSender, parseE) =>
             {
-                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
                 {
                     return;
                 }
@@ -2255,7 +2339,7 @@ namespace CSGOTacticSimulator
             };
             parser.BombBeginDefuse += (parseSender, parseE) =>
             {
-                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
                 {
                     return;
                 }
@@ -2275,7 +2359,7 @@ namespace CSGOTacticSimulator
             };
             parser.BombAbortDefuse += (parseSender, parseE) =>
             {
-                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
                 {
                     return;
                 }
@@ -2305,6 +2389,10 @@ namespace CSGOTacticSimulator
             //};
             parser.DecoyNadeStarted += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
                 if (!isRoundAnnounceMatchStarted)
                 {
                     return;
@@ -2321,6 +2409,10 @@ namespace CSGOTacticSimulator
             };
             parser.Blind += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
                 if (!isRoundAnnounceMatchStarted)
                 {
                     return;
@@ -2342,7 +2434,7 @@ namespace CSGOTacticSimulator
             //};
             parser.BombPlanted += (parseSender, parseE) =>
             {
-                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
                 {
                     return;
                 }
@@ -2362,6 +2454,10 @@ namespace CSGOTacticSimulator
             };
             parser.SmokeNadeEnded += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
                 if (!isRoundAnnounceMatchStarted)
                 {
                     return;
@@ -2380,6 +2476,10 @@ namespace CSGOTacticSimulator
             //};
             parser.WeaponFired += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
                 if (!isRoundAnnounceMatchStarted)
                 {
                     return;
@@ -2417,11 +2517,15 @@ namespace CSGOTacticSimulator
             //};
             parser.RoundAnnounceMatchStarted += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
+
                 isRoundAnnounceMatchStarted = true;
 
                 DemoParser demoParser = parseSender as DemoParser;
 
-                roundDic[demoParser.TScore + demoParser.CTScore + 1] = eventList.Count;
                 foreach (Player player in demoParser.PlayingParticipants)
                 {
                     if (player.Team == Team.Spectate)
@@ -2442,17 +2546,59 @@ namespace CSGOTacticSimulator
                     {
                         camp = true;
                     }
-                    Character character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
+
+                    Character character = null;
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
+                    });
                     dic.Add(character.SteamId, character.Number);
                 }
+
+
+                if(demoParser.TScore + demoParser.CTScore >= 1)
+                {
+                    eventDic[demoParser.TScore + demoParser.CTScore] = eventList;
+                    eventList = new List<Tuple<CurrentInfo, EventArgs, string, int>>();
+
+                    if (eventDic.Count >= 2)
+                    {
+                        List<int> keyList = new List<int>();
+                        foreach (int key in eventDic.Keys)
+                        {
+                            keyList.Add(key);
+                        }
+                        foreach (int key in keyList)
+                        {
+                            if (key < roundNumber)
+                            {
+                                eventDic[key] = null;
+                                eventDic.Remove(key);
+                            }
+                        }
+
+                        if (demoParser.TScore + demoParser.CTScore - 1 == roundNumber && eventDic.ContainsKey(demoParser.TScore + demoParser.CTScore - 1))
+                        {
+                            nowCanRun = demoParser.TScore + demoParser.CTScore - 1;
+                        }
+                    }
+                }
+                
             };
             parser.RoundStart += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
+
                 DemoParser demoParser = parseSender as DemoParser;
 
-                te_editor.Text += "- Round " + (demoParser.TScore + demoParser.CTScore + 1) + " -- T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "\n";
+                te_editor.Dispatcher.Invoke(() => 
+                { 
+                    te_editor.Text += "- Round " + (demoParser.TScore + demoParser.CTScore + 1) + " -- T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "\n"; 
+                });
 
-                roundDic[demoParser.TScore + demoParser.CTScore + 1] = eventList.Count;
                 //CharacterHelper.ClearCharacters();
 
                 foreach (Player player in demoParser.PlayingParticipants)
@@ -2475,7 +2621,13 @@ namespace CSGOTacticSimulator
                     {
                         camp = true;
                     }
-                    Character character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
+
+                    Character character = null;
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
+                    });
+                    
                     dic.Add(character.SteamId, character.Number);
                 }
                 // 一局开始
@@ -2487,10 +2639,43 @@ namespace CSGOTacticSimulator
                     nowParticipants.Add(playingParticipant.Copy());
                 }
                 CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+
+                if (demoParser.TScore + demoParser.CTScore >= 1)
+                {
+                    eventDic[demoParser.TScore + demoParser.CTScore] = eventList;
+                    eventList = new List<Tuple<CurrentInfo, EventArgs, string, int>>();
+
+                    if (eventDic.Count >= 2)
+                    {
+                        List<int> keyList = new List<int>();
+                        foreach (int key in eventDic.Keys)
+                        {
+                            keyList.Add(key);
+                        }
+                        foreach (int key in keyList)
+                        {
+                            if (key < roundNumber)
+                            {
+                                eventDic[key] = null;
+                                eventDic.Remove(key);
+                            }
+                        }
+
+                        if (demoParser.TScore + demoParser.CTScore - 1 == roundNumber && eventDic.ContainsKey(demoParser.TScore + demoParser.CTScore - 1))
+                        {
+                            nowCanRun = demoParser.TScore + demoParser.CTScore - 1;
+                        }
+                    }
+                }
+
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "RoundStart", 0));
             };
             parser.SmokeNadeStarted += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
                 if (!isRoundAnnounceMatchStarted)
                 {
                     return;
@@ -2513,6 +2698,10 @@ namespace CSGOTacticSimulator
             //};
             parser.RoundEnd += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
                 if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
@@ -2543,6 +2732,10 @@ namespace CSGOTacticSimulator
             //};
             parser.FreezetimeEnded += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
                 if (firstFreezetimeEndedTime == -1)
                 {
                     if (tickTime != -1)
@@ -2566,6 +2759,10 @@ namespace CSGOTacticSimulator
             };
             parser.TickDone += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
                 if (!isRoundAnnounceMatchStarted)
                 {
                     return;
@@ -2609,6 +2806,10 @@ namespace CSGOTacticSimulator
             };
             parser.PlayerKilled += (parseSender, parseE) =>
             {
+                if ((parser.CTScore + parser.TScore + 2) < roundNumber)
+                {
+                    return;
+                }
                 if (!isRoundAnnounceMatchStarted)
                 {
                     return;
@@ -2673,73 +2874,44 @@ namespace CSGOTacticSimulator
             //parser.RankUpdate += (parseSender, parseE) =>
             //{
             //};
-            try
-            {
-                parser.ParseToEnd();
-            }
-            catch
-            {
-                // DO NOTHING
-            }
 
-            btn_pause.Tag = "R";
-            
-            Thread totalThread = new Thread(() =>
+            Thread analyzethread = new Thread(() =>
             {
-                bool isAnalized = false;
-                while (isAnalizeToLastRound || (!isAnalizeToLastRound && !isAnalized))
+                try
                 {
-                    this.Dispatcher.Invoke(() =>
+                    while (roundNumber != -1)
                     {
-                        tb_timer.Text = "Round: " + (roundNumber).ToString();
-                        tb_timer.Tag = (roundNumber).ToString();
-                    });
-
-                    Thread analizeDemoThread = new Thread(AnalizeDemo);
-                    analizeDemoThread.Start(new Tuple<List<Tuple<CurrentInfo, EventArgs, string, int>>, int, Dictionary<long, int>, float, float, Dictionary<int, int>>(eventList, roundNumber, dic, tickTime, firstFreezetimeEndedTime, roundDic));
-                    ThreadHelper.AddThread(analizeDemoThread);
-                    analizeDemoThread.Join();
-
-                    List<Character> charactersTemp = CharacterHelper.GetCharacters();
-                    List<Character> newCharactersTemp = new List<Character>();
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        int count = charactersTemp.Count();
-                        for (int i = 0; i < count; ++i)
+                        if (nowCanRun < roundNumber)
                         {
-                            newCharactersTemp.Add(new Character(charactersTemp[i].Name, charactersTemp[i].SteamId, charactersTemp[i].IsFriendly, charactersTemp[i].IsT, charactersTemp[i].MapPoint, this));
+                            parser.ParseNextTick();
                         }
-                        Stop(new List<string>() { "totalThread" });
-                        for (int i = 0; i < newCharactersTemp.Count(); ++i)
+                        else
                         {
-                            new Character(newCharactersTemp[i].Name, newCharactersTemp[i].SteamId, newCharactersTemp[i].IsFriendly, newCharactersTemp[i].IsT, newCharactersTemp[i].MapPoint, this);
+                            Thread.Sleep(GlobalDictionary.animationFreshTime);
                         }
-                    });
-
-                    isAnalized = true;
-
-                    ++roundNumber;
-                    if (roundNumber > (parser.TScore + parser.CTScore))
-                    {
-                        Stop();
-                        return;
                     }
                 }
+                catch (Exception ex)
+                {
+                    // DO NOTHING
+                }
+                eventDic[parser.TScore + parser.CTScore + 1] = eventList;
+                nowCanRun = parser.TScore + parser.CTScore;
             });
-            totalThread.Name = "totalThread";
-            totalThread.Start();
-            ThreadHelper.AddThread(totalThread);
+            analyzethread.Name = "analyzethread";
+            analyzethread.Start();
+            ThreadHelper.AddThread(analyzethread);
+            
         }
 
         private void AnalizeDemo(object obj)
         {
-            Tuple<List<Tuple<CurrentInfo, EventArgs, string, int>>, int, Dictionary<long, int>, float, float, Dictionary<int, int>> tupleTemp = (Tuple<List<Tuple<CurrentInfo, EventArgs, string, int>>, int, Dictionary<long, int>, float, float, Dictionary<int, int>>)obj;
-            List<Tuple<CurrentInfo, EventArgs, string, int>> eventList = tupleTemp.Item1;
+            Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float> tupleTemp = (Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float>)obj;
+            Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>> eventDic = tupleTemp.Item1;
             int roundNumber = tupleTemp.Item2;
             Dictionary<long, int> dic = tupleTemp.Item3;
             float tickTime = tupleTemp.Item4;
             float firstFreezetimeEndedTime = tupleTemp.Item5;
-            Dictionary<int, int> roundDic = tupleTemp.Item6;
             // double runSpeed = double.Parse(IniHelper.ReadIni("RunSpeed", character.Weapon.ToString()));
             //double missileSpeed = double.Parse(IniHelper.ReadIni("Missile", "Speed"));
 
@@ -2766,16 +2938,8 @@ namespace CSGOTacticSimulator
             bool isNeedRefreshPov = false;
             isNeedAutomaticGuidance = false;
 
-            int endIndex = -1;
-            if (roundDic.ContainsKey(roundNumber + 1))
-            {
-                endIndex = roundDic[roundNumber + 1];
-            }
-            else
-            {
-                endIndex = eventList.Count;
-            }
-            for (int i = roundDic[roundNumber]; i < endIndex; ++i)
+            List<Tuple<CurrentInfo, EventArgs, string, int>> eventList = eventDic[roundNumber];
+            for (int i = 0; i < eventList.Count; ++i)
             {
                 Tuple<CurrentInfo, EventArgs, string, int> currentEvent = eventList[i];
 
