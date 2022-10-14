@@ -2877,17 +2877,25 @@ namespace CSGOTacticSimulator
                 }
                 catch (Exception ex)
                 {
-                    eventDic[parser.TScore + parser.CTScore] = eventList;
-                    while (roundNumber != -1)
+                    if (ex is EndOfStreamException)
                     {
-                        if (nowCanRun < roundNumber)
+                        eventDic[parser.TScore + parser.CTScore] = eventList;
+                        while (roundNumber != -1)
                         {
-                            ++nowCanRun;
+                            if (nowCanRun < roundNumber)
+                            {
+                                ++nowCanRun;
+                            }
+                            else
+                            {
+                                Thread.Sleep(GlobalDictionary.animationFreshTime);
+                            }
                         }
-                        else
-                        {
-                            Thread.Sleep(GlobalDictionary.animationFreshTime);
-                        }
+                    }
+                    else
+                    {
+                        te_editor.Text += "ERROR: " + ex.Message + "\n";
+                        te_editor.ScrollToEnd();
                     }
                 }
                 
