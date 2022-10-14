@@ -3472,6 +3472,10 @@ namespace CSGOTacticSimulator
 
                                         if (eventList[m].Item3 == "SmokeNadeEnded")
                                         {
+                                            if (((SmokeEventArgs)eventList[m].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                                            {
+                                                continue;
+                                            }
                                             if (tickTime == -1)
                                             {
                                                 effectTime = eventList[m].Item1.CurrentTime - eventList[n].Item1.CurrentTime;
@@ -3480,6 +3484,7 @@ namespace CSGOTacticSimulator
                                             {
                                                 effectTime = tickTime * (eventList[m].Item1.CurrentTick - eventList[n].Item1.CurrentTick);
                                             }
+                                            break;
                                         }
                                     }
 
@@ -3523,6 +3528,10 @@ namespace CSGOTacticSimulator
 
                                         if (eventList[m].Item3 == "FireNadeEnded")
                                         {
+                                            if (((FireEventArgs)eventList[m].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                                            {
+                                                continue;
+                                            }
                                             if (tickTime == -1)
                                             {
                                                 effectTime = eventList[m].Item1.CurrentTime - eventList[n].Item1.CurrentTime;
@@ -3531,6 +3540,7 @@ namespace CSGOTacticSimulator
                                             {
                                                 effectTime = tickTime * (eventList[m].Item1.CurrentTick - eventList[n].Item1.CurrentTick);
                                             }
+                                            break;
                                         }
                                     }
                                     break;
@@ -3573,6 +3583,10 @@ namespace CSGOTacticSimulator
 
                                         if (eventList[m].Item3 == "DecoyNadeEnded")
                                         {
+                                            if (((DecoyEventArgs)eventList[m].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                                            {
+                                                continue;
+                                            }
                                             if (tickTime == -1)
                                             {
                                                 effectTime = eventList[m].Item1.CurrentTime - eventList[n].Item1.CurrentTime;
@@ -3581,6 +3595,7 @@ namespace CSGOTacticSimulator
                                             {
                                                 effectTime = tickTime * (eventList[m].Item1.CurrentTick - eventList[n].Item1.CurrentTick);
                                             }
+                                            break;
                                         }
                                     }
                                     break;
