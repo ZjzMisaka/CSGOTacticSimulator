@@ -2051,6 +2051,7 @@ namespace CSGOTacticSimulator
                     Thread analizeDemoThread = new Thread(AnalizeDemo);
                     analizeDemoThread.Start(new Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float>(eventDic, roundNumber, dic, tickTime, firstFreezetimeEndedTime));
                     ThreadHelper.AddThread(analizeDemoThread);
+                    ++roundNumber;
                     analizeDemoThread.Join();
 
                     this.Dispatcher.Invoke(() =>
@@ -2059,8 +2060,6 @@ namespace CSGOTacticSimulator
                     });
 
                     isAnalized = true;
-
-                    ++roundNumber;
                 }
 
                 roundNumber = -1;
