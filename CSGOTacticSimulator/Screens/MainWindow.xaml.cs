@@ -2894,8 +2894,11 @@ namespace CSGOTacticSimulator
                     }
                     else
                     {
-                        te_editor.Text += "ERROR: " + ex.Message + "\n";
-                        te_editor.ScrollToEnd();
+                        te_editor.Dispatcher.Invoke(() =>
+                        {
+                            te_editor.Text += "ERROR: " + ex.Message + "\n";
+                            te_editor.ScrollToEnd();
+                        });
                     }
                 }
                 
