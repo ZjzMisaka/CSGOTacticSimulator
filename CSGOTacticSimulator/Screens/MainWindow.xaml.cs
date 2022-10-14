@@ -2579,7 +2579,8 @@ namespace CSGOTacticSimulator
 
                 te_editor.Dispatcher.Invoke(() => 
                 { 
-                    te_editor.Text += "- Round " + (demoParser.TScore + demoParser.CTScore + 1) + " -- T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "\n"; 
+                    te_editor.Text += "- Round " + (demoParser.TScore + demoParser.CTScore + 1) + " -- T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "\n";
+                    te_editor.ScrollToEnd();
                 });
 
                 //CharacterHelper.ClearCharacters();
@@ -2876,12 +2877,21 @@ namespace CSGOTacticSimulator
                 }
                 catch (Exception ex)
                 {
-                    // DO NOTHING
+                    eventDic[parser.TScore + parser.CTScore] = eventList;
+                    while (roundNumber != -1)
+                    {
+                        if (nowCanRun < roundNumber)
+                        {
+                            ++nowCanRun;
+                        }
+                        else
+                        {
+                            Thread.Sleep(GlobalDictionary.animationFreshTime);
+                        }
+                    }
                 }
                 
             });
-            eventDic[parser.TScore + parser.CTScore + 1] = eventList;
-            nowCanRun = parser.TScore + parser.CTScore;
 
             analyzeThread.Name = "analyzeThread";
             analyzeThread.Start();
@@ -2901,7 +2911,7 @@ namespace CSGOTacticSimulator
 
             int animationFreshTime = GlobalDictionary.animationFreshTime;
 
-            List<int> usedMissileList = new List<int>();
+            Dictionary<int, int> usedMissileDic = new Dictionary<int, int>();
 
             //double lastActionTime = 0;
             
@@ -2981,9 +2991,9 @@ namespace CSGOTacticSimulator
                                     thisOffset += (int)(tickTime * 1000);
                                 }
                             }
-                            if (usedMissileList.Contains(i))
+                            if (usedMissileDic.Keys.Contains(i))
                             {
-                                usedMissileList.Remove(i);
+                                usedMissileDic.Remove(i);
                             }
                             continue;
                         }
@@ -3032,6 +3042,8 @@ namespace CSGOTacticSimulator
                         {
                             continue;
                         }
+
+                        isFreezetimeEnded = false;
                     }
                 }
                 else if (currentEvent.Item2 is RoundEndedEventArgs)
@@ -3354,7 +3366,7 @@ namespace CSGOTacticSimulator
                                 {
                                     break;
                                 }
-                                if (usedMissileList.Contains(n))
+                                if (usedMissileDic.Values.Contains(n))
                                 {
                                     continue;
                                 }
@@ -3364,7 +3376,11 @@ namespace CSGOTacticSimulator
                                 }
                                 if (weapon == EquipmentElement.HE && eventList[n].Item3 == "ExplosiveNadeExploded")
                                 {
-                                    usedMissileList.Add(n);
+                                    if (((GrenadeEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                                    {
+                                        continue;
+                                    }
+                                    usedMissileDic.Add(i, n);
                                     if (tickTime == -1)
                                     {
                                         costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime);
@@ -3378,7 +3394,11 @@ namespace CSGOTacticSimulator
                                 }
                                 else if (weapon == EquipmentElement.Flash && eventList[n].Item3 == "FlashNadeExploded")
                                 {
-                                    usedMissileList.Add(n);
+                                    if (((FlashEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                                    {
+                                        continue;
+                                    }
+                                    usedMissileDic.Add(i, n);
                                     if (tickTime == -1)
                                     {
                                         costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime);
@@ -3392,7 +3412,11 @@ namespace CSGOTacticSimulator
                                 }
                                 else if (weapon == EquipmentElement.Smoke && eventList[n].Item3 == "SmokeNadeStarted")
                                 {
-                                    usedMissileList.Add(n);
+                                    if (((SmokeEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                                    {
+                                        continue;
+                                    }
+                                    usedMissileDic.Add(i, n);
                                     if (tickTime == -1)
                                     {
                                         costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime);
@@ -3413,7 +3437,7 @@ namespace CSGOTacticSimulator
                                         {
                                             break;
                                         }
-                                        if (usedMissileList.Contains(m))
+                                        if (usedMissileDic.Keys.Contains(m))
                                         {
                                             continue;
                                         }
@@ -3439,7 +3463,11 @@ namespace CSGOTacticSimulator
                                 }
                                 else if ((weapon == EquipmentElement.Incendiary || weapon == EquipmentElement.Molotov) && eventList[n].Item3 == "FireNadeWithOwnerStarted")
                                 {
-                                    usedMissileList.Add(n);
+                                    if (((FireEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                                    {
+                                        continue;
+                                    }
+                                    usedMissileDic.Add(i, n);
                                     if (tickTime == -1)
                                     {
                                         costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime);
@@ -3460,7 +3488,7 @@ namespace CSGOTacticSimulator
                                         {
                                             break;
                                         }
-                                        if (usedMissileList.Contains(m))
+                                        if (usedMissileDic.Values.Contains(m))
                                         {
                                             continue;
                                         }
@@ -3485,7 +3513,11 @@ namespace CSGOTacticSimulator
                                 }
                                 else if (weapon == EquipmentElement.Decoy && eventList[n].Item3 == "DecoyNadeStarted")
                                 {
-                                    usedMissileList.Add(n);
+                                    if (((DecoyEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                                    {
+                                        continue;
+                                    }
+                                    usedMissileDic.Add(i, n);
                                     if (tickTime == -1)
                                     {
                                         costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime);
@@ -3506,7 +3538,7 @@ namespace CSGOTacticSimulator
                                         {
                                             break;
                                         }
-                                        if (usedMissileList.Contains(m))
+                                        if (usedMissileDic.Values.Contains(m))
                                         {
                                             continue;
                                         }
@@ -3815,7 +3847,7 @@ namespace CSGOTacticSimulator
 
                                 character.CharacterImg.Tag = (nowTime - firstFreezetimeEndedTime) + "|" + (stopWatchThisRound.ElapsedMilliseconds / 1000.0 + offset / 1000);
 
-                                if (isNeedRefreshPov)
+                                if (isNeedRefreshPov && me_pov.Visibility == Visibility.Visible)
                                 {
                                     double currentTime = double.Parse(CharacterHelper.GetCharacter(characterNumber).CharacterImg.Tag.ToString().Split('|')[(int)me_pov.Tag]);
                                     string filePath = me_pov.Source.LocalPath;
