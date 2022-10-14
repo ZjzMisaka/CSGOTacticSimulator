@@ -1,7 +1,6 @@
 # CSGOTacticSimulator
 CSGO Tactic Simulator <br />
  ![CSGOTacticSimulator](https://www.iaders.com/wp-content/uploads/2020/05/CTS.png) <br />
- ![WTFPL](http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl-badge-1.png) <br />
  [中文ReadMe](https://github.com/ZjzMisaka/CSGOTacticSimulator/blob/master/README_CH.md) <br />
 ## EXAMPLE
 *(v1.1.0 gif)* </br>

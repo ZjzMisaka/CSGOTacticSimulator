@@ -2892,7 +2892,7 @@ namespace CSGOTacticSimulator
                             }
                         }
                     }
-                    else
+                    else if (!(ex is ThreadAbortException))
                     {
                         te_editor.Dispatcher.Invoke(() =>
                         {
