@@ -346,7 +346,7 @@ namespace CSGOTacticSimulator
             Stop();
 
             string filePath = tb_select_file.Text;
-            if (Path.GetExtension(filePath) == ".txt")
+            if (Path.GetExtension(filePath) == ".txt" || filePath == "")
             {
                 nowRunningType = RunningType.TXT;
 
