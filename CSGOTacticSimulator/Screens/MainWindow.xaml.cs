@@ -1942,8 +1942,21 @@ namespace CSGOTacticSimulator
 
         private void btn_select_file_Click(object sender, RoutedEventArgs e)
         {
+            string folder = "";
+            if (tb_select_file.Text.Trim() != "" && Directory.Exists(tb_select_file.Text.Trim()))
+            {
+                folder = tb_select_file.Text.Trim();
+            }
+            else if (tb_select_file.Text.Trim() != "" && File.Exists(tb_select_file.Text.Trim()))
+            {
+                folder = Path.GetDirectoryName(tb_select_file.Text);
+            }
+            else
+            {
+                folder = GlobalDictionary.exePath;
+            }
             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
-            ofd.InitialDirectory = GlobalDictionary.exePath;
+            ofd.InitialDirectory = folder;
             ofd.DefaultExt = ".txt";
             ofd.Filter = "脚本或demo (*.txt, *.dem)|*.txt; *.dem";
             if (ofd.ShowDialog() == true)
@@ -2814,6 +2827,7 @@ namespace CSGOTacticSimulator
                 {
                     parseE.Killer = parseE.Killer.Copy();
                 }
+                parseE.Weapon = new Equipment(parseE.Weapon.OriginalString);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "PlayerKilled", 0));
 
                 if (parseE.Weapon.Weapon == EquipmentElement.Molotov || parseE.Weapon.Weapon == EquipmentElement.HE || parseE.Weapon.Weapon == EquipmentElement.Flash || parseE.Weapon.Weapon == EquipmentElement.Decoy || parseE.Weapon.Weapon == EquipmentElement.Smoke || parseE.Weapon.Weapon == EquipmentElement.Incendiary)
