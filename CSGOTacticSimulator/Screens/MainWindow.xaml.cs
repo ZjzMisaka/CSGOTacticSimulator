@@ -2973,7 +2973,7 @@ namespace CSGOTacticSimulator
                     {
                         if (eventList[i].Item2 is TickDoneEventArgs)
                         {
-                            if (tickTime == -1)
+                            if (tickTime == -1 || currentInfo == null)
                             {
                                 thisOffset += (int)(currentInfo.TickTime * 1000);
                             }
@@ -2982,6 +2982,14 @@ namespace CSGOTacticSimulator
                                 thisOffset += (int)(tickTime * 1000);
                             }
                         }
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            foreach (Character character in CharacterHelper.GetCharacters())
+                            {
+                                character.OtherImg.Visibility = Visibility.Collapsed;
+                            }
+                        });
+                        
                         continue;
                     }
                     else
@@ -3007,7 +3015,7 @@ namespace CSGOTacticSimulator
                             i -= 2;
                             if (eventList[i].Item2 is TickDoneEventArgs)
                             {
-                                if (tickTime == -1)
+                                if (tickTime == -1 || currentInfo == null)
                                 {
                                     thisOffset += (int)(currentInfo.TickTime * 1000);
                                 }
@@ -3020,6 +3028,14 @@ namespace CSGOTacticSimulator
                             {
                                 usedMissileDic.Remove(i);
                             }
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                foreach (Character character in CharacterHelper.GetCharacters())
+                                {
+                                    character.OtherImg.Visibility = Visibility.Collapsed;
+                                }
+                            });
+
                             continue;
                         }
                         else
@@ -3069,6 +3085,13 @@ namespace CSGOTacticSimulator
                                     victimCharacter.OtherImg.Visibility = Visibility.Collapsed;
                                 });
                             }
+                            if (victimCharacter.StatusImg.Visibility == Visibility.Visible)
+                            {
+                                this.Dispatcher.Invoke(() =>
+                                {
+                                    victimCharacter.StatusImg.Visibility = Visibility.Collapsed;
+                                });
+                            }
                         }
                     }
                 }
@@ -3111,8 +3134,8 @@ namespace CSGOTacticSimulator
 
                         this.Dispatcher.Invoke(() =>
                         {
-                            character.OtherImg.Visibility = Visibility.Visible;
-                            character.OtherImg.Source = new BitmapImage(new Uri(GlobalDictionary.eyePath));
+                            character.StatusImg.Visibility = Visibility.Visible;
+                            character.StatusImg.Source = new BitmapImage(new Uri(GlobalDictionary.eyePath));
                         });
 
                         Thread blindThread = new Thread(() =>
@@ -3120,7 +3143,7 @@ namespace CSGOTacticSimulator
                             Thread.Sleep((int)((currentEvent.Item2 as BlindEventArgs).FlashDuration * 1000));
                             this.Dispatcher.Invoke(() =>
                             {
-                                character.OtherImg.Visibility = Visibility.Collapsed;
+                                character.StatusImg.Visibility = Visibility.Collapsed;
                             });
                         });
                         blindThread.Start();
@@ -3894,6 +3917,10 @@ namespace CSGOTacticSimulator
                                 {
                                     c_runcanvas.Children.Remove(character.OtherImg);
                                 }
+                                if (character.StatusImg.Visibility == Visibility.Visible)
+                                {
+                                    c_runcanvas.Children.Remove(character.StatusImg);
+                                }
 
                                 endMapPoint = DemoPointToMapPoint(player.Position, currentInfo.Map);
                                 endWndPoint = GetWndPoint(endMapPoint, ImgType.Character);
@@ -3920,12 +3947,34 @@ namespace CSGOTacticSimulator
                                 Canvas.SetLeft(name, endWndPoint.X);
                                 Canvas.SetTop(name, endWndPoint.Y + character.CharacterImg.Height / 2);
 
-                                if (character.OtherImg.Visibility == Visibility.Visible)
+                                if (character.OtherImg.Visibility == Visibility.Visible && character.StatusImg.Visibility == Visibility.Visible)
                                 {
                                     character.OtherImg.Width = character.CharacterImg.Width * 1.5;
                                     character.OtherImg.Height = character.CharacterImg.Height * 1.5;
-                                    Canvas.SetLeft(character.OtherImg, endWndPoint.X - character.CharacterImg.Width * 3 / 8);
+                                    Canvas.SetLeft(character.OtherImg, endWndPoint.X - character.CharacterImg.Width * -3 / 8);
                                     Canvas.SetTop(character.OtherImg, endWndPoint.Y - character.CharacterImg.Height);
+
+                                    character.StatusImg.Width = character.CharacterImg.Width * 1.5;
+                                    character.StatusImg.Height = character.CharacterImg.Height * 1.5;
+                                    Canvas.SetLeft(character.StatusImg, endWndPoint.X - character.CharacterImg.Width * 8 / 8);
+                                    Canvas.SetTop(character.StatusImg, endWndPoint.Y - character.CharacterImg.Height);
+                                }
+                                else
+                                {
+                                    if (character.OtherImg.Visibility == Visibility.Visible)
+                                    {
+                                        character.OtherImg.Width = character.CharacterImg.Width * 1.5;
+                                        character.OtherImg.Height = character.CharacterImg.Height * 1.5;
+                                        Canvas.SetLeft(character.OtherImg, endWndPoint.X - character.CharacterImg.Width * 3 / 8);
+                                        Canvas.SetTop(character.OtherImg, endWndPoint.Y - character.CharacterImg.Height);
+                                    }
+                                    if (character.StatusImg.Visibility == Visibility.Visible)
+                                    {
+                                        character.StatusImg.Width = character.CharacterImg.Width * 1.5;
+                                        character.StatusImg.Height = character.CharacterImg.Height * 1.5;
+                                        Canvas.SetLeft(character.StatusImg, endWndPoint.X - character.CharacterImg.Width * 3 / 8);
+                                        Canvas.SetTop(character.StatusImg, endWndPoint.Y - character.CharacterImg.Height);
+                                    }
                                 }
 
                                 character.CharacterImg.RenderTransform = new RotateTransform(360 - player.ViewDirectionX, character.CharacterImg.Width / 2, character.CharacterImg.Height / 2);
@@ -3935,6 +3984,10 @@ namespace CSGOTacticSimulator
                                 if (character.OtherImg.Visibility == Visibility.Visible)
                                 {
                                     c_runcanvas.Children.Add(character.OtherImg);
+                                }
+                                if (character.StatusImg.Visibility == Visibility.Visible)
+                                {
+                                    c_runcanvas.Children.Add(character.StatusImg);
                                 }
                             });
 

@@ -84,6 +84,8 @@ namespace CSGOTacticSimulator.Model
         private Image characterImg = new Image();
         public Image OtherImg { get => otherImg; set => otherImg = value; }
         private Image otherImg = new Image();
+        public Image StatusImg { get => statusImg; set => statusImg = value; }
+        private Image statusImg = new Image();
 
         public Character(string name, long steamId, bool isFriendly, bool isT, Point mapPoint, MainWindow wnd)
         {
