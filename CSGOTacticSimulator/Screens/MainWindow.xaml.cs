@@ -5227,7 +5227,7 @@ namespace CSGOTacticSimulator
         private void Btn_forward_Click(object sender, RoutedEventArgs e)
         {
             string filePath = tb_select_file.Text;
-            if (Path.GetExtension(filePath) == ".dem" && btn_pause.Tag != null && btn_pause.Tag.ToString() == "R")
+            if (nowRunningType == RunningType.DEM && btn_pause.Tag != null && btn_pause.Tag.ToString() == "R")
             {
                 isForward = true;
             }
@@ -5236,7 +5236,7 @@ namespace CSGOTacticSimulator
         private void Btn_backward_Click(object sender, RoutedEventArgs e)
         {
             string filePath = tb_select_file.Text;
-            if (Path.GetExtension(filePath) == ".dem" && btn_pause.Tag != null && btn_pause.Tag.ToString() == "R")
+            if (nowRunningType == RunningType.DEM && btn_pause.Tag != null && btn_pause.Tag.ToString() == "R")
             {
                 isBackward = true;
             }
