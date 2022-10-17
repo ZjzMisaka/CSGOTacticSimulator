@@ -3071,7 +3071,36 @@ namespace CSGOTacticSimulator
                             {
                                 headShotStr += " [headshot]";
                             }
-                            te_editor.Text += "Round " + (currentEvent.Item1.CtScore + currentEvent.Item1.TScore + 1) + ": " + playerKilledEventArgs.Killer.Name + " killed " + playerKilledEventArgs.Victim.Name + " by " + playerKilledEventArgs.Weapon.OriginalString + headShotStr + "\n";
+
+                            string blindStr = "";
+                            foreach (long steamId in dic.Keys)
+                            {
+                                if (playerKilledEventArgs.Killer.SteamID == steamId)
+                                {
+                                    if (CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Visibility == Visibility.Visible)
+                                    {
+                                        blindStr += " [blind]";
+                                    }
+                                }
+                            }
+
+                            string withFlashStr = "";
+                            foreach (long steamId in dic.Keys)
+                            {
+                                if (playerKilledEventArgs.Victim.SteamID == steamId)
+                                {
+                                    if (CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Visibility == Visibility.Visible)
+                                    {
+                                        withFlashStr += " [with flashbang]";
+                                    }
+                                }
+                            }
+
+
+                            string killerWeaponString = playerKilledEventArgs.Weapon.OriginalString;
+                            killerWeaponString = killerWeaponString.Replace("weapon_", "");
+                            killerWeaponString = killerWeaponString.Replace("_", " ");
+                            te_editor.Text += "Round " + (currentEvent.Item1.CtScore + currentEvent.Item1.TScore + 1) + ": " + playerKilledEventArgs.Killer.Name + " killed " + playerKilledEventArgs.Victim.Name + " by " + killerWeaponString + headShotStr + blindStr + withFlashStr + "\n";
                             te_editor.ScrollToEnd();
                         });
                         long victimSteamID = playerKilledEventArgs.Victim.SteamID;
