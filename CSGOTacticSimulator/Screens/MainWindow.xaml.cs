@@ -2973,12 +2973,12 @@ namespace CSGOTacticSimulator
             TimeSpan roundTimeSpan = new TimeSpan(0, 1, 55);
             for (int i = 0; i < eventList.Count; ++i)
             {
-                TimeSpan roundLeaveTimeSpan = roundTimeSpan - stopWatch.Elapsed + new TimeSpan(0, 0, 0, 0, offset);
+                TimeSpan roundLeaveTimeSpan = roundTimeSpan - stopWatch.Elapsed - new TimeSpan(0, 0, 0, 0, offset);
                 int roundLeaveMinutes = (int)roundLeaveTimeSpan.Minutes;
                 int roundLeaveSeconds = roundLeaveTimeSpan.Seconds % 60;
                 this.Dispatcher.Invoke(() =>
                 {
-                    tb_timer.Text = "Round: " + (roundNumber).ToString() + " " + roundLeaveMinutes.ToString() + ":" + roundLeaveSeconds.ToString();
+                    tb_timer.Text = "Round: " + (roundNumber).ToString() + "\n" + roundLeaveMinutes.ToString() + ":" + roundLeaveSeconds.ToString();
                 });
 
 

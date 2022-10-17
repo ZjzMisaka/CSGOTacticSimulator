@@ -96,7 +96,7 @@
                 <Image x:Name="i_map" MouseLeftButtonDown="i_map_MouseLeftButtonDown" MouseRightButtonUp="i_map_MouseRightButtonUp" SizeChanged="i_map_SizeChanged">
                 </Image>
                 <TextBlock x:Name="tb_infos" Visibility="Hidden" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5" IsHitTestVisible="False" ></TextBlock>
-                <TextBlock x:Name="tb_timer" Visibility="Hidden" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="5" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_timer" Visibility="Hidden" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="5" IsHitTestVisible="False" ></TextBlock>
             </Grid>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1">
