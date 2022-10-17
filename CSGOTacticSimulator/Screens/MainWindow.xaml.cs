@@ -2995,7 +2995,7 @@ namespace CSGOTacticSimulator
                     {
                         if (eventList[i].Item2 is TickDoneEventArgs)
                         {
-                            if (tickTime == -1 || currentInfo == null)
+                            if (tickTime == -1 && currentInfo != null)
                             {
                                 thisOffset += (int)(currentInfo.TickTime * 1000);
                             }
@@ -3037,7 +3037,7 @@ namespace CSGOTacticSimulator
                             i -= 2;
                             if (eventList[i].Item2 is TickDoneEventArgs)
                             {
-                                if (tickTime == -1 || currentInfo == null)
+                                if (tickTime == -1 && currentInfo != null)
                                 {
                                     thisOffset += (int)(currentInfo.TickTime * 1000);
                                 }
