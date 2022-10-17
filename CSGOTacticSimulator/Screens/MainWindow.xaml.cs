@@ -2070,7 +2070,6 @@ namespace CSGOTacticSimulator
 
                     this.Dispatcher.Invoke(() =>
                     {
-                        tb_timer.Text = "Round: " + (roundNumber).ToString();
                         tb_timer.Tag = (roundNumber).ToString();
                     });
 
@@ -2970,8 +2969,19 @@ namespace CSGOTacticSimulator
             isNeedAutomaticGuidance = false;
 
             List<Tuple<CurrentInfo, EventArgs, string, int>> eventList = eventDic[roundNumber];
+
+            TimeSpan roundTimeSpan = new TimeSpan(0, 1, 55);
             for (int i = 0; i < eventList.Count; ++i)
             {
+                TimeSpan roundLeaveTimeSpan = roundTimeSpan - stopWatch.Elapsed + new TimeSpan(0, 0, 0, 0, offset);
+                int roundLeaveMinutes = (int)roundLeaveTimeSpan.Minutes;
+                int roundLeaveSeconds = roundLeaveTimeSpan.Seconds % 60;
+                this.Dispatcher.Invoke(() =>
+                {
+                    tb_timer.Text = "Round: " + (roundNumber).ToString() + " " + roundLeaveMinutes.ToString() + ":" + roundLeaveSeconds.ToString();
+                });
+
+
                 Tuple<CurrentInfo, EventArgs, string, int> currentEvent = eventList[i];
 
                 CurrentInfo currentInfo = currentEvent.Item1;
@@ -5204,6 +5214,7 @@ namespace CSGOTacticSimulator
             {
                 GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
                 tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+                tb_timer.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
 
                 foreach (Character character in CharacterHelper.GetCharacters())
                 {
