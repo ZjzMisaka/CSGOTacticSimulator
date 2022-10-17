@@ -2993,15 +2993,18 @@ namespace CSGOTacticSimulator
                 {
                     if (thisOffset < GlobalDictionary.forwardTimeSpan)
                     {
-                        if (eventList[i].Item2 is TickDoneEventArgs)
+                        if (currentEvent.Item2 is TickDoneEventArgs)
                         {
-                            if (tickTime == -1 && currentInfo != null)
+                            if (currentEvent.Item3 == "TickDone")
                             {
-                                thisOffset += (int)(currentInfo.TickTime * 1000);
-                            }
-                            else
-                            {
-                                thisOffset += (int)(tickTime * 1000);
+                                if (tickTime == -1)
+                                {
+                                    thisOffset += (int)(currentInfo.TickTime * 1000);
+                                }
+                                else
+                                {
+                                    thisOffset += (int)(tickTime * 1000);
+                                }
                             }
                         }
                         this.Dispatcher.Invoke(() =>
@@ -3035,15 +3038,18 @@ namespace CSGOTacticSimulator
                         if (thisOffset < GlobalDictionary.backwardTimeSpan)
                         {
                             i -= 2;
-                            if (eventList[i].Item2 is TickDoneEventArgs)
+                            if (currentEvent.Item2 is TickDoneEventArgs)
                             {
-                                if (tickTime == -1 && currentInfo != null)
+                                if (currentEvent.Item3 == "TickDone")
                                 {
-                                    thisOffset += (int)(currentInfo.TickTime * 1000);
-                                }
-                                else
-                                {
-                                    thisOffset += (int)(tickTime * 1000);
+                                    if (tickTime == -1)
+                                    {
+                                        thisOffset += (int)(currentInfo.TickTime * 1000);
+                                    }
+                                    else
+                                    {
+                                        thisOffset += (int)(tickTime * 1000);
+                                    }
                                 }
                             }
                             if (usedMissileDic.Keys.Contains(i))
