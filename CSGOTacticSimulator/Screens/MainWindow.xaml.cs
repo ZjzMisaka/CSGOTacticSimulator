@@ -48,6 +48,8 @@ namespace CSGOTacticSimulator
         private CompletionWindow completionWindow;
         private Point mouseLastPosition = new Point(-1, -1);
         private Selector selector = null;
+        private XshdSyntaxDefinition codeXshd = null;
+        private XshdSyntaxDefinition logXshd = null;
         public List<Point> mouseMovePathInPreview = new List<Point>();
         public List<Point> keyDownInPreview = new List<Point>();
         public Stopwatch stopWatch = null;
@@ -71,10 +73,13 @@ namespace CSGOTacticSimulator
             //快速搜索功能
             SearchPanel.Install(te_editor.TextArea);
             //设置语法规则
-            string highlightPath = GlobalDictionary.highlightPath;
-            XmlTextReader reader = new XmlTextReader(highlightPath);
-            var xshd = HighlightingLoader.LoadXshd(reader);
-            te_editor.SyntaxHighlighting = HighlightingLoader.Load(xshd, HighlightingManager.Instance);
+            string codeHighlightPath = GlobalDictionary.codeHighlightPath;
+            XmlTextReader codeReader = new XmlTextReader(codeHighlightPath);
+            codeXshd = HighlightingLoader.LoadXshd(codeReader);
+            string logHighlightPath = GlobalDictionary.logHighlightPath;
+            XmlTextReader logReader = new XmlTextReader(logHighlightPath);
+            logXshd = HighlightingLoader.LoadXshd(logReader);
+            te_editor.SyntaxHighlighting = HighlightingLoader.Load(codeXshd, HighlightingManager.Instance);
 
             te_editor.TextArea.TextEntering += te_editor_TextArea_TextEntering;
             te_editor.TextArea.TextEntered += te_editor_TextArea_TextEntered;
@@ -349,6 +354,10 @@ namespace CSGOTacticSimulator
             if (Path.GetExtension(filePath) == ".txt" || filePath == "")
             {
                 nowRunningType = RunningType.TXT;
+                te_editor.Dispatcher.Invoke(() =>
+                {
+                    te_editor.SyntaxHighlighting = HighlightingLoader.Load(codeXshd, HighlightingManager.Instance);
+                });
 
                 string processedCommand = null;
 
@@ -1985,6 +1994,10 @@ namespace CSGOTacticSimulator
         private void ReadDemo(string filePath)
         {
             nowRunningType = RunningType.DEM;
+            te_editor.Dispatcher.Invoke(() =>
+            {
+                te_editor.SyntaxHighlighting = HighlightingLoader.Load(logXshd, HighlightingManager.Instance);
+            });
 
             if (i_map.Source == null)
             {
@@ -2915,7 +2928,6 @@ namespace CSGOTacticSimulator
                         });
                     }
                 }
-                
             });
 
             analyzeThread.Name = "analyzeThread";
@@ -3096,11 +3108,25 @@ namespace CSGOTacticSimulator
                                 }
                             }
 
+                            string assisterStr = "";
+                            if (playerKilledEventArgs.Assister != null)
+                            {
+                                string teammateStr = "";
+                                if (playerKilledEventArgs.Assister.Team == playerKilledEventArgs.Victim.Team)
+                                {
+                                    teammateStr = " (team damage)";
+                                }
+                                assisterStr = " [with " + playerKilledEventArgs.Assister.Name + teammateStr + "]";
+                            }
 
-                            string killerWeaponString = playerKilledEventArgs.Weapon.OriginalString;
-                            killerWeaponString = killerWeaponString.Replace("weapon_", "");
-                            killerWeaponString = killerWeaponString.Replace("_", " ");
-                            te_editor.Text += "Round " + (currentEvent.Item1.CtScore + currentEvent.Item1.TScore + 1) + ": " + playerKilledEventArgs.Killer.Name + " killed " + playerKilledEventArgs.Victim.Name + " by " + killerWeaponString + headShotStr + blindStr + withFlashStr + "\n";
+                            string teamkillStr = "";
+                            if (playerKilledEventArgs.Killer.Team == playerKilledEventArgs.Victim.Team)
+                            {
+                                teamkillStr = " [team kill]";
+                            }
+
+                            string killerWeaponString = playerKilledEventArgs.Weapon.Weapon.ToString();
+                            te_editor.Text += "Round " + (currentEvent.Item1.CtScore + currentEvent.Item1.TScore + 1) + ": " + playerKilledEventArgs.Killer.Name + " killed " + playerKilledEventArgs.Victim.Name + " by " + killerWeaponString + headShotStr + assisterStr + blindStr + withFlashStr + teamkillStr + "\n";
                             te_editor.ScrollToEnd();
                         });
                         long victimSteamID = playerKilledEventArgs.Victim.SteamID;

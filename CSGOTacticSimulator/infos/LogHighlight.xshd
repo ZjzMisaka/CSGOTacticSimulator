@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="Command" extensions=".txt" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <!-- The named colors 'Comment' and 'String' are used in SharpDevelop to detect if a line is inside a multiline string/comment -->
+  <Color name="NumberLiteral" foreground="#4285f4"/>
+  <Color name="InTagRule" fontWeight="bold" foreground="#ff66cccc" />
+  <Color name="TagRule" fontWeight="bold" foreground="#ff33aa33" />
+  <Color name="RoundKeywords" foreground="#aa33aa33" />
+  <Color name="KillInfoKeywords" foreground="#ea4436" />
+
+  <!-- This is the main ruleset. -->
+  <RuleSet>
+
+    <Keywords color="RoundKeywords">
+      <Word>Round</Word>
+      <Word>: </Word>
+    </Keywords>
+
+    <Keywords color="KillInfoKeywords">
+      <Word>killed</Word>
+      <Word>by</Word>
+    </Keywords>
+
+    <Rule color="TagRule">
+      [[][\s\S]+[]]
+    </Rule>
+
+    <Rule color="InTagRule">
+      [(][\s\S]+[)]
+    </Rule>
+
+    <!-- Digits -->
+    <Rule color="NumberLiteral">
+      [ ][0-9]+
+    </Rule>
+  </RuleSet>
+</SyntaxDefinition>

@@ -148,10 +148,13 @@
     <Content Include="img\effect_he.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="infos\highlight.xshd">
+    <Content Include="infos\setting.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="infos\setting.ini">
+    <Content Include="infos\CodeHighlight.xshd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="infos\LogHighlight.xshd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="maps\mapframe\Mirage.json">
