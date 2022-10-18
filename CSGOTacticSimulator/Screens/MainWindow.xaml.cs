@@ -3478,7 +3478,16 @@ namespace CSGOTacticSimulator
                                     }
                                 }
                             }
-                            if (equipList.Count() == equipListNext.Count())
+                            int equipListNextCount = -1;
+                            if (equipListNext == null)
+                            {
+                                equipListNextCount = 0;
+                            }
+                            else
+                            {
+                                equipListNextCount = equipListNext.Count();
+                            }
+                            if (equipList.Count() == equipListNextCount)
                             {
                                 continue;
                             }
