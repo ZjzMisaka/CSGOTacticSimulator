@@ -2839,6 +2839,10 @@ namespace CSGOTacticSimulator
                 {
                     parseE.Killer = parseE.Killer.Copy();
                 }
+                if (parseE.Assister != null)
+                {
+                    parseE.Assister = parseE.Assister.Copy();
+                }
                 parseE.Weapon = new Equipment(parseE.Weapon.OriginalString);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "PlayerKilled", 0));
 
@@ -3119,7 +3123,7 @@ namespace CSGOTacticSimulator
                                 {
                                     if (CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Visibility == Visibility.Visible)
                                     {
-                                        withFlashStr += " [with flashbang]";
+                                        withFlashStr += (" [with flashbang by " + CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Tag.ToString() + "]");
                                     }
                                 }
                             }
@@ -3207,6 +3211,7 @@ namespace CSGOTacticSimulator
                         {
                             character.StatusImg.Visibility = Visibility.Visible;
                             character.StatusImg.Source = new BitmapImage(new Uri(GlobalDictionary.eyePath));
+                            character.StatusImg.Tag = (currentEvent.Item2 as BlindEventArgs).Attacker.Name;
                         });
 
                         Thread blindThread = new Thread(() =>

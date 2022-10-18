@@ -95,6 +95,9 @@ namespace CSGOTacticSimulator.Model
             CharacterImg.Width = GlobalDictionary.CharacterWidthAndHeight;
             CharacterImg.Height = GlobalDictionary.CharacterWidthAndHeight;
 
+            OtherImg.Visibility = Visibility.Collapsed;
+            StatusImg.Visibility = Visibility.Collapsed;
+
             if (name != "")
             {
                 this.Name = name;
