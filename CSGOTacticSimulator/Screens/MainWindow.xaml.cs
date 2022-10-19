@@ -53,6 +53,7 @@ namespace CSGOTacticSimulator
         private XshdSyntaxDefinition codeXshd = null;
         private XshdSyntaxDefinition logXshd = null;
         private System.Timers.Timer resizeTimer = new System.Timers.Timer(100) { Enabled = false };
+        private bool isResizing = false;
         private Dictionary<UIElement, Point> elementPointDic = new Dictionary<UIElement, Point>();
         public List<Point> mouseMovePathInPreview = new List<Point>();
         public List<Point> keyDownInPreview = new List<Point>();
@@ -5264,32 +5265,29 @@ namespace CSGOTacticSimulator
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            List<UIElement> list = new List<UIElement>();
-            foreach (UIElement obj in c_runcanvas.Children)
+            if (!isResizing)
             {
-                if (!elementPointDic.ContainsKey(obj))
+                elementPointDic.Clear();
+                List<UIElement> list = new List<UIElement>();
+                foreach (UIElement obj in c_runcanvas.Children)
                 {
-                    list.Add(obj);
+                    Point wndPoint = new Point(Canvas.GetLeft(obj), Canvas.GetTop(obj));
+                    Point mapPoint = GetMapPoint(wndPoint, ImgType.Nothing);
+
+                    elementPointDic[obj] = mapPoint;
                 }
             }
-            foreach (UIElement obj in list)
-            {
-                Point wndPoint = new Point(Canvas.GetLeft(obj), Canvas.GetTop(obj));
-                Point mapPoint = GetMapPoint(wndPoint, ImgType.Nothing);
 
-                elementPointDic[obj] = mapPoint;
-            }
+            isResizing = true;
             resizeTimer.Stop();
             resizeTimer.Start();
         }
 
         private void ResizingDone(object sender, ElapsedEventArgs e)
         {
+            isResizing = false;
             resizeTimer.Stop();
-            this.Dispatcher.Invoke(() =>
-            {
-                MainSizeChanged();
-            });
+            MainSizeChanged();
         }
 
         private void MainSizeChanged()
@@ -5300,39 +5298,50 @@ namespace CSGOTacticSimulator
             {
                 keyList.Add(obj);
             }
-            foreach (UIElement obj in keyList)
+
+            new Thread(() =>
             {
-                if (c_runcanvas.Children.Contains(obj))
+                Thread.Sleep(50);
+                foreach (UIElement obj in keyList)
                 {
-                    Point newWndPoint = GetWndPoint(elementPointDic[obj], ImgType.Nothing);
-                    elementPointDic[obj] = GetMapPoint(newWndPoint, ImgType.Nothing);
-                    c_runcanvas.Children.Remove(obj);
-                    Canvas.SetLeft(obj, newWndPoint.X);
-                    Canvas.SetTop(obj, newWndPoint.Y);
-                    c_runcanvas.Children.Add(obj);
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        if (c_runcanvas.Children.Contains(obj))
+                        {
+                            Point newWndPoint = GetWndPoint(elementPointDic[obj], ImgType.Nothing);
+                            c_runcanvas.Children.Remove(obj);
+                            Canvas.SetLeft(obj, newWndPoint.X);
+                            Canvas.SetTop(obj, newWndPoint.Y);
+                            c_runcanvas.Children.Add(obj);
+                        }
+                        else
+                        {
+                            removeList.Add(obj);
+                        }
+                    });
                 }
-                else
-                {
-                    removeList.Add(obj);
-                }
-            }
+            }).Start();
+            
             foreach (UIElement obj in removeList)
             {
                 elementPointDic.Remove(obj);
             }
 
-            if (i_map.Source != null)
+            this.Dispatcher.Invoke(() =>
             {
-                GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
-                tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
-                tb_timer.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
-
-                foreach (Character character in CharacterHelper.GetCharacters())
+                if (i_map.Source != null)
                 {
-                    character.CharacterImg.Width = GlobalDictionary.CharacterWidthAndHeight;
-                    character.CharacterImg.Height = GlobalDictionary.CharacterWidthAndHeight;
+                    GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
+                    tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+                    tb_timer.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+
+                    foreach (Character character in CharacterHelper.GetCharacters())
+                    {
+                        character.CharacterImg.Width = GlobalDictionary.CharacterWidthAndHeight;
+                        character.CharacterImg.Height = GlobalDictionary.CharacterWidthAndHeight;
+                    }
                 }
-            }
+            });
         }
     }
 }
