@@ -38,6 +38,8 @@ namespace CSGOTacticSimulator.Model
         private long steamId = 0;
         public int Hp { get => hp; set => hp = value; }
         private int hp = 0;
+        public int Money { get => money; set => money = value; }
+        private int money = 0;
         public Weapon Weapon { get => weapon; set => weapon = value; }
         private Weapon weapon = Weapon.Knife;
         public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
@@ -52,6 +54,8 @@ namespace CSGOTacticSimulator.Model
         private bool isFriendly = true;
         public bool IsT { get => isT; set => isT = value; }
         private bool isT = true;
+        public bool IsAlive { get => isAlive; set => isAlive = value; }
+        private bool isAlive = true;
         public Status Status
         {
             get => status;

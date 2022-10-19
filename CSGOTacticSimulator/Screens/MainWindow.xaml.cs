@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Threading;
 using System.Timers;
 using System.Windows;
@@ -1827,6 +1828,7 @@ namespace CSGOTacticSimulator
                     {
                         string equipments = "";
                         string missileEquipments = "";
+                        int money = character.Money;
                         foreach (Equipment equipment in character.EquipmentList)
                         {
                             equipments += equipment.Weapon.ToString() + " ";
@@ -1849,6 +1851,7 @@ namespace CSGOTacticSimulator
                         "\nName: " + character.Name +
                         "\nEquipments: " + equipments +
                         "\nMissiles: " + missileEquipments +
+                        "\nMoney: " + money +
                         "\nHP: " + character.Hp;
                     }
 
@@ -1857,21 +1860,48 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void SetInfos()
+        private void SetInfos(int tScore, int ctScore)
         {
             List<Character> characters = CharacterHelper.GetCharacters();
 
+            int team1Money = 0;
+            string team1Camp = "";
+            int team1Score = 0;
+            int team2Money = 0;
+            string team2Camp = "";
+            int team2Score = 0;
+
             foreach (Character character in characters)
             {
+                if (character.SteamId == (long)tb_team1.Tag)
+                {
+                    team1Camp = character.IsT ? "T" : "CT";
+                    team1Score = character.IsT ? tScore : ctScore;
+                }
+                else if (character.SteamId == (long)tb_team2.Tag)
+                {
+                    team2Camp = character.IsT ? "T" : "CT";
+                    team2Score = character.IsT ? tScore : ctScore;
+                }
                 foreach (UIElement element in g_infos.Children)
                 {
                     if (element is TextBlock)
                     {
                         TextBlock textBlock = (TextBlock)element;
-                        if ((long)textBlock.Tag == character.SteamId)
+                        textBlock.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+                        if ((long)textBlock.Tag == character.SteamId && textBlock != tb_team1 && textBlock != tb_team2)
                         {
                             string equipments = "";
                             string missileEquipments = "";
+                            int money = character.Money;
+                            if (Grid.GetColumn(textBlock) == 0)
+                            {
+                                team1Money += money;
+                            }
+                            else 
+                            {
+                                team2Money += money;
+                            }
                             foreach (Equipment equipment in character.EquipmentList)
                             {
                                 equipments += equipment.Weapon.ToString() + " ";
@@ -1889,16 +1919,45 @@ namespace CSGOTacticSimulator
                                 missileEquipments.Remove(missileEquipments.Length - 1, 1);
                             }
 
+                            if (!character.IsAlive)
+                            {
+                                textBlock.Foreground = Brushes.Red;
+                                textBlock.TextDecorations = TextDecorations.Strikethrough;
+                            }
+                            else
+                            {
+                                if (character.Hp <= 20)
+                                {
+                                    textBlock.Foreground = Brushes.HotPink;
+                                }
+                                else
+                                {
+                                    textBlock.Foreground = Brushes.White;
+                                }
+                                textBlock.TextDecorations = null;
+                            }
+
                             textBlock.Text =
                             "Number: " + character.Number +
                             "\nName: " + character.Name +
                             "\nEquipments: " + equipments +
                             "\nMissiles: " + missileEquipments +
+                            "\nMoney: " + money +
                             "\nHP: " + character.Hp;
                         }
                     }
                 }
             }
+
+            tb_team1.Text =
+            "Camp: " + team1Camp +
+            "\nScore: " + team1Score +
+            "\nEconomy: " + team1Money;
+
+            tb_team2.Text =
+            "Camp: " + team2Camp +
+            "\nScore: " + team2Score +
+            "\nEconomy: " + team2Money;
         }
 
         public void ShowPov(object sender, MouseEventArgs e)
@@ -1945,14 +2004,17 @@ namespace CSGOTacticSimulator
                     povsFolder = povsFolder.Replace(new FileInfo(povsFolder).Name, "");
                     povsFolder = Path.Combine(povsFolder, "povs");
                     povFolder = new DirectoryInfo(povsFolder);
-                    foreach (FileInfo file in povFolder.GetFiles())
+                    if (povFolder.Exists)
                     {
-                        if (character.Name.ToLowerInvariant() == file.Name.Replace(file.Extension, "").ToLowerInvariant())
+                        foreach (FileInfo file in povFolder.GetFiles())
                         {
-                            double currentTime = double.Parse(character.CharacterImg.Tag.ToString().Split('|')[0]);
-                            me_pov.Tag = 0;
-                            PlayPov(file, currentTime);
-                            return;
+                            if (character.Name.ToLowerInvariant() == file.Name.Replace(file.Extension, "").ToLowerInvariant())
+                            {
+                                double currentTime = double.Parse(character.CharacterImg.Tag.ToString().Split('|')[0]);
+                                me_pov.Tag = 0;
+                                PlayPov(file, currentTime);
+                                return;
+                            }
                         }
                     }
 
@@ -2595,11 +2657,6 @@ namespace CSGOTacticSimulator
             {
                 isRoundAnnounceMatchStarted = true;
 
-                if ((parser.CTScore + parser.TScore + 1) < roundNumber)
-                {
-                    return;
-                }
-
                 DemoParser demoParser = parseSender as DemoParser;
 
                 foreach (Player player in demoParser.PlayingParticipants)
@@ -2633,8 +2690,12 @@ namespace CSGOTacticSimulator
                     InitInfoTag(player);
                 }
 
+                if ((parser.CTScore + parser.TScore + 1) < roundNumber)
+                {
+                    return;
+                }
 
-                if(demoParser.TScore + demoParser.CTScore >= 1)
+                if (demoParser.TScore + demoParser.CTScore >= 1)
                 {
                     eventDic[demoParser.TScore + demoParser.CTScore] = eventList;
                     eventList = new List<Tuple<CurrentInfo, EventArgs, string, int>>();
@@ -2855,7 +2916,9 @@ namespace CSGOTacticSimulator
 
                 foreach (Player playingParticipant in nowParser.PlayingParticipants)
                 {
-                    nowParticipants.Add(playingParticipant.Copy());
+                    Player copiedPlayer = playingParticipant.Copy();
+                    copiedPlayer.Money = playingParticipant.Money;
+                    nowParticipants.Add(copiedPlayer);
 
                     List<Equipment> missileEquipList = new List<Equipment>();
                     List<Equipment> weaponEquipList = new List<Equipment>();
@@ -3174,7 +3237,7 @@ namespace CSGOTacticSimulator
                             string blindStr = "";
                             foreach (long steamId in dic.Keys)
                             {
-                                if (playerKilledEventArgs.Killer.SteamID == steamId)
+                                if (playerKilledEventArgs.Killer != null && playerKilledEventArgs.Killer.SteamID == steamId)
                                 {
                                     if (CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Visibility == Visibility.Visible)
                                     {
@@ -3186,7 +3249,7 @@ namespace CSGOTacticSimulator
                             string withFlashStr = "";
                             foreach (long steamId in dic.Keys)
                             {
-                                if (playerKilledEventArgs.Victim.SteamID == steamId)
+                                if (playerKilledEventArgs.Victim != null && playerKilledEventArgs.Victim.SteamID == steamId)
                                 {
                                     if (CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Visibility == Visibility.Visible)
                                     {
@@ -3199,7 +3262,7 @@ namespace CSGOTacticSimulator
                             if (playerKilledEventArgs.Assister != null)
                             {
                                 string teammateStr = "";
-                                if (playerKilledEventArgs.Assister.Team == playerKilledEventArgs.Victim.Team)
+                                if (playerKilledEventArgs.Assister != null && playerKilledEventArgs.Victim != null && playerKilledEventArgs.Assister.Team == playerKilledEventArgs.Victim.Team)
                                 {
                                     teammateStr = " (team damage)";
                                 }
@@ -3207,7 +3270,7 @@ namespace CSGOTacticSimulator
                             }
 
                             string teamkillStr = "";
-                            if (playerKilledEventArgs.Killer.Team == playerKilledEventArgs.Victim.Team)
+                            if (playerKilledEventArgs.Killer != null && playerKilledEventArgs.Victim != null && playerKilledEventArgs.Killer.Team == playerKilledEventArgs.Victim.Team)
                             {
                                 teamkillStr = " [team kill]";
                             }
@@ -4041,7 +4104,6 @@ namespace CSGOTacticSimulator
                                         label.Content = character.Name == "" ? character.Number.ToString() : character.Name + " [" + 0 + "]";
                                     }
                                     character.Status = Model.Status.Dead;
-                                    return;
                                 }
                                 else
                                 {
@@ -4062,6 +4124,9 @@ namespace CSGOTacticSimulator
                                 character.MissileEquipList = missileEquipList;
                                 character.EquipmentList = equipList;
                                 character.Hp = player.HP;
+                                character.Money = player.Money;
+                                character.IsT = player.Team == Team.Terrorist;
+                                character.IsAlive = player.IsAlive;
 
                                 c_runcanvas.Children.Remove(character.CharacterImg);
                                 c_runcanvas.Children.Remove(label);
@@ -4074,7 +4139,7 @@ namespace CSGOTacticSimulator
                                     c_runcanvas.Children.Remove(character.StatusImg);
                                 }
 
-                                endMapPoint = DemoPointToMapPoint(player.Position, currentInfo.Map);
+                                endMapPoint = DemoPointToMapPoint(player.IsAlive ? player.Position : player.LastAlivePosition, currentInfo.Map);
                                 endWndPoint = GetWndPoint(endMapPoint, ImgType.Character);
 
                                 character.CharacterImg.Tag = (nowTime - firstFreezetimeEndedTime) + "|" + (stopWatchThisRound.ElapsedMilliseconds / 1000.0 + offset / 1000);
@@ -4149,7 +4214,7 @@ namespace CSGOTacticSimulator
 
                         this.Dispatcher.Invoke(() =>
                         {
-                            SetInfos();
+                            SetInfos(currentInfo.TScore, currentInfo.CtScore);
                         });
 
                         float nowTimeEnd = 0;
@@ -4211,6 +4276,7 @@ namespace CSGOTacticSimulator
                     if (tb_player1.Tag == null)
                     {
                         tb_player1.Tag = player.SteamID;
+                        tb_team1.Tag = player.SteamID;
                     }
                     else if (tb_player2.Tag == null)
                     {
@@ -4234,6 +4300,7 @@ namespace CSGOTacticSimulator
                     if (tb_player6.Tag == null)
                     {
                         tb_player6.Tag = player.SteamID;
+                        tb_team2.Tag = player.SteamID;
                     }
                     else if (tb_player7.Tag == null)
                     {
@@ -4583,7 +4650,7 @@ namespace CSGOTacticSimulator
             {
                 c_paintcanvas.Children.Clear();
             }
-            else if (Keyboard.IsKeyDown(Key.Q))
+            else if (Keyboard.IsKeyDown(Key.CapsLock))
             {
                 g_infos.Visibility = Visibility.Visible;
             }
@@ -4595,7 +4662,7 @@ namespace CSGOTacticSimulator
             {
                 c_paintcanvas.IsHitTestVisible = false;
             }
-            else if (e.Key == Key.Q)
+            else if (e.Key == Key.CapsLock)
             {
                 g_infos.Visibility = Visibility.Collapsed;
             }
@@ -5397,6 +5464,11 @@ namespace CSGOTacticSimulator
 
                     elementPointDic[obj] = mapPoint;
                 }
+            }
+
+            if (sender.Equals(i_map))
+            {
+                g_infos.Width = e.NewSize.Width - g_infos.Margin.Left - g_infos.Margin.Right;
             }
 
             isResizing = true;

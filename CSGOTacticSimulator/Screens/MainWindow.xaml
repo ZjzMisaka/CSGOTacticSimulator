@@ -99,7 +99,7 @@
                 <TextBlock x:Name="tb_timer" Visibility="Hidden" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="5" IsHitTestVisible="False" ></TextBlock>
             </Grid>
 
-            <Grid x:Name="g_infos" Grid.Row="2" Grid.Column="0" Margin="10, 30" HorizontalAlignment="Left" VerticalAlignment="Center" Opacity="0.85" Background="Gray" Visibility="Collapsed">
+            <Grid x:Name="g_infos" Grid.Row="2" Grid.Column="0" Margin="10, 30" HorizontalAlignment="Left" VerticalAlignment="Center" Opacity="0.85" Background="Gray" Visibility="Collapsed" Panel.ZIndex="9999">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
@@ -110,17 +110,21 @@
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
-                <TextBlock x:Name="tb_player1" Grid.Column="0" Grid.Row="0" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
-                <TextBlock x:Name="tb_player2" Grid.Column="0" Grid.Row="1" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
-                <TextBlock x:Name="tb_player3" Grid.Column="0" Grid.Row="2" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
-                <TextBlock x:Name="tb_player4" Grid.Column="0" Grid.Row="3" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
-                <TextBlock x:Name="tb_player5" Grid.Column="0" Grid.Row="4" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
-                <TextBlock x:Name="tb_player6" Grid.Column="1" Grid.Row="0" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Right" IsHitTestVisible="False" ></TextBlock>
-                <TextBlock x:Name="tb_player7" Grid.Column="1" Grid.Row="1" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Right" IsHitTestVisible="False" ></TextBlock>
-                <TextBlock x:Name="tb_player8" Grid.Column="1" Grid.Row="2" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Right" IsHitTestVisible="False" ></TextBlock>
-                <TextBlock x:Name="tb_player9" Grid.Column="1" Grid.Row="3" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Right" IsHitTestVisible="False" ></TextBlock>
-                <TextBlock x:Name="tb_player10" Grid.Column="1" Grid.Row="4" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Right" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_team1" Margin="5" Grid.Column="0" Grid.Row="0" Visibility="Visible" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_team2" Margin="5" Grid.Column="1" Grid.Row="0" Visibility="Visible" Foreground="White" FontSize="15" Text="" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right" IsHitTestVisible="False" ></TextBlock>
+                
+                <TextBlock x:Name="tb_player1" Margin="5" Grid.Column="0" Grid.Row="1" Visibility="Visible" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player2" Margin="5" Grid.Column="0" Grid.Row="2" Visibility="Visible" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player3" Margin="5" Grid.Column="0" Grid.Row="3" Visibility="Visible" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player4" Margin="5" Grid.Column="0" Grid.Row="4" Visibility="Visible" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player5" Margin="5" Grid.Column="0" Grid.Row="5" Visibility="Visible" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player6" Margin="5" Grid.Column="1" Grid.Row="1" Visibility="Visible" Foreground="White" FontSize="15" Text="" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player7" Margin="5" Grid.Column="1" Grid.Row="2" Visibility="Visible" Foreground="White" FontSize="15" Text="" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player8" Margin="5" Grid.Column="1" Grid.Row="3" Visibility="Visible" Foreground="White" FontSize="15" Text="" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player9" Margin="5" Grid.Column="1" Grid.Row="4" Visibility="Visible" Foreground="White" FontSize="15" Text="" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player10" Margin="5" Grid.Column="1" Grid.Row="5" Visibility="Visible" Foreground="White" FontSize="15" Text="" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right" IsHitTestVisible="False" ></TextBlock>
             </Grid>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1">
@@ -128,7 +132,7 @@
                 <Button x:Name="btn_select_file" Style="{StaticResource Style.TextContentButton}" Width="50" Height="32" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Content="..." FontSize="20" Margin="0,0,0,3" Click="btn_select_file_Click" />
             </StackPanel>
 
-            <avalonEdit:TextEditor x:Name="te_editor" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" FontSize="20" Margin="5, 0, 0, 0" ShowLineNumbers="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+            <avalonEdit:TextEditor x:Name="te_editor" WordWrap="True" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" FontSize="20" Margin="5, 0, 0, 0" ShowLineNumbers="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
             <MediaElement x:Name="me_pov" Panel.ZIndex="1000" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="5, 0, 0, 0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="Collapsed" />
             <Grid x:Name="g_povcontroller" Panel.ZIndex="1000" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="5, 0, 0, 0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="LightGray" Width="150" Height="50" Visibility="Collapsed" >
                 <Grid.ColumnDefinitions>
@@ -170,11 +174,11 @@
             </Grid>
             
         </Grid>
-        <Canvas x:Name="c_runcanvas">
+        <Canvas x:Name="c_runcanvas" Panel.ZIndex="99999">
         </Canvas>
-        <Canvas x:Name="c_previewcanvas">
+        <Canvas x:Name="c_previewcanvas" Panel.ZIndex="99999">
         </Canvas>
-        <Canvas x:Name="c_paintcanvas" Background="Transparent" IsHitTestVisible="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseMove="c_paintcanvas_MouseMove" >
+        <Canvas x:Name="c_paintcanvas" Background="Transparent" IsHitTestVisible="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseMove="c_paintcanvas_MouseMove"  Panel.ZIndex="99999">
         </Canvas>
         <Button x:Name="btn_minimize" Style="{StaticResource Style.ImageBackgroundButton}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="30" Width="30" Height="30" Click="btn_minimize_Click"></Button>
         <Button x:Name="btn_restore" Style="{StaticResource Style.ImageBackgroundButton}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="30, 30, 75, 30" Width="30" Height="30" Visibility="Collapsed" Click="btn_restore_Click"></Button>
