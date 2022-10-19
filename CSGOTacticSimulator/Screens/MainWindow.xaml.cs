@@ -2074,6 +2074,11 @@ namespace CSGOTacticSimulator
                         Thread.Sleep(GlobalDictionary.animationFreshTime);
                     }
 
+                    if (!eventDic.ContainsKey(roundNumber))
+                    {
+                        break;
+                    }
+
                     this.Dispatcher.Invoke(() =>
                     {
                         tb_timer.Tag = (roundNumber).ToString();
