@@ -2,7 +2,7 @@
 CSGO Tactic Simulator <br />
  ![CSGOTacticSimulator](https://www.iaders.com/wp-content/uploads/2020/05/CTS.png) <br />
  [中文ReadMe](https://github.com/ZjzMisaka/CSGOTacticSimulator/blob/master/README_CH.md) <br />
-## EXAMPLE
+## Example
 *(v1.1.0 gif)* </br>
 https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 *(v2.1.1 screenshot)* </br>
@@ -10,30 +10,31 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 ![screenshot](https://www.iaders.com/upload/2020/0707/02.png) </br>
 *(v1.6.1 screenshot)* </br>
 ![screenshot](https://www.iaders.com/wp-content/uploads/2020/05/1.6.0.png)
-## PROMPT
+## Prompt
 - You can read and watch the demo. When watching the demo, click the character point on the left map to play the pov corresponding to the current time. 
 - Pathfinding can be performed after selecting the map frame.
 - You can edit the map frame in the program (for pathfinding).
 - You can get the coordinates by clicking on the picture.
 - The coordinates have nothing to do with the zoom level of the picture in the window, you can change the window size without modifying the script. 
 - Move your mouse over the character's point to see the character information (number, item, coordinates, etc).
-## WATCH DEMO&POV
+## Watch DEMO&POV
 - Enter the path of the demo file into the file input box to load the demo file.
 - You can choose to watch a round or watch all rounds.
+- Press the CapsLock key to view the information panel. 
 - Click the character point on the left map when running the demo then you can watch the pov corresponding to the current time. 
 - Pov is divided into the whole game POV or one round POV. If you want to watch only one round, you can only record the POV video of that round. If you want to watch the whole game, you can record the whole game POV video.
 - The pov file name should be the same as the player name (case insensitive).
 - The whole game POV video files should be placed in the povs folder of the directory to which the demo file belongs, the one round POV video files should be placed in the round number folder in the povs folder of the directory to which the demo file belongs. </br>
 ![directory](https://www.iaders.com/upload/2020/0709/directory.png)
 - The whole game POV video should start with the end of the freezing time of the first round. the one round POV video should start with the end of the freezing time of this round.
-## SCRIPT
-### PROMPT
+## Script
+### Prompt
 - The input box is a full-fledged script editor (Thanks to AvalonEdit), and it is still being improved. It supports syntax highlighting, auto-completion, and searching.
 - You can use a backslash at the end of a line for multi-line input commands.
 - Each script performs an action on behalf of a character, such as buying (instantly), moving (time-consuming), waiting.
 - The order between the characters in the script does not affect the final effect. For example, you can write the scripts of the actions of one character at the same time, or you can write the scripts of multiple characters at the same time.
 - You can add "-" before the script command and other statements to comment the content after this line.
-### CREATE SCRIPTS VISUALLY
+### Create scripts visually
 - Right-click the map
     - Set the speed
         - Sets the overall speed ratio value
@@ -71,8 +72,8 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
     - Shooting
         - Shoot to a point
         - Shoot to a character, you can set whether the character being shot survives or not
-### QUERY TABLE
-#### ABOUT TACTIC SIMULATION
+### Query table
+#### About tactic simulation
 |Grammar|Explanation|Implementation or Not|
 |----|----|----|
 |set entirety speed {Ratio value}|Sets the overall speed ratio value used by the current script. If not set, the default value is used.|√|
@@ -91,7 +92,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |action character {Character number} wait until {Seconds}|Wait in place until the specified time|√|
 |action character {Character number} wait for {Seconds}|Wait in place for a specified number of seconds|√|
 |create comment {Seconds} {Coordinate} {Content}|Create a callout at a specified time and place|×|
-#### ABOUT MAP FRAME CREATION AND MODIFICATION
+#### About map frame creation and modification
 |Grammar|Explanation|Implementation or Not|
 |----|----|----|
 |create map {Map name}|Create a new map frame|√|
@@ -99,13 +100,13 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |create path {Node number} to {Node number} <{Node number} ...... {Node number}> limit {Movement limits} mode [oneway / reversedoneway / twoway] distance {Distance}|Create a path|√|
 |delete node {Node number}|Delete a node|√|
 |delete path {Node number} to {Node number} <{Node number} ...... {Node number}> mode [oneway / reversedoneway / twoway]|Delete a path|√|
-## WAYFINDING
-### LAYER
+## Wayfinding
+### Layer
 - The number of layers represents the number of layers of the two-dimensional coordinates of the currently represented point on the map, Take A side of Mirrage as an example: Palace and A Bomb Site have a layer value of 0, while Balcony has a layer value of 1, and Under Balcony has a layer value of 0.
 - quietly / noisily represents whether the pathfinding movement can make a sound. If quietly is selected, even if the path allows running, it will move silently; if the path only allows running and jumping, the path will be bypassed.
-## DRAWING FUNCTION
+## Drawing
 - You can hold down the LControl key at any time and use left button to draw. 
-### RELATED HOT KEYS
+### Related hot keys
 |Hot keys|Effect|
 |----|----|
 |LControl + LShift|Eraser|
@@ -114,8 +115,8 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |LControl + S|Choose size of brush or eraser|
 |LControl + A|Choose transparency|
 |LControl + Delete|Clear whole canvas|
-## TODO
-## USE OF EXTERNAL RESOURCES
+## Todo
+## External resources
 |Resource|License|
 |----|----|
 |[icsharpcode/AvalonEdit](https://github.com/icsharpcode/AvalonEdit)|MIT|
