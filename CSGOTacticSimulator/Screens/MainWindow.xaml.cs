@@ -1857,6 +1857,50 @@ namespace CSGOTacticSimulator
             }
         }
 
+        private void SetInfos()
+        {
+            List<Character> characters = CharacterHelper.GetCharacters();
+
+            foreach (Character character in characters)
+            {
+                foreach (UIElement element in g_infos.Children)
+                {
+                    if (element is TextBlock)
+                    {
+                        TextBlock textBlock = (TextBlock)element;
+                        if ((long)textBlock.Tag == character.SteamId)
+                        {
+                            string equipments = "";
+                            string missileEquipments = "";
+                            foreach (Equipment equipment in character.EquipmentList)
+                            {
+                                equipments += equipment.Weapon.ToString() + " ";
+                            }
+                            foreach (Equipment equipment in character.MissileEquipList)
+                            {
+                                missileEquipments += equipment.Weapon.ToString() + " ";
+                            }
+                            if (equipments.Length >= 1)
+                            {
+                                equipments.Remove(equipments.Length - 1, 1);
+                            }
+                            if (missileEquipments.Length >= 1)
+                            {
+                                missileEquipments.Remove(missileEquipments.Length - 1, 1);
+                            }
+
+                            textBlock.Text =
+                            "Number: " + character.Number +
+                            "\nName: " + character.Name +
+                            "\nEquipments: " + equipments +
+                            "\nMissiles: " + missileEquipments +
+                            "\nHP: " + character.Hp;
+                        }
+                    }
+                }
+            }
+        }
+
         public void ShowPov(object sender, MouseEventArgs e)
         {
             List<Character> characters = CharacterHelper.GetCharacters();
@@ -2062,6 +2106,13 @@ namespace CSGOTacticSimulator
             int nowCanRun = -1;
 
 
+            foreach (UIElement item in g_infos.Children)
+            {
+                if (item is TextBlock)
+                {
+                    (item as TextBlock).Tag = null;
+                }
+            }
 
 
             btn_pause.Tag = "R";
@@ -2578,6 +2629,8 @@ namespace CSGOTacticSimulator
                         character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
                     });
                     dic.Add(character.SteamId, character.Number);
+
+                    InitInfoTag(player);
                 }
 
 
@@ -2650,6 +2703,8 @@ namespace CSGOTacticSimulator
                     });
                     
                     dic.Add(character.SteamId, character.Number);
+
+                    InitInfoTag(player);
                 }
                 // 一局开始
 
@@ -4092,6 +4147,11 @@ namespace CSGOTacticSimulator
                             characters[characters.IndexOf(character)].MapPoint = endMapPoint;
                         }
 
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            SetInfos();
+                        });
+
                         float nowTimeEnd = 0;
                         if (tickTime != -1)
                         {
@@ -4140,6 +4200,59 @@ namespace CSGOTacticSimulator
 
                 }
             }
+        }
+
+        private void InitInfoTag(Player player)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                if (player.Team == Team.Terrorist)
+                {
+                    if (tb_player1.Tag == null)
+                    {
+                        tb_player1.Tag = player.SteamID;
+                    }
+                    else if (tb_player2.Tag == null)
+                    {
+                        tb_player2.Tag = player.SteamID;
+                    }
+                    else if (tb_player3.Tag == null)
+                    {
+                        tb_player3.Tag = player.SteamID;
+                    }
+                    else if (tb_player4.Tag == null)
+                    {
+                        tb_player4.Tag = player.SteamID;
+                    }
+                    else if (tb_player5.Tag == null)
+                    {
+                        tb_player5.Tag = player.SteamID;
+                    }
+                }
+                else
+                {
+                    if (tb_player6.Tag == null)
+                    {
+                        tb_player6.Tag = player.SteamID;
+                    }
+                    else if (tb_player7.Tag == null)
+                    {
+                        tb_player7.Tag = player.SteamID;
+                    }
+                    else if (tb_player8.Tag == null)
+                    {
+                        tb_player8.Tag = player.SteamID;
+                    }
+                    else if (tb_player9.Tag == null)
+                    {
+                        tb_player9.Tag = player.SteamID;
+                    }
+                    else if (tb_player10.Tag == null)
+                    {
+                        tb_player10.Tag = player.SteamID;
+                    }
+                }
+            });
         }
 
         private Point DemoPointToMapPoint(DemoInfo.Vector demoPoint, string mapName)
@@ -4470,6 +4583,10 @@ namespace CSGOTacticSimulator
             {
                 c_paintcanvas.Children.Clear();
             }
+            else if (Keyboard.IsKeyDown(Key.Q))
+            {
+                g_infos.Visibility = Visibility.Visible;
+            }
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
@@ -4477,6 +4594,10 @@ namespace CSGOTacticSimulator
             if (e.Key == Key.LeftCtrl)
             {
                 c_paintcanvas.IsHitTestVisible = false;
+            }
+            else if (e.Key == Key.Q)
+            {
+                g_infos.Visibility = Visibility.Collapsed;
             }
         }
 

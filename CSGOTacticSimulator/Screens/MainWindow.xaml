@@ -99,6 +99,30 @@
                 <TextBlock x:Name="tb_timer" Visibility="Hidden" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="5" IsHitTestVisible="False" ></TextBlock>
             </Grid>
 
+            <Grid x:Name="g_infos" Grid.Row="2" Grid.Column="0" Margin="10, 30" HorizontalAlignment="Left" VerticalAlignment="Center" Opacity="0.85" Background="Gray" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="tb_player1" Grid.Column="0" Grid.Row="0" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player2" Grid.Column="0" Grid.Row="1" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player3" Grid.Column="0" Grid.Row="2" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player4" Grid.Column="0" Grid.Row="3" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player5" Grid.Column="0" Grid.Row="4" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player6" Grid.Column="1" Grid.Row="0" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Right" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player7" Grid.Column="1" Grid.Row="1" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Right" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player8" Grid.Column="1" Grid.Row="2" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Right" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player9" Grid.Column="1" Grid.Row="3" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Right" IsHitTestVisible="False" ></TextBlock>
+                <TextBlock x:Name="tb_player10" Grid.Column="1" Grid.Row="4" Visibility="Visible" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Right" IsHitTestVisible="False" ></TextBlock>
+            </Grid>
+
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1">
                 <TextBox x:Name="tb_select_file" Width="200" Height="32" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="20" KeyDown="Tb_select_file_KeyDown"></TextBox>
                 <Button x:Name="btn_select_file" Style="{StaticResource Style.TextContentButton}" Width="50" Height="32" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Content="..." FontSize="20" Margin="0,0,0,3" Click="btn_select_file_Click" />
