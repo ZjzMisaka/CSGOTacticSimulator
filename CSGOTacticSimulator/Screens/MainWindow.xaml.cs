@@ -1898,7 +1898,14 @@ namespace CSGOTacticSimulator
                     if (element is TextBlock)
                     {
                         TextBlock textBlock = (TextBlock)element;
-                        textBlock.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+                        if (textBlock == tb_team1 || textBlock == tb_team2)
+                        {
+                            textBlock.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+                        }
+                        else
+                        {
+                            textBlock.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.0;
+                        }
                         if ((long)textBlock.Tag == character.SteamId && textBlock != tb_team1 && textBlock != tb_team2)
                         {
                             string weapons = "";
@@ -3254,6 +3261,10 @@ namespace CSGOTacticSimulator
                     if (currentEvent.Item3 == "PlayerKilled")
                     {
                         PlayerKilledEventArgs playerKilledEventArgs = (currentEvent.Item2 as PlayerKilledEventArgs);
+                        if (playerKilledEventArgs.Killer == null || playerKilledEventArgs.Victim == null)
+                        {
+                            continue;
+                        }
                         te_editor.Dispatcher.Invoke(() =>
                         {
                             string headShotStr = "";
@@ -5566,7 +5577,14 @@ namespace CSGOTacticSimulator
                     {
                         if (element is TextBlock)
                         {
-                            (element as TextBlock).FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+                            if (element == tb_team1 || element == tb_team2)
+                            {
+                                (element as TextBlock).FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+                            }
+                            else
+                            {
+                                (element as TextBlock).FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.0;
+                            }
                         }
                     }
 
