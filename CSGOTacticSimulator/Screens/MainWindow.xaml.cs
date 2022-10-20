@@ -5513,7 +5513,12 @@ namespace CSGOTacticSimulator
 
             if (sender.Equals(i_map))
             {
-                g_infos.Width = e.NewSize.Width - g_infos.Margin.Left - g_infos.Margin.Right;
+                double width = e.NewSize.Width - g_infos.Margin.Left - g_infos.Margin.Right;
+                if (width < 0)
+                {
+                    width = 0;
+                }
+                g_infos.Width = width;
             }
 
             isResizing = true;
