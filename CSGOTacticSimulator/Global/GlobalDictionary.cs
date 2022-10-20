@@ -177,8 +177,10 @@ namespace CSGOTacticSimulator.Global
         static public string friendlyAliveLowerPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "FriendlyAliveLower")).Replace("/", "\\");
         static public string enemyAliveUpperPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "EnemyAliveUpper")).Replace("/", "\\");
         static public string enemyAliveLowerPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "EnemyAliveLower")).Replace("/", "\\");
-        static public string deadUpperPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "DeadUpper")).Replace("/", "\\");
-        static public string deadLowerPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "DeadLower")).Replace("/", "\\");
+        static public string friendlyDeadUpperPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "FriendlyDeadUpper")).Replace("/", "\\");
+        static public string friendlyDeadLowerPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "FriendlyDeadLower")).Replace("/", "\\");
+        static public string enemyDeadUpperPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "EnemyDeadUpper")).Replace("/", "\\");
+        static public string enemyDeadLowerPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "EnemyDeadLower")).Replace("/", "\\");
 
         static public ImageBrush backgroundBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.backgroundPath)), Stretch = Stretch.Fill };
         static public ImageBrush minimizeBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.minimizePath)), Stretch = Stretch.Uniform };

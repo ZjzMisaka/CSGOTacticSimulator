@@ -152,14 +152,24 @@ namespace CSGOTacticSimulator.Model
                 CharacterImg.Source = new BitmapImage(new Uri(GlobalDictionary.enemyAliveLowerPath));
                 CharacterImg.Opacity = 0.4;
             }
-            else if (status == Status.Dead && verticalPosition == VerticalPosition.Upper)
+            else if (status == Status.Dead && IsFriendly == true && verticalPosition == VerticalPosition.Upper)
             {
-                CharacterImg.Source = new BitmapImage(new Uri(GlobalDictionary.deadUpperPath));
+                CharacterImg.Source = new BitmapImage(new Uri(GlobalDictionary.friendlyDeadUpperPath));
                 CharacterImg.Opacity = 1;
             }
-            else if (status == Status.Dead && verticalPosition == VerticalPosition.Lower)
+            else if (status == Status.Dead && IsFriendly == true && verticalPosition == VerticalPosition.Lower)
             {
-                CharacterImg.Source = new BitmapImage(new Uri(GlobalDictionary.deadLowerPath));
+                CharacterImg.Source = new BitmapImage(new Uri(GlobalDictionary.friendlyDeadLowerPath));
+                CharacterImg.Opacity = 0.85;
+            }
+            else if (status == Status.Dead && IsFriendly == false && verticalPosition == VerticalPosition.Upper)
+            {
+                CharacterImg.Source = new BitmapImage(new Uri(GlobalDictionary.enemyDeadUpperPath));
+                CharacterImg.Opacity = 1;
+            }
+            else if (status == Status.Dead && IsFriendly == false && verticalPosition == VerticalPosition.Lower)
+            {
+                CharacterImg.Source = new BitmapImage(new Uri(GlobalDictionary.enemyDeadLowerPath));
                 CharacterImg.Opacity = 0.85;
             }
         }

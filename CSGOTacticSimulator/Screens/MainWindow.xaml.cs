@@ -4239,7 +4239,10 @@ namespace CSGOTacticSimulator
                                     }
                                 }
 
-                                character.CharacterImg.RenderTransform = new RotateTransform(360 - player.ViewDirectionX, character.CharacterImg.Width / 2, character.CharacterImg.Height / 2);
+                                if (character.IsAlive)
+                                {
+                                    character.CharacterImg.RenderTransform = new RotateTransform(360 - player.ViewDirectionX, character.CharacterImg.Width / 2, character.CharacterImg.Height / 2);
+                                }
 
                                 c_runcanvas.Children.Add(character.CharacterImg);
                                 c_runcanvas.Children.Add(name);
