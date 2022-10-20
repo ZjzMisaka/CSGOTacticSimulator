@@ -9,7 +9,7 @@ namespace CSGOTacticSimulator.Model
 {
     internal class CurrentInfo
     {
-        public CurrentInfo(int tScore, int ctScore, int currentTick, float currentTime, string map, float tickTime, IEnumerable<Player> participants, Dictionary<long, List<Equipment>> missileEquipDic = null, Dictionary<long, List<Equipment>> equipDic = null)
+        public CurrentInfo(int tScore, int ctScore, int currentTick, float currentTime, string map, float tickTime, IEnumerable<Player> participants, Dictionary<long, List<Equipment>> missileEquipDic = null, Dictionary<long, List<Equipment>> weaponEquipDic = null, Dictionary<long, List<Equipment>> equipDic = null)
         {
             TScore = tScore;
             CtScore = ctScore;
@@ -19,6 +19,7 @@ namespace CSGOTacticSimulator.Model
             TickTime = tickTime;
             Participants = participants;
             MissileEquipDic = missileEquipDic;
+            WeaponEquipDic = weaponEquipDic;
             EquipDic = equipDic;
         }
 
@@ -30,6 +31,7 @@ namespace CSGOTacticSimulator.Model
         public float TickTime { get; set; }
         public IEnumerable<Player> Participants { get; set; }
         public Dictionary<long, List<Equipment>> MissileEquipDic { get; set; }
+        public Dictionary<long, List<Equipment>> WeaponEquipDic { get; set; }
         public Dictionary<long, List<Equipment>> EquipDic { get; set; }
     }
 }

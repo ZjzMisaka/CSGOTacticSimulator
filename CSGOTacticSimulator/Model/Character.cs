@@ -42,10 +42,12 @@ namespace CSGOTacticSimulator.Model
         private int money = 0;
         public Weapon Weapon { get => weapon; set => weapon = value; }
         private Weapon weapon = Weapon.Knife;
-        public List<Equipment> EquipmentList { get => equipmentList; set => equipmentList = value; }
-        private List<Equipment> equipmentList = new List<Equipment>();
+        public List<Equipment> WeaponEquipmentList { get => weaponEquipmentList; set => weaponEquipmentList = value; }
+        private List<Equipment> weaponEquipmentList = new List<Equipment>();
         public List<Equipment> MissileEquipList { get => missileEquipList; set => missileEquipList = value; }
         private List<Equipment> missileEquipList = new List<Equipment>();
+        public List<Equipment> EquipList { get => equipList; set => equipList = value; }
+        private List<Equipment> equipList = null;
         public List<Missile> Missiles { get => grenades; set => grenades = value; }
         private List<Missile> grenades = new List<Missile>();
         public Props Props { get => props; set => props = value; }

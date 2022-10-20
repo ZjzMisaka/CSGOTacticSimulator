@@ -1826,31 +1826,41 @@ namespace CSGOTacticSimulator
                     }
                     else if (nowRunningType == RunningType.DEM)
                     {
-                        string equipments = "";
+                        string weapons = "";
                         string missileEquipments = "";
+                        string equips = "";
                         int money = character.Money;
-                        foreach (Equipment equipment in character.EquipmentList)
+                        foreach (Equipment equipment in character.WeaponEquipmentList)
                         {
-                            equipments += equipment.Weapon.ToString() + " ";
+                            weapons += equipment.Weapon.ToString() + " ";
+                        }
+                        if (weapons.Length >= 1)
+                        {
+                            weapons.Remove(weapons.Length - 1, 1);
                         }
                         foreach (Equipment equipment in character.MissileEquipList)
                         {
                             missileEquipments += equipment.Weapon.ToString() + " ";
                         }
-                        if (equipments.Length >= 1)
-                        {
-                            equipments.Remove(equipments.Length - 1, 1);
-                        }
                         if (missileEquipments.Length >= 1)
                         {
                             missileEquipments.Remove(missileEquipments.Length - 1, 1);
+                        }
+                        foreach (Equipment equipment in character.EquipList)
+                        {
+                            equips += equipment.Weapon.ToString() + " ";
+                        }
+                        if (equips.Length >= 1)
+                        {
+                            equips.Remove(equips.Length - 1, 1);
                         }
 
                         tb_infos.Text =
                         "Number: " + character.Number +
                         "\nName: " + character.Name +
-                        "\nEquipments: " + equipments +
+                        "\nWeapons: " + weapons +
                         "\nMissiles: " + missileEquipments +
+                        "\nEquipment: " + equips +
                         "\nMoney: " + money +
                         "\nHP: " + character.Hp;
                     }
@@ -1891,8 +1901,9 @@ namespace CSGOTacticSimulator
                         textBlock.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
                         if ((long)textBlock.Tag == character.SteamId && textBlock != tb_team1 && textBlock != tb_team2)
                         {
-                            string equipments = "";
+                            string weapons = "";
                             string missileEquipments = "";
+                            string equips = "";
                             int money = character.Money;
                             if (Grid.GetColumn(textBlock) == 0)
                             {
@@ -1902,21 +1913,29 @@ namespace CSGOTacticSimulator
                             {
                                 team2Money += money;
                             }
-                            foreach (Equipment equipment in character.EquipmentList)
+                            foreach (Equipment equipment in character.WeaponEquipmentList)
                             {
-                                equipments += equipment.Weapon.ToString() + " ";
+                                weapons += equipment.Weapon.ToString() + " ";
+                            }
+                            if (weapons.Length >= 1)
+                            {
+                                weapons.Remove(weapons.Length - 1, 1);
                             }
                             foreach (Equipment equipment in character.MissileEquipList)
                             {
                                 missileEquipments += equipment.Weapon.ToString() + " ";
                             }
-                            if (equipments.Length >= 1)
-                            {
-                                equipments.Remove(equipments.Length - 1, 1);
-                            }
                             if (missileEquipments.Length >= 1)
                             {
                                 missileEquipments.Remove(missileEquipments.Length - 1, 1);
+                            }
+                            foreach (Equipment equipment in character.EquipList)
+                            {
+                                equips += equipment.Weapon.ToString() + " ";
+                            }
+                            if (equips.Length >= 1)
+                            {
+                                equips.Remove(equips.Length - 1, 1);
                             }
 
                             if (!character.IsAlive)
@@ -1940,8 +1959,9 @@ namespace CSGOTacticSimulator
                             textBlock.Text =
                             "Number: " + character.Number +
                             "\nName: " + character.Name +
-                            "\nEquipments: " + equipments +
+                            "\nWeapons: " + weapons +
                             "\nMissiles: " + missileEquipments +
+                            "\nEquipment: " + equips +
                             "\nMoney: " + money +
                             "\nHP: " + character.Hp;
                         }
@@ -2913,6 +2933,7 @@ namespace CSGOTacticSimulator
 
                 Dictionary<long, List<Equipment>> missileEquipDic = new Dictionary<long, List<Equipment>>();
                 Dictionary<long, List<Equipment>> weaponEquipDic = new Dictionary<long, List<Equipment>>();
+                Dictionary<long, List<Equipment>> equipmentDic = new Dictionary<long, List<Equipment>>();
 
                 foreach (Player playingParticipant in nowParser.PlayingParticipants)
                 {
@@ -2922,9 +2943,15 @@ namespace CSGOTacticSimulator
 
                     List<Equipment> missileEquipList = new List<Equipment>();
                     List<Equipment> weaponEquipList = new List<Equipment>();
+                    List<Equipment> equipmentList = new List<Equipment>();
+
                     foreach (Equipment weapon in playingParticipant.Weapons)
                     {
-                        if (weapon.Class != EquipmentClass.Grenade)
+                        if (weapon.Class == EquipmentClass.Equipment)
+                        {
+                            equipmentList.Add(new Equipment(weapon.OriginalString));
+                        }
+                        else if(weapon.Class != EquipmentClass.Grenade)
                         {
                             weaponEquipList.Add(new Equipment(weapon.OriginalString));
                         }
@@ -2938,9 +2965,10 @@ namespace CSGOTacticSimulator
                     }
                     missileEquipDic[playingParticipant.SteamID] = missileEquipList;
                     weaponEquipDic[playingParticipant.SteamID] = weaponEquipList;
+                    equipmentDic[playingParticipant.SteamID] = equipmentList;
                 }
                 
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants, missileEquipDic, weaponEquipDic);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants, missileEquipDic, weaponEquipDic, equipmentDic);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "TickDone", 0));
             };
             parser.PlayerKilled += (parseSender, parseE) =>
@@ -4111,18 +4139,24 @@ namespace CSGOTacticSimulator
                                 }
 
                                 List<Equipment> missileEquipList = new List<Equipment>();
+                                List<Equipment> weaponEquipList = new List<Equipment>();
                                 List<Equipment> equipList = new List<Equipment>();
-                                foreach (Equipment equipment in currentEvent.Item1.EquipDic[player.SteamID])
+                                foreach (Equipment equipment in currentEvent.Item1.WeaponEquipDic[player.SteamID])
                                 {
-                                    equipList.Add(new Equipment(equipment.OriginalString));
+                                    weaponEquipList.Add(new Equipment(equipment.OriginalString));
                                 }
                                 foreach (Equipment equipment in currentEvent.Item1.MissileEquipDic[player.SteamID])
                                 {
                                     missileEquipList.Add(new Equipment(equipment.OriginalString));
                                 }
-                                
+                                foreach (Equipment equipment in currentEvent.Item1.EquipDic[player.SteamID])
+                                {
+                                    equipList.Add(new Equipment(equipment.OriginalString));
+                                }
+
                                 character.MissileEquipList = missileEquipList;
-                                character.EquipmentList = equipList;
+                                character.WeaponEquipmentList = weaponEquipList;
+                                character.EquipList = equipList;
                                 character.Hp = player.HP;
                                 character.Money = player.Money;
                                 character.IsT = player.Team == Team.Terrorist;
@@ -5527,6 +5561,14 @@ namespace CSGOTacticSimulator
                     GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
                     tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
                     tb_timer.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+
+                    foreach (UIElement element in g_infos.Children)
+                    {
+                        if (element is TextBlock)
+                        {
+                            (element as TextBlock).FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+                        }
+                    }
 
                     foreach (Character character in CharacterHelper.GetCharacters())
                     {
