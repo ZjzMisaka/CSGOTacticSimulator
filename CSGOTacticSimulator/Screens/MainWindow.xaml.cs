@@ -59,10 +59,7 @@ namespace CSGOTacticSimulator
         private XshdSyntaxDefinition logXshd = null;
         private System.Timers.Timer resizeTimer = new System.Timers.Timer(100) { Enabled = false };
         private bool isResizing = false;
-        private bool mapSizeChanged = false;
         private Dictionary<UIElement, Point> elementPointDic = new Dictionary<UIElement, Point>();
-        private double mapOldWidth = -1;
-        private double mapNewWidth = 0;
         public List<Point> mouseMovePathInPreview = new List<Point>();
         public List<Point> keyDownInPreview = new List<Point>();
         public Stopwatch stopWatch = null;
@@ -5509,13 +5506,6 @@ namespace CSGOTacticSimulator
 
             if (sender.Equals(i_map))
             {
-                mapSizeChanged = true;
-                mapNewWidth = e.NewSize.Width;
-                if (mapOldWidth == -1 && e.PreviousSize.Width > 0)
-                {
-                    mapOldWidth = e.PreviousSize.Width;
-                }
-
                 double width = e.NewSize.Width - g_infos.Margin.Left - g_infos.Margin.Right;
                 if (width < 0)
                 {
