@@ -92,6 +92,8 @@ namespace CSGOTacticSimulator.Model
         private Image otherImg = new Image();
         public Image StatusImg { get => statusImg; set => statusImg = value; }
         private Image statusImg = new Image();
+        public Label CharacterLabel { get => characterLabel; set => characterLabel = value; }
+        private Label characterLabel = new Label();
 
         public Character(string name, long steamId, bool isFriendly, bool isT, Point mapPoint, MainWindow wnd)
         {

@@ -11,9 +11,12 @@ using Newtonsoft.Json;
 using Sdl.MultiSelectComboBox.Themes.Generic;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Numerics;
 using System.Security.Policy;
 using System.Threading;
 using System.Timers;
@@ -25,6 +28,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Xml;
+using System.Xml.Linq;
 using static CustomizableMessageBox.MessageBox;
 using MessageBox = CustomizableMessageBox.MessageBox;
 using Path = System.IO.Path;
@@ -55,7 +59,10 @@ namespace CSGOTacticSimulator
         private XshdSyntaxDefinition logXshd = null;
         private System.Timers.Timer resizeTimer = new System.Timers.Timer(100) { Enabled = false };
         private bool isResizing = false;
+        private bool mapSizeChanged = false;
         private Dictionary<UIElement, Point> elementPointDic = new Dictionary<UIElement, Point>();
+        private double mapOldWidth = -1;
+        private double mapNewWidth = 0;
         public List<Point> mouseMovePathInPreview = new List<Point>();
         public List<Point> keyDownInPreview = new List<Point>();
         public Stopwatch stopWatch = null;
@@ -262,6 +269,25 @@ namespace CSGOTacticSimulator
             }
         }
 
+        private Label CreateChacterlabel(Character character, Point wndPoint, int hp)
+        {
+            Label name = new Label();
+            name.IsHitTestVisible = false;
+            name.Foreground = new SolidColorBrush(Colors.White);
+            name.FontSize *= GlobalDictionary.ImageRatio * 1.3;
+            name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
+            if (hp >= 0)
+            {
+                name.Content += " [" + hp + "]";
+            }
+            Canvas.SetLeft(name, wndPoint.X);
+            Canvas.SetTop(name, wndPoint.Y + character.CharacterImg.Height / 2);
+
+            character.CharacterLabel = name;
+
+            return name;
+        }
+
         public void NewCharacter(Character character, Point mapPoint)
         {
             Point wndPoint = GetWndPoint(mapPoint, ImgType.Character);
@@ -269,16 +295,8 @@ namespace CSGOTacticSimulator
             Canvas.SetLeft(character.CharacterImg, wndPoint.X);
             Canvas.SetTop(character.CharacterImg, wndPoint.Y);
 
-            Label name = new Label();
-            name.IsHitTestVisible = false;
-            name.Foreground = new SolidColorBrush(Colors.White);
-            name.FontSize *= GlobalDictionary.ImageRatio * 1.3;
-            name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
-            Canvas.SetLeft(name, wndPoint.X);
-            Canvas.SetTop(name, wndPoint.Y + character.CharacterImg.Height / 2);
-
             c_runcanvas.Children.Add(character.CharacterImg);
-            c_runcanvas.Children.Add(name);
+            c_runcanvas.Children.Add(CreateChacterlabel(character, wndPoint, -1));
         }
 
         public Point GetWndPoint(Point mapPoint, ImgType imgType)
@@ -478,7 +496,7 @@ namespace CSGOTacticSimulator
             {
                 return;
             }
-            
+
             if (btn_pause.Tag.ToString() == "R")
             {
                 ThreadHelper.PauseAllThread();
@@ -1486,16 +1504,8 @@ namespace CSGOTacticSimulator
                     Canvas.SetLeft(character.CharacterImg, endWndPointList.Last().X);
                     Canvas.SetTop(character.CharacterImg, endWndPointList.Last().Y);
 
-                    Label name = new Label();
-                    name.IsHitTestVisible = false;
-                    name.Foreground = new SolidColorBrush(Colors.White);
-                    name.FontSize *= GlobalDictionary.ImageRatio * 1.3;
-                    name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
-                    Canvas.SetLeft(name, endWndPointList.Last().X);
-                    Canvas.SetTop(name, endWndPointList.Last().Y + character.CharacterImg.Height / 2);
-
                     c_runcanvas.Children.Add(character.CharacterImg);
-                    c_runcanvas.Children.Add(name);
+                    c_runcanvas.Children.Add(CreateChacterlabel(character, endWndPointList.Last(), -1));
 
                     characters[characters.IndexOf(character)].MapPoint = GetMapPoint(endWndPointList.Last(), ImgType.Character);
                 }
@@ -1548,16 +1558,8 @@ namespace CSGOTacticSimulator
                                     Canvas.SetLeft(character.CharacterImg, nowWndPoint.X);
                                     Canvas.SetTop(character.CharacterImg, nowWndPoint.Y);
 
-                                    Label name = new Label();
-                                    name.IsHitTestVisible = false;
-                                    name.Foreground = new SolidColorBrush(Colors.White);
-                                    name.FontSize *= GlobalDictionary.ImageRatio * 1.3;
-                                    name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
-                                    Canvas.SetLeft(name, nowWndPoint.X);
-                                    Canvas.SetTop(name, nowWndPoint.Y + character.CharacterImg.Height / 2);
-
                                     c_runcanvas.Children.Add(character.CharacterImg);
-                                    c_runcanvas.Children.Add(name);
+                                    c_runcanvas.Children.Add(CreateChacterlabel(character, nowWndPoint, -1));
                                 }
                                 catch
                                 {
@@ -1916,7 +1918,7 @@ namespace CSGOTacticSimulator
                             {
                                 team1Money += money;
                             }
-                            else 
+                            else
                             {
                                 team2Money += money;
                             }
@@ -1991,7 +1993,7 @@ namespace CSGOTacticSimulator
         {
             List<Character> characters = CharacterHelper.GetCharacters();
 
-            if(e != null)
+            if (e != null)
             {
                 isNeedAutomaticGuidance = false;
             }
@@ -2113,7 +2115,7 @@ namespace CSGOTacticSimulator
                 string filePath = ofd.FileName;
                 if (Path.GetExtension(filePath) == ".txt")
                 {
-                    if(!File.Exists(filePath))
+                    if (!File.Exists(filePath))
                     {
                         PropertiesSetter newPropertiesSetter = new PropertiesSetter(GlobalDictionary.propertiesSetter);
                         newPropertiesSetter.CloseTimer = new MessageBoxCloseTimer(3, 0);
@@ -2274,7 +2276,7 @@ namespace CSGOTacticSimulator
                 else
                 {
                     int result;
-                    if(int.TryParse((MessageBox.ButtonList[0] as TextBox).Text, out result))
+                    if (int.TryParse((MessageBox.ButtonList[0] as TextBox).Text, out result))
                     {
                         tickTime = 1 / (float)result;
                     }
@@ -2284,7 +2286,7 @@ namespace CSGOTacticSimulator
                         newPropertiesSetter.CloseTimer = new MessageBoxCloseTimer(3, 0);
                         MessageBox.Show(newPropertiesSetter, "请输入数字", "错误", MessageBoxButton.OK, MessageBoxImage.Information);
                         return;
-                    }                   
+                    }
                 }
             }
             parser.DecoyNadeEnded += (parseSender, parseE) =>
@@ -2749,14 +2751,14 @@ namespace CSGOTacticSimulator
                         }
                     }
                 }
-                
+
             };
             parser.RoundStart += (parseSender, parseE) =>
             {
                 DemoParser demoParser = parseSender as DemoParser;
 
-                te_editor.Dispatcher.Invoke(() => 
-                { 
+                te_editor.Dispatcher.Invoke(() =>
+                {
                     te_editor.Text += "Round " + (demoParser.TScore + demoParser.CTScore + 1) + ": [T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "]\n";
                     te_editor.ScrollToEnd();
                 });
@@ -2789,7 +2791,7 @@ namespace CSGOTacticSimulator
                     {
                         character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
                     });
-                    
+
                     dic.Add(character.SteamId, character.Number);
 
                     InitInfoTag(player);
@@ -2958,7 +2960,7 @@ namespace CSGOTacticSimulator
                         {
                             equipmentList.Add(new Equipment(weapon.OriginalString));
                         }
-                        else if(weapon.Class != EquipmentClass.Grenade)
+                        else if (weapon.Class != EquipmentClass.Grenade)
                         {
                             weaponEquipList.Add(new Equipment(weapon.OriginalString));
                         }
@@ -2974,7 +2976,7 @@ namespace CSGOTacticSimulator
                     weaponEquipDic[playingParticipant.SteamID] = weaponEquipList;
                     equipmentDic[playingParticipant.SteamID] = equipmentList;
                 }
-                
+
                 CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants, missileEquipDic, weaponEquipDic, equipmentDic);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "TickDone", 0));
             };
@@ -3023,7 +3025,7 @@ namespace CSGOTacticSimulator
                     Tuple<CurrentInfo, EventArgs, string, int> currentEvent = eventList[i];
 
                     EventArgs eventArgs = currentEvent.Item2;
-                    if(eventArgs is TickDoneEventArgs)
+                    if (eventArgs is TickDoneEventArgs)
                     {
                         ++ticksCount;
                     }
@@ -3119,7 +3121,7 @@ namespace CSGOTacticSimulator
             Dictionary<int, int> usedMissileDic = new Dictionary<int, int>();
 
             //double lastActionTime = 0;
-            
+
             bool isFreezetimeEnded = false;
 
             float startTime = 0;
@@ -3183,7 +3185,7 @@ namespace CSGOTacticSimulator
                                 character.OtherImg.Visibility = Visibility.Collapsed;
                             }
                         });
-                        
+
                         continue;
                     }
                     else
@@ -3250,7 +3252,7 @@ namespace CSGOTacticSimulator
                     PlayerKilledEventArgs playerKilledEventArgs = (currentEvent.Item2 as PlayerKilledEventArgs);
                     long steamID = playerKilledEventArgs.Killer.SteamID;
                     Character character = CharacterHelper.GetCharacter(dic[steamID]);
-                    
+
                     this.Dispatcher.Invoke(() =>
                     {
                         ShowPov(character.CharacterImg, null);
@@ -4200,15 +4202,6 @@ namespace CSGOTacticSimulator
                                 Canvas.SetLeft(character.CharacterImg, endWndPoint.X);
                                 Canvas.SetTop(character.CharacterImg, endWndPoint.Y);
 
-                                Label name = new Label();
-                                name.IsHitTestVisible = false;
-                                name.Foreground = new SolidColorBrush(Colors.White);
-                                name.FontSize *= GlobalDictionary.ImageRatio * 1.3;
-                                name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
-                                name.Content += " [" + player.HP + "]";
-                                Canvas.SetLeft(name, endWndPoint.X);
-                                Canvas.SetTop(name, endWndPoint.Y + character.CharacterImg.Height / 2);
-
                                 if (character.OtherImg.Visibility == Visibility.Visible && character.StatusImg.Visibility == Visibility.Visible)
                                 {
                                     character.OtherImg.Width = character.CharacterImg.Width * 1.5;
@@ -4245,7 +4238,7 @@ namespace CSGOTacticSimulator
                                 }
 
                                 c_runcanvas.Children.Add(character.CharacterImg);
-                                c_runcanvas.Children.Add(name);
+                                c_runcanvas.Children.Add(CreateChacterlabel(character, endWndPoint, player.HP));
                                 if (character.OtherImg.Visibility == Visibility.Visible)
                                 {
                                     c_runcanvas.Children.Add(character.OtherImg);
@@ -4375,13 +4368,13 @@ namespace CSGOTacticSimulator
             string[] splitListStr = null;
             foreach (string map in mapList)
             {
-                if(mapName.Contains(map.ToLowerInvariant()))
+                if (mapName.Contains(map.ToLowerInvariant()))
                 {
                     string[] mapCalibrationDatas = GlobalDictionary.mapCalibrationDatas;
-                    foreach(string mapData in mapCalibrationDatas)
+                    foreach (string mapData in mapCalibrationDatas)
                     {
                         string[] mapCalibrationData = mapData.Split(':');
-                        if(mapCalibrationData[0].ToLowerInvariant() == map.ToLowerInvariant())
+                        if (mapCalibrationData[0].ToLowerInvariant() == map.ToLowerInvariant())
                         {
                             splitListStr = mapCalibrationData[1].Split(',');
                             break;
@@ -5516,6 +5509,13 @@ namespace CSGOTacticSimulator
 
             if (sender.Equals(i_map))
             {
+                mapSizeChanged = true;
+                mapNewWidth = e.NewSize.Width;
+                if (mapOldWidth == -1 && e.PreviousSize.Width > 0)
+                {
+                    mapOldWidth = e.PreviousSize.Width;
+                }
+
                 double width = e.NewSize.Width - g_infos.Margin.Left - g_infos.Margin.Right;
                 if (width < 0)
                 {
@@ -5567,7 +5567,7 @@ namespace CSGOTacticSimulator
                     });
                 }
             }).Start();
-            
+
             foreach (UIElement obj in removeList)
             {
                 elementPointDic.Remove(obj);
