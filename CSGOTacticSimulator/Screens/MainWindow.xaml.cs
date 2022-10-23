@@ -5639,18 +5639,31 @@ namespace CSGOTacticSimulator
 
             foreach (Character character in characterList)
             {
-                if (character.CharacterImg.Visibility == Visibility.Visible)
+                if (character.StatusImg.Visibility == Visibility.Visible)
                 {
-                    c_runcanvas.Children.Remove(character.CharacterImg);
+                    c_runcanvas.Children.Remove(character.StatusImg);
 
-                    character.CharacterImg.Width = character.CharacterImg.Width * 1.5;
-                    character.CharacterImg.Height = character.CharacterImg.Height * 1.5;
+                    character.StatusImg.Width = character.CharacterImg.Width * 1.5;
+                    character.StatusImg.Height = character.CharacterImg.Height * 1.5;
 
-                    Point mapPoint = character.CharacterImg.MapPoint;
-                    Canvas.SetLeft(character.CharacterImg, GetWndPoint(mapPoint, ImgType.Nothing).X);
-                    Canvas.SetTop(character.CharacterImg, GetWndPoint(mapPoint, ImgType.Nothing).Y);
+                    Point mapPoint = character.StatusImg.MapPoint;
+                    Canvas.SetLeft(character.StatusImg, GetWndPoint(mapPoint, ImgType.Nothing).X);
+                    Canvas.SetTop(character.StatusImg, GetWndPoint(mapPoint, ImgType.Nothing).Y);
 
-                    c_runcanvas.Children.Add(character.CharacterImg);
+                    c_runcanvas.Children.Add(character.StatusImg);
+                }
+                if (character.OtherImg.Visibility == Visibility.Visible)
+                {
+                    c_runcanvas.Children.Remove(character.OtherImg);
+
+                    character.OtherImg.Width = character.CharacterImg.Width * 1.5;
+                    character.OtherImg.Height = character.CharacterImg.Height * 1.5;
+
+                    Point mapPoint = character.OtherImg.MapPoint;
+                    Canvas.SetLeft(character.OtherImg, GetWndPoint(mapPoint, ImgType.Nothing).X);
+                    Canvas.SetTop(character.OtherImg, GetWndPoint(mapPoint, ImgType.Nothing).Y);
+
+                    c_runcanvas.Children.Add(character.OtherImg);
                 }
             }
         }
