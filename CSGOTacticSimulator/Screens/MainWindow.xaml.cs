@@ -65,6 +65,7 @@ namespace CSGOTacticSimulator
         public List<Point> keyDownInPreview = new List<Point>();
         public Stopwatch stopWatch = null;
         public Stopwatch stopWatchThisRound = null;
+        public List<Stopwatch> stopwatchList = new List<Stopwatch>();
         public int offset = 0;
         public bool isForward = false;
         public bool isBackward = false;
@@ -508,6 +509,13 @@ namespace CSGOTacticSimulator
                 {
                     stopWatchThisRound.Stop();
                 }
+                foreach (Stopwatch stopwatch in stopwatchList)
+                {
+                    if (stopwatch != null)
+                    {
+                        stopwatch.Stop();
+                    }
+                }
 
                 btn_pause.Background = GlobalDictionary.resumeBrush;
 
@@ -528,6 +536,13 @@ namespace CSGOTacticSimulator
                 if (stopWatchThisRound != null)
                 {
                     stopWatchThisRound.Start();
+                }
+                foreach (Stopwatch stopwatch in stopwatchList)
+                {
+                    if (stopwatch != null)
+                    {
+                        stopwatch.Start();
+                    }
                 }
 
                 btn_pause.Background = GlobalDictionary.pauseBrush;
@@ -3971,12 +3986,13 @@ namespace CSGOTacticSimulator
                                 missileImg.EndMapPoint = GetMapPoint(missileEndWndPoint, ImgType.Missile);
                                 Point nowWndPoint = GetWndPoint(missileImg.MapPoint, ImgType.Missile);
                                 Point unitVector = VectorHelper.GetUnitVector(nowWndPoint, missileEndWndPoint);
-                                int costedTime = 0;
+                                Stopwatch costedTimeStopwatch = Stopwatch.StartNew();
+                                stopwatchList.Add(costedTimeStopwatch);
                                 while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, GetWndPoint(missileImg.EndMapPoint, ImgType.Missile)), unitVector) < 1)
                                 {
                                     missileEndWndPoint = GetWndPoint(missileImg.EndMapPoint, ImgType.Missile);
                                     nowWndPoint = GetWndPoint(missileImg.MapPoint, ImgType.Missile);
-                                    double pixelPerFresh = VectorHelper.GetDistance(nowWndPoint, missileEndWndPoint) / ((1000 / GlobalDictionary.animationFreshTime) * (costTime - (double)costedTime / 1000));
+                                    double pixelPerFresh = VectorHelper.GetDistance(nowWndPoint, missileEndWndPoint) / ((1000 / GlobalDictionary.animationFreshTime) * (costTime - costedTimeStopwatch.Elapsed.TotalSeconds));
 
                                     nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
                                     Point nowMapPoint = GetMapPoint(nowWndPoint, ImgType.Missile);
@@ -3999,8 +4015,10 @@ namespace CSGOTacticSimulator
                                     });
 
                                     Thread.Sleep(animationFreshTime);
-                                    costedTime += animationFreshTime;
                                 }
+                                costedTimeStopwatch.Stop();
+                                costedTimeStopwatch = null;
+                                stopwatchList.Remove(costedTimeStopwatch);
                                 c_runcanvas.Dispatcher.Invoke(() =>
                                 {
                                     if (c_runcanvas.Children.Contains(missileImg))
