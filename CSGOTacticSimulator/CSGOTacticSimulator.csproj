@@ -102,6 +102,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\TSImage.cs" />
     <Compile Include="Global\GlobalDictionary.cs" />
     <Compile Include="Model\Animation.cs" />
     <Compile Include="Helper\CharacterHelper.cs" />

@@ -1,4 +1,5 @@
-﻿using CSGOTacticSimulator.Global;
+﻿using CSGOTacticSimulator.Controls;
+using CSGOTacticSimulator.Global;
 using CSGOTacticSimulator.Helper;
 using CSGOTacticSimulator.Model;
 using CustomizableMessageBox;
@@ -26,6 +27,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.TextFormatting;
 using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Linq;
@@ -58,7 +60,6 @@ namespace CSGOTacticSimulator
         private XshdSyntaxDefinition codeXshd = null;
         private XshdSyntaxDefinition logXshd = null;
         private System.Timers.Timer resizeTimer = new System.Timers.Timer(100) { Enabled = false };
-        private bool isResizing = false;
         private Dictionary<UIElement, Point> elementPointDic = new Dictionary<UIElement, Point>();
         public List<Point> mouseMovePathInPreview = new List<Point>();
         public List<Point> keyDownInPreview = new List<Point>();
@@ -3433,12 +3434,12 @@ namespace CSGOTacticSimulator
 
                         c_runcanvas.Dispatcher.Invoke(() =>
                         {
-                            Image bombImage = null;
+                            TSImage bombImage = null;
                             foreach (FrameworkElement frameworkElement in c_runcanvas.Children)
                             {
-                                if (frameworkElement is Image && frameworkElement.Tag != null && frameworkElement.Tag.ToString() == "Bomb")
+                                if (frameworkElement is TSImage && (frameworkElement as TSImage).TagStr == "Bomb")
                                 {
-                                    bombImage = frameworkElement as Image;
+                                    bombImage = frameworkElement as TSImage;
                                 }
                             }
                             if (bombImage == null)
@@ -3446,12 +3447,14 @@ namespace CSGOTacticSimulator
                                 return;
                             }
 
-                            Image explosionImage = new Image();
+                            TSImage explosionImage = new TSImage();
                             explosionImage.Source = new BitmapImage(new Uri(GlobalDictionary.explosionPath));
                             explosionImage.Width = GlobalDictionary.ExplosionEffectWidthAndHeight;
                             explosionImage.Height = GlobalDictionary.ExplosionEffectWidthAndHeight;
-                            Point explosionWndPoint = GetMapPoint(new Point(Canvas.GetLeft(bombImage), Canvas.GetTop(bombImage)), ImgType.Props);
+                            Point explosionWndPoint = bombImage.MapPoint;
                             c_runcanvas.Children.Remove(bombImage);
+                            explosionImage.MapPoint = explosionWndPoint;
+                            explosionImage.ImgType = ImgType.ExplosionEffect;
 
                             explosionWndPoint = GetWndPoint(explosionWndPoint, ImgType.ExplosionEffect);
                             Canvas.SetLeft(explosionImage, explosionWndPoint.X);
@@ -3482,12 +3485,12 @@ namespace CSGOTacticSimulator
 
                         c_runcanvas.Dispatcher.Invoke(() =>
                         {
-                            Image bombImage = null;
+                            TSImage bombImage = null;
                             foreach (FrameworkElement frameworkElement in c_runcanvas.Children)
                             {
-                                if (frameworkElement is Image && frameworkElement.Tag != null && frameworkElement.Tag.ToString() == "Bomb")
+                                if (frameworkElement is TSImage && (frameworkElement as TSImage).TagStr == "Bomb")
                                 {
-                                    bombImage = frameworkElement as Image;
+                                    bombImage = frameworkElement as TSImage;
                                 }
                             }
                             if (bombImage == null)
@@ -3497,7 +3500,7 @@ namespace CSGOTacticSimulator
 
                             c_runcanvas.Children.Remove(bombImage);
 
-                            Image explosionImage = new Image();
+                            TSImage explosionImage = new TSImage();
                             explosionImage.Source = new BitmapImage(new Uri(GlobalDictionary.explosionPath));
                             explosionImage.Width = GlobalDictionary.ExplosionEffectWidthAndHeight;
                             explosionImage.Height = GlobalDictionary.ExplosionEffectWidthAndHeight;
@@ -3515,12 +3518,14 @@ namespace CSGOTacticSimulator
 
                         c_runcanvas.Dispatcher.Invoke(() =>
                         {
-                            Image bombImage = new Image();
+                            TSImage bombImage = new TSImage();
                             bombImage.Source = new BitmapImage(new Uri(GlobalDictionary.bombPath));
                             bombImage.Width = GlobalDictionary.PropsWidthAndHeight;
                             bombImage.Height = GlobalDictionary.PropsWidthAndHeight;
                             bombImage.Opacity = 0.75;
-                            bombImage.Tag = "Bomb";
+                            bombImage.TagStr = "Bomb";
+                            bombImage.MapPoint = character.MapPoint;
+                            bombImage.ImgType = ImgType.Props;
                             Point bombWndPoint = GetWndPoint(character.MapPoint, ImgType.Props);
 
                             character.OtherImg.Visibility = Visibility.Collapsed;
@@ -3900,19 +3905,23 @@ namespace CSGOTacticSimulator
                             Point missileStartWndPoint = GetWndPoint(missileStartMapPoint, ImgType.Missile);
                             Point missileEndWndPoint = GetWndPoint(missileEndMapPoint, ImgType.Missile);
 
-                            double pixelPerFresh = VectorHelper.GetDistance(missileStartWndPoint, missileEndWndPoint) / ((1000 / GlobalDictionary.animationFreshTime) * costTime);
+                            
 
 
 
                             List<Character> characters = CharacterHelper.GetCharacters();
 
-                            Image missileImg = null;
-                            Image missileEffectImg = null;
+                            TSImage missileImg = null;
+                            TSImage missileEffectImg = null;
                             double effectLifeSpan = 0;
                             this.Dispatcher.Invoke(() =>
                             {
-                                missileImg = new Image();
-                                missileEffectImg = new Image();
+                                missileImg = new TSImage();
+                                missileEffectImg = new TSImage();
+                                missileImg.MapPoint = missileStartMapPoint;
+                                missileImg.ImgType = ImgType.Missile;
+                                missileEffectImg.MapPoint = missileEndMapPoint;
+                                missileEffectImg.ImgType = ImgType.MissileEffect;
                                 if (weapon == EquipmentElement.HE)
                                 {
                                     missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.hegrenadePath));
@@ -3953,24 +3962,24 @@ namespace CSGOTacticSimulator
 
                                 missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
                                 missileImg.Height = GlobalDictionary.MissileWidthAndHeight;
-
-                                if (missileEffectImg != null)
-                                {
-                                    missileEffectImg.Opacity = 0.85;
-                                    missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
-                                    missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
-                                }
                             });
 
 
                             //Thread.Sleep((int)(waitTime * 1000));
                             Thread throwThread = new Thread(() =>
                             {
-                                Point nowWndPoint = missileStartWndPoint;
-                                Point unitVector = VectorHelper.GetUnitVector(missileStartWndPoint, missileEndWndPoint);
-                                while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, missileEndWndPoint), unitVector) < 1)
+                                missileImg.EndMapPoint = GetMapPoint(missileEndWndPoint, ImgType.Missile);
+                                Point nowWndPoint = GetWndPoint(missileImg.MapPoint, ImgType.Missile);
+                                Point unitVector = VectorHelper.GetUnitVector(nowWndPoint, missileEndWndPoint);
+                                int costedTime = 0;
+                                while (VectorHelper.GetDistance(VectorHelper.GetUnitVector(nowWndPoint, GetWndPoint(missileImg.EndMapPoint, ImgType.Missile)), unitVector) < 1)
                                 {
+                                    missileEndWndPoint = GetWndPoint(missileImg.EndMapPoint, ImgType.Missile);
+                                    nowWndPoint = GetWndPoint(missileImg.MapPoint, ImgType.Missile);
+                                    double pixelPerFresh = VectorHelper.GetDistance(nowWndPoint, missileEndWndPoint) / ((1000 / GlobalDictionary.animationFreshTime) * (costTime - (double)costedTime / 1000));
+
                                     nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
+                                    Point nowMapPoint = GetMapPoint(nowWndPoint, ImgType.Missile);
 
                                     if (double.IsInfinity(nowWndPoint.X) || double.IsInfinity(nowWndPoint.Y))
                                     {
@@ -3979,6 +3988,7 @@ namespace CSGOTacticSimulator
 
                                     c_runcanvas.Dispatcher.Invoke(() =>
                                     {
+                                        missileImg.MapPoint = nowMapPoint;
                                         if (c_runcanvas.Children.Contains(missileImg))
                                         {
                                             c_runcanvas.Children.Remove(missileImg);
@@ -3989,8 +3999,8 @@ namespace CSGOTacticSimulator
                                     });
 
                                     Thread.Sleep(animationFreshTime);
+                                    costedTime += animationFreshTime;
                                 }
-                                missileStartWndPoint = nowWndPoint;
                                 c_runcanvas.Dispatcher.Invoke(() =>
                                 {
                                     if (c_runcanvas.Children.Contains(missileImg))
@@ -3999,9 +4009,15 @@ namespace CSGOTacticSimulator
                                     }
                                 });
 
-                                nowWndPoint = GetWndPoint(GetMapPoint(nowWndPoint, ImgType.Missile), ImgType.MissileEffect);
+                                nowWndPoint = GetWndPoint(missileImg.EndMapPoint, ImgType.MissileEffect);
                                 c_runcanvas.Dispatcher.Invoke(() =>
                                 {
+                                    if (missileEffectImg != null)
+                                    {
+                                        missileEffectImg.Opacity = 0.85;
+                                        missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
+                                        missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
+                                    }
                                     Canvas.SetLeft(missileEffectImg, missileEndWndPoint.X);
                                     Canvas.SetTop(missileEffectImg, missileEndWndPoint.Y);
                                     c_runcanvas.Children.Add(missileEffectImg);
@@ -4032,7 +4048,8 @@ namespace CSGOTacticSimulator
                             bulletLine.StrokeDashCap = PenLineCap.Triangle;
                             bulletLine.StrokeEndLineCap = PenLineCap.Triangle;
                             bulletLine.StrokeStartLineCap = PenLineCap.Square;
-                            Point fromWndPoint = GetWndPoint(DemoPointToMapPoint(player.Position, currentInfo.Map), ImgType.Nothing);
+                            Point fromMapPoint = DemoPointToMapPoint(player.Position, currentInfo.Map);
+                            Point fromWndPoint = GetWndPoint(fromMapPoint, ImgType.Nothing);
                             WeaponFiredEventArgs weaponFiredEventArgs = currentEvent.Item2 as WeaponFiredEventArgs;
 
                             double tan = Math.Tan(player.ViewDirectionX * Math.PI / 180);
@@ -4056,7 +4073,12 @@ namespace CSGOTacticSimulator
 
                             direction = VectorHelper.GetUnitVector(new Point(0, 0), direction);
 
-                            Point toWndPoint = GetWndPoint(DemoPointToMapPoint(player.Position + new DemoInfo.Vector((float)(direction.X * 1000), (float)(direction.Y * 1000), 0), currentInfo.Map), ImgType.Nothing);
+                            Point toMapPoint = DemoPointToMapPoint(player.Position + new DemoInfo.Vector((float)(direction.X * 1000), (float)(direction.Y * 1000), 0), currentInfo.Map);
+                            Point toWndPoint = GetWndPoint(toMapPoint, ImgType.Nothing);
+
+                            List<Point> mapPointList = new List<Point>() { fromMapPoint, toMapPoint };
+                            bulletLine.Tag = mapPointList;
+
                             bulletLine.X1 = fromWndPoint.X;
                             bulletLine.Y1 = fromWndPoint.Y;
                             bulletLine.X2 = toWndPoint.X;
@@ -4203,13 +4225,19 @@ namespace CSGOTacticSimulator
                                 {
                                     character.OtherImg.Width = character.CharacterImg.Width * 1.5;
                                     character.OtherImg.Height = character.CharacterImg.Height * 1.5;
-                                    Canvas.SetLeft(character.OtherImg, endWndPoint.X - character.CharacterImg.Width * -3 / 8);
-                                    Canvas.SetTop(character.OtherImg, endWndPoint.Y - character.CharacterImg.Height);
+                                    Point otherImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * -3 / 8, endWndPoint.Y - character.CharacterImg.Height);
+                                    character.OtherImg.MapPoint = GetMapPoint(otherImgWndPoint, ImgType.Nothing);
+                                    character.OtherImg.ImgType = ImgType.Nothing;
+                                    Canvas.SetLeft(character.OtherImg, otherImgWndPoint.X);
+                                    Canvas.SetTop(character.OtherImg, otherImgWndPoint.Y);
 
                                     character.StatusImg.Width = character.CharacterImg.Width * 1.5;
                                     character.StatusImg.Height = character.CharacterImg.Height * 1.5;
-                                    Canvas.SetLeft(character.StatusImg, endWndPoint.X - character.CharacterImg.Width * 8 / 8);
-                                    Canvas.SetTop(character.StatusImg, endWndPoint.Y - character.CharacterImg.Height);
+                                    Point statusImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 8 / 8, endWndPoint.Y - character.CharacterImg.Height);
+                                    character.StatusImg.MapPoint = GetMapPoint(statusImgWndPoint, ImgType.Nothing);
+                                    character.StatusImg.ImgType = ImgType.Nothing;
+                                    Canvas.SetLeft(character.StatusImg, statusImgWndPoint.X);
+                                    Canvas.SetTop(character.StatusImg, statusImgWndPoint.Y);
                                 }
                                 else
                                 {
@@ -4217,15 +4245,21 @@ namespace CSGOTacticSimulator
                                     {
                                         character.OtherImg.Width = character.CharacterImg.Width * 1.5;
                                         character.OtherImg.Height = character.CharacterImg.Height * 1.5;
-                                        Canvas.SetLeft(character.OtherImg, endWndPoint.X - character.CharacterImg.Width * 3 / 8);
-                                        Canvas.SetTop(character.OtherImg, endWndPoint.Y - character.CharacterImg.Height);
+                                        Point otherImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 3 / 8, endWndPoint.Y - character.CharacterImg.Height);
+                                        character.OtherImg.MapPoint = GetMapPoint(otherImgWndPoint, ImgType.Nothing);
+                                        character.OtherImg.ImgType = ImgType.Nothing;
+                                        Canvas.SetLeft(character.OtherImg, otherImgWndPoint.X);
+                                        Canvas.SetTop(character.OtherImg, otherImgWndPoint.Y);
                                     }
                                     if (character.StatusImg.Visibility == Visibility.Visible)
                                     {
                                         character.StatusImg.Width = character.CharacterImg.Width * 1.5;
                                         character.StatusImg.Height = character.CharacterImg.Height * 1.5;
-                                        Canvas.SetLeft(character.StatusImg, endWndPoint.X - character.CharacterImg.Width * 3 / 8);
-                                        Canvas.SetTop(character.StatusImg, endWndPoint.Y - character.CharacterImg.Height);
+                                        Point statusImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 3 / 8, endWndPoint.Y - character.CharacterImg.Height);
+                                        character.StatusImg.MapPoint = GetMapPoint(statusImgWndPoint, ImgType.Nothing);
+                                        character.StatusImg.ImgType = ImgType.Nothing;
+                                        Canvas.SetLeft(character.StatusImg, statusImgWndPoint.X);
+                                        Canvas.SetTop(character.StatusImg, statusImgWndPoint.Y);
                                     }
                                 }
 
@@ -4234,6 +4268,8 @@ namespace CSGOTacticSimulator
                                     character.CharacterImg.RenderTransform = new RotateTransform(360 - player.ViewDirectionX, character.CharacterImg.Width / 2, character.CharacterImg.Height / 2);
                                 }
 
+                                character.CharacterImg.MapPoint = endMapPoint;
+                                character.CharacterImg.ImgType = ImgType.Character;
                                 c_runcanvas.Children.Add(character.CharacterImg);
                                 c_runcanvas.Children.Add(CreateChacterlabel(character, endWndPoint, player.HP));
                                 if (character.OtherImg.Visibility == Visibility.Visible)
@@ -5491,19 +5527,6 @@ namespace CSGOTacticSimulator
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (!isResizing)
-            {
-                elementPointDic.Clear();
-                List<UIElement> list = new List<UIElement>();
-                foreach (UIElement obj in c_runcanvas.Children)
-                {
-                    Point wndPoint = new Point(Canvas.GetLeft(obj), Canvas.GetTop(obj));
-                    Point mapPoint = GetMapPoint(wndPoint, ImgType.Nothing);
-
-                    elementPointDic[obj] = mapPoint;
-                }
-            }
-
             if (sender.Equals(i_map))
             {
                 double width = e.NewSize.Width - g_infos.Margin.Left - g_infos.Margin.Right;
@@ -5514,85 +5537,122 @@ namespace CSGOTacticSimulator
                 g_infos.Width = width;
             }
 
-            isResizing = true;
             resizeTimer.Stop();
             resizeTimer.Start();
+
         }
 
         private void ResizingDone(object sender, ElapsedEventArgs e)
         {
-            isResizing = false;
             resizeTimer.Stop();
-            MainSizeChanged();
+
+            c_runcanvas.Dispatcher.Invoke(() =>
+            {
+                if (i_map.Source != null)
+                {
+                    MainSizeChanged();
+                }
+            });
         }
 
         private void MainSizeChanged()
         {
-            List<UIElement> keyList = new List<UIElement>();
-            List<UIElement> removeList = new List<UIElement>();
-            foreach (UIElement obj in elementPointDic.Keys)
+            GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
+            List<UIElement> uIElementList = new List<UIElement>();
+            foreach (UIElement obj in c_runcanvas.Children)
             {
-                keyList.Add(obj);
+                uIElementList.Add(obj);
             }
 
-            new Thread(() =>
+            List<Character> characterList = CharacterHelper.GetCharacters();
+
+            foreach (UIElement obj in uIElementList)
             {
-                Thread.Sleep(50);
-                foreach (UIElement obj in keyList)
+                if (obj is Label)
                 {
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        if (c_runcanvas.Children.Contains(obj))
-                        {
-                            Point newWndPoint = GetWndPoint(elementPointDic[obj], ImgType.Nothing);
-                            c_runcanvas.Children.Remove(obj);
-                            Canvas.SetLeft(obj, newWndPoint.X);
-                            Canvas.SetTop(obj, newWndPoint.Y);
-                            c_runcanvas.Children.Add(obj);
-                        }
-                        else
-                        {
-                            removeList.Add(obj);
-                        }
-                    });
+                    c_runcanvas.Children.Remove(obj);
                 }
-            }).Start();
-
-            foreach (UIElement obj in removeList)
-            {
-                elementPointDic.Remove(obj);
-            }
-
-            this.Dispatcher.Invoke(() =>
-            {
-                if (i_map.Source != null)
+                else if (obj is Line)
                 {
-                    GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
-                    tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
-                    tb_timer.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+                    Line bulletLine = obj as Line;
 
-                    foreach (UIElement element in g_infos.Children)
+                    c_runcanvas.Children.Remove(bulletLine);
+
+                    List<Point> mapPointList = (List<Point>)bulletLine.Tag;
+
+                    Point fromWndPoint = GetWndPoint(mapPointList[0], ImgType.Nothing);
+                    Point toWndPoint = GetWndPoint(mapPointList[1], ImgType.Nothing);
+
+                    bulletLine.X1 = fromWndPoint.X;
+                    bulletLine.Y1 = fromWndPoint.Y;
+                    bulletLine.X2 = toWndPoint.X;
+                    bulletLine.Y2 = toWndPoint.Y;
+                    c_runcanvas.Children.Add(bulletLine);
+                }
+                else if (obj is TSImage)
+                {
+                    TSImage img = obj as TSImage;
+
+                    c_runcanvas.Children.Remove(img);
+
+                    Point wndPoint = GetWndPoint(img.MapPoint, img.ImgType);
+                    if (img.ImgType == ImgType.Character)
                     {
-                        if (element is TextBlock)
+                        img.Width = GlobalDictionary.CharacterWidthAndHeight;
+                        img.Height = GlobalDictionary.CharacterWidthAndHeight;
+
+                        foreach (Character character in characterList)
                         {
-                            if (element == tb_team1 || element == tb_team2)
+                            if (character.CharacterImg.Equals(img))
                             {
-                                (element as TextBlock).FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
-                            }
-                            else
-                            {
-                                (element as TextBlock).FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.0;
+                                c_runcanvas.Children.Add(CreateChacterlabel(character, wndPoint, character.Hp));
                             }
                         }
                     }
-
-                    foreach (Character character in CharacterHelper.GetCharacters())
+                    else if (img.ImgType == ImgType.ExplosionEffect)
                     {
-                        character.CharacterImg.Width = GlobalDictionary.CharacterWidthAndHeight;
-                        character.CharacterImg.Height = GlobalDictionary.CharacterWidthAndHeight;
+                        img.Width = GlobalDictionary.ExplosionEffectWidthAndHeight;
+                        img.Height = GlobalDictionary.ExplosionEffectWidthAndHeight;
                     }
+                    else if (img.ImgType == ImgType.MissileEffect)
+                    {
+                        img.Width = GlobalDictionary.MissileEffectWidthAndHeight;
+                        img.Height = GlobalDictionary.MissileEffectWidthAndHeight;
+                    }
+                    else if (img.ImgType == ImgType.Missile)
+                    {
+                        img.Width = GlobalDictionary.MissileWidthAndHeight;
+                        img.Height = GlobalDictionary.MissileWidthAndHeight;
+                    }
+                    else if (img.ImgType == ImgType.Props)
+                    {
+                        img.Width = GlobalDictionary.PropsWidthAndHeight;
+                        img.Height = GlobalDictionary.PropsWidthAndHeight;
+                    }
+
+                    Canvas.SetLeft(img, wndPoint.X);
+                    Canvas.SetTop(img, wndPoint.Y);
+
+                    c_runcanvas.Children.Add(img);
                 }
-            });
+            }
+
+            foreach (Character character in characterList)
+            {
+                if (character.CharacterImg.Visibility == Visibility.Visible)
+                {
+                    c_runcanvas.Children.Remove(character.CharacterImg);
+
+                    character.CharacterImg.Width = character.CharacterImg.Width * 1.5;
+                    character.CharacterImg.Height = character.CharacterImg.Height * 1.5;
+
+                    Point mapPoint = character.CharacterImg.MapPoint;
+                    Canvas.SetLeft(character.CharacterImg, GetWndPoint(mapPoint, ImgType.Nothing).X);
+                    Canvas.SetTop(character.CharacterImg, GetWndPoint(mapPoint, ImgType.Nothing).Y);
+
+                    c_runcanvas.Children.Add(character.CharacterImg);
+                }
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ using CSGOTacticSimulator.Helper;
 using CSGOTacticSimulator.Global;
 using System.Windows.Media.Imaging;
 using DemoInfo;
+using CSGOTacticSimulator.Controls;
 
 namespace CSGOTacticSimulator.Model
 {
@@ -86,12 +87,12 @@ namespace CSGOTacticSimulator.Model
         private Point mapPoint;
         public int Number { get => number; set => number = value; }
         private int number = Global.GlobalDictionary.charatersNumber++;
-        public Image CharacterImg { get => characterImg; set => characterImg = value; }
-        private Image characterImg = new Image();
-        public Image OtherImg { get => otherImg; set => otherImg = value; }
-        private Image otherImg = new Image();
-        public Image StatusImg { get => statusImg; set => statusImg = value; }
-        private Image statusImg = new Image();
+        public TSImage CharacterImg { get => characterImg; set => characterImg = value; }
+        private TSImage characterImg = new TSImage();
+        public TSImage OtherImg { get => otherImg; set => otherImg = value; }
+        private TSImage otherImg = new TSImage();
+        public TSImage StatusImg { get => statusImg; set => statusImg = value; }
+        private TSImage statusImg = new TSImage();
         public Label CharacterLabel { get => characterLabel; set => characterLabel = value; }
         private Label characterLabel = new Label();
 
