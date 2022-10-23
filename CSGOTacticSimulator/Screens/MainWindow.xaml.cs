@@ -266,6 +266,8 @@ namespace CSGOTacticSimulator
             {
                 btn_restore.Visibility = Visibility.Visible;
             }
+
+            OnSizeChanged(this, null);
         }
 
         private Label CreateChacterlabel(Character character, Point wndPoint, int hp)
@@ -304,7 +306,7 @@ namespace CSGOTacticSimulator
             Point wndPoint = new Point();
             i_map.Dispatcher.Invoke(() =>
             {
-                wndPoint = i_map.TranslatePoint(scaledMapPoint, this);
+                wndPoint = i_map.TranslatePoint(scaledMapPoint, c_runcanvas);
             });
             int widthAndHeight = 0;
             switch (imgType)
@@ -360,7 +362,7 @@ namespace CSGOTacticSimulator
             Point scaledMapPoint = new Point();
             i_map.Dispatcher.Invoke(() =>
             {
-                scaledMapPoint = this.TranslatePoint(wndPoint, i_map);
+                scaledMapPoint = c_runcanvas.TranslatePoint(wndPoint, i_map);
             });
             Point mapPoint = new Point(scaledMapPoint.X / GlobalDictionary.ImageRatio, scaledMapPoint.Y / GlobalDictionary.ImageRatio);
             return mapPoint;
@@ -1935,6 +1937,27 @@ namespace CSGOTacticSimulator
                             {
                                 team2Money += money;
                             }
+                            if (!character.IsAlive)
+                            {
+                                textBlock.Foreground = Brushes.Red;
+                                textBlock.TextDecorations = TextDecorations.Strikethrough;
+
+                                textBlock.Text = textBlock.Text.Substring(0, textBlock.Text.LastIndexOf(":") + 1) + " 0";
+
+                                continue;
+                            }
+                            else
+                            {
+                                if (character.Hp <= 20)
+                                {
+                                    textBlock.Foreground = Brushes.HotPink;
+                                }
+                                else
+                                {
+                                    textBlock.Foreground = Brushes.White;
+                                }
+                                textBlock.TextDecorations = null;
+                            }
                             foreach (Equipment equipment in character.WeaponEquipmentList)
                             {
                                 weapons += equipment.Weapon.ToString() + " ";
@@ -1958,24 +1981,6 @@ namespace CSGOTacticSimulator
                             if (equips.Length >= 1)
                             {
                                 equips.Remove(equips.Length - 1, 1);
-                            }
-
-                            if (!character.IsAlive)
-                            {
-                                textBlock.Foreground = Brushes.Red;
-                                textBlock.TextDecorations = TextDecorations.Strikethrough;
-                            }
-                            else
-                            {
-                                if (character.Hp <= 20)
-                                {
-                                    textBlock.Foreground = Brushes.HotPink;
-                                }
-                                else
-                                {
-                                    textBlock.Foreground = Brushes.White;
-                                }
-                                textBlock.TextDecorations = null;
                             }
 
                             textBlock.Text =
@@ -2239,6 +2244,8 @@ namespace CSGOTacticSimulator
                     {
                         tb_timer.Tag = (roundNumber).ToString();
                     });
+
+                    stopwatchList.Clear();
 
                     Thread analizeDemoThread = new Thread(AnalizeDemo);
                     analizeDemoThread.Start(new Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float>(eventDic, roundNumber, dic, tickTime, firstFreezetimeEndedTime));
@@ -3920,7 +3927,7 @@ namespace CSGOTacticSimulator
                             Point missileStartWndPoint = GetWndPoint(missileStartMapPoint, ImgType.Missile);
                             Point missileEndWndPoint = GetWndPoint(missileEndMapPoint, ImgType.Missile);
 
-                            
+
 
 
 
@@ -3997,7 +4004,7 @@ namespace CSGOTacticSimulator
                                     nowWndPoint = VectorHelper.Add(nowWndPoint, VectorHelper.Multiply(unitVector, pixelPerFresh));
                                     Point nowMapPoint = GetMapPoint(nowWndPoint, ImgType.Missile);
 
-                                    if (double.IsInfinity(nowWndPoint.X) || double.IsInfinity(nowWndPoint.Y))
+                                    if (costedTimeStopwatch.Elapsed.TotalSeconds >= costTime || pixelPerFresh <= 0 || double.IsInfinity(nowWndPoint.X) || double.IsInfinity(nowWndPoint.Y))
                                     {
                                         break;
                                     }
@@ -4036,8 +4043,8 @@ namespace CSGOTacticSimulator
                                         missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
                                         missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
                                     }
-                                    Canvas.SetLeft(missileEffectImg, missileEndWndPoint.X);
-                                    Canvas.SetTop(missileEffectImg, missileEndWndPoint.Y);
+                                    Canvas.SetLeft(missileEffectImg, nowWndPoint.X);
+                                    Canvas.SetTop(missileEffectImg, nowWndPoint.Y);
                                     c_runcanvas.Children.Add(missileEffectImg);
                                 });
                                 Thread.Sleep((int)(effectLifeSpan * 1000));
@@ -4052,68 +4059,70 @@ namespace CSGOTacticSimulator
                             throwThread.Start();
                             ThreadHelper.AddThread(throwThread);
                         }
-
-                        Character character = CharacterHelper.GetCharacter(characterNumber);
-                        Player player = (currentEvent.Item2 as WeaponFiredEventArgs).Shooter;
-
-                        Line bulletLine = null;
-                        c_runcanvas.Dispatcher.Invoke(() =>
+                        else
                         {
-                            bulletLine = new Line();
-                            bulletLine.Stroke = Brushes.White;
-                            bulletLine.StrokeThickness = 2;
-                            bulletLine.StrokeDashArray = new DoubleCollection() { 2, 3 };
-                            bulletLine.StrokeDashCap = PenLineCap.Triangle;
-                            bulletLine.StrokeEndLineCap = PenLineCap.Triangle;
-                            bulletLine.StrokeStartLineCap = PenLineCap.Square;
-                            Point fromMapPoint = DemoPointToMapPoint(player.Position, currentInfo.Map);
-                            Point fromWndPoint = GetWndPoint(fromMapPoint, ImgType.Nothing);
-                            WeaponFiredEventArgs weaponFiredEventArgs = currentEvent.Item2 as WeaponFiredEventArgs;
+                            Character character = CharacterHelper.GetCharacter(characterNumber);
+                            Player player = (currentEvent.Item2 as WeaponFiredEventArgs).Shooter;
 
-                            double tan = Math.Tan(player.ViewDirectionX * Math.PI / 180);
-                            Point direction = new Point();
-                            if (player.ViewDirectionX < -270 || (player.ViewDirectionX > -90 && player.ViewDirectionX < 90) || player.ViewDirectionX > 270)
-                            {
-                                direction = new Point(1, tan);
-                            }
-                            else if ((player.ViewDirectionX > 90 && player.ViewDirectionX < 270) || (player.ViewDirectionX < -90 && player.ViewDirectionX > -270))
-                            {
-                                direction = new Point(-1, -tan);
-                            }
-                            else if (player.ViewDirectionX == 90 || player.ViewDirectionX == -270)
-                            {
-                                direction = new Point(0, 1);
-                            }
-                            else if (player.ViewDirectionX == 270 || player.ViewDirectionX == -90)
-                            {
-                                direction = new Point(0, -1);
-                            }
-
-                            direction = VectorHelper.GetUnitVector(new Point(0, 0), direction);
-
-                            Point toMapPoint = DemoPointToMapPoint(player.Position + new DemoInfo.Vector((float)(direction.X * 1000), (float)(direction.Y * 1000), 0), currentInfo.Map);
-                            Point toWndPoint = GetWndPoint(toMapPoint, ImgType.Nothing);
-
-                            List<Point> mapPointList = new List<Point>() { fromMapPoint, toMapPoint };
-                            bulletLine.Tag = mapPointList;
-
-                            bulletLine.X1 = fromWndPoint.X;
-                            bulletLine.Y1 = fromWndPoint.Y;
-                            bulletLine.X2 = toWndPoint.X;
-                            bulletLine.Y2 = toWndPoint.Y;
-                            c_runcanvas.Children.Add(bulletLine);
-                        });
-
-                        Thread shootThread = new Thread(() =>
-                        {
-                            Thread.Sleep(150);
+                            Line bulletLine = null;
                             c_runcanvas.Dispatcher.Invoke(() =>
                             {
-                                c_runcanvas.Children.Remove(bulletLine);
+                                bulletLine = new Line();
+                                bulletLine.Stroke = Brushes.White;
+                                bulletLine.StrokeThickness = 2;
+                                bulletLine.StrokeDashArray = new DoubleCollection() { 2, 3 };
+                                bulletLine.StrokeDashCap = PenLineCap.Triangle;
+                                bulletLine.StrokeEndLineCap = PenLineCap.Triangle;
+                                bulletLine.StrokeStartLineCap = PenLineCap.Square;
+                                Point fromMapPoint = DemoPointToMapPoint(player.Position, currentInfo.Map);
+                                Point fromWndPoint = GetWndPoint(fromMapPoint, ImgType.Nothing);
+                                WeaponFiredEventArgs weaponFiredEventArgs = currentEvent.Item2 as WeaponFiredEventArgs;
+
+                                double tan = Math.Tan(player.ViewDirectionX * Math.PI / 180);
+                                Point direction = new Point();
+                                if (player.ViewDirectionX < -270 || (player.ViewDirectionX > -90 && player.ViewDirectionX < 90) || player.ViewDirectionX > 270)
+                                {
+                                    direction = new Point(1, tan);
+                                }
+                                else if ((player.ViewDirectionX > 90 && player.ViewDirectionX < 270) || (player.ViewDirectionX < -90 && player.ViewDirectionX > -270))
+                                {
+                                    direction = new Point(-1, -tan);
+                                }
+                                else if (player.ViewDirectionX == 90 || player.ViewDirectionX == -270)
+                                {
+                                    direction = new Point(0, 1);
+                                }
+                                else if (player.ViewDirectionX == 270 || player.ViewDirectionX == -90)
+                                {
+                                    direction = new Point(0, -1);
+                                }
+
+                                direction = VectorHelper.GetUnitVector(new Point(0, 0), direction);
+
+                                Point toMapPoint = DemoPointToMapPoint(player.Position + new DemoInfo.Vector((float)(direction.X * 1000), (float)(direction.Y * 1000), 0), currentInfo.Map);
+                                Point toWndPoint = GetWndPoint(toMapPoint, ImgType.Nothing);
+
+                                List<Point> mapPointList = new List<Point>() { fromMapPoint, toMapPoint };
+                                bulletLine.Tag = mapPointList;
+
+                                bulletLine.X1 = fromWndPoint.X;
+                                bulletLine.Y1 = fromWndPoint.Y;
+                                bulletLine.X2 = toWndPoint.X;
+                                bulletLine.Y2 = toWndPoint.Y;
+                                c_runcanvas.Children.Add(bulletLine);
                             });
-                        });
-                        shootThread.Start();
-                        ThreadHelper.AddThread(shootThread);
+
+                            Thread shootThread = new Thread(() =>
+                            {
+                                Thread.Sleep(150);
+                                c_runcanvas.Dispatcher.Invoke(() =>
+                                {
+                                    c_runcanvas.Children.Remove(bulletLine);
+                                });
+                            });
+                            shootThread.Start();
+                            ThreadHelper.AddThread(shootThread);
+                        }
                     }
                 }
                 else if (currentEvent.Item2 is TickDoneEventArgs)
