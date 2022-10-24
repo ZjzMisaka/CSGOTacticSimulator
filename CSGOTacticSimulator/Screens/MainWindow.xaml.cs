@@ -2172,6 +2172,7 @@ namespace CSGOTacticSimulator
             }
             GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
             tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+            tb_timer.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
 
             var setting = new JsonSerializerSettings();
             setting.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -5589,9 +5590,25 @@ namespace CSGOTacticSimulator
                 g_infos.Width = width;
             }
 
+            foreach (UIElement element in g_infos.Children)
+            {
+                if (element is TextBlock)
+                {
+                    if (element == tb_team1 || element == tb_team2)
+                    {
+                        (element as TextBlock).FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+                    }
+                    else
+                    {
+                        (element as TextBlock).FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.0;
+                    }
+                }
+            }
+            tb_timer.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+            tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+
             resizeTimer.Stop();
             resizeTimer.Start();
-
         }
 
         private void ResizingDone(object sender, ElapsedEventArgs e)
