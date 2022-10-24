@@ -2179,9 +2179,20 @@ namespace CSGOTacticSimulator
             setting.MissingMemberHandling = MissingMemberHandling.Ignore;
 
             PropertiesSetter propertiesSetter = new PropertiesSetter(GlobalDictionary.propertiesSetter);
+            propertiesSetter.LoadedEventHandler = new RoutedEventHandler((s, e) =>
+            {
+                (MessageBox.ButtonList[0] as TextBox).Focus();
+            });
+            propertiesSetter.KeyDownEventHandler += new KeyEventHandler((s, e) =>
+            {
+                if (e.Key == Key.Enter)
+                {
+                    MessageBox.CloseNow(3);
+                }
+            });
             propertiesSetter.EnableCloseButton = true;
             int res = MessageBox.Show(propertiesSetter, new RefreshList {
-                new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50 },
+                new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50, Height = 32, FontSize = 20 },
                 new CheckBox() { Content = "包括之后所有回合" , VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 150, Foreground = new SolidColorBrush(Colors.White), IsChecked = true},
                 new ButtonSpacer(200),
                 "OK" }, "需要观看第几回合? ", "选择回合数", MessageBoxImage.Question);
@@ -2290,7 +2301,7 @@ namespace CSGOTacticSimulator
             te_editor.Text = "";
             if (float.IsNaN(parser.TickTime))
             {
-                int resTickTime = MessageBox.Show(propertiesSetter, new RefreshList { new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50 }, new ButtonSpacer(350), "OK" }, "该demo是多少ticks的?", "未知ticks", MessageBoxImage.Information);
+                int resTickTime = MessageBox.Show(propertiesSetter, new RefreshList { new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50, Height = 32, FontSize = 20 }, new ButtonSpacer(350), "OK" }, "该demo是多少ticks的?", "未知ticks", MessageBoxImage.Information);
                 if (resTickTime == -1)
                 {
                     return;
@@ -4881,7 +4892,7 @@ namespace CSGOTacticSimulator
             buttonCreateCharacter.Content = "创建角色";
             buttonSpeed.Click += delegate (object sender, RoutedEventArgs e)
             {
-                MessageBox.ButtonList = new RefreshList { new Label() { Content = "设置速度", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, new TextBox() { Width = 60, FontSize = 20, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 10, 0, 10) }, new ButtonSpacer(200), "OK" };
+                MessageBox.ButtonList = new RefreshList { new Label() { Content = "设置速度", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, new TextBox() { Width = 60, Height = 32, FontSize = 20, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 10, 0, 10) }, new ButtonSpacer(200), "OK" };
                 MessageBox.MessageBoxImageType = MessageBoxImage.None;
                 MessageBox.MessageText = "填写速度比率";
             };
@@ -4890,6 +4901,7 @@ namespace CSGOTacticSimulator
                 ComboBox comboBox = new ComboBox();
                 comboBox.FontSize = 20;
                 comboBox.Width = 60;
+                comboBox.Height = 32;
                 comboBox.Margin = new Thickness(0, 10, 0, 10);
                 comboBox.VerticalContentAlignment = VerticalAlignment.Center;
                 comboBox.Items.Add(new ComboBoxItem() { Content = "T", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
@@ -4904,6 +4916,7 @@ namespace CSGOTacticSimulator
                 ComboBox comboBox = new ComboBox();
                 comboBox.FontSize = 20;
                 comboBox.Width = 60;
+                comboBox.Height = 32;
                 comboBox.VerticalContentAlignment = VerticalAlignment.Center;
                 comboBox.Items.Add(new ComboBoxItem() { Content = "T", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 comboBox.Items.Add(new ComboBoxItem() { Content = "CT", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
@@ -4912,12 +4925,15 @@ namespace CSGOTacticSimulator
                 TextBox textBoxName = new TextBox();
                 textBoxName.FontSize = 20;
                 textBoxName.Width = 60;
+                textBoxName.Height = 32;
                 textBoxName.IsEnabled = false;
                 textBoxName.VerticalContentAlignment = VerticalAlignment.Center;
+                textBoxName.Height = 32;
                 CheckBox checkBoxName = new CheckBox();
                 checkBoxName.FontSize = 20;
                 checkBoxName.Width = 60;
                 checkBoxName.Content = "别名";
+                checkBoxName.VerticalContentAlignment = VerticalAlignment.Center;
                 checkBoxName.Foreground = new SolidColorBrush(Colors.White);
                 checkBoxName.Click += delegate (object cbSender, RoutedEventArgs cbE)
                 {
@@ -4942,6 +4958,7 @@ namespace CSGOTacticSimulator
                 gridName.Children.Add(textBoxName);
                 gridName.Width = 150;
                 gridName.Height = 50;
+                gridName.Margin = new Thickness(5);
 
                 MessageBox.ButtonList = new RefreshList { new Label() { Content = "创建角色", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, gridName, new ButtonSpacer(50), "OK" };
                 MessageBox.MessageBoxImageType = MessageBoxImage.None;
@@ -4955,7 +4972,18 @@ namespace CSGOTacticSimulator
             switch ((MessageBox.ButtonList[0] as Label).Content)
             {
                 case "设置速度":
-                    double speedController = double.Parse((MessageBox.ButtonList[1] as TextBox).Text);
+                    double speedController = -1;
+                    try
+                    {
+                        speedController = double.Parse((MessageBox.ButtonList[1] as TextBox).Text);
+                    }
+                    catch
+                    {
+                        PropertiesSetter newPropertiesSetter = new PropertiesSetter(propertiesSetter);
+                        newPropertiesSetter.CloseTimer = new MessageBoxCloseTimer(3, 0);
+                        MessageBox.Show(newPropertiesSetter, "请输入数字", "错误", MessageBoxButton.OK, MessageBoxImage.Information);
+                        break;
+                    }
                     if (te_editor.Text.Count() > 0 && te_editor.Text[te_editor.Text.Count() - 1] != '\n')
                     {
                         te_editor.Text += "\n";
@@ -5158,7 +5186,7 @@ namespace CSGOTacticSimulator
                 {
                     new Label() { Content = "等待", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
                     comboBox,
-                    new TextBox() { Width = 60, FontSize = 20, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 10, 0, 10) },
+                    new TextBox() { Width = 60, FontSize = 20, Height = 32, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 10, 0, 10) },
                     new Label() { Content = "秒", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
                     new ButtonSpacer(140),
                     "OK"
@@ -5315,9 +5343,9 @@ namespace CSGOTacticSimulator
             buttonAutoMove.Click += delegate (object sender, RoutedEventArgs e)
             {
                 Label labelStartLayer = new Label() { Content = "起始层数", Foreground = new SolidColorBrush(Colors.White), FontSize = 20, Height = 32 };
-                TextBox textBoxStartLayer = new TextBox() { FontSize = 20, Height = 32, Width = 50, HorizontalAlignment = HorizontalAlignment.Left, Name = "textBoxStartLayer" };
+                TextBox textBoxStartLayer = new TextBox() { FontSize = 20, Height = 32, Width = 50, VerticalContentAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Left, Name = "textBoxStartLayer" };
                 Label labelEndLayer = new Label() { Content = "结束层数", Foreground = new SolidColorBrush(Colors.White), FontSize = 20, Height = 32 };
-                TextBox textBoxEndLayer = new TextBox() { FontSize = 20, Height = 32, Width = 50, HorizontalAlignment = HorizontalAlignment.Left, Name = "textBoxEndLayer" };
+                TextBox textBoxEndLayer = new TextBox() { FontSize = 20, Height = 32, Width = 50, VerticalContentAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Left, Name = "textBoxEndLayer" };
                 if (keyDownInPreview.Count < 2 || keyDownInPreview.Count > 2)
                 {
                     textBoxStartLayer.Text = "0";
@@ -5397,7 +5425,7 @@ namespace CSGOTacticSimulator
             buttonShoot.Click += delegate (object sender, RoutedEventArgs e)
             {
                 CheckBox cb = new CheckBox() { Content = "射击某角色", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), Height = 32 };
-                TextBox tb = new TextBox() { Width = 60, FontSize = 20, Height = 32, HorizontalAlignment = HorizontalAlignment.Left };
+                TextBox tb = new TextBox() { Width = 60, VerticalContentAlignment = VerticalAlignment.Center, FontSize = 20, Height = 32, HorizontalAlignment = HorizontalAlignment.Left };
                 tb.IsEnabled = false;
                 cb.Click += delegate (object cbSender, RoutedEventArgs cbE)
                 {
