@@ -3175,9 +3175,11 @@ namespace CSGOTacticSimulator
             List<Tuple<CurrentInfo, EventArgs, string, int>> eventList = eventDic[roundNumber];
 
             TimeSpan roundTimeSpan = new TimeSpan(0, 1, 55);
+            TimeSpan timeSpanWhenBombPlanted = new TimeSpan(0);
+            TimeSpan offsetWhenBombPlanted = new TimeSpan(0);
             for (int i = 0; i < eventList.Count; ++i)
             {
-                TimeSpan roundLeaveTimeSpan = roundTimeSpan - stopWatch.Elapsed - new TimeSpan(0, 0, 0, 0, offset);
+                TimeSpan roundLeaveTimeSpan = roundTimeSpan - (stopWatch.Elapsed - timeSpanWhenBombPlanted) - (new TimeSpan(0, 0, 0, 0, offset) - offsetWhenBombPlanted);
                 int roundLeaveMinutes = (int)roundLeaveTimeSpan.Minutes;
                 int roundLeaveSeconds = roundLeaveTimeSpan.Seconds % 60;
                 this.Dispatcher.Invoke(() =>
@@ -3222,6 +3224,11 @@ namespace CSGOTacticSimulator
                                 }
                             }
                         }
+                        else if (currentEvent.Item3 == "BombPlanted")
+                        {
+                            PlantBomb(CharacterHelper.GetCharacter(currentEvent.Item4), out roundTimeSpan, out timeSpanWhenBombPlanted, out offsetWhenBombPlanted);
+                        }
+
                         this.Dispatcher.Invoke(() =>
                         {
                             foreach (Character character in CharacterHelper.GetCharacters())
@@ -3235,10 +3242,10 @@ namespace CSGOTacticSimulator
                     }
                     else
                     {
-                        thisOffset = 0;
                         isForward = false;
                         isNeedRefreshPov = true;
-                        offset += GlobalDictionary.forwardTimeSpan;
+                        offset += thisOffset;
+                        thisOffset = 0;
                     }
                 }
                 if (isBackward)
@@ -3284,10 +3291,10 @@ namespace CSGOTacticSimulator
                         }
                         else
                         {
-                            thisOffset = 0;
                             isBackward = false;
                             isNeedRefreshPov = true;
-                            offset -= GlobalDictionary.backwardTimeSpan;
+                            offset -= thisOffset;
+                            thisOffset = 0;
                         }
                     }
                 }
@@ -3512,24 +3519,7 @@ namespace CSGOTacticSimulator
                             continue;
                         }
 
-                        c_runcanvas.Dispatcher.Invoke(() =>
-                        {
-                            TSImage bombImage = new TSImage();
-                            bombImage.Source = new BitmapImage(new Uri(GlobalDictionary.bombPath));
-                            bombImage.Width = GlobalDictionary.PropsWidthAndHeight;
-                            bombImage.Height = GlobalDictionary.PropsWidthAndHeight;
-                            bombImage.Opacity = 0.75;
-                            bombImage.TagStr = "Bomb";
-                            bombImage.MapPoint = character.MapPoint;
-                            bombImage.ImgType = ImgType.Props;
-                            Point bombWndPoint = GetWndPoint(character.MapPoint, ImgType.Props);
-
-                            character.OtherImg.Visibility = Visibility.Collapsed;
-
-                            Canvas.SetLeft(bombImage, bombWndPoint.X);
-                            Canvas.SetTop(bombImage, bombWndPoint.Y);
-                            c_runcanvas.Children.Add(bombImage);
-                        });
+                        PlantBomb(character, out roundTimeSpan, out timeSpanWhenBombPlanted, out offsetWhenBombPlanted);
                     }
                 }
                 else if (currentEvent.Item2 is BombDefuseEventArgs)
@@ -4340,6 +4330,32 @@ namespace CSGOTacticSimulator
 
                 }
             }
+        }
+
+        private void PlantBomb(Character character, out TimeSpan roundTimeSpan, out TimeSpan timeSpanWhenBombPlanted, out TimeSpan offsetWhenBombPlanted)
+        {
+            roundTimeSpan = new TimeSpan(0, 0, 40);
+            timeSpanWhenBombPlanted = stopWatch.Elapsed;
+            offsetWhenBombPlanted = new TimeSpan(0, 0, 0, 0, offset);
+
+            c_runcanvas.Dispatcher.Invoke(() =>
+            {
+                TSImage bombImage = new TSImage();
+                bombImage.Source = new BitmapImage(new Uri(GlobalDictionary.bombPath));
+                bombImage.Width = GlobalDictionary.PropsWidthAndHeight;
+                bombImage.Height = GlobalDictionary.PropsWidthAndHeight;
+                bombImage.Opacity = 0.75;
+                bombImage.TagStr = "Bomb";
+                bombImage.MapPoint = character.MapPoint;
+                bombImage.ImgType = ImgType.Props;
+                Point bombWndPoint = GetWndPoint(character.MapPoint, ImgType.Props);
+
+                character.OtherImg.Visibility = Visibility.Collapsed;
+
+                Canvas.SetLeft(bombImage, bombWndPoint.X);
+                Canvas.SetTop(bombImage, bombWndPoint.Y);
+                c_runcanvas.Children.Add(bombImage);
+            });
         }
 
         private void ShowPlayerKilledLog(PlayerKilledEventArgs playerKilledEventArgs, CurrentInfo currentInfo, Dictionary<long, int> dic, bool isSkip = false)
