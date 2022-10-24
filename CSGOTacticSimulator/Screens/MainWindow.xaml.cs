@@ -2225,6 +2225,7 @@ namespace CSGOTacticSimulator
 
 
             btn_pause.Tag = "R";
+            btn_pause.Background = GlobalDictionary.pauseBrush;
             Thread totalThread = new Thread(() =>
             {
                 bool isAnalized = false;
@@ -3198,11 +3199,23 @@ namespace CSGOTacticSimulator
                                 }
                             }
                         }
+                        else if (currentEvent.Item2 is PlayerKilledEventArgs)
+                        {
+                            if (currentEvent.Item3 == "PlayerKilled")
+                            {
+                                PlayerKilledEventArgs playerKilledEventArgs = (currentEvent.Item2 as PlayerKilledEventArgs);
+                                if (playerKilledEventArgs.Killer != null && playerKilledEventArgs.Victim != null)
+                                {
+                                    ShowPlayerKilledLog(playerKilledEventArgs, currentInfo, dic, true);
+                                }
+                            }
+                        }
                         this.Dispatcher.Invoke(() =>
                         {
                             foreach (Character character in CharacterHelper.GetCharacters())
                             {
                                 character.OtherImg.Visibility = Visibility.Collapsed;
+                                character.StatusImg.Visibility = Visibility.Collapsed;
                             }
                         });
 
@@ -3287,59 +3300,8 @@ namespace CSGOTacticSimulator
                         {
                             continue;
                         }
-                        te_editor.Dispatcher.Invoke(() =>
-                        {
-                            string headShotStr = "";
-                            if (playerKilledEventArgs.Headshot)
-                            {
-                                headShotStr += " [headshot]";
-                            }
+                        ShowPlayerKilledLog(playerKilledEventArgs, currentInfo, dic);
 
-                            string blindStr = "";
-                            foreach (long steamId in dic.Keys)
-                            {
-                                if (playerKilledEventArgs.Killer != null && playerKilledEventArgs.Killer.SteamID == steamId)
-                                {
-                                    if (CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Visibility == Visibility.Visible)
-                                    {
-                                        blindStr += " [blind]";
-                                    }
-                                }
-                            }
-
-                            string withFlashStr = "";
-                            foreach (long steamId in dic.Keys)
-                            {
-                                if (playerKilledEventArgs.Victim != null && playerKilledEventArgs.Victim.SteamID == steamId)
-                                {
-                                    if (CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Visibility == Visibility.Visible)
-                                    {
-                                        withFlashStr += (" [with flashbang by " + CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Tag.ToString() + "]");
-                                    }
-                                }
-                            }
-
-                            string assisterStr = "";
-                            if (playerKilledEventArgs.Assister != null)
-                            {
-                                string teammateStr = "";
-                                if (playerKilledEventArgs.Assister != null && playerKilledEventArgs.Victim != null && playerKilledEventArgs.Assister.Team == playerKilledEventArgs.Victim.Team)
-                                {
-                                    teammateStr = " (team damage)";
-                                }
-                                assisterStr = " [with " + playerKilledEventArgs.Assister.Name + teammateStr + "]";
-                            }
-
-                            string teamkillStr = "";
-                            if (playerKilledEventArgs.Killer != null && playerKilledEventArgs.Victim != null && playerKilledEventArgs.Killer.Team == playerKilledEventArgs.Victim.Team)
-                            {
-                                teamkillStr = " [team kill]";
-                            }
-
-                            string killerWeaponString = playerKilledEventArgs.Weapon.Weapon.ToString();
-                            te_editor.Text += "Round " + (currentEvent.Item1.CtScore + currentEvent.Item1.TScore + 1) + ": " + playerKilledEventArgs.Killer.Name + " killed " + playerKilledEventArgs.Victim.Name + " by " + killerWeaponString + headShotStr + assisterStr + blindStr + withFlashStr + teamkillStr + "\n";
-                            te_editor.ScrollToEnd();
-                        });
                         long victimSteamID = playerKilledEventArgs.Victim.SteamID;
                         if (dic.ContainsKey(victimSteamID))
                         {
@@ -4366,6 +4328,69 @@ namespace CSGOTacticSimulator
 
                 }
             }
+        }
+
+        private void ShowPlayerKilledLog(PlayerKilledEventArgs playerKilledEventArgs, CurrentInfo currentInfo, Dictionary<long, int> dic, bool isSkip = false)
+        {
+            te_editor.Dispatcher.Invoke(() =>
+            {
+                string skipInfo = "";
+                if (isSkip)
+                {
+                    skipInfo = " (blind or with flash information is unknown)";
+                }
+
+                string headShotStr = "";
+                if (playerKilledEventArgs.Headshot)
+                {
+                    headShotStr += " [headshot]";
+                }
+
+                string blindStr = "";
+                foreach (long steamId in dic.Keys)
+                {
+                    if (playerKilledEventArgs.Killer != null && playerKilledEventArgs.Killer.SteamID == steamId)
+                    {
+                        if (CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Visibility == Visibility.Visible)
+                        {
+                            blindStr += " [blind]";
+                        }
+                    }
+                }
+
+                string withFlashStr = "";
+                foreach (long steamId in dic.Keys)
+                {
+                    if (playerKilledEventArgs.Victim != null && playerKilledEventArgs.Victim.SteamID == steamId)
+                    {
+                        if (CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Visibility == Visibility.Visible)
+                        {
+                            withFlashStr += (" [with flashbang by " + CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Tag.ToString() + "]");
+                        }
+                    }
+                }
+
+                string assisterStr = "";
+                if (playerKilledEventArgs.Assister != null)
+                {
+                    string teammateStr = "";
+                    if (playerKilledEventArgs.Assister != null && playerKilledEventArgs.Victim != null && playerKilledEventArgs.Assister.Team == playerKilledEventArgs.Victim.Team)
+                    {
+                        teammateStr = " (team damage)";
+                    }
+                    assisterStr = " [with " + playerKilledEventArgs.Assister.Name + teammateStr + "]";
+                }
+
+                string teamkillStr = "";
+                if (playerKilledEventArgs.Killer != null && playerKilledEventArgs.Victim != null && playerKilledEventArgs.Killer.Team == playerKilledEventArgs.Victim.Team)
+                {
+                    teamkillStr = " [team kill]";
+                }
+
+                string killerWeaponString = playerKilledEventArgs.Weapon.Weapon.ToString();
+                te_editor.Text += "Round " + (currentInfo.CtScore + currentInfo.TScore + 1) + ": " + playerKilledEventArgs.Killer.Name + " killed " + playerKilledEventArgs.Victim.Name + " by " + killerWeaponString + headShotStr + assisterStr + blindStr + withFlashStr + teamkillStr + skipInfo + "\n";
+                te_editor.ScrollToEnd();
+            });
         }
 
         private void InitInfoTag(Player player)
