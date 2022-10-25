@@ -1947,8 +1947,6 @@ namespace CSGOTacticSimulator
                                     textBlock.TextDecorations = TextDecorations.Strikethrough;
 
                                     textBlock.Text = textBlock.Text.Substring(0, textBlock.Text.LastIndexOf(":") + 1) + " 0";
-
-                                    continue;
                                 }
                                 else
                                 {
@@ -1962,7 +1960,7 @@ namespace CSGOTacticSimulator
                                     }
                                     textBlock.TextDecorations = null;
                                 }
-                                foreach (Equipment equipment in character.WeaponEquipmentList)
+                                foreach (Equipment equipment in character.LastAliveInfo.WeaponEquipmentList)
                                 {
                                     weapons += equipment.Weapon.ToString() + " ";
                                 }
@@ -1970,7 +1968,7 @@ namespace CSGOTacticSimulator
                                 {
                                     weapons.Remove(weapons.Length - 1, 1);
                                 }
-                                foreach (Equipment equipment in character.MissileEquipList)
+                                foreach (Equipment equipment in character.LastAliveInfo.MissileEquipList)
                                 {
                                     missileEquipments += equipment.Weapon.ToString() + " ";
                                 }
@@ -1978,7 +1976,7 @@ namespace CSGOTacticSimulator
                                 {
                                     missileEquipments.Remove(missileEquipments.Length - 1, 1);
                                 }
-                                foreach (Equipment equipment in character.EquipList)
+                                foreach (Equipment equipment in character.LastAliveInfo.EquipList)
                                 {
                                     equips += equipment.Weapon.ToString() + " ";
                                 }
@@ -3947,6 +3945,13 @@ namespace CSGOTacticSimulator
                                 character.AdditionalPlayerInformation.Ping = player.AdditionaInformations.Ping;
                                 character.AdditionalPlayerInformation.Clantag = player.AdditionaInformations.Clantag;
                                 character.AdditionalPlayerInformation.TotalCashSpent = player.AdditionaInformations.Assists;
+                                if (player.IsAlive)
+                                {
+                                    character.LastAliveInfo.MissileEquipList = missileEquipList;
+                                    character.LastAliveInfo.WeaponEquipmentList = weaponEquipList;
+                                    character.LastAliveInfo.EquipList = equipList;
+                                    character.LastAliveInfo.Money = player.Money;
+                                }
 
                                 c_runcanvas.Children.Remove(character.CharacterImg);
                                 c_runcanvas.Children.Remove(label);
@@ -5009,7 +5014,14 @@ namespace CSGOTacticSimulator
             }
             else if (e.Key == Key.LeftShift)
             {
-                g_infos.Visibility = Visibility.Visible;
+                if (Keyboard.IsKeyDown(Key.CapsLock))
+                {
+                    g_infos.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    g_infos.Visibility = Visibility.Collapsed;
+                }
                 g_infos.Tag = "DefaultInfo";
             }
         }

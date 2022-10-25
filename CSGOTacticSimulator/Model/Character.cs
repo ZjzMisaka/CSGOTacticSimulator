@@ -42,6 +42,18 @@ namespace CSGOTacticSimulator.Model
         public int TotalCashSpent { get; internal set; }
     }
 
+    public class LastAliveInfo
+    {
+        public int Money { get => money; set => money = value; }
+        private int money = 0;
+        public List<Equipment> WeaponEquipmentList { get => weaponEquipmentList; set => weaponEquipmentList = value; }
+        private List<Equipment> weaponEquipmentList = new List<Equipment>();
+        public List<Equipment> MissileEquipList { get => missileEquipList; set => missileEquipList = value; }
+        private List<Equipment> missileEquipList = new List<Equipment>();
+        public List<Equipment> EquipList { get => equipList; set => equipList = value; }
+        private List<Equipment> equipList = null;
+    }
+
     public class Character
     {
         public string Name { get => name; set => name = value; }
@@ -108,6 +120,8 @@ namespace CSGOTacticSimulator.Model
         private Label characterLabel = new Label();
         public AdditionalPlayerInformation AdditionalPlayerInformation { get => additionalPlayerInformation; set => additionalPlayerInformation = value; }
         private AdditionalPlayerInformation additionalPlayerInformation = new AdditionalPlayerInformation();
+        public LastAliveInfo LastAliveInfo { get => lastAliveInfo; set => lastAliveInfo = value; }
+        private LastAliveInfo lastAliveInfo = new LastAliveInfo();
 
         public Character(string name, long steamId, bool isFriendly, bool isT, Point mapPoint, MainWindow wnd)
         {
