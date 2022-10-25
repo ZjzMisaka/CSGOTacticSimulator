@@ -164,6 +164,7 @@ namespace CSGOTacticSimulator.Global
         static public string defuseKitPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "DefuseKit")).Replace("/", "\\");
         static public string explosionPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "Explosion")).Replace("/", "\\");
         static public string decoyPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "Decoy")).Replace("/", "\\");
+        static public string decoyEffectPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "DecoyEffect")).Replace("/", "\\");
         static public string molotovPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "Molotov")).Replace("/", "\\");
         static public string incgrenadePath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "Incgrenade")).Replace("/", "\\");
         static public string fireEffectPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "FireEffect")).Replace("/", "\\");

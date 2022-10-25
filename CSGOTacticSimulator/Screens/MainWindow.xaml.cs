@@ -4275,7 +4275,7 @@ namespace CSGOTacticSimulator
                 missileEffectImg = new TSImage();
                 missileEffectImg.MapPoint = DemoPointToMapPoint(eventArgs.Position, currentInfo.Map);
                 missileEffectImg.ImgType = ImgType.MissileEffect;
-                missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.decoyPath));
+                missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.decoyEffectPath));
 
                 missileEffectImg.Opacity = 0.85;
                 missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
