@@ -153,7 +153,7 @@
         <Canvas x:Name="c_paintcanvas" Background="Transparent" IsHitTestVisible="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseMove="c_paintcanvas_MouseMove">
         </Canvas>
         <Grid Margin="30, 80, 30, 30">
-            <Grid x:Name="g_infos" Margin="10, 30" HorizontalAlignment="Left" VerticalAlignment="Center" Opacity="0.85" Background="Gray" Visibility="Collapsed">
+            <Grid x:Name="g_infos" Tag="DefaultInfo" Margin="10, 30" HorizontalAlignment="Left" VerticalAlignment="Center" Opacity="0.85" Background="Gray" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>

@@ -1910,6 +1910,7 @@ namespace CSGOTacticSimulator
                     team2Camp = character.IsT ? "T" : "CT";
                     team2Score = character.IsT ? tScore : ctScore;
                 }
+
                 foreach (UIElement element in g_infos.Children)
                 {
                     if (element is TextBlock)
@@ -1925,72 +1926,87 @@ namespace CSGOTacticSimulator
                         }
                         if ((long)textBlock.Tag == character.SteamId && textBlock != tb_team1 && textBlock != tb_team2)
                         {
-                            string weapons = "";
-                            string missileEquipments = "";
-                            string equips = "";
-                            int money = character.Money;
-                            if (Grid.GetColumn(textBlock) == 0)
+                            if (g_infos.Tag.Equals("DefaultInfo"))
                             {
-                                team1Money += money;
-                            }
-                            else
-                            {
-                                team2Money += money;
-                            }
-                            if (!character.IsAlive)
-                            {
-                                textBlock.Foreground = Brushes.Red;
-                                textBlock.TextDecorations = TextDecorations.Strikethrough;
-
-                                textBlock.Text = textBlock.Text.Substring(0, textBlock.Text.LastIndexOf(":") + 1) + " 0";
-
-                                continue;
-                            }
-                            else
-                            {
-                                if (character.Hp <= 20)
+                                string weapons = "";
+                                string missileEquipments = "";
+                                string equips = "";
+                                int money = character.Money;
+                                if (Grid.GetColumn(textBlock) == 0)
                                 {
-                                    textBlock.Foreground = Brushes.HotPink;
+                                    team1Money += money;
                                 }
                                 else
                                 {
-                                    textBlock.Foreground = Brushes.White;
+                                    team2Money += money;
                                 }
-                                textBlock.TextDecorations = null;
-                            }
-                            foreach (Equipment equipment in character.WeaponEquipmentList)
-                            {
-                                weapons += equipment.Weapon.ToString() + " ";
-                            }
-                            if (weapons.Length >= 1)
-                            {
-                                weapons.Remove(weapons.Length - 1, 1);
-                            }
-                            foreach (Equipment equipment in character.MissileEquipList)
-                            {
-                                missileEquipments += equipment.Weapon.ToString() + " ";
-                            }
-                            if (missileEquipments.Length >= 1)
-                            {
-                                missileEquipments.Remove(missileEquipments.Length - 1, 1);
-                            }
-                            foreach (Equipment equipment in character.EquipList)
-                            {
-                                equips += equipment.Weapon.ToString() + " ";
-                            }
-                            if (equips.Length >= 1)
-                            {
-                                equips.Remove(equips.Length - 1, 1);
-                            }
+                                if (!character.IsAlive)
+                                {
+                                    textBlock.Foreground = Brushes.Red;
+                                    textBlock.TextDecorations = TextDecorations.Strikethrough;
 
-                            textBlock.Text =
-                            "Number: " + character.Number +
-                            "\nName: " + character.Name +
-                            "\nWeapons: " + weapons +
-                            "\nMissiles: " + missileEquipments +
-                            "\nEquipment: " + equips +
-                            "\nMoney: " + money +
-                            "\nHP: " + character.Hp;
+                                    textBlock.Text = textBlock.Text.Substring(0, textBlock.Text.LastIndexOf(":") + 1) + " 0";
+
+                                    continue;
+                                }
+                                else
+                                {
+                                    if (character.Hp <= 20)
+                                    {
+                                        textBlock.Foreground = Brushes.HotPink;
+                                    }
+                                    else
+                                    {
+                                        textBlock.Foreground = Brushes.White;
+                                    }
+                                    textBlock.TextDecorations = null;
+                                }
+                                foreach (Equipment equipment in character.WeaponEquipmentList)
+                                {
+                                    weapons += equipment.Weapon.ToString() + " ";
+                                }
+                                if (weapons.Length >= 1)
+                                {
+                                    weapons.Remove(weapons.Length - 1, 1);
+                                }
+                                foreach (Equipment equipment in character.MissileEquipList)
+                                {
+                                    missileEquipments += equipment.Weapon.ToString() + " ";
+                                }
+                                if (missileEquipments.Length >= 1)
+                                {
+                                    missileEquipments.Remove(missileEquipments.Length - 1, 1);
+                                }
+                                foreach (Equipment equipment in character.EquipList)
+                                {
+                                    equips += equipment.Weapon.ToString() + " ";
+                                }
+                                if (equips.Length >= 1)
+                                {
+                                    equips.Remove(equips.Length - 1, 1);
+                                }
+
+                                textBlock.Text =
+                                "Number: " + character.Number +
+                                "\nName: " + character.Name +
+                                "\nWeapons: " + weapons +
+                                "\nMissiles: " + missileEquipments +
+                                "\nEquipment: " + equips +
+                                "\nMoney: " + money +
+                                "\nHP: " + character.Hp;
+                            }
+                            else
+                            {
+                                textBlock.Text =
+                                "Number: " + character.Number +
+                                "\nName: " + character.Name +
+                                "\nK/D/A: " + character.AdditionalPlayerInformation.Kills + "/" + character.AdditionalPlayerInformation.Deaths + "/" + character.AdditionalPlayerInformation.Assists +
+                                "\nKD: " + ((double)character.AdditionalPlayerInformation.Kills / character.AdditionalPlayerInformation.Deaths).ToString("#0.00") +
+                                "\nScore: " + character.AdditionalPlayerInformation.Score +
+                                "\nMVPs: " + character.AdditionalPlayerInformation.MVPs +
+                                "\nPing: " + character.AdditionalPlayerInformation.Ping +
+                                "\nTotalCashSpent: " + character.AdditionalPlayerInformation.TotalCashSpent;
+                            }
                         }
                     }
                 }
@@ -2981,6 +2997,15 @@ namespace CSGOTacticSimulator
                 {
                     Player copiedPlayer = playingParticipant.Copy();
                     copiedPlayer.Money = playingParticipant.Money;
+                    copiedPlayer.AdditionaInformations = new DemoInfo.AdditionalPlayerInformation();
+                    copiedPlayer.AdditionaInformations.Kills = playingParticipant.AdditionaInformations.Kills;
+                    copiedPlayer.AdditionaInformations.Deaths = playingParticipant.AdditionaInformations.Deaths;
+                    copiedPlayer.AdditionaInformations.Assists = playingParticipant.AdditionaInformations.Assists;
+                    copiedPlayer.AdditionaInformations.Score = playingParticipant.AdditionaInformations.Score;
+                    copiedPlayer.AdditionaInformations.MVPs = playingParticipant.AdditionaInformations.MVPs;
+                    copiedPlayer.AdditionaInformations.Ping = playingParticipant.AdditionaInformations.Ping;
+                    copiedPlayer.AdditionaInformations.Clantag = playingParticipant.AdditionaInformations.Clantag;
+                    copiedPlayer.AdditionaInformations.TotalCashSpent = playingParticipant.AdditionaInformations.Assists;
                     nowParticipants.Add(copiedPlayer);
 
                     List<Equipment> missileEquipList = new List<Equipment>();
@@ -4256,6 +4281,14 @@ namespace CSGOTacticSimulator
                                 character.Money = player.Money;
                                 character.IsT = player.Team == Team.Terrorist;
                                 character.IsAlive = player.IsAlive;
+                                character.AdditionalPlayerInformation.Kills = player.AdditionaInformations.Kills;
+                                character.AdditionalPlayerInformation.Deaths = player.AdditionaInformations.Deaths;
+                                character.AdditionalPlayerInformation.Assists = player.AdditionaInformations.Assists;
+                                character.AdditionalPlayerInformation.Score = player.AdditionaInformations.Score;
+                                character.AdditionalPlayerInformation.MVPs = player.AdditionaInformations.MVPs;
+                                character.AdditionalPlayerInformation.Ping = player.AdditionaInformations.Ping;
+                                character.AdditionalPlayerInformation.Clantag = player.AdditionaInformations.Clantag;
+                                character.AdditionalPlayerInformation.TotalCashSpent = player.AdditionaInformations.Assists;
 
                                 c_runcanvas.Children.Remove(character.CharacterImg);
                                 c_runcanvas.Children.Remove(label);
@@ -4876,9 +4909,15 @@ namespace CSGOTacticSimulator
             {
                 c_paintcanvas.Children.Clear();
             }
-            else if (Keyboard.IsKeyDown(Key.CapsLock))
+            else if (e.Key == Key.CapsLock && !Keyboard.IsKeyDown(Key.LeftShift))
             {
                 g_infos.Visibility = Visibility.Visible;
+                g_infos.Tag = "DefaultInfo";
+            }
+            else if (e.Key == Key.LeftShift && Keyboard.IsKeyDown(Key.CapsLock))
+            {
+                g_infos.Visibility = Visibility.Visible;
+                g_infos.Tag = "PersonalInfo";
             }
         }
 
@@ -4891,6 +4930,12 @@ namespace CSGOTacticSimulator
             else if (e.Key == Key.CapsLock)
             {
                 g_infos.Visibility = Visibility.Collapsed;
+                g_infos.Tag = "DefaultInfo";
+            }
+            else if (e.Key == Key.LeftShift)
+            {
+                g_infos.Visibility = Visibility.Visible;
+                g_infos.Tag = "DefaultInfo";
             }
         }
 

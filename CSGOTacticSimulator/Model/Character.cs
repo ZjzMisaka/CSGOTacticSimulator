@@ -30,6 +30,17 @@ namespace CSGOTacticSimulator.Model
         Plant, 
         Defuse
     }
+    public class AdditionalPlayerInformation
+    {
+        public int Kills { get; internal set; }
+        public int Deaths { get; internal set; }
+        public int Assists { get; internal set; }
+        public int Score { get; internal set; }
+        public int MVPs { get; internal set; }
+        public int Ping { get; internal set; }
+        public string Clantag { get; internal set; }
+        public int TotalCashSpent { get; internal set; }
+    }
 
     public class Character
     {
@@ -95,6 +106,8 @@ namespace CSGOTacticSimulator.Model
         private TSImage statusImg = new TSImage();
         public Label CharacterLabel { get => characterLabel; set => characterLabel = value; }
         private Label characterLabel = new Label();
+        public AdditionalPlayerInformation AdditionalPlayerInformation { get => additionalPlayerInformation; set => additionalPlayerInformation = value; }
+        private AdditionalPlayerInformation additionalPlayerInformation = new AdditionalPlayerInformation();
 
         public Character(string name, long steamId, bool isFriendly, bool isT, Point mapPoint, MainWindow wnd)
         {
