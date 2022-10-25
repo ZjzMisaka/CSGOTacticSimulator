@@ -4162,6 +4162,13 @@ namespace CSGOTacticSimulator
                         }
                         foreach (KeyValuePair<KeyValuePair<int, int>, TSImage> kv in usedMissileKeyValuePairList)
                         {
+                            c_runcanvas.Dispatcher.Invoke(() =>
+                            {
+                                if (c_runcanvas.Children.Contains(kv.Value))
+                                {
+                                    c_runcanvas.Children.Remove(kv.Value);
+                                }
+                            });
                             missileKeyValuePairList.Remove(kv);
                         }
 
