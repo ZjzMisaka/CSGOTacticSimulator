@@ -3173,6 +3173,7 @@ namespace CSGOTacticSimulator
             isNeedAutomaticGuidance = false;
 
             List<Tuple<CurrentInfo, EventArgs, string, int>> eventList = eventDic[roundNumber];
+            List<KeyValuePair<int, TSImage>> missileEffectKeyValuePairList = new List<KeyValuePair<int, TSImage>>();
 
             TimeSpan roundTimeSpan = new TimeSpan(0, 1, 55);
             TimeSpan timeSpanWhenBombPlanted = new TimeSpan(0);
@@ -3892,39 +3893,26 @@ namespace CSGOTacticSimulator
                             Point missileEndWndPoint = GetWndPoint(missileEndMapPoint, ImgType.Missile);
 
 
-
-
-
                             List<Character> characters = CharacterHelper.GetCharacters();
 
                             TSImage missileImg = null;
-                            TSImage missileEffectImg = null;
-                            double effectLifeSpan = 0;
                             this.Dispatcher.Invoke(() =>
                             {
                                 missileImg = new TSImage();
-                                missileEffectImg = new TSImage();
+                                missileImg.StartMapPoint = missileStartMapPoint;
                                 missileImg.MapPoint = missileStartMapPoint;
                                 missileImg.ImgType = ImgType.Missile;
-                                missileEffectImg.MapPoint = missileEndMapPoint;
-                                missileEffectImg.ImgType = ImgType.MissileEffect;
                                 if (weapon == EquipmentElement.HE)
                                 {
                                     missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.hegrenadePath));
-                                    missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.heEffectPath));
-                                    effectLifeSpan = GlobalDictionary.heLifespan;
                                 }
                                 else if (weapon == EquipmentElement.Flash)
                                 {
                                     missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.flashbangPath));
-                                    missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.flashEffectPath));
-                                    effectLifeSpan = GlobalDictionary.flashbangLifespan;
                                 }
                                 else if (weapon == EquipmentElement.Smoke)
                                 {
                                     missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.smokePath));
-                                    missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.smokeEffectPath));
-                                    effectLifeSpan = effectTime == 0 ? GlobalDictionary.smokeLifespan : effectTime;
                                 }
                                 else if (weapon == EquipmentElement.Incendiary || weapon == EquipmentElement.Molotov)
                                 {
@@ -3936,14 +3924,10 @@ namespace CSGOTacticSimulator
                                     {
                                         missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.molotovPath));
                                     }
-                                    missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.fireEffectPath));
-                                    effectLifeSpan = effectTime == 0 ? GlobalDictionary.firebombLifespan : effectTime;
                                 }
                                 else if (weapon == EquipmentElement.Decoy)
                                 {
                                     missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.decoyPath));
-                                    missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.decoyPath));
-                                    effectLifeSpan = effectTime == 0 ? GlobalDictionary.decoyLifespan : effectTime;
                                 }
 
                                 missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
@@ -3995,28 +3979,6 @@ namespace CSGOTacticSimulator
                                     if (c_runcanvas.Children.Contains(missileImg))
                                     {
                                         c_runcanvas.Children.Remove(missileImg);
-                                    }
-                                });
-
-                                nowWndPoint = GetWndPoint(missileImg.EndMapPoint, ImgType.MissileEffect);
-                                c_runcanvas.Dispatcher.Invoke(() =>
-                                {
-                                    if (missileEffectImg != null)
-                                    {
-                                        missileEffectImg.Opacity = 0.85;
-                                        missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
-                                        missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
-                                    }
-                                    Canvas.SetLeft(missileEffectImg, nowWndPoint.X);
-                                    Canvas.SetTop(missileEffectImg, nowWndPoint.Y);
-                                    c_runcanvas.Children.Add(missileEffectImg);
-                                });
-                                Thread.Sleep((int)(effectLifeSpan * 1000));
-                                c_runcanvas.Dispatcher.Invoke(() =>
-                                {
-                                    if (c_runcanvas.Children.Contains(missileEffectImg))
-                                    {
-                                        c_runcanvas.Children.Remove(missileEffectImg);
                                     }
                                 });
                             });
@@ -4089,6 +4051,233 @@ namespace CSGOTacticSimulator
                         }
                     }
                 }
+                else if (currentEvent.Item2 is GrenadeEventArgs)
+                {
+                    if (currentEvent.Item3 == "ExplosiveNadeExploded")
+                    {
+                        TSImage missileEffectImg = null;
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            missileEffectImg = new TSImage();
+                            missileEffectImg.MapPoint = DemoPointToMapPoint((eventArgs as GrenadeEventArgs).Position, currentInfo.Map);
+                            missileEffectImg.ImgType = ImgType.MissileEffect;
+                            missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.heEffectPath));
+
+                            missileEffectImg.Opacity = 0.85;
+                            missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
+                            missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
+                            Point wndPoint = GetWndPoint(missileEffectImg.MapPoint, ImgType.MissileEffect);
+                            Canvas.SetLeft(missileEffectImg, wndPoint.X);
+                            Canvas.SetTop(missileEffectImg, wndPoint.Y);
+                            c_runcanvas.Children.Add(missileEffectImg);
+                        });
+                        Thread effectThread = new Thread(() =>
+                        {
+                            Thread.Sleep((int)(GlobalDictionary.heLifespan * 1000));
+                            c_runcanvas.Dispatcher.Invoke(() =>
+                            {
+                                if (c_runcanvas.Children.Contains(missileEffectImg))
+                                {
+                                    c_runcanvas.Children.Remove(missileEffectImg);
+                                }
+                            });
+                        });
+                        effectThread.Start();
+                        ThreadHelper.AddThread(effectThread);
+                    }
+                }
+                else if (currentEvent.Item2 is FlashEventArgs)
+                {
+                    if (currentEvent.Item3 == "FlashNadeExploded")
+                    {
+                        TSImage missileEffectImg = null;
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            missileEffectImg = new TSImage();
+                            missileEffectImg.MapPoint = DemoPointToMapPoint((eventArgs as FlashEventArgs).Position, currentInfo.Map);
+                            missileEffectImg.ImgType = ImgType.MissileEffect;
+                            missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.flashEffectPath));
+
+                            missileEffectImg.Opacity = 0.85;
+                            missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
+                            missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
+                            Point wndPoint = GetWndPoint(missileEffectImg.MapPoint, ImgType.MissileEffect);
+                            Canvas.SetLeft(missileEffectImg, wndPoint.X);
+                            Canvas.SetTop(missileEffectImg, wndPoint.Y);
+                            c_runcanvas.Children.Add(missileEffectImg);
+                        });
+                        Thread effectThread = new Thread(() =>
+                        {
+                            Thread.Sleep((int)(GlobalDictionary.flashbangLifespan * 1000));
+                            c_runcanvas.Dispatcher.Invoke(() =>
+                            {
+                                if (c_runcanvas.Children.Contains(missileEffectImg))
+                                {
+                                    c_runcanvas.Children.Remove(missileEffectImg);
+                                }
+                            });
+                        });
+                        effectThread.Start();
+                        ThreadHelper.AddThread(effectThread);
+                    }
+                }
+                else if (currentEvent.Item2 is SmokeEventArgs)
+                {
+                    if (currentEvent.Item3 == "SmokeNadeStarted")
+                    {
+                        TSImage missileEffectImg = null;
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            missileEffectImg = new TSImage();
+                            missileEffectImg.MapPoint = DemoPointToMapPoint((eventArgs as SmokeEventArgs).Position, currentInfo.Map);
+                            missileEffectImg.ImgType = ImgType.MissileEffect;
+                            missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.smokeEffectPath));
+
+                            missileEffectImg.Opacity = 0.85;
+                            missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
+                            missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
+                            Point wndPoint = GetWndPoint(missileEffectImg.MapPoint, ImgType.MissileEffect);
+                            Canvas.SetLeft(missileEffectImg, wndPoint.X);
+                            Canvas.SetTop(missileEffectImg, wndPoint.Y);
+                            c_runcanvas.Children.Add(missileEffectImg);
+                        });
+
+
+                        for (int m = i + 1; m < eventList.Count(); ++m)
+                        {
+                            if (eventList[m].Item1 == null)
+                            {
+                                continue;
+                            }
+                            if ((eventList[m].Item1.CtScore + eventList[m].Item1.TScore) != (currentEvent.Item1.CtScore + currentEvent.Item1.TScore))
+                            {
+                                break;
+                            }
+                            if (usedMissileDic.Values.Contains(m))
+                            {
+                                continue;
+                            }
+                            if (eventList[m].Item4 != characterNumber)
+                            {
+                                continue;
+                            }
+
+                            if (eventList[m].Item3 == "SmokeNadeEnded")
+                            {
+                                if (((SmokeEventArgs)eventList[m].Item2).ThrownBy.SteamID != (eventArgs as SmokeEventArgs).ThrownBy.SteamID)
+                                {
+                                    continue;
+                                }
+                                missileEffectKeyValuePairList.Add(new KeyValuePair<int, TSImage>(eventList[m].Item1.CurrentTick, missileEffectImg));
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (currentEvent.Item2 is FireEventArgs)
+                {
+                    if (currentEvent.Item3 == "FireNadeWithOwnerStarted")
+                    {
+                        TSImage missileEffectImg = null;
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            missileEffectImg = new TSImage();
+                            missileEffectImg.MapPoint = DemoPointToMapPoint((eventArgs as FireEventArgs).Position, currentInfo.Map);
+                            missileEffectImg.ImgType = ImgType.MissileEffect;
+                            missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.fireEffectPath));
+
+                            missileEffectImg.Opacity = 0.85;
+                            missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
+                            missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
+                            Point wndPoint = GetWndPoint(missileEffectImg.MapPoint, ImgType.MissileEffect);
+                            Canvas.SetLeft(missileEffectImg, wndPoint.X);
+                            Canvas.SetTop(missileEffectImg, wndPoint.Y);
+                            c_runcanvas.Children.Add(missileEffectImg);
+                        });
+
+                        for (int m = i + 1; m < eventList.Count(); ++m)
+                        {
+                            if (eventList[m].Item1 == null)
+                            {
+                                continue;
+                            }
+                            if ((eventList[m].Item1.CtScore + eventList[m].Item1.TScore) != (currentEvent.Item1.CtScore + currentEvent.Item1.TScore))
+                            {
+                                break;
+                            }
+                            if (usedMissileDic.Values.Contains(m))
+                            {
+                                continue;
+                            }
+                            if (eventList[m].Item4 != characterNumber)
+                            {
+                                continue;
+                            }
+
+                            if (eventList[m].Item3 == "FireNadeEnded")
+                            {
+                                if (((FireEventArgs)eventList[m].Item2).ThrownBy.SteamID != (eventArgs as FireEventArgs).ThrownBy.SteamID)
+                                {
+                                    continue;
+                                }
+                                missileEffectKeyValuePairList.Add(new KeyValuePair<int, TSImage>(eventList[m].Item1.CurrentTick, missileEffectImg));
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (currentEvent.Item2 is DecoyEventArgs)
+                {
+                    if (currentEvent.Item3 == "DecoyNadeStarted")
+                    {
+                        TSImage missileEffectImg = null;
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            missileEffectImg = new TSImage();
+                            missileEffectImg.MapPoint = DemoPointToMapPoint((eventArgs as DecoyEventArgs).Position, currentInfo.Map);
+                            missileEffectImg.ImgType = ImgType.MissileEffect;
+                            missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.decoyPath));
+
+                            missileEffectImg.Opacity = 0.85;
+                            missileEffectImg.Width = GlobalDictionary.MissileEffectWidthAndHeight;
+                            missileEffectImg.Height = GlobalDictionary.MissileEffectWidthAndHeight;
+                            Point wndPoint = GetWndPoint(missileEffectImg.MapPoint, ImgType.MissileEffect);
+                            Canvas.SetLeft(missileEffectImg, wndPoint.X);
+                            Canvas.SetTop(missileEffectImg, wndPoint.Y);
+                            c_runcanvas.Children.Add(missileEffectImg);
+                        });
+
+                        for (int m = i + 1; m < eventList.Count(); ++m)
+                        {
+                            if (eventList[m].Item1 == null)
+                            {
+                                continue;
+                            }
+                            if ((eventList[m].Item1.CtScore + eventList[m].Item1.TScore) != (currentEvent.Item1.CtScore + currentEvent.Item1.TScore))
+                            {
+                                break;
+                            }
+                            if (usedMissileDic.Values.Contains(m))
+                            {
+                                continue;
+                            }
+                            if (eventList[m].Item4 != characterNumber)
+                            {
+                                continue;
+                            }
+
+                            if (eventList[m].Item3 == "DecoyNadeEnded")
+                            {
+                                if (((DecoyEventArgs)eventList[m].Item2).ThrownBy.SteamID != (eventArgs as DecoyEventArgs).ThrownBy.SteamID)
+                                {
+                                    continue;
+                                }
+                                missileEffectKeyValuePairList.Add(new KeyValuePair<int, TSImage>(eventList[m].Item1.CurrentTick, missileEffectImg));
+                                break;
+                            }
+                        }
+                    }
+                }
                 else if (currentEvent.Item2 is TickDoneEventArgs)
                 {
                     if (currentEvent.Item3 == "TickDone")
@@ -4101,6 +4290,26 @@ namespace CSGOTacticSimulator
                         if (stopWatchThisRound == null || !isFreezetimeEnded)
                         {
                             continue;
+                        }
+
+                        List<KeyValuePair<int, TSImage>> usedMissileEffectKeyValuePairList = new List<KeyValuePair<int, TSImage>>();
+                        foreach (KeyValuePair<int, TSImage> kv in missileEffectKeyValuePairList)
+                        {
+                            if (kv.Key <= currentEvent.Item1.CurrentTick)
+                            {
+                                c_runcanvas.Dispatcher.Invoke(() =>
+                                {
+                                    if (c_runcanvas.Children.Contains(kv.Value))
+                                    {
+                                        c_runcanvas.Children.Remove(kv.Value);
+                                    }
+                                });
+                                usedMissileEffectKeyValuePairList.Add(kv);
+                            }
+                        }
+                        foreach (KeyValuePair<int, TSImage> kv in usedMissileEffectKeyValuePairList)
+                        {
+                            missileEffectKeyValuePairList.Remove(kv);
                         }
 
                         foreach (Player player in currentEvent.Item1.Participants)
