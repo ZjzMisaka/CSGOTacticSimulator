@@ -3253,6 +3253,21 @@ namespace CSGOTacticSimulator
                         {
                             PlantBomb(CharacterHelper.GetCharacter(currentEvent.Item4), out roundTimeSpan, out timeSpanWhenBombPlanted, out offsetWhenBombPlanted);
                         }
+                        if (currentEvent.Item3 == "WeaponFired")
+                        {
+                            if ((currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Flash ||
+                                    (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.HE ||
+                                    (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Smoke ||
+                                    (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Molotov ||
+                                    (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Incendiary ||
+                                    (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Decoy)
+                            {
+                                if (ThrowMissile(currentInfo, eventArgs, eventName, characterNumber, eventList, i, usedMissileDic, missileKeyValuePairList, tickTime))
+                                {
+                                    continue;
+                                }
+                            }
+                        }
 
                         this.Dispatcher.Invoke(() =>
                         {
@@ -3635,198 +3650,10 @@ namespace CSGOTacticSimulator
                                 (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Incendiary ||
                                 (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Decoy)
                         {
-                            EquipmentElement weapon = (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon;
-                            Character characterThrow = CharacterHelper.GetCharacter(characterNumber);
-
-                            Player playerThrow = (currentEvent.Item2 as WeaponFiredEventArgs).Shooter;
-
-                            // 判断取消投掷
-                            List<Equipment> equipList = currentInfo.MissileEquipDic[playerThrow.SteamID];
-                            List<Equipment> equipListNext = null;
-                            int getTickDoneCount = 0;
-                            for (int n = i + 1; n < eventList.Count(); ++n)
-                            {
-                                if (eventList[n].Item1 == null)
-                                {
-                                    continue;
-                                }
-                                if ((eventList[n].Item1.CtScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CtScore + currentEvent.Item1.TScore))
-                                {
-                                    break;
-                                }
-                                if (eventList[n].Item3 == "TickDone")
-                                {
-                                    if (getTickDoneCount <= 30)
-                                    {
-                                        ++getTickDoneCount;
-                                    }
-                                    else
-                                    {
-                                        equipListNext = eventList[n].Item1.MissileEquipDic[playerThrow.SteamID];
-                                        break;
-                                    }
-                                }
-                            }
-                            int equipListNextCount = -1;
-                            if (equipListNext == null)
-                            {
-                                equipListNextCount = 0;
-                            }
-                            else
-                            {
-                                equipListNextCount = equipListNext.Count();
-                            }
-                            if (equipList.Count() == equipListNextCount)
+                            if (ThrowMissile(currentInfo, eventArgs, eventName, characterNumber, eventList, i, usedMissileDic, missileKeyValuePairList, tickTime))
                             {
                                 continue;
                             }
-
-                            int endTick = 0;
-                            double costTime = 0;
-                            Point missileStartMapPoint = DemoPointToMapPoint(playerThrow.Position, currentInfo.Map);
-                            Point missileEndMapPoint = new Point();
-
-                            for (int n = i + 1; n < eventList.Count(); ++n)
-                            {
-                                if (eventList[n].Item1 == null)
-                                {
-                                    continue;
-                                }
-                                if ((eventList[n].Item1.CtScore + eventList[n].Item1.TScore) != (currentEvent.Item1.CtScore + currentEvent.Item1.TScore))
-                                {
-                                    break;
-                                }
-                                if (usedMissileDic.Values.Contains(n))
-                                {
-                                    continue;
-                                }
-                                if (eventList[n].Item4 != characterNumber)
-                                {
-                                    continue;
-                                }
-                                if (weapon == EquipmentElement.HE && eventList[n].Item3 == "ExplosiveNadeExploded")
-                                {
-                                    if (((GrenadeEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
-                                    {
-                                        continue;
-                                    }
-                                    usedMissileDic.Add(i, n);
-                                    endTick = eventList[n].Item1.CurrentTick;
-                                    if (tickTime == -1)
-                                    {
-                                        costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime);
-                                    }
-                                    else
-                                    {
-                                        costTime = tickTime * (eventList[n].Item1.CurrentTick - currentInfo.CurrentTick);
-                                    }
-                                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as GrenadeEventArgs).Position, currentInfo.Map);
-                                    break;
-                                }
-                                else if (weapon == EquipmentElement.Flash && eventList[n].Item3 == "FlashNadeExploded")
-                                {
-                                    if (((FlashEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
-                                    {
-                                        continue;
-                                    }
-                                    usedMissileDic.Add(i, n);
-                                    endTick = eventList[n].Item1.CurrentTick;
-                                    if (tickTime == -1)
-                                    {
-                                        costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime);
-                                    }
-                                    else
-                                    {
-                                        costTime = tickTime * (eventList[n].Item1.CurrentTick - currentInfo.CurrentTick);
-                                    }
-                                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FlashEventArgs).Position, currentInfo.Map);
-                                    break;
-                                }
-                                else if (weapon == EquipmentElement.Smoke && eventList[n].Item3 == "SmokeNadeStarted")
-                                {
-                                    if (((SmokeEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
-                                    {
-                                        continue;
-                                    }
-                                    usedMissileDic.Add(i, n);
-                                    endTick = eventList[n].Item1.CurrentTick;
-                                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as SmokeEventArgs).Position, currentInfo.Map);
-                                    break;
-                                }
-                                else if ((weapon == EquipmentElement.Incendiary || weapon == EquipmentElement.Molotov) && eventList[n].Item3 == "FireNadeWithOwnerStarted")
-                                {
-                                    if (((FireEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
-                                    {
-                                        continue;
-                                    }
-                                    usedMissileDic.Add(i, n);
-                                    endTick = eventList[n].Item1.CurrentTick;
-                                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FireEventArgs).Position, currentInfo.Map);
-                                    break;
-                                }
-                                else if (weapon == EquipmentElement.Decoy && eventList[n].Item3 == "DecoyNadeStarted")
-                                {
-                                    if (((DecoyEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
-                                    {
-                                        continue;
-                                    }
-                                    usedMissileDic.Add(i, n);
-                                    endTick = eventList[n].Item1.CurrentTick;
-                                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as DecoyEventArgs).Position, currentInfo.Map);
-                                    break;
-                                }
-                            }
-
-                            if (missileEndMapPoint.X == 0 && missileEndMapPoint.Y == 0)
-                            {
-                                continue;
-                            }
-
-                            Point missileStartWndPoint = GetWndPoint(missileStartMapPoint, ImgType.Missile);
-                            Point missileEndWndPoint = GetWndPoint(missileEndMapPoint, ImgType.Missile);
-
-
-                            List<Character> characters = CharacterHelper.GetCharacters();
-
-                            c_runcanvas.Dispatcher.Invoke(() =>
-                            {
-                                TSImage missileImg = new TSImage();
-                                missileImg.StartMapPoint = missileStartMapPoint;
-                                missileImg.EndMapPoint = missileEndMapPoint;
-                                missileImg.MapPoint = missileStartMapPoint;
-                                missileImg.ImgType = ImgType.Missile;
-                                if (weapon == EquipmentElement.HE)
-                                {
-                                    missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.hegrenadePath));
-                                }
-                                else if (weapon == EquipmentElement.Flash)
-                                {
-                                    missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.flashbangPath));
-                                }
-                                else if (weapon == EquipmentElement.Smoke)
-                                {
-                                    missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.smokePath));
-                                }
-                                else if (weapon == EquipmentElement.Incendiary || weapon == EquipmentElement.Molotov)
-                                {
-                                    if (weapon == EquipmentElement.Incendiary)
-                                    {
-                                        missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.incgrenadePath));
-                                    }
-                                    else
-                                    {
-                                        missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.molotovPath));
-                                    }
-                                }
-                                else if (weapon == EquipmentElement.Decoy)
-                                {
-                                    missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.decoyPath));
-                                }
-
-                                missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
-                                missileImg.Height = GlobalDictionary.MissileWidthAndHeight;
-                                missileKeyValuePairList.Add(new KeyValuePair<KeyValuePair<int, int>, TSImage>(new KeyValuePair<int, int>(currentInfo.CurrentTick, endTick), missileImg));
-                            });
                         }
                         else
                         {
@@ -4435,6 +4262,206 @@ namespace CSGOTacticSimulator
 
                 }
             }
+        }
+
+        private bool ThrowMissile(CurrentInfo currentInfo, EventArgs eventArgs, string eventName, int characterNumber, List<Tuple<CurrentInfo, EventArgs, string, int>> eventList, int i, Dictionary<int, int> usedMissileDic, List<KeyValuePair<KeyValuePair<int, int>, TSImage>> missileKeyValuePairList, float tickTime)
+        {
+            EquipmentElement weapon = (eventArgs as WeaponFiredEventArgs).Weapon.Weapon;
+            Character characterThrow = CharacterHelper.GetCharacter(characterNumber);
+
+            Player playerThrow = (eventArgs as WeaponFiredEventArgs).Shooter;
+
+            // 判断取消投掷
+            List<Equipment> equipList = currentInfo.MissileEquipDic[playerThrow.SteamID];
+            List<Equipment> equipListNext = null;
+            int getTickDoneCount = 0;
+            for (int n = i + 1; n < eventList.Count(); ++n)
+            {
+                if (eventList[n].Item1 == null)
+                {
+                    continue;
+                }
+                if ((eventList[n].Item1.CtScore + eventList[n].Item1.TScore) != (currentInfo.CtScore + currentInfo.TScore))
+                {
+                    break;
+                }
+                if (eventList[n].Item3 == "TickDone")
+                {
+                    if (getTickDoneCount <= 30)
+                    {
+                        ++getTickDoneCount;
+                    }
+                    else
+                    {
+                        equipListNext = eventList[n].Item1.MissileEquipDic[playerThrow.SteamID];
+                        break;
+                    }
+                }
+            }
+            int equipListNextCount = -1;
+            if (equipListNext == null)
+            {
+                equipListNextCount = 0;
+            }
+            else
+            {
+                equipListNextCount = equipListNext.Count();
+            }
+            if (equipList.Count() == equipListNextCount)
+            {
+                // continue
+                return true;
+            }
+
+            int endTick = 0;
+            double costTime = 0;
+            Point missileStartMapPoint = DemoPointToMapPoint(playerThrow.Position, currentInfo.Map);
+            Point missileEndMapPoint = new Point();
+
+            for (int n = i + 1; n < eventList.Count(); ++n)
+            {
+                if (eventList[n].Item1 == null)
+                {
+                    continue;
+                }
+                if ((eventList[n].Item1.CtScore + eventList[n].Item1.TScore) != (currentInfo.CtScore + currentInfo.TScore))
+                {
+                    break;
+                }
+                if (usedMissileDic.Values.Contains(n))
+                {
+                    continue;
+                }
+                if (eventList[n].Item4 != characterNumber)
+                {
+                    continue;
+                }
+                if (weapon == EquipmentElement.HE && eventList[n].Item3 == "ExplosiveNadeExploded")
+                {
+                    if (((GrenadeEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                    {
+                        continue;
+                    }
+                    usedMissileDic.Add(i, n);
+                    endTick = eventList[n].Item1.CurrentTick;
+                    if (tickTime == -1)
+                    {
+                        costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime);
+                    }
+                    else
+                    {
+                        costTime = tickTime * (eventList[n].Item1.CurrentTick - currentInfo.CurrentTick);
+                    }
+                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as GrenadeEventArgs).Position, currentInfo.Map);
+                    break;
+                }
+                else if (weapon == EquipmentElement.Flash && eventList[n].Item3 == "FlashNadeExploded")
+                {
+                    if (((FlashEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                    {
+                        continue;
+                    }
+                    usedMissileDic.Add(i, n);
+                    endTick = eventList[n].Item1.CurrentTick;
+                    if (tickTime == -1)
+                    {
+                        costTime = (eventList[n].Item1.CurrentTime - currentInfo.CurrentTime);
+                    }
+                    else
+                    {
+                        costTime = tickTime * (eventList[n].Item1.CurrentTick - currentInfo.CurrentTick);
+                    }
+                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FlashEventArgs).Position, currentInfo.Map);
+                    break;
+                }
+                else if (weapon == EquipmentElement.Smoke && eventList[n].Item3 == "SmokeNadeStarted")
+                {
+                    if (((SmokeEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                    {
+                        continue;
+                    }
+                    usedMissileDic.Add(i, n);
+                    endTick = eventList[n].Item1.CurrentTick;
+                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as SmokeEventArgs).Position, currentInfo.Map);
+                    break;
+                }
+                else if ((weapon == EquipmentElement.Incendiary || weapon == EquipmentElement.Molotov) && eventList[n].Item3 == "FireNadeWithOwnerStarted")
+                {
+                    if (((FireEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                    {
+                        continue;
+                    }
+                    usedMissileDic.Add(i, n);
+                    endTick = eventList[n].Item1.CurrentTick;
+                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FireEventArgs).Position, currentInfo.Map);
+                    break;
+                }
+                else if (weapon == EquipmentElement.Decoy && eventList[n].Item3 == "DecoyNadeStarted")
+                {
+                    if (((DecoyEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                    {
+                        continue;
+                    }
+                    usedMissileDic.Add(i, n);
+                    endTick = eventList[n].Item1.CurrentTick;
+                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as DecoyEventArgs).Position, currentInfo.Map);
+                    break;
+                }
+            }
+
+            if (missileEndMapPoint.X == 0 && missileEndMapPoint.Y == 0)
+            {
+                // continue
+                return true;
+            }
+
+            Point missileStartWndPoint = GetWndPoint(missileStartMapPoint, ImgType.Missile);
+            Point missileEndWndPoint = GetWndPoint(missileEndMapPoint, ImgType.Missile);
+
+
+            List<Character> characters = CharacterHelper.GetCharacters();
+
+            c_runcanvas.Dispatcher.Invoke(() =>
+            {
+                TSImage missileImg = new TSImage();
+                missileImg.StartMapPoint = missileStartMapPoint;
+                missileImg.EndMapPoint = missileEndMapPoint;
+                missileImg.MapPoint = missileStartMapPoint;
+                missileImg.ImgType = ImgType.Missile;
+                if (weapon == EquipmentElement.HE)
+                {
+                    missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.hegrenadePath));
+                }
+                else if (weapon == EquipmentElement.Flash)
+                {
+                    missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.flashbangPath));
+                }
+                else if (weapon == EquipmentElement.Smoke)
+                {
+                    missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.smokePath));
+                }
+                else if (weapon == EquipmentElement.Incendiary || weapon == EquipmentElement.Molotov)
+                {
+                    if (weapon == EquipmentElement.Incendiary)
+                    {
+                        missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.incgrenadePath));
+                    }
+                    else
+                    {
+                        missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.molotovPath));
+                    }
+                }
+                else if (weapon == EquipmentElement.Decoy)
+                {
+                    missileImg.Source = new BitmapImage(new Uri(GlobalDictionary.decoyPath));
+                }
+
+                missileImg.Width = GlobalDictionary.MissileWidthAndHeight;
+                missileImg.Height = GlobalDictionary.MissileWidthAndHeight;
+                missileKeyValuePairList.Add(new KeyValuePair<KeyValuePair<int, int>, TSImage>(new KeyValuePair<int, int>(currentInfo.CurrentTick, endTick), missileImg));
+            });
+
+            return false;
         }
 
         private void PlantBomb(Character character, out TimeSpan roundTimeSpan, out TimeSpan timeSpanWhenBombPlanted, out TimeSpan offsetWhenBombPlanted)
