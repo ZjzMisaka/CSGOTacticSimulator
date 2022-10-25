@@ -3324,7 +3324,9 @@ namespace CSGOTacticSimulator
                                 foreach (Character character in CharacterHelper.GetCharacters())
                                 {
                                     character.OtherImg.Visibility = Visibility.Collapsed;
+                                    character.StatusImg.Visibility = Visibility.Collapsed;
                                 }
+                                c_runcanvas.Children.Clear();
                             });
 
                             continue;
