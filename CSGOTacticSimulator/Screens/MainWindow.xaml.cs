@@ -3200,7 +3200,7 @@ namespace CSGOTacticSimulator
             List<Tuple<CurrentInfo, EventArgs, string, int>> eventList = eventDic[roundNumber];
             List<KeyValuePair<int, TSImage>> missileEffectKeyValuePairList = new List<KeyValuePair<int, TSImage>>();
             List<KeyValuePair<KeyValuePair<int, int>, TSImage>> missileKeyValuePairList = new List<KeyValuePair<KeyValuePair<int, int>, TSImage>>();
-            TimeSpan roundTimeSpan = new TimeSpan(0, 1, 55);
+            TimeSpan roundTimeSpan = new TimeSpan(0, 1, 56);
             TimeSpan timeSpanWhenBombPlanted = new TimeSpan(0);
             TimeSpan offsetWhenBombPlanted = new TimeSpan(0);
             for (int i = 0; i < eventList.Count; ++i)
@@ -4439,7 +4439,7 @@ namespace CSGOTacticSimulator
 
         private void PlantBomb(Character character, out TimeSpan roundTimeSpan, out TimeSpan timeSpanWhenBombPlanted, out TimeSpan offsetWhenBombPlanted)
         {
-            roundTimeSpan = new TimeSpan(0, 0, 40);
+            roundTimeSpan = new TimeSpan(0, 0, 41);
             timeSpanWhenBombPlanted = stopWatch.Elapsed;
             offsetWhenBombPlanted = new TimeSpan(0, 0, 0, 0, offset);
 
