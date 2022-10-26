@@ -2217,6 +2217,7 @@ namespace CSGOTacticSimulator
                 new CheckBox() { Content = "包括之后所有回合" , VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 150, Foreground = new SolidColorBrush(Colors.White), IsChecked = true},
                 new ButtonSpacer(200),
                 "OK" }, "需要观看第几回合? ", "选择回合数", MessageBoxImage.Question);
+
             int roundNumber = 0;
             bool isAnalizeToLastRound = true;
             if (res == -1)
@@ -2773,17 +2774,12 @@ namespace CSGOTacticSimulator
                     InitInfoTag(player);
                 }
 
-                if ((parser.CTScore + parser.TScore + 1) < roundNumber)
-                {
-                    return;
-                }
-
                 if (demoParser.TScore + demoParser.CTScore >= 1)
                 {
                     eventDic[demoParser.TScore + demoParser.CTScore] = eventList;
                     eventList = new List<Tuple<CurrentInfo, EventArgs, string, int>>();
 
-                    if (eventDic.Count >= 2)
+                    if (eventDic.Count >= 1)
                     {
                         List<int> keyList = new List<int>();
                         foreach (int key in eventDic.Keys)
@@ -2799,23 +2795,22 @@ namespace CSGOTacticSimulator
                             }
                         }
 
-                        if (demoParser.TScore + demoParser.CTScore - 1 == roundNumber && eventDic.ContainsKey(demoParser.TScore + demoParser.CTScore - 1))
+                        if (demoParser.TScore + demoParser.CTScore == roundNumber && eventDic.ContainsKey(demoParser.TScore + demoParser.CTScore))
                         {
-                            nowCanRun = demoParser.TScore + demoParser.CTScore - 1;
+                            nowCanRun = demoParser.TScore + demoParser.CTScore;
                         }
                     }
                 }
-
-            };
-            parser.RoundStart += (parseSender, parseE) =>
-            {
-                DemoParser demoParser = parseSender as DemoParser;
-
                 te_editor.Dispatcher.Invoke(() =>
                 {
                     te_editor.Text += "Round " + (demoParser.TScore + demoParser.CTScore + 1) + ": [T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "]\n";
                     te_editor.ScrollToEnd();
                 });
+
+            };
+            parser.RoundStart += (parseSender, parseE) =>
+            {
+                DemoParser demoParser = parseSender as DemoParser;
 
                 //CharacterHelper.ClearCharacters();
 
@@ -2862,10 +2857,18 @@ namespace CSGOTacticSimulator
 
                 if (demoParser.TScore + demoParser.CTScore >= 1)
                 {
+                    if (eventDic.ContainsKey(demoParser.TScore + demoParser.CTScore))
+                    {
+                        te_editor.Dispatcher.Invoke(() =>
+                        {
+                            te_editor.Text = te_editor.Text.Substring(0, te_editor.Text.LastIndexOf("\n") + 1);
+                            te_editor.ScrollToEnd();
+                        });
+                    }
                     eventDic[demoParser.TScore + demoParser.CTScore] = eventList;
                     eventList = new List<Tuple<CurrentInfo, EventArgs, string, int>>();
 
-                    if (eventDic.Count >= 2)
+                    if (eventDic.Count >= 1)
                     {
                         List<int> keyList = new List<int>();
                         foreach (int key in eventDic.Keys)
@@ -2881,12 +2884,17 @@ namespace CSGOTacticSimulator
                             }
                         }
 
-                        if (demoParser.TScore + demoParser.CTScore - 1 == roundNumber && eventDic.ContainsKey(demoParser.TScore + demoParser.CTScore - 1))
+                        if (demoParser.TScore + demoParser.CTScore == roundNumber && eventDic.ContainsKey(demoParser.TScore + demoParser.CTScore))
                         {
-                            nowCanRun = demoParser.TScore + demoParser.CTScore - 1;
+                            nowCanRun = demoParser.TScore + demoParser.CTScore;
                         }
                     }
                 }
+                te_editor.Dispatcher.Invoke(() =>
+                {
+                    te_editor.Text += "Round " + (demoParser.TScore + demoParser.CTScore + 1) + ": [T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "]\n";
+                    te_editor.ScrollToEnd();
+                });
 
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "RoundStart", 0));
             };
@@ -3127,7 +3135,21 @@ namespace CSGOTacticSimulator
                     {
                         if (nowCanRun < roundNumber)
                         {
-                            parser.ParseNextTick();
+                            if (!parser.ParseNextTick())
+                            {
+                                eventDic[parser.TScore + parser.CTScore] = eventList;
+                                while (roundNumber != -1)
+                                {
+                                    if (nowCanRun < roundNumber)
+                                    {
+                                        ++nowCanRun;
+                                    }
+                                    else
+                                    {
+                                        Thread.Sleep(GlobalDictionary.animationFreshTime);
+                                    }
+                                }
+                            }
                         }
                         else
                         {
@@ -3137,22 +3159,7 @@ namespace CSGOTacticSimulator
                 }
                 catch (Exception ex)
                 {
-                    if (ex is EndOfStreamException)
-                    {
-                        eventDic[parser.TScore + parser.CTScore] = eventList;
-                        while (roundNumber != -1)
-                        {
-                            if (nowCanRun < roundNumber)
-                            {
-                                ++nowCanRun;
-                            }
-                            else
-                            {
-                                Thread.Sleep(GlobalDictionary.animationFreshTime);
-                            }
-                        }
-                    }
-                    else if (!(ex is ThreadAbortException))
+                    if (!(ex is ThreadAbortException))
                     {
                         te_editor.Dispatcher.Invoke(() =>
                         {
