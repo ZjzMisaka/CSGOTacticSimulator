@@ -111,6 +111,9 @@ namespace CSGOTacticSimulator
             btn_forward.Background = GlobalDictionary.forwardBrush;
             btn_backward.Background = GlobalDictionary.backwardBrush;
             btn_auto.Background = GlobalDictionary.autoBrush;
+
+            AddMapsFromFolder(GlobalDictionary.mapFolderPath);
+            tb_select_folder.Text = GlobalDictionary.mapFolderPath;
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
