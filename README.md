@@ -21,6 +21,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 - Enter the path of the demo file into the file input box to load the demo file.
 - You can choose to watch a round or watch all rounds.
 - Press the CapsLock key to view the information panel. 
+- Press CapsLock + LeftShift key to switch to the scoreboard. 
 - Click the character point on the left map when running the demo then you can watch the pov corresponding to the current time. 
 - Pov is divided into the whole game POV or one round POV. If you want to watch only one round, you can only record the POV video of that round. If you want to watch the whole game, you can record the whole game POV video.
 - The pov file name should be the same as the player name (case insensitive).
@@ -29,7 +30,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 - The whole game POV video should start with the end of the freezing time of the first round. the one round POV video should start with the end of the freezing time of this round.
 ## Script
 ### Prompt
-- The input box is a full-fledged script editor (Thanks to AvalonEdit), and it is still being improved. It supports syntax highlighting, auto-completion, and searching.
+- The input box is a full-fledged script editor, it supports syntax highlighting, auto-completion, and searching. 
 - You can use a backslash at the end of a line for multi-line input commands.
 - Each script performs an action on behalf of a character, such as buying (instantly), moving (time-consuming), waiting.
 - The order between the characters in the script does not affect the final effect. For example, you can write the scripts of the actions of one character at the same time, or you can write the scripts of multiple characters at the same time.
