@@ -51,7 +51,7 @@ namespace CSGOTacticSimulator.Model
         public List<Equipment> MissileEquipList { get => missileEquipList; set => missileEquipList = value; }
         private List<Equipment> missileEquipList = new List<Equipment>();
         public List<Equipment> EquipList { get => equipList; set => equipList = value; }
-        private List<Equipment> equipList = null;
+        private List<Equipment> equipList = new List<Equipment>();
     }
 
     public class Character
@@ -71,7 +71,7 @@ namespace CSGOTacticSimulator.Model
         public List<Equipment> MissileEquipList { get => missileEquipList; set => missileEquipList = value; }
         private List<Equipment> missileEquipList = new List<Equipment>();
         public List<Equipment> EquipList { get => equipList; set => equipList = value; }
-        private List<Equipment> equipList = null;
+        private List<Equipment> equipList = new List<Equipment>();
         public List<Missile> Missiles { get => grenades; set => grenades = value; }
         private List<Missile> grenades = new List<Missile>();
         public Props Props { get => props; set => props = value; }

@@ -1890,6 +1890,11 @@ namespace CSGOTacticSimulator
 
         private void SetInfos(int tScore, int ctScore)
         {
+            if (tb_team1.Tag == null || tb_team2.Tag == null)
+            {
+                return;
+            }
+
             List<Character> characters = CharacterHelper.GetCharacters();
 
             int team1Money = 0;
@@ -2161,6 +2166,7 @@ namespace CSGOTacticSimulator
                 else
                 {
                     tb_select_file.Text = filePath;
+                    Stop();
                     ReadDemo(filePath);
                 }
             }
