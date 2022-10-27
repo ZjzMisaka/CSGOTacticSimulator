@@ -1916,6 +1916,22 @@ namespace CSGOTacticSimulator
             }
         }
 
+        private void ResetInfoPanelFontStyle()
+        {
+            foreach (UIElement element in g_infos.Children)
+            {
+                if (element is TextBlock)
+                {
+                    TextBlock textBlock = (TextBlock)element;
+                    if (textBlock != tb_team1 && textBlock != tb_team2)
+                    {
+                        textBlock.Foreground = Brushes.White;
+                        textBlock.TextDecorations = null;
+                    }
+                }
+            }
+        }
+
         private void SetInfos(int tScore, int ctScore)
         {
             if (tb_team1.Tag == null || tb_team2.Tag == null)
@@ -5031,6 +5047,7 @@ namespace CSGOTacticSimulator
             {
                 if (!(Keyboard.IsKeyDown(Key.CapsLock) && Keyboard.IsKeyDown(Key.LeftShift)))
                 {
+                    ResetInfoPanelFontStyle();
                     ShowDefaultInfo();
                     Thread showInfoThread = new Thread(() =>
                     {
