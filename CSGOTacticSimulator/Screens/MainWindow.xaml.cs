@@ -2217,12 +2217,12 @@ namespace CSGOTacticSimulator
             propertiesSetter.EnableCloseButton = true;
             int res = MessageBox.Show(propertiesSetter, new RefreshList {
                 new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50, Height = 32, FontSize = 20 },
-                new CheckBox() { Content = "包括之后所有回合" , VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 150, Foreground = new SolidColorBrush(Colors.White), IsChecked = true},
+                new CheckBox() { Content = "自动显示信息面板" , VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 150, Foreground = new SolidColorBrush(Colors.White), IsChecked = true},
                 new ButtonSpacer(200),
                 "OK" }, "需要观看第几回合? ", "选择回合数", MessageBoxImage.Question);
 
             int roundNumber = 0;
-            bool isAnalizeToLastRound = true;
+            bool isAutoShowInfoPanel = true;
             if (res == -1)
             {
                 return;
@@ -2236,7 +2236,7 @@ namespace CSGOTacticSimulator
                     MessageBox.Show(newPropertiesSetter, "请输入数字", "错误", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
-                isAnalizeToLastRound = (MessageBox.ButtonList[1] as CheckBox).IsChecked == true ? true : false;
+                isAutoShowInfoPanel = (MessageBox.ButtonList[1] as CheckBox).IsChecked == true ? true : false;
             }
 
             Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>> eventDic = new Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>();
@@ -2265,8 +2265,7 @@ namespace CSGOTacticSimulator
             btn_pause.Background = GlobalDictionary.pauseBrush;
             Thread totalThread = new Thread(() =>
             {
-                bool isAnalized = false;
-                while (isAnalizeToLastRound || (!isAnalizeToLastRound && !isAnalized))
+                while (true)
                 {
                     while (nowCanRun != roundNumber)
                     {
@@ -2295,8 +2294,6 @@ namespace CSGOTacticSimulator
                     {
                         c_runcanvas.Children.Clear();
                     });
-
-                    isAnalized = true;
                 }
 
                 roundNumber = -1;
@@ -2481,10 +2478,6 @@ namespace CSGOTacticSimulator
             parser.BombBeginPlant += (parseSender, parseE) =>
             {
                 if ((parser.CTScore + parser.TScore + 1) < roundNumber)
-                {
-                    return;
-                }
-                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -2930,10 +2923,6 @@ namespace CSGOTacticSimulator
             parser.RoundEnd += (parseSender, parseE) =>
             {
                 if ((parser.CTScore + parser.TScore + 1) < roundNumber)
-                {
-                    return;
-                }
-                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
