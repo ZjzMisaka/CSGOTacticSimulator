@@ -1960,6 +1960,23 @@ namespace CSGOTacticSimulator
                         }
                         if ((long)textBlock.Tag == character.SteamId && textBlock != tb_team1 && textBlock != tb_team2)
                         {
+                            if (!character.IsAlive)
+                            {
+                                textBlock.Foreground = Brushes.Red;
+                                textBlock.TextDecorations = TextDecorations.Strikethrough;
+                            }
+                            else
+                            {
+                                if (character.Hp <= 20)
+                                {
+                                    textBlock.Foreground = Brushes.HotPink;
+                                }
+                                else
+                                {
+                                    textBlock.Foreground = Brushes.White;
+                                }
+                                textBlock.TextDecorations = null;
+                            }
                             if (g_infos.Tag.Equals("DefaultInfo"))
                             {
                                 string weapons = "";
@@ -1973,25 +1990,6 @@ namespace CSGOTacticSimulator
                                 else
                                 {
                                     team2Money += money;
-                                }
-                                if (!character.IsAlive)
-                                {
-                                    textBlock.Foreground = Brushes.Red;
-                                    textBlock.TextDecorations = TextDecorations.Strikethrough;
-
-                                    textBlock.Text = textBlock.Text.Substring(0, textBlock.Text.LastIndexOf(":") + 1) + " 0";
-                                }
-                                else
-                                {
-                                    if (character.Hp <= 20)
-                                    {
-                                        textBlock.Foreground = Brushes.HotPink;
-                                    }
-                                    else
-                                    {
-                                        textBlock.Foreground = Brushes.White;
-                                    }
-                                    textBlock.TextDecorations = null;
                                 }
                                 foreach (Equipment equipment in character.LastAliveInfo.WeaponEquipmentList)
                                 {
@@ -2044,15 +2042,19 @@ namespace CSGOTacticSimulator
                 }
             }
 
-            tb_team1.Text =
-            "Camp: " + team1Camp +
-            "\nScore: " + team1Score +
-            "\nEconomy: " + team1Money;
+            tb_team1.Text = "Camp: " + team1Camp;
+            if (g_infos.Tag.Equals("DefaultInfo"))
+            {
+                tb_team1.Text += "\nScore: " + team1Score +
+                "\nEconomy: " + team1Money;
+            }
 
-            tb_team2.Text =
-            "Camp: " + team2Camp +
-            "\nScore: " + team2Score +
-            "\nEconomy: " + team2Money;
+            tb_team2.Text = "Camp: " + team2Camp;
+            if (g_infos.Tag.Equals("DefaultInfo"))
+            {
+                tb_team2.Text += "\nScore: " + team2Score +
+                "\nEconomy: " + team2Money;
+            }
         }
 
         public void ShowPov(object sender, MouseEventArgs e)
@@ -3715,35 +3717,6 @@ namespace CSGOTacticSimulator
                         isFreezetimeEnded = true;
                     }
                 }
-                //else if (currentEvent.Item2 is DecoyEventArgs)
-                //{
-                //}
-                //else if (currentEvent.Item2 is FireEventArgs)
-                //{
-                //}
-                else if (currentEvent.Item2 is BombEventArgs)
-                {
-                    if (currentEvent.Item3 == "BombBeginPlant")
-                    {
-                        if (stopWatchThisRound == null || !isFreezetimeEnded)
-                        {
-                            continue;
-                        }
-                    }
-                }
-                else if (currentEvent.Item2 is BombDefuseEventArgs)
-                {
-                    if (currentEvent.Item3 == "BombBeginDefuse")
-                    {
-                        if (stopWatchThisRound == null || !isFreezetimeEnded)
-                        {
-                            continue;
-                        }
-                    }
-                }
-                //else if (currentEvent.Item2 is SmokeEventArgs)
-                //{
-                //}
                 else if (currentEvent.Item2 is WeaponFiredEventArgs)
                 {
                     if (currentEvent.Item3 == "WeaponFired")
@@ -3870,11 +3843,6 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "TickDone")
                     {
-                        //if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber || !isFreezetimeEnded)
-                        //{
-                        //    continue;
-                        //}
-
                         if (stopWatchThisRound == null || !isFreezetimeEnded)
                         {
                             continue;
@@ -3941,9 +3909,6 @@ namespace CSGOTacticSimulator
                             });
                             missileKeyValuePairList.Remove(kv);
                         }
-
-
-
 
                         foreach (Player player in currentEvent.Item1.Participants)
                         {
@@ -4180,7 +4145,6 @@ namespace CSGOTacticSimulator
                                 }
                             }
                             realCostTime += GlobalDictionary.animationFreshTime;
-
 
                             long elapsedTimeMillisecond = stopWatch.ElapsedMilliseconds;
                             int sleepTime = (int)(animationFreshTime - (elapsedTimeMillisecond - elapsedTimeMillisecondInDemo));
