@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Diagnostics.Tracing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -282,16 +283,36 @@ namespace CSGOTacticSimulator
             name.Foreground = new SolidColorBrush(Colors.White);
             name.FontSize *= GlobalDictionary.ImageRatio * 1.3;
             name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
+            name.Padding = new Thickness(0);
+            name.Margin = new Thickness(0);
             if (hp >= 0)
             {
                 name.Content += " [" + hp + "]";
             }
-            Canvas.SetLeft(name, wndPoint.X);
-            Canvas.SetTop(name, wndPoint.Y + character.CharacterImg.Height / 2);
+            Canvas.SetLeft(name, wndPoint.X + character.CharacterImg.Width / 2);
+            Canvas.SetTop(name, wndPoint.Y + character.CharacterImg.Height);
 
             character.CharacterLabel = name;
 
             return name;
+        }
+
+        private Label CreateChacterNumberlabel(Character character, Point wndPoint)
+        {
+            Label number = new Label();
+            number.IsHitTestVisible = false;
+            number.Foreground = new SolidColorBrush(Colors.White);
+            number.FontSize *= GlobalDictionary.ImageRatio * 1.0;
+            number.Content = character.Number;
+            number.Padding = new Thickness(0);
+            number.Margin = new Thickness(0);
+
+            Canvas.SetLeft(number, wndPoint.X);
+            Canvas.SetTop(number, wndPoint.Y + character.CharacterImg.Height);
+
+            character.NumberLabel = number;
+
+            return number;
         }
 
         public void NewCharacter(Character character, Point mapPoint)
@@ -301,8 +322,11 @@ namespace CSGOTacticSimulator
             Canvas.SetLeft(character.CharacterImg, wndPoint.X);
             Canvas.SetTop(character.CharacterImg, wndPoint.Y);
 
-            c_runcanvas.Children.Add(character.CharacterImg);
-            c_runcanvas.Children.Add(CreateChacterlabel(character, wndPoint, -1));
+            if (character.SteamId <= 0)
+            {
+                c_runcanvas.Children.Add(character.CharacterImg);
+                c_runcanvas.Children.Add(CreateChacterlabel(character, wndPoint, -1));
+            }
         }
 
         public Point GetWndPoint(Point mapPoint, ImgType imgType)
@@ -2179,6 +2203,7 @@ namespace CSGOTacticSimulator
         private void ReadDemo(string filePath)
         {
             nowRunningType = RunningType.DEM;
+            ResizeMode = ResizeMode.CanResizeWithGrip;
             te_editor.Dispatcher.Invoke(() =>
             {
                 te_editor.SyntaxHighlighting = HighlightingLoader.Load(logXshd, HighlightingManager.Instance);
@@ -3940,7 +3965,8 @@ namespace CSGOTacticSimulator
                                 continue;
                             }
 
-                            Label label = null;
+                            Label nameLabel = null;
+                            Label numberLabel = null;
                             if (!dic.ContainsKey(player.SteamID))
                             {
                                 continue;
@@ -3958,16 +3984,20 @@ namespace CSGOTacticSimulator
                                     {
                                         if ((frameworkElement as Label).Content.ToString().Contains((character.Name == "" ? character.Number.ToString() : character.Name)))
                                         {
-                                            label = (Label)frameworkElement;
+                                            nameLabel = (Label)frameworkElement;
+                                        }
+                                        else if ((frameworkElement as Label).Content.ToString() == character.Number.ToString())
+                                        {
+                                            numberLabel = (Label)frameworkElement;
                                         }
                                     }
                                 }
 
                                 if (player.IsAlive == false)
                                 {
-                                    if (label != null)
+                                    if (nameLabel != null)
                                     {
-                                        label.Content = character.Name == "" ? character.Number.ToString() : character.Name + " [" + 0 + "]";
+                                        nameLabel.Content = character.Name == "" ? character.Number.ToString() : character.Name + " [" + 0 + "]";
                                     }
                                     character.Status = Model.Status.Dead;
                                 }
@@ -4016,7 +4046,8 @@ namespace CSGOTacticSimulator
                                 }
 
                                 c_runcanvas.Children.Remove(character.CharacterImg);
-                                c_runcanvas.Children.Remove(label);
+                                c_runcanvas.Children.Remove(nameLabel);
+                                c_runcanvas.Children.Remove(numberLabel);
                                 if (character.OtherImg.Visibility == Visibility.Visible)
                                 {
                                     c_runcanvas.Children.Remove(character.OtherImg);
@@ -4093,6 +4124,7 @@ namespace CSGOTacticSimulator
                                 character.CharacterImg.ImgType = ImgType.Character;
                                 c_runcanvas.Children.Add(character.CharacterImg);
                                 c_runcanvas.Children.Add(CreateChacterlabel(character, endWndPoint, player.HP));
+                                c_runcanvas.Children.Add(CreateChacterNumberlabel(character, endWndPoint));
                                 if (character.OtherImg.Visibility == Visibility.Visible)
                                 {
                                     c_runcanvas.Children.Add(character.OtherImg);
@@ -6027,6 +6059,7 @@ namespace CSGOTacticSimulator
                             if (character.CharacterImg.Equals(img))
                             {
                                 c_runcanvas.Children.Add(CreateChacterlabel(character, wndPoint, character.Hp));
+                                c_runcanvas.Children.Add(CreateChacterNumberlabel(character, wndPoint));
                             }
                         }
                     }

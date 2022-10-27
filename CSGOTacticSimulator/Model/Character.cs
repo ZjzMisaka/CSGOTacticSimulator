@@ -118,6 +118,8 @@ namespace CSGOTacticSimulator.Model
         private TSImage statusImg = new TSImage();
         public Label CharacterLabel { get => characterLabel; set => characterLabel = value; }
         private Label characterLabel = new Label();
+        public Label NumberLabel { get => numberLabel; set => numberLabel = value; }
+        private Label numberLabel = new Label();
         public AdditionalPlayerInformation AdditionalPlayerInformation { get => additionalPlayerInformation; set => additionalPlayerInformation = value; }
         private AdditionalPlayerInformation additionalPlayerInformation = new AdditionalPlayerInformation();
         public LastAliveInfo LastAliveInfo { get => lastAliveInfo; set => lastAliveInfo = value; }
