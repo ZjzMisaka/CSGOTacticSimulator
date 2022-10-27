@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Security.Policy;
 using System.Threading;
 using System.Timers;
@@ -111,6 +112,9 @@ namespace CSGOTacticSimulator
             btn_forward.Background = GlobalDictionary.forwardBrush;
             btn_backward.Background = GlobalDictionary.backwardBrush;
             btn_auto.Background = GlobalDictionary.autoBrush;
+
+            AddMapsFromFolder(GlobalDictionary.mapFolderPath);
+            tb_select_folder.Text = GlobalDictionary.mapFolderPath;
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -2214,12 +2218,12 @@ namespace CSGOTacticSimulator
             propertiesSetter.EnableCloseButton = true;
             int res = MessageBox.Show(propertiesSetter, new RefreshList {
                 new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50, Height = 32, FontSize = 20 },
-                new CheckBox() { Content = "包括之后所有回合" , VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 150, Foreground = new SolidColorBrush(Colors.White), IsChecked = true},
+                new CheckBox() { Content = "自动显示信息面板" , VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 150, Foreground = new SolidColorBrush(Colors.White), IsChecked = true},
                 new ButtonSpacer(200),
                 "OK" }, "需要观看第几回合? ", "选择回合数", MessageBoxImage.Question);
 
             int roundNumber = 0;
-            bool isAnalizeToLastRound = true;
+            bool isAutoShowInfoPanel = true;
             if (res == -1)
             {
                 return;
@@ -2233,7 +2237,7 @@ namespace CSGOTacticSimulator
                     MessageBox.Show(newPropertiesSetter, "请输入数字", "错误", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
-                isAnalizeToLastRound = (MessageBox.ButtonList[1] as CheckBox).IsChecked == true ? true : false;
+                isAutoShowInfoPanel = (MessageBox.ButtonList[1] as CheckBox).IsChecked == true ? true : false;
             }
 
             Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>> eventDic = new Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>();
@@ -2262,8 +2266,7 @@ namespace CSGOTacticSimulator
             btn_pause.Background = GlobalDictionary.pauseBrush;
             Thread totalThread = new Thread(() =>
             {
-                bool isAnalized = false;
-                while (isAnalizeToLastRound || (!isAnalizeToLastRound && !isAnalized))
+                while (true)
                 {
                     while (nowCanRun != roundNumber)
                     {
@@ -2283,7 +2286,7 @@ namespace CSGOTacticSimulator
                     stopwatchList.Clear();
 
                     Thread analizeDemoThread = new Thread(AnalizeDemo);
-                    analizeDemoThread.Start(new Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float>(eventDic, roundNumber, dic, tickTime, firstFreezetimeEndedTime));
+                    analizeDemoThread.Start(new Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float, bool>(eventDic, roundNumber, dic, tickTime, firstFreezetimeEndedTime, isAutoShowInfoPanel));
                     ThreadHelper.AddThread(analizeDemoThread);
                     ++roundNumber;
                     analizeDemoThread.Join();
@@ -2292,8 +2295,6 @@ namespace CSGOTacticSimulator
                     {
                         c_runcanvas.Children.Clear();
                     });
-
-                    isAnalized = true;
                 }
 
                 roundNumber = -1;
@@ -2478,10 +2479,6 @@ namespace CSGOTacticSimulator
             parser.BombBeginPlant += (parseSender, parseE) =>
             {
                 if ((parser.CTScore + parser.TScore + 1) < roundNumber)
-                {
-                    return;
-                }
-                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -2803,9 +2800,22 @@ namespace CSGOTacticSimulator
                 }
                 te_editor.Dispatcher.Invoke(() =>
                 {
+                    if (demoParser.TScore + demoParser.CTScore == 0)
+                    {
+                        te_editor.Text = "";
+                    }
                     te_editor.Text += "Round " + (demoParser.TScore + demoParser.CTScore + 1) + ": [T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "]\n";
                     te_editor.ScrollToEnd();
                 });
+
+                DemoParser nowParser = (parseSender as DemoParser);
+                List<Player> nowParticipants = new List<Player>();
+                foreach (Player playingParticipant in nowParser.PlayingParticipants)
+                {
+                    nowParticipants.Add(playingParticipant.Copy());
+                }
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "RoundAnnounceMatchStarted", 0));
 
             };
             parser.RoundStart += (parseSender, parseE) =>
@@ -2892,6 +2902,10 @@ namespace CSGOTacticSimulator
                 }
                 te_editor.Dispatcher.Invoke(() =>
                 {
+                    if (demoParser.TScore + demoParser.CTScore == 0)
+                    {
+                        te_editor.Text = "";
+                    }
                     te_editor.Text += "Round " + (demoParser.TScore + demoParser.CTScore + 1) + ": [T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "]\n";
                     te_editor.ScrollToEnd();
                 });
@@ -2927,10 +2941,6 @@ namespace CSGOTacticSimulator
             parser.RoundEnd += (parseSender, parseE) =>
             {
                 if ((parser.CTScore + parser.TScore + 1) < roundNumber)
-                {
-                    return;
-                }
-                if (!isAnalizeToLastRound && ((parseSender as DemoParser).TScore + (parseSender as DemoParser).CTScore + 1) != roundNumber)
                 {
                     return;
                 }
@@ -3177,12 +3187,13 @@ namespace CSGOTacticSimulator
 
         private void AnalizeDemo(object obj)
         {
-            Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float> tupleTemp = (Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float>)obj;
+            Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float, bool> tupleTemp = (Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float, bool>)obj;
             Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>> eventDic = tupleTemp.Item1;
             int roundNumber = tupleTemp.Item2;
             Dictionary<long, int> dic = tupleTemp.Item3;
             float tickTime = tupleTemp.Item4;
             float firstFreezetimeEndedTime = tupleTemp.Item5;
+            bool isAutoShowInfoPanel = tupleTemp.Item6;
             // double runSpeed = double.Parse(IniHelper.ReadIni("RunSpeed", character.Weapon.ToString()));
             //double missileSpeed = double.Parse(IniHelper.ReadIni("Missile", "Speed"));
 
@@ -3416,6 +3427,34 @@ namespace CSGOTacticSimulator
                         }
                     }
                 }
+                else if (currentEvent.Item2 is RoundAnnounceMatchStartedEventArgs)
+                {
+                    if (currentEvent.Item3 == "RoundAnnounceMatchStarted")
+                    {
+                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber)
+                        {
+                            continue;
+                        }
+
+                        if (isAutoShowInfoPanel)
+                        {
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                ShowDefaultInfo();
+                            });
+                            Thread showInfoThread = new Thread(() =>
+                            {
+                                Thread.Sleep(5 * 1000);
+                                this.Dispatcher.Invoke(() =>
+                                {
+                                    HideDefaultInfo();
+                                });
+                            });
+                            showInfoThread.Start();
+                            ThreadHelper.AddThread(showInfoThread);
+                        }
+                    }
+                }
                 else if (currentEvent.Item2 is RoundStartedEventArgs)
                 {
                     if (currentEvent.Item3 == "RoundStart")
@@ -3423,6 +3462,11 @@ namespace CSGOTacticSimulator
                         if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber)
                         {
                             continue;
+                        }
+
+                        if (isAutoShowInfoPanel)
+                        {
+                            AutoShowInfoPanel();
                         }
 
                         isFreezetimeEnded = false;
@@ -3435,6 +3479,11 @@ namespace CSGOTacticSimulator
                         if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber)
                         {
                             continue;
+                        }
+
+                        if (isAutoShowInfoPanel)
+                        {
+                            AutoShowInfoPanel();
                         }
                     }
                 }
@@ -4992,6 +5041,59 @@ namespace CSGOTacticSimulator
             }
         }
 
+        private void AutoShowInfoPanel()
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                HidePersonalInfo();
+                ShowPersonalInfo();
+            });
+            Thread showInfoThread = new Thread(() =>
+            {
+                Thread.Sleep(5 * 1000);
+                this.Dispatcher.Invoke(() =>
+                {
+                    HidePersonalInfo();
+                });
+            });
+            showInfoThread.Start();
+            ThreadHelper.AddThread(showInfoThread);
+        }
+
+        private void ShowDefaultInfo()
+        {
+            g_infos.Visibility = Visibility.Visible;
+            g_infos.Tag = "DefaultInfo";
+        }
+        private void ShowPersonalInfo()
+        {
+            g_infos.Visibility = Visibility.Visible;
+            g_infos.Tag = "PersonalInfo";
+        }
+        private void HideDefaultInfo()
+        {
+            if (!Keyboard.IsKeyDown(Key.CapsLock))
+            {
+                g_infos.Visibility = Visibility.Collapsed;
+                g_infos.Tag = "DefaultInfo";
+            }
+        }
+        private void HidePersonalInfo()
+        {
+            if (!Keyboard.IsKeyDown(Key.LeftShift))
+            {
+                if (Keyboard.IsKeyDown(Key.CapsLock))
+                {
+                    g_infos.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    g_infos.Visibility = Visibility.Collapsed;
+                }
+                g_infos.Tag = "DefaultInfo";
+            }
+        }
+
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.Delete))
@@ -5004,13 +5106,11 @@ namespace CSGOTacticSimulator
             }
             else if (e.Key == Key.CapsLock && !Keyboard.IsKeyDown(Key.LeftShift))
             {
-                g_infos.Visibility = Visibility.Visible;
-                g_infos.Tag = "DefaultInfo";
+                ShowDefaultInfo();
             }
             else if (e.Key == Key.LeftShift && Keyboard.IsKeyDown(Key.CapsLock))
             {
-                g_infos.Visibility = Visibility.Visible;
-                g_infos.Tag = "PersonalInfo";
+                ShowPersonalInfo();
             }
         }
 
@@ -5022,20 +5122,11 @@ namespace CSGOTacticSimulator
             }
             else if (e.Key == Key.CapsLock)
             {
-                g_infos.Visibility = Visibility.Collapsed;
-                g_infos.Tag = "DefaultInfo";
+                HideDefaultInfo();
             }
             else if (e.Key == Key.LeftShift)
             {
-                if (Keyboard.IsKeyDown(Key.CapsLock))
-                {
-                    g_infos.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    g_infos.Visibility = Visibility.Collapsed;
-                }
-                g_infos.Tag = "DefaultInfo";
+                HidePersonalInfo();
             }
         }
 
