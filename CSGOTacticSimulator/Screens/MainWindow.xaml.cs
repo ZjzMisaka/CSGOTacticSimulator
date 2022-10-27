@@ -3467,20 +3467,7 @@ namespace CSGOTacticSimulator
 
                         if (isAutoShowInfoPanel)
                         {
-                            this.Dispatcher.Invoke(() =>
-                            {
-                                ShowDefaultInfo();
-                            });
-                            Thread showInfoThread = new Thread(() =>
-                            {
-                                Thread.Sleep(5 * 1000);
-                                this.Dispatcher.Invoke(() =>
-                                {
-                                    HideDefaultInfo();
-                                });
-                            });
-                            showInfoThread.Start();
-                            ThreadHelper.AddThread(showInfoThread);
+                            AutoShowDefaultInfoPanel();
                         }
                     }
                 }
@@ -3495,7 +3482,7 @@ namespace CSGOTacticSimulator
 
                         if (isAutoShowInfoPanel)
                         {
-                            AutoShowInfoPanel();
+                            AutoShowDefaultInfoPanel();
                         }
 
                         isFreezetimeEnded = false;
@@ -3512,7 +3499,7 @@ namespace CSGOTacticSimulator
 
                         if (isAutoShowInfoPanel)
                         {
-                            AutoShowInfoPanel();
+                            AutoShowPersonalInfoPanel();
                         }
                     }
                 }
@@ -5038,24 +5025,46 @@ namespace CSGOTacticSimulator
                 }
             }
         }
-
-        private void AutoShowInfoPanel()
+        private void AutoShowDefaultInfoPanel()
         {
             this.Dispatcher.Invoke(() =>
             {
-                HidePersonalInfo();
-                ShowPersonalInfo();
-            });
-            Thread showInfoThread = new Thread(() =>
-            {
-                Thread.Sleep(5 * 1000);
-                this.Dispatcher.Invoke(() =>
+                if (!(Keyboard.IsKeyDown(Key.CapsLock) && Keyboard.IsKeyDown(Key.LeftShift)))
                 {
-                    HidePersonalInfo();
-                });
+                    ShowDefaultInfo();
+                    Thread showInfoThread = new Thread(() =>
+                    {
+                        Thread.Sleep(5 * 1000);
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            HideDefaultInfo();
+                        });
+                    });
+                    showInfoThread.Start();
+                    ThreadHelper.AddThread(showInfoThread);
+                }
             });
-            showInfoThread.Start();
-            ThreadHelper.AddThread(showInfoThread);
+        }
+
+        private void AutoShowPersonalInfoPanel()
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                if (!Keyboard.IsKeyDown(Key.CapsLock))
+                {
+                    ShowPersonalInfo();
+                    Thread showInfoThread = new Thread(() =>
+                    {
+                        Thread.Sleep(5 * 1000);
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            HidePersonalInfo();
+                        });
+                    });
+                    showInfoThread.Start();
+                    ThreadHelper.AddThread(showInfoThread);
+                }
+            });
         }
 
         private void ShowDefaultInfo()
@@ -5078,6 +5087,11 @@ namespace CSGOTacticSimulator
         }
         private void HidePersonalInfo()
         {
+            if (g_infos.Visibility == Visibility.Visible && g_infos.Tag.ToString() == "DefaultInfo")
+            {
+                return;
+            }
+
             if (!Keyboard.IsKeyDown(Key.LeftShift))
             {
                 if (Keyboard.IsKeyDown(Key.CapsLock))
