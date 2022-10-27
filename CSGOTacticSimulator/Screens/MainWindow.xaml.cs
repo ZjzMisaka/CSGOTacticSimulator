@@ -2765,7 +2765,7 @@ namespace CSGOTacticSimulator
 
                 DemoParser demoParser = parseSender as DemoParser;
 
-                IEnumerable<Player> playingParticipants = demoParser.PlayingParticipants.OrderBy(Player => Player.Team);
+                IEnumerable<Player> playingParticipants = demoParser.PlayingParticipants.OrderBy(Player => Player.SteamID).OrderBy(Player => Player.Team);
                 foreach (Player player in playingParticipants)
                 {
                     if (player.Team == Team.Spectate)
@@ -2850,7 +2850,7 @@ namespace CSGOTacticSimulator
 
                 //CharacterHelper.ClearCharacters();
 
-                IEnumerable<Player> playingParticipants = demoParser.PlayingParticipants.OrderBy(Player => Player.Team);
+                IEnumerable<Player> playingParticipants = demoParser.PlayingParticipants.OrderBy(Player => Player.SteamID).OrderBy(Player => Player.Team);
                 foreach (Player player in playingParticipants)
                 {
                     if (player.Team == Team.Spectate)
