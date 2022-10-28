@@ -3299,6 +3299,9 @@ namespace CSGOTacticSimulator
             TimeSpan roundTimeSpan = new TimeSpan(0, 1, 56);
             TimeSpan timeSpanWhenBombPlanted = new TimeSpan(0);
             TimeSpan offsetWhenBombPlanted = new TimeSpan(0);
+
+            bool beginPlantOrDefuse = false;
+
             for (int i = 0; i < eventList.Count; ++i)
             {
                 TimeSpan roundLeaveTimeSpan = roundTimeSpan - (stopWatch.Elapsed - timeSpanWhenBombPlanted) - (new TimeSpan(0, 0, 0, 0, offset) - offsetWhenBombPlanted);
@@ -3596,8 +3599,11 @@ namespace CSGOTacticSimulator
 
                         this.Dispatcher.Invoke(() =>
                         {
+                            beginPlantOrDefuse = true;
+
                             character.OtherImg.Visibility = Visibility.Visible;
                             character.OtherImg.Source = new BitmapImage(new Uri(GlobalDictionary.bombPath));
+                            character.OtherImg.Tag = "Plant";
                         });
                     }
                     else if (currentEvent.Item3 == "BombAbortPlant")
@@ -3718,8 +3724,10 @@ namespace CSGOTacticSimulator
                         }
                         this.Dispatcher.Invoke(() =>
                         {
+                            beginPlantOrDefuse = true;
                             character.OtherImg.Visibility = Visibility.Visible;
                             character.OtherImg.Source = new BitmapImage(new Uri(GlobalDictionary.defuseKitPath));
+                            character.OtherImg.Tag = "Defuse";
                         });
                     }
                     else if (currentEvent.Item3 == "BombAbortDefuse")
@@ -3757,6 +3765,8 @@ namespace CSGOTacticSimulator
                             continue;
                         }
 
+                        Character character = CharacterHelper.GetCharacter(characterNumber);
+
                         if ((currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Flash ||
                                 (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.HE ||
                                 (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Smoke ||
@@ -3764,6 +3774,14 @@ namespace CSGOTacticSimulator
                                 (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Incendiary ||
                                 (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Decoy)
                         {
+                            c_runcanvas.Dispatcher.Invoke(() =>
+                            {
+                                if (character.OtherImg.Visibility == Visibility.Visible && character.OtherImg.Tag != null && character.OtherImg.Tag.ToString() == "Plant")
+                                {
+                                    character.OtherImg.Visibility = Visibility.Collapsed;
+                                }
+                            });
+
                             if (ThrowMissile(currentInfo, eventArgs, eventName, characterNumber, eventList, i, usedMissileDic, missileKeyValuePairList, tickTime))
                             {
                                 continue;
@@ -3771,7 +3789,14 @@ namespace CSGOTacticSimulator
                         }
                         else
                         {
-                            Character character = CharacterHelper.GetCharacter(characterNumber);
+                            c_runcanvas.Dispatcher.Invoke(() =>
+                            {
+                                if (character.OtherImg.Visibility == Visibility.Visible)
+                                {
+                                    character.OtherImg.Visibility = Visibility.Collapsed;
+                                }
+                            });
+
                             Player player = (currentEvent.Item2 as WeaponFiredEventArgs).Shooter;
 
                             Line bulletLine = null;
@@ -4118,6 +4143,20 @@ namespace CSGOTacticSimulator
                                     character.CharacterImg.RenderTransform = new RotateTransform(360 - player.ViewDirectionX, character.CharacterImg.Width / 2, character.CharacterImg.Height / 2);
                                 }
 
+                                c_runcanvas.Dispatcher.Invoke(() =>
+                                {
+                                    if (character.OtherImg.Visibility == Visibility.Visible && !character.CharacterImg.MapPoint.Equals(endMapPoint))
+                                    {
+                                        if (beginPlantOrDefuse)
+                                        {
+                                            beginPlantOrDefuse = false;
+                                        }
+                                        else
+                                        {
+                                            character.OtherImg.Visibility = Visibility.Collapsed;
+                                        }
+                                    }
+                                });
                                 character.CharacterImg.MapPoint = endMapPoint;
                                 character.CharacterImg.ImgType = ImgType.Character;
                                 c_runcanvas.Children.Add(character.CharacterImg);
