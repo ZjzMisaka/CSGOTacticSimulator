@@ -3350,7 +3350,11 @@ namespace CSGOTacticSimulator
                         }
                         else if (currentEvent.Item3 == "BombPlanted")
                         {
-                            PlantBomb(CharacterHelper.GetCharacter(currentEvent.Item4), out roundTimeSpan, out timeSpanWhenBombPlanted, out offsetWhenBombPlanted);
+                            BombPlanted(DemoPointToMapPoint((currentEvent.Item2 as BombEventArgs).Player.Position, currentInfo.Map), CharacterHelper.GetCharacter(currentEvent.Item4), out roundTimeSpan, out timeSpanWhenBombPlanted, out offsetWhenBombPlanted);
+                        }
+                        else if (currentEvent.Item3 == "BombDefused")
+                        {
+                            BombDefused(CharacterHelper.GetCharacter(currentEvent.Item4));
                         }
                         if (currentEvent.Item3 == "WeaponFired")
                         {
@@ -3675,31 +3679,7 @@ namespace CSGOTacticSimulator
                             continue;
                         }
 
-                        c_runcanvas.Dispatcher.Invoke(() =>
-                        {
-                            TSImage bombImage = null;
-                            foreach (FrameworkElement frameworkElement in c_runcanvas.Children)
-                            {
-                                if (frameworkElement is TSImage && (frameworkElement as TSImage).TagStr == "Bomb")
-                                {
-                                    bombImage = frameworkElement as TSImage;
-                                }
-                            }
-                            if (bombImage == null)
-                            {
-                                return;
-                            }
-
-                            c_runcanvas.Children.Remove(bombImage);
-
-                            TSImage explosionImage = new TSImage();
-                            explosionImage.Source = new BitmapImage(new Uri(GlobalDictionary.explosionPath));
-                            explosionImage.Width = GlobalDictionary.ExplosionEffectWidthAndHeight;
-                            explosionImage.Height = GlobalDictionary.ExplosionEffectWidthAndHeight;
-                            c_runcanvas.Children.Remove(explosionImage);
-
-                            character.OtherImg.Visibility = Visibility.Collapsed;
-                        });
+                        BombDefused(character);
                     }
                     else if (currentEvent.Item3 == "BombPlanted")
                     {
@@ -3708,7 +3688,7 @@ namespace CSGOTacticSimulator
                             continue;
                         }
 
-                        PlantBomb(character, out roundTimeSpan, out timeSpanWhenBombPlanted, out offsetWhenBombPlanted);
+                        BombPlanted(DemoPointToMapPoint((currentEvent.Item2 as BombEventArgs).Player.Position, currentInfo.Map), character, out roundTimeSpan, out timeSpanWhenBombPlanted, out offsetWhenBombPlanted);
                     }
                 }
                 else if (currentEvent.Item2 is BombDefuseEventArgs)
@@ -4647,7 +4627,7 @@ namespace CSGOTacticSimulator
             return false;
         }
 
-        private void PlantBomb(Character character, out TimeSpan roundTimeSpan, out TimeSpan timeSpanWhenBombPlanted, out TimeSpan offsetWhenBombPlanted)
+        private void BombPlanted(Point mapPoint, Character character, out TimeSpan roundTimeSpan, out TimeSpan timeSpanWhenBombPlanted, out TimeSpan offsetWhenBombPlanted)
         {
             roundTimeSpan = new TimeSpan(0, 0, 41);
             timeSpanWhenBombPlanted = stopWatch.Elapsed;
@@ -4661,15 +4641,44 @@ namespace CSGOTacticSimulator
                 bombImage.Height = GlobalDictionary.PropsWidthAndHeight;
                 bombImage.Opacity = 0.75;
                 bombImage.TagStr = "Bomb";
-                bombImage.MapPoint = character.MapPoint;
+                bombImage.MapPoint = mapPoint;
                 bombImage.ImgType = ImgType.Props;
-                Point bombWndPoint = GetWndPoint(character.MapPoint, ImgType.Props);
+                Point bombWndPoint = GetWndPoint(mapPoint, ImgType.Props);
 
                 character.OtherImg.Visibility = Visibility.Collapsed;
 
                 Canvas.SetLeft(bombImage, bombWndPoint.X);
                 Canvas.SetTop(bombImage, bombWndPoint.Y);
                 c_runcanvas.Children.Add(bombImage);
+            });
+        }
+
+        private void BombDefused(Character character)
+        {
+            c_runcanvas.Dispatcher.Invoke(() =>
+            {
+                TSImage bombImage = null;
+                foreach (FrameworkElement frameworkElement in c_runcanvas.Children)
+                {
+                    if (frameworkElement is TSImage && (frameworkElement as TSImage).TagStr == "Bomb")
+                    {
+                        bombImage = frameworkElement as TSImage;
+                    }
+                }
+                if (bombImage == null)
+                {
+                    return;
+                }
+
+                c_runcanvas.Children.Remove(bombImage);
+
+                TSImage explosionImage = new TSImage();
+                explosionImage.Source = new BitmapImage(new Uri(GlobalDictionary.explosionPath));
+                explosionImage.Width = GlobalDictionary.ExplosionEffectWidthAndHeight;
+                explosionImage.Height = GlobalDictionary.ExplosionEffectWidthAndHeight;
+                c_runcanvas.Children.Remove(explosionImage);
+
+                character.OtherImg.Visibility = Visibility.Collapsed;
             });
         }
 

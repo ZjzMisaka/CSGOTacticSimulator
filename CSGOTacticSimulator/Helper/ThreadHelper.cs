@@ -48,7 +48,8 @@ namespace CSGOTacticSimulator.Helper
         {
             for (int i = listThread.Count - 1; i >= 0; --i)
             {
-                if (listThread[i].IsAlive && listThread[i].ThreadState == ThreadState.Suspended)
+                if (listThread[i].IsAlive && listThread[i].ThreadState == ThreadState.Suspended
+                    || listThread[i].IsAlive && listThread[i].ThreadState == (ThreadState.SuspendRequested | ThreadState.WaitSleepJoin))
                 {
                     listThread[i].Resume();
                 }
