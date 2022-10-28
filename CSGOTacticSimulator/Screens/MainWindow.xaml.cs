@@ -2346,9 +2346,7 @@ namespace CSGOTacticSimulator
             totalThread.Start();
             ThreadHelper.AddThread(totalThread);
 
-
-
-
+            List<int> loggedRoundList = new List<int>();
 
             parser.ParseHeader();
             if (!parser.Map.ToUpper().Contains(cb_select_mapimg.SelectedValue.ToString().ToUpper()))
@@ -2844,12 +2842,29 @@ namespace CSGOTacticSimulator
                 }
                 te_editor.Dispatcher.Invoke(() =>
                 {
-                    if (demoParser.TScore + demoParser.CTScore == 0)
+                    if (loggedRoundList.Count >= 1 && loggedRoundList.Last() == demoParser.TScore + demoParser.CTScore + 1)
                     {
-                        te_editor.Text = "";
+                        te_editor.Dispatcher.Invoke(() =>
+                        {
+                            List<string> splitedList = te_editor.Text.Trim().Split("\n".ToCharArray()).ToList();
+                            if (splitedList.Count >= 1)
+                            {
+                                splitedList.RemoveAt(splitedList.Count - 1);
+                            }
+                            te_editor.Text = String.Join("\n", splitedList);
+                            if (te_editor.Text.Length > 0)
+                            {
+                                te_editor.Text += "\n";
+                            }
+                            te_editor.ScrollToEnd();
+                        });
                     }
-                    te_editor.Text += "Round " + (demoParser.TScore + demoParser.CTScore + 1) + ": [T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "]\n";
-                    te_editor.ScrollToEnd();
+                    if ((loggedRoundList.Count >= 1 && loggedRoundList.Last() == demoParser.TScore + demoParser.CTScore + 1) || (!loggedRoundList.Contains(demoParser.TScore + demoParser.CTScore + 1)))
+                    {
+                        te_editor.Text += "Round " + (demoParser.TScore + demoParser.CTScore + 1) + ": [T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "]\n";
+                        loggedRoundList.Add(demoParser.TScore + demoParser.CTScore + 1);
+                        te_editor.ScrollToEnd();
+                    }
                 });
 
                 DemoParser nowParser = (parseSender as DemoParser);
@@ -2912,14 +2927,6 @@ namespace CSGOTacticSimulator
 
                 if (demoParser.TScore + demoParser.CTScore >= 1)
                 {
-                    if (eventDic.ContainsKey(demoParser.TScore + demoParser.CTScore))
-                    {
-                        te_editor.Dispatcher.Invoke(() =>
-                        {
-                            te_editor.Text = te_editor.Text.Substring(0, te_editor.Text.LastIndexOf("\n") + 1);
-                            te_editor.ScrollToEnd();
-                        });
-                    }
                     eventDic[demoParser.TScore + demoParser.CTScore] = eventList;
                     eventList = new List<Tuple<CurrentInfo, EventArgs, string, int>>();
 
@@ -2947,12 +2954,32 @@ namespace CSGOTacticSimulator
                 }
                 te_editor.Dispatcher.Invoke(() =>
                 {
-                    if (demoParser.TScore + demoParser.CTScore == 0)
+                    if (loggedRoundList.Count >= 1 && loggedRoundList.Last() == demoParser.TScore + demoParser.CTScore + 1)
                     {
-                        te_editor.Text = "";
+                        te_editor.Dispatcher.Invoke(() =>
+                        {
+                            List<string> splitedList = te_editor.Text.Trim().Split("\n".ToCharArray()).ToList();
+                            if (splitedList.Count >= 1)
+                            {
+                                splitedList.RemoveAt(splitedList.Count - 1);
+                            }
+                            te_editor.Text = String.Join("\n", splitedList);
+                            if (te_editor.Text.Length > 0)
+                            {
+                                te_editor.Text += "\n";
+                            }
+                            te_editor.ScrollToEnd();
+                        });
                     }
-                    te_editor.Text += "Round " + (demoParser.TScore + demoParser.CTScore + 1) + ": [T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "]\n";
-                    te_editor.ScrollToEnd();
+                    if ((loggedRoundList.Count >= 1 && loggedRoundList.Last() == demoParser.TScore + demoParser.CTScore + 1) || (!loggedRoundList.Contains(demoParser.TScore + demoParser.CTScore + 1)))
+                    {
+                        if (isRoundAnnounceMatchStarted)
+                        {
+                            te_editor.Text += "Round " + (demoParser.TScore + demoParser.CTScore + 1) + ": [T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "]\n";
+                            loggedRoundList.Add(demoParser.TScore + demoParser.CTScore + 1);
+                            te_editor.ScrollToEnd();
+                        }
+                    }
                 });
 
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "RoundStart", 0));
@@ -3182,6 +3209,7 @@ namespace CSGOTacticSimulator
             //{
             //};
 
+            te_editor.Text = "";
             Thread analyzeThread = new Thread(() =>
             {
                 try
