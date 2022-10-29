@@ -2806,7 +2806,7 @@ namespace CSGOTacticSimulator
                     Character character = null;
                     this.Dispatcher.Invoke(() =>
                     {
-                        character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
+                        character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this, true);
                     });
                     dic.Add(character.SteamId, character.Number);
 
@@ -2908,7 +2908,7 @@ namespace CSGOTacticSimulator
                     Character character = null;
                     this.Dispatcher.Invoke(() =>
                     {
-                        character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
+                        character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this, true);
                     });
 
                     dic.Add(character.SteamId, character.Number);
