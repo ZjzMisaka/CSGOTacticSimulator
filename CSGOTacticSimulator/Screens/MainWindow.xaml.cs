@@ -2817,6 +2817,10 @@ namespace CSGOTacticSimulator
                     {
                         continue;
                     }
+                    if (player.SteamID <= 0)
+                    {
+                        continue;
+                    }
                     Point mapPoint = DemoPointToMapPoint(player.Position, demoParser.Map);
                     bool camp = false;
                     if (player.Team == Team.Terrorist)
@@ -2831,7 +2835,7 @@ namespace CSGOTacticSimulator
                     Character character = null;
                     this.Dispatcher.Invoke(() =>
                     {
-                        character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this, true);
+                        character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
                     });
                     dic.Add(character.SteamId, character.Number);
 
@@ -2919,6 +2923,10 @@ namespace CSGOTacticSimulator
                     {
                         continue;
                     }
+                    if (player.SteamID <= 0)
+                    {
+                        continue;
+                    }
                     Point mapPoint = DemoPointToMapPoint(player.Position, demoParser.Map);
                     bool camp = false;
                     if (player.Team == Team.Terrorist)
@@ -2933,7 +2941,7 @@ namespace CSGOTacticSimulator
                     Character character = null;
                     this.Dispatcher.Invoke(() =>
                     {
-                        character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this, true);
+                        character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
                     });
 
                     dic.Add(character.SteamId, character.Number);
