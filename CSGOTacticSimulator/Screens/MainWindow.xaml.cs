@@ -2238,9 +2238,6 @@ namespace CSGOTacticSimulator
                 MessageBox.Show(newPropertiesSetter, "文件\n" + filePath + "\n不存在", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
-            tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
-            tb_timer.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
 
             var setting = new JsonSerializerSettings();
             setting.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -3301,6 +3298,19 @@ namespace CSGOTacticSimulator
             TimeSpan offsetWhenBombPlanted = new TimeSpan(0);
 
             bool beginPlantOrDefuse = false;
+
+            this.Dispatcher.Invoke(() =>
+            {
+                GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
+                tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+                tb_timer.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+                List<Character> characterList = CharacterHelper.GetCharacters();
+                foreach (Character character in characterList)
+                {
+                    character.CharacterImg.Width = GlobalDictionary.CharacterWidthAndHeight;
+                    character.CharacterImg.Height = GlobalDictionary.CharacterWidthAndHeight;
+                }
+            });
 
             for (int i = 0; i < eventList.Count; ++i)
             {
@@ -6047,20 +6057,6 @@ namespace CSGOTacticSimulator
                 g_infos.Width = width;
             }
 
-            foreach (UIElement element in g_infos.Children)
-            {
-                if (element is TextBlock)
-                {
-                    if (element == tb_team1 || element == tb_team2)
-                    {
-                        (element as TextBlock).FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
-                    }
-                    else
-                    {
-                        (element as TextBlock).FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.0;
-                    }
-                }
-            }
             tb_timer.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
             tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
 
@@ -6084,6 +6080,25 @@ namespace CSGOTacticSimulator
         private void MainSizeChanged()
         {
             GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
+
+            foreach (UIElement element in g_infos.Children)
+            {
+                if (element is TextBlock)
+                {
+                    if (element == tb_team1 || element == tb_team2)
+                    {
+                        (element as TextBlock).FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+                    }
+                    else
+                    {
+                        (element as TextBlock).FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.0;
+                    }
+                }
+            }
+
+            tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+            tb_timer.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+
             List<UIElement> uIElementList = new List<UIElement>();
             foreach (UIElement obj in c_runcanvas.Children)
             {
