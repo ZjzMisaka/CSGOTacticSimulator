@@ -1921,7 +1921,7 @@ namespace CSGOTacticSimulator
                         "\n⚔Weapons: " + weapons +
                         "\n🧨Missiles: " + missileEquipments +
                         "\n⚙Equipment: " + equips +
-                        "\n💰Money: " + money +
+                        "\n💴Money: " + money +
                         "\n♥HP: " + character.Hp;
                     }
 
@@ -2066,7 +2066,7 @@ namespace CSGOTacticSimulator
                                 "\n⚔Weapons: " + weapons +
                                 "\n🧨Missiles: " + missileEquipments +
                                 "\n⚙Equipment: " + equips +
-                                "\n💰Money: " + money +
+                                "\n💴Money: " + money +
                                 "\n♥HP: " + character.Hp;
                             }
                             else
