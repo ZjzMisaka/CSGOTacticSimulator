@@ -125,9 +125,9 @@ namespace CSGOTacticSimulator.Model
         public LastAliveInfo LastAliveInfo { get => lastAliveInfo; set => lastAliveInfo = value; }
         private LastAliveInfo lastAliveInfo = new LastAliveInfo();
 
-        public Character(string name, long steamId, bool isFriendly, bool isT, Point mapPoint, MainWindow wnd, bool chackSteam = false)
+        public Character(string name, long steamId, bool isFriendly, bool isT, Point mapPoint, MainWindow wnd, bool checkSteam = false)
         {
-            if (chackSteam && steamId <= 0)
+            if (checkSteam && steamId <= 0)
             {
                 return;
             }
