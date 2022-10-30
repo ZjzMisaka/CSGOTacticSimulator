@@ -3619,7 +3619,7 @@ namespace CSGOTacticSimulator
                         {
                             character.StatusImg.Visibility = Visibility.Visible;
                             character.StatusImg.Source = new BitmapImage(new Uri(GlobalDictionary.eyePath));
-                            character.StatusImg.Tag = (currentEvent.Item2 as BlindEventArgs).Attacker.Name;
+                            character.StatusImg.Tag = (currentEvent.Item2 as BlindEventArgs).Attacker.SteamID;
                         });
 
                         Thread blindThread = new Thread(() =>
@@ -4759,19 +4759,21 @@ namespace CSGOTacticSimulator
                 }
 
                 string withFlashStr = "";
+                long withFlashSteamId = -1;
                 foreach (long steamId in dic.Keys)
                 {
                     if (playerKilledEventArgs.Victim != null && playerKilledEventArgs.Victim.SteamID == steamId)
                     {
                         if (CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Visibility == Visibility.Visible)
                         {
-                            withFlashStr += (" [with flashbang by " + CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Tag.ToString() + "]");
+                            withFlashSteamId = (long)CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Tag;
+                            withFlashStr += (" [with flashbang by " + CharacterHelper.GetCharacter(dic[withFlashSteamId]).Name + "]");
                         }
                     }
                 }
 
                 string assisterStr = "";
-                if (playerKilledEventArgs.Assister != null)
+                if (playerKilledEventArgs.Assister != null && playerKilledEventArgs.Assister.SteamID != withFlashSteamId)
                 {
                     string teammateStr = "";
                     if (playerKilledEventArgs.Assister != null && playerKilledEventArgs.Victim != null && playerKilledEventArgs.Assister.Team == playerKilledEventArgs.Victim.Team)
