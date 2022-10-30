@@ -64,6 +64,8 @@ namespace CSGOTacticSimulator
         private XshdSyntaxDefinition logXshd = null;
         private System.Timers.Timer resizeTimer = new System.Timers.Timer(100) { Enabled = false };
         private Dictionary<UIElement, Point> elementPointDic = new Dictionary<UIElement, Point>();
+        private int currentTScore = -1;
+        private int currentCTScore = -1;
         public List<Point> mouseMovePathInPreview = new List<Point>();
         public List<Point> keyDownInPreview = new List<Point>();
         public Stopwatch stopWatch = null;
@@ -1916,11 +1918,11 @@ namespace CSGOTacticSimulator
                         tb_infos.Text =
                         "Number: " + character.Number +
                         "\nName: " + character.Name +
-                        "\nWeapons: " + weapons +
-                        "\nMissiles: " + missileEquipments +
-                        "\nEquipment: " + equips +
-                        "\nMoney: " + money +
-                        "\nHP: " + character.Hp;
+                        "\n⚔Weapons: " + weapons +
+                        "\n🧨Missiles: " + missileEquipments +
+                        "\n⚙Equipment: " + equips +
+                        "\n💰Money: " + money +
+                        "\n♥HP: " + character.Hp;
                     }
 
                     break;
@@ -1999,7 +2001,7 @@ namespace CSGOTacticSimulator
                             {
                                 if (character.Hp <= 20)
                                 {
-                                    textBlock.Foreground = Brushes.HotPink;
+                                    textBlock.Foreground = Brushes.DeepPink;
                                 }
                                 else
                                 {
@@ -2061,11 +2063,11 @@ namespace CSGOTacticSimulator
                                 textBlock.Text =
                                 "Number: " + character.Number +
                                 "\nName: " + character.Name +
-                                "\nWeapons: " + weapons +
-                                "\nMissiles: " + missileEquipments +
-                                "\nEquipment: " + equips +
-                                "\nMoney: " + money +
-                                "\nHP: " + character.Hp;
+                                "\n⚔Weapons: " + weapons +
+                                "\n🧨Missiles: " + missileEquipments +
+                                "\n⚙Equipment: " + equips +
+                                "\n💰Money: " + money +
+                                "\n♥HP: " + character.Hp;
                             }
                             else
                             {
@@ -4194,7 +4196,9 @@ namespace CSGOTacticSimulator
 
                         this.Dispatcher.Invoke(() =>
                         {
-                            SetInfos(currentInfo.TScore, currentInfo.CtScore);
+                            currentTScore = currentInfo.TScore;
+                            currentCTScore = currentInfo.CtScore;
+                            SetInfos(currentTScore, currentCTScore);
                         });
 
                         float nowTimeEnd = 0;
@@ -5200,11 +5204,13 @@ namespace CSGOTacticSimulator
         {
             g_infos.Visibility = Visibility.Visible;
             g_infos.Tag = "DefaultInfo";
+            SetInfos(currentTScore, currentCTScore);
         }
         private void ShowPersonalInfo()
         {
             g_infos.Visibility = Visibility.Visible;
             g_infos.Tag = "PersonalInfo";
+            SetInfos(currentTScore, currentCTScore);
         }
         private void HideDefaultInfo()
         {
@@ -5232,6 +5238,7 @@ namespace CSGOTacticSimulator
                     g_infos.Visibility = Visibility.Collapsed;
                 }
                 g_infos.Tag = "DefaultInfo";
+                SetInfos(currentTScore, currentCTScore);
             }
         }
 
