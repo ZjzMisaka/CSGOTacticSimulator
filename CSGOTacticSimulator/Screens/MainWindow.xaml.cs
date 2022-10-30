@@ -1981,10 +1981,12 @@ namespace CSGOTacticSimulator
                         if (textBlock == tb_team1 || textBlock == tb_team2)
                         {
                             textBlock.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+                            textBlock.Margin = new Thickness(GlobalDictionary.ImageRatio * 10);
                         }
                         else
                         {
                             textBlock.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.0;
+                            textBlock.Margin = new Thickness(GlobalDictionary.ImageRatio * 5);
                         }
                         if ((long)textBlock.Tag == character.SteamId && textBlock != tb_team1 && textBlock != tb_team2)
                         {
@@ -6112,10 +6114,12 @@ namespace CSGOTacticSimulator
                     if (element == tb_team1 || element == tb_team2)
                     {
                         (element as TextBlock).FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
+                        (element as TextBlock).Margin = new Thickness(GlobalDictionary.ImageRatio * 10);
                     }
                     else
                     {
                         (element as TextBlock).FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.0;
+                        (element as TextBlock).Margin = new Thickness(GlobalDictionary.ImageRatio * 5);
                     }
                 }
             }
