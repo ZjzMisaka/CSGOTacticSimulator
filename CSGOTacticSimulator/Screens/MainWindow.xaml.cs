@@ -1882,7 +1882,11 @@ namespace CSGOTacticSimulator
                         }
                         if (weapons.Length >= 1)
                         {
-                            weapons.Remove(weapons.Length - 1, 1);
+                            weapons = weapons.Remove(weapons.Length - 1, 1);
+                        }
+                        else
+                        {
+                            weapons = "none";
                         }
                         foreach (Equipment equipment in character.MissileEquipList)
                         {
@@ -1890,7 +1894,11 @@ namespace CSGOTacticSimulator
                         }
                         if (missileEquipments.Length >= 1)
                         {
-                            missileEquipments.Remove(missileEquipments.Length - 1, 1);
+                            missileEquipments = missileEquipments.Remove(missileEquipments.Length - 1, 1);
+                        }
+                        else
+                        {
+                            missileEquipments = "none";
                         }
                         foreach (Equipment equipment in character.EquipList)
                         {
@@ -1898,7 +1906,11 @@ namespace CSGOTacticSimulator
                         }
                         if (equips.Length >= 1)
                         {
-                            equips.Remove(equips.Length - 1, 1);
+                            equips = equips.Remove(equips.Length - 1, 1);
+                        }
+                        else
+                        {
+                            equips = "none";
                         }
 
                         tb_infos.Text =
@@ -2013,7 +2025,11 @@ namespace CSGOTacticSimulator
                                 }
                                 if (weapons.Length >= 1)
                                 {
-                                    weapons.Remove(weapons.Length - 1, 1);
+                                    weapons = weapons.Remove(weapons.Length - 1, 1);
+                                }
+                                else
+                                {
+                                    weapons = "none";
                                 }
                                 foreach (Equipment equipment in character.LastAliveInfo.MissileEquipList)
                                 {
@@ -2021,7 +2037,11 @@ namespace CSGOTacticSimulator
                                 }
                                 if (missileEquipments.Length >= 1)
                                 {
-                                    missileEquipments.Remove(missileEquipments.Length - 1, 1);
+                                    missileEquipments = missileEquipments.Remove(missileEquipments.Length - 1, 1);
+                                }
+                                else
+                                {
+                                    missileEquipments = "none";
                                 }
                                 foreach (Equipment equipment in character.LastAliveInfo.EquipList)
                                 {
@@ -2029,7 +2049,11 @@ namespace CSGOTacticSimulator
                                 }
                                 if (equips.Length >= 1)
                                 {
-                                    equips.Remove(equips.Length - 1, 1);
+                                    equips = equips.Remove(equips.Length - 1, 1);
+                                }
+                                else
+                                {
+                                    equips = "none";
                                 }
 
                                 textBlock.Text =
