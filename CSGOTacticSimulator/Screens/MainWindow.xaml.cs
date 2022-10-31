@@ -3333,6 +3333,11 @@ namespace CSGOTacticSimulator
             TimeSpan timeSpanWhenBombPlanted = new TimeSpan(0);
             TimeSpan offsetWhenBombPlanted = new TimeSpan(0);
 
+            // 奇技淫巧
+            // 防止中止下包 / 中止拆包后对应图标不消失
+            // 从开始拆包下包起到完成为止如果出现位移或射击, 投掷 (仅下包) , 则隐藏图标
+            // 但如果玩家取消后在原地什么都不干, 则无法判断
+            // *** 不是我故意用这种奇葩写法, 而是因为取消下包, 取消拆包事件只存在于服务器, 无法判断 ***
             bool beginPlantOrDefuse = false;
 
             this.Dispatcher.Invoke(() =>
@@ -4475,13 +4480,8 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private bool ThrowMissile(CurrentInfo currentInfo, EventArgs eventArgs, string eventName, int characterNumber, List<Tuple<CurrentInfo, EventArgs, string, int>> eventList, int i, Dictionary<int, int> usedMissileDic, List<KeyValuePair<KeyValuePair<int, int>, TSImage>> missileKeyValuePairList, float tickTime)
+        private bool CheckIfCanceledThrow(Player playerThrow, CurrentInfo currentInfo, List<Tuple<CurrentInfo, EventArgs, string, int>> eventList, int i)
         {
-            EquipmentElement weapon = (eventArgs as WeaponFiredEventArgs).Weapon.Weapon;
-            Character characterThrow = CharacterHelper.GetCharacter(characterNumber);
-
-            Player playerThrow = (eventArgs as WeaponFiredEventArgs).Shooter;
-
             // 判断取消投掷
             List<Equipment> equipList = currentInfo.MissileEquipDic[playerThrow.SteamID];
             List<Equipment> equipListNext = null;
@@ -4521,6 +4521,21 @@ namespace CSGOTacticSimulator
             if (equipList.Count() == equipListNextCount)
             {
                 // continue
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool ThrowMissile(CurrentInfo currentInfo, EventArgs eventArgs, string eventName, int characterNumber, List<Tuple<CurrentInfo, EventArgs, string, int>> eventList, int i, Dictionary<int, int> usedMissileDic, List<KeyValuePair<KeyValuePair<int, int>, TSImage>> missileKeyValuePairList, float tickTime)
+        {
+            EquipmentElement weapon = (eventArgs as WeaponFiredEventArgs).Weapon.Weapon;
+            Character characterThrow = CharacterHelper.GetCharacter(characterNumber);
+
+            Player playerThrow = (eventArgs as WeaponFiredEventArgs).Shooter;
+
+            if (CheckIfCanceledThrow(playerThrow, currentInfo, eventList, i))
+            {
                 return true;
             }
 
@@ -4606,6 +4621,35 @@ namespace CSGOTacticSimulator
                     endTick = eventList[n].Item1.CurrentTick;
                     missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FireEventArgs).Position, currentInfo.Map);
                     break;
+                }
+                // 奇技淫巧
+                // 为了防止火落到烟上不触发NadeStart引起对应错位
+                // 如果火被投掷到下一个NadeStart间有另一个成功的投掷事件, 则无视这次投掷
+                // 这种写法可能引起另一个bug: 连扔两颗火并且第一颗火轨迹很长时这颗火会被无视
+                // 因此最妥当的写法是检查回合内这位玩家的燃烧弹投掷事件与NadeStart事件数量是否对得上
+                // 但是这种情况基本不存在, 所以就不这么写了
+                // *** 不是我故意用这种奇葩写法, 而是因为燃烧弹熄灭事件只存在于服务器, 无法判断 ***
+                else if (weapon == EquipmentElement.Incendiary  && eventList[n].Item3 == "WeaponFired" && ((WeaponFiredEventArgs)eventList[n].Item2).Weapon.Weapon == EquipmentElement.Incendiary)
+                {
+                    if (((WeaponFiredEventArgs)eventList[n].Item2).Shooter.SteamID != playerThrow.SteamID)
+                    {
+                        continue;
+                    }
+                    if (!CheckIfCanceledThrow(playerThrow, eventList[n].Item1, eventList, n))
+                    {
+                        break;
+                    }
+                }
+                else if (weapon == EquipmentElement.Molotov && eventList[n].Item3 == "WeaponFired" && ((WeaponFiredEventArgs)eventList[n].Item2).Weapon.Weapon == EquipmentElement.Molotov)
+                {
+                    if (((WeaponFiredEventArgs)eventList[n].Item2).Shooter.SteamID != playerThrow.SteamID)
+                    {
+                        continue;
+                    }
+                    if (!CheckIfCanceledThrow(playerThrow, eventList[n].Item1, eventList, n))
+                    {
+                        break;
+                    }
                 }
                 else if (weapon == EquipmentElement.Decoy && eventList[n].Item3 == "DecoyNadeStarted")
                 {
