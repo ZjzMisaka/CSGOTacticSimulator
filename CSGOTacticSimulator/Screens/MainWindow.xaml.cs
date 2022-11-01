@@ -4386,7 +4386,7 @@ namespace CSGOTacticSimulator
 
                 if (eventList[m].Item3 == "SmokeNadeEnded")
                 {
-                    if (((SmokeEventArgs)eventList[m].Item2).ThrownBy.SteamID != eventArgs.ThrownBy.SteamID)
+                    if (((SmokeEventArgs)eventList[m].Item2).ThrownBy.SteamID != 0 &&((SmokeEventArgs)eventList[m].Item2).ThrownBy.SteamID != eventArgs.ThrownBy.SteamID)
                     {
                         continue;
                     }
@@ -4436,7 +4436,7 @@ namespace CSGOTacticSimulator
 
                 if (eventList[m].Item3 == "FireNadeEnded")
                 {
-                    if (((FireEventArgs)eventList[m].Item2).ThrownBy.SteamID != eventArgs.ThrownBy.SteamID)
+                    if (((FireEventArgs)eventList[m].Item2).ThrownBy.SteamID != 0 && ((FireEventArgs)eventList[m].Item2).ThrownBy.SteamID != eventArgs.ThrownBy.SteamID)
                     {
                         continue;
                     }
@@ -4486,7 +4486,7 @@ namespace CSGOTacticSimulator
 
                 if (eventList[m].Item3 == "DecoyNadeEnded")
                 {
-                    if (((DecoyEventArgs)eventList[m].Item2).ThrownBy.SteamID != eventArgs.ThrownBy.SteamID)
+                    if (((DecoyEventArgs)eventList[m].Item2).ThrownBy.SteamID != 0 && ((DecoyEventArgs)eventList[m].Item2).ThrownBy.SteamID != eventArgs.ThrownBy.SteamID)
                     {
                         continue;
                     }
@@ -4580,7 +4580,7 @@ namespace CSGOTacticSimulator
                 }
                 if (weapon == EquipmentElement.HE && eventList[n].Item3 == "ExplosiveNadeExploded")
                 {
-                    if (((GrenadeEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                    if (((GrenadeEventArgs)eventList[n].Item2).ThrownBy.SteamID != 0 && ((GrenadeEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
                     {
                         continue;
                     }
@@ -4599,7 +4599,7 @@ namespace CSGOTacticSimulator
                 }
                 else if (weapon == EquipmentElement.Flash && eventList[n].Item3 == "FlashNadeExploded")
                 {
-                    if (((FlashEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                    if (((FlashEventArgs)eventList[n].Item2).ThrownBy.SteamID != 0 && ((FlashEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
                     {
                         continue;
                     }
@@ -4618,7 +4618,7 @@ namespace CSGOTacticSimulator
                 }
                 else if (weapon == EquipmentElement.Smoke && eventList[n].Item3 == "SmokeNadeStarted")
                 {
-                    if (((SmokeEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                    if (((SmokeEventArgs)eventList[n].Item2).ThrownBy.SteamID != 0 && ((SmokeEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
                     {
                         continue;
                     }
@@ -4629,7 +4629,7 @@ namespace CSGOTacticSimulator
                 }
                 else if ((weapon == EquipmentElement.Incendiary || weapon == EquipmentElement.Molotov) && eventList[n].Item3 == "FireNadeWithOwnerStarted")
                 {
-                    if (((FireEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                    if (((FireEventArgs)eventList[n].Item2).ThrownBy.SteamID != 0 && ((FireEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
                     {
                         continue;
                     }
@@ -4669,7 +4669,7 @@ namespace CSGOTacticSimulator
                 }
                 else if (weapon == EquipmentElement.Decoy && eventList[n].Item3 == "DecoyNadeStarted")
                 {
-                    if (((DecoyEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
+                    if (((DecoyEventArgs)eventList[n].Item2).ThrownBy.SteamID != 0 && ((DecoyEventArgs)eventList[n].Item2).ThrownBy.SteamID != playerThrow.SteamID)
                     {
                         continue;
                     }
