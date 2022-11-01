@@ -66,6 +66,8 @@ namespace CSGOTacticSimulator
         private Dictionary<UIElement, Point> elementPointDic = new Dictionary<UIElement, Point>();
         private int currentTScore = -1;
         private int currentCTScore = -1;
+        private string currentTName = "";
+        private string currentCTName = "";
         public List<Point> mouseMovePathInPreview = new List<Point>();
         public List<Point> keyDownInPreview = new List<Point>();
         public Stopwatch stopWatch = null;
@@ -1946,7 +1948,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void SetInfos(int tScore, int ctScore)
+        private void SetInfos(int tScore, int ctScore, string tName, string ctName)
         {
             if (tb_team1.Tag == null || tb_team2.Tag == null)
             {
@@ -1957,9 +1959,11 @@ namespace CSGOTacticSimulator
 
             int team1Money = 0;
             string team1Camp = "";
+            string team1CampName = "";
             int team1Score = 0;
             int team2Money = 0;
             string team2Camp = "";
+            string team2CampName = "";
             int team2Score = 0;
 
             foreach (Character character in characters)
@@ -1968,11 +1972,13 @@ namespace CSGOTacticSimulator
                 {
                     team1Camp = character.IsT ? "T" : "CT";
                     team1Score = character.IsT ? tScore : ctScore;
+                    team1CampName = character.IsT ? tName : ctName;
                 }
                 else if (character.SteamId == (long)tb_team2.Tag)
                 {
                     team2Camp = character.IsT ? "T" : "CT";
                     team2Score = character.IsT ? tScore : ctScore;
+                    team2CampName = character.IsT ? tName : ctName;
                 }
 
                 foreach (UIElement element in g_infos.Children)
@@ -2086,14 +2092,22 @@ namespace CSGOTacticSimulator
                 }
             }
 
-            tb_team1.Text = "Camp: " + team1Camp;
+            if (team1CampName != "")
+            {
+                team1CampName = ": " + team1CampName;
+            }
+            if (team2CampName != "")
+            {
+                team2CampName = ": " + team2CampName;
+            }
+            tb_team1.Text = team1Camp + team1CampName;
             if (g_infos.Tag.Equals("DefaultInfo"))
             {
                 tb_team1.Text += "\nScore: " + team1Score +
                 "\nEconomy: " + team1Money;
             }
 
-            tb_team2.Text = "Camp: " + team2Camp;
+            tb_team2.Text = team2Camp + team2CampName;
             if (g_infos.Tag.Equals("DefaultInfo"))
             {
                 tb_team2.Text += "\nScore: " + team2Score +
@@ -2427,7 +2441,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "DecoyNadeEnded", dic[parseE.ThrownBy.SteamID]));
             };
             //parser.FireNadeStarted += (parseSender, parseE) =>
@@ -2449,7 +2463,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.ThrownBy = parseE.ThrownBy.Copy();
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "FireNadeWithOwnerStarted", dic[parseE.ThrownBy.SteamID]));
             };
@@ -2469,7 +2483,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "FireNadeEnded", dic[parseE.ThrownBy.SteamID]));
             };
             parser.ExplosiveNadeExploded += (parseSender, parseE) =>
@@ -2488,7 +2502,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "ExplosiveNadeExploded", dic[parseE.ThrownBy.SteamID]));
             };
             parser.FlashNadeExploded += (parseSender, parseE) =>
@@ -2507,7 +2521,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "FlashNadeExploded", dic[parseE.ThrownBy.SteamID]));
             };
             parser.ExplosiveNadeExploded += (parseSender, parseE) =>
@@ -2526,7 +2540,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "ExplosiveNadeExploded", dic[parseE.ThrownBy.SteamID]));
             };
             //parser.NadeReachedTarget += (parseSender, parseE) =>
@@ -2558,7 +2572,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.Player = parseE.Player.Copy();
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "BombBeginPlant", dic[parseE.Player.SteamID]));
             };
@@ -2578,7 +2592,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.Player = parseE.Player.Copy();
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "BombAbortPlant", dic[parseE.Player.SteamID]));
             };
@@ -2598,7 +2612,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.Player = parseE.Player.Copy();
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "BombExploded", dic[parseE.Player.SteamID]));
             };
@@ -2618,7 +2632,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.Player = parseE.Player.Copy();
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "BombDefused", dic[parseE.Player.SteamID]));
             };
@@ -2638,7 +2652,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.Player = parseE.Player.Copy();
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "BombBeginDefuse", dic[parseE.Player.SteamID]));
             };
@@ -2658,7 +2672,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.Player = parseE.Player.Copy();
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "BombAbortDefuse", dic[parseE.Player.SteamID]));
             };
@@ -2688,7 +2702,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.ThrownBy = parseE.ThrownBy.Copy();
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "DecoyNadeStarted", dic[parseE.ThrownBy.SteamID]));
             };
@@ -2708,7 +2722,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.Player = parseE.Player.Copy();
                 parseE.Attacker = parseE.Attacker.Copy();
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "Blind", dic[parseE.Player.SteamID]));
@@ -2733,7 +2747,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.Player = parseE.Player.Copy();
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "BombPlanted", dic[parseE.Player.SteamID]));
             };
@@ -2753,7 +2767,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "SmokeNadeEnded", dic[parseE.ThrownBy.SteamID]));
             };
             //parser.RoundOfficiallyEnd += (parseSender, parseE) =>
@@ -2789,7 +2803,7 @@ namespace CSGOTacticSimulator
                     }
                 }
                 equipDic[parseE.Shooter.SteamID] = equipList;
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants, equipDic);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants, equipDic);
                 parseE.Shooter = parseE.Shooter.Copy();
                 parseE.Weapon = new Equipment(parseE.Weapon.OriginalString);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "WeaponFired", dic[parseE.Shooter.SteamID]));
@@ -2902,7 +2916,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "RoundAnnounceMatchStarted", 0));
 
             };
@@ -2956,7 +2970,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
 
                 if (demoParser.TScore + demoParser.CTScore >= 1)
                 {
@@ -3033,7 +3047,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 parseE.ThrownBy = parseE.ThrownBy.Copy();
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "SmokeNadeStarted", dic[parseE.ThrownBy.SteamID]));
             };
@@ -3061,7 +3075,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "RoundEnd", 0));
             };
             //parser.SayText2 += (parseSender, parseE) =>
@@ -3097,7 +3111,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "FreezetimeEnded", 0));
             };
             parser.TickDone += (parseSender, parseE) =>
@@ -3163,7 +3177,7 @@ namespace CSGOTacticSimulator
                     equipmentDic[playingParticipant.SteamID] = equipmentList;
                 }
 
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants, missileEquipDic, weaponEquipDic, equipmentDic);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants, missileEquipDic, weaponEquipDic, equipmentDic);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "TickDone", 0));
             };
             parser.PlayerKilled += (parseSender, parseE) =>
@@ -3183,7 +3197,7 @@ namespace CSGOTacticSimulator
                 {
                     nowParticipants.Add(playingParticipant.Copy());
                 }
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 if (parseE.Victim != null)
                 {
                     parseE.Victim = parseE.Victim.Copy();
@@ -4211,7 +4225,9 @@ namespace CSGOTacticSimulator
                         {
                             currentTScore = currentInfo.TScore;
                             currentCTScore = currentInfo.CtScore;
-                            SetInfos(currentTScore, currentCTScore);
+                            currentTName = currentInfo.TName;
+                            currentCTName = currentInfo.CtName;
+                            SetInfos(currentTScore, currentCTScore, currentTName, currentCTName);
                         });
 
                         float nowTimeEnd = 0;
@@ -5258,13 +5274,13 @@ namespace CSGOTacticSimulator
         {
             g_infos.Visibility = Visibility.Visible;
             g_infos.Tag = "DefaultInfo";
-            SetInfos(currentTScore, currentCTScore);
+            SetInfos(currentTScore, currentCTScore, currentTName, currentCTName);
         }
         private void ShowPersonalInfo()
         {
             g_infos.Visibility = Visibility.Visible;
             g_infos.Tag = "PersonalInfo";
-            SetInfos(currentTScore, currentCTScore);
+            SetInfos(currentTScore, currentCTScore, currentTName, currentCTName);
         }
         private void HideDefaultInfo()
         {
@@ -5292,7 +5308,7 @@ namespace CSGOTacticSimulator
                     g_infos.Visibility = Visibility.Collapsed;
                 }
                 g_infos.Tag = "DefaultInfo";
-                SetInfos(currentTScore, currentCTScore);
+                SetInfos(currentTScore, currentCTScore, currentTName, currentCTName);
             }
         }
 
