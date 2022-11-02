@@ -3255,6 +3255,35 @@ namespace CSGOTacticSimulator
             //parser.RankUpdate += (parseSender, parseE) =>
             //{
             //};
+            parser.PlayerDropWeapon += (parseSender, parseE) =>
+            {
+
+            };
+            parser.PlayerPickWeapon += (parseSender, parseE) =>
+            {
+
+            };
+            parser.SayText += (parseSender, parseE) =>
+            {
+                if ((parser.CTScore + parser.TScore + 1) < roundNumber)
+                {
+                    return;
+                }
+                DemoParser nowParser = (parseSender as DemoParser);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, null);
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "SayText", 0));
+            };
+            parser.SayText2 += (parseSender, parseE) =>
+            {
+                if ((parser.CTScore + parser.TScore + 1) < roundNumber)
+                {
+                    return;
+                }
+                DemoParser nowParser = (parseSender as DemoParser); 
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, null);
+                parseE.Sender = parseE.Sender.Copy();
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "SayText2", 0));
+            };
 
             te_editor.Text = "";
             Thread analyzeThread = new Thread(() =>
@@ -3455,6 +3484,14 @@ namespace CSGOTacticSimulator
                         else if (currentEvent.Item3 == "DecoyNadeStarted")
                         {
                             DecoyNadeStarted(eventArgs as DecoyEventArgs, currentInfo, characterNumber, eventList, i, usedMissileDic, missileEffectKeyValuePairList);
+                        }
+                        else if (currentEvent.Item3 == "SayText")
+                        {
+                            SayText("Server", (eventArgs as SayTextEventArgs).Text);
+                        }
+                        else if (currentEvent.Item3 == "SayText2")
+                        {
+                            SayText((eventArgs as SayText2EventArgs).Sender.Name, (eventArgs as SayText2EventArgs).Text);
                         }
 
                         this.Dispatcher.Invoke(() =>
@@ -4276,7 +4313,29 @@ namespace CSGOTacticSimulator
                     }
 
                 }
+                else if (currentEvent.Item2 is SayTextEventArgs)
+                {
+                    if (currentEvent.Item3 == "SayText")
+                    {
+                        SayText("Server", (eventArgs as SayTextEventArgs).Text);
+                    }
+                }
+                else if (currentEvent.Item2 is SayText2EventArgs)
+                {
+                    if (currentEvent.Item3 == "SayText2")
+                    {
+                        SayText((eventArgs as SayText2EventArgs).Sender.Name, (eventArgs as SayText2EventArgs).Text);
+                    }
+                }
             }
+        }
+
+        private void SayText(string name, string text)
+        {
+            te_editor.Dispatcher.Invoke(() =>
+            {
+                te_editor.Text += "[" + name + "] " + text + "\n";
+            });
         }
 
         private void ExplosiveNadeExploded(GrenadeEventArgs eventArgs, CurrentInfo currentInfo)
