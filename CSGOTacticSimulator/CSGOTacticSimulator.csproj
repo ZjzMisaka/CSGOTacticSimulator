@@ -70,6 +70,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
@@ -104,6 +105,7 @@
     </Compile>
     <Compile Include="Controls\TSImage.cs" />
     <Compile Include="Global\GlobalDictionary.cs" />
+    <Compile Include="Helper\SteamHelper.cs" />
     <Compile Include="Model\Animation.cs" />
     <Compile Include="Helper\CharacterHelper.cs" />
     <Compile Include="Helper\CommandHelper.cs" />
@@ -340,6 +342,10 @@
     <ProjectReference Include="..\demoinfo\DemoInfo\DemoInfo.csproj">
       <Project>{22d4cfc7-6810-4c18-a353-71a49782394f}</Project>
       <Name>DemoInfo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Facepunch.Steamworks\Facepunch.Steamworks.Win32.csproj">
+      <Project>{b6c720a0-cc55-43ca-a16b-b3a26c290b41}</Project>
+      <Name>Facepunch.Steamworks.Win32</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

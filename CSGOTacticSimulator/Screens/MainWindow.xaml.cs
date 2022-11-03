@@ -63,21 +63,22 @@ namespace CSGOTacticSimulator
         private XshdSyntaxDefinition codeXshd = null;
         private XshdSyntaxDefinition logXshd = null;
         private System.Timers.Timer resizeTimer = new System.Timers.Timer(100) { Enabled = false };
-        private Dictionary<UIElement, Point> elementPointDic = new Dictionary<UIElement, Point>();
         private int currentTScore = -1;
         private int currentCTScore = -1;
         private string currentTName = "";
         private string currentCTName = "";
+        private Stopwatch stopWatch = null;
+        private Stopwatch stopWatchThisRound = null;
+        private List<Stopwatch> stopwatchList = new List<Stopwatch>();
+        private int offset = 0;
+        private bool isForward = false;
+        private bool isBackward = false;
+        private List<string> mapList = null;
+        private bool isNeedAutomaticGuidance = false;
+        private bool steamInited = false;
+
         public List<Point> mouseMovePathInPreview = new List<Point>();
         public List<Point> keyDownInPreview = new List<Point>();
-        public Stopwatch stopWatch = null;
-        public Stopwatch stopWatchThisRound = null;
-        public List<Stopwatch> stopwatchList = new List<Stopwatch>();
-        public int offset = 0;
-        public bool isForward = false;
-        public bool isBackward = false;
-        public List<string> mapList = null;
-        public bool isNeedAutomaticGuidance = false;
 
         public MainWindow()
         {
@@ -120,6 +121,8 @@ namespace CSGOTacticSimulator
 
             AddMapsFromFolder(GlobalDictionary.mapFolderPath);
             tb_select_folder.Text = GlobalDictionary.mapFolderPath;
+
+            steamInited = SteamHelper.InitSteamClient();
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -2850,6 +2853,10 @@ namespace CSGOTacticSimulator
                     this.Dispatcher.Invoke(() =>
                     {
                         character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
+                        if (steamInited)
+                        {
+                            SteamHelper.GetAvatarAsync((ulong)player.SteamID, character.Avatar);
+                        }
                     });
                     dic.Add(character.SteamId, character.Number);
 
@@ -2956,6 +2963,10 @@ namespace CSGOTacticSimulator
                     this.Dispatcher.Invoke(() =>
                     {
                         character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
+                        if (steamInited)
+                        {
+                            SteamHelper.GetAvatarAsync((ulong)player.SteamID, character.Avatar);
+                        }
                     });
 
                     dic.Add(character.SteamId, character.Number);
