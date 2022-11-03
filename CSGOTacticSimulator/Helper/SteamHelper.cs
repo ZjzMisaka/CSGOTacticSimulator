@@ -9,6 +9,8 @@ using System.Windows.Media.Imaging;
 using System.Runtime.InteropServices.ComTypes;
 using System.Drawing.Imaging;
 using CSGOTacticSimulator.Controls;
+using HltvSharp.Models;
+using System.Security.Policy;
 
 namespace CSGOTacticSimulator.Helper
 {
@@ -27,15 +29,34 @@ namespace CSGOTacticSimulator.Helper
             return true;
         }
 
-        public static async void GetAvatarAsync(ulong steamId, TSImage tSImage)
+        public static async void GetAvatarAsync(ulong steamId, string name, TSImage tSImage)
         {
             SteamId id = new SteamId();
             id.Value = steamId;
+            var Search = new HltvSharp.Search();
+            List<PlayerSearchItem> res = await Search.Players(name);
 
-            Steamworks.Data.Image? img = await SteamFriends.GetLargeAvatarAsync(id);
-            if (img.HasValue)
+            BitmapImage bitmapImage = new BitmapImage();
+
+            if (res != null && res.Count > 0)
             {
-                tSImage.Source = GetTextureFromImage(img.Value);
+                bitmapImage.BeginInit();
+                bitmapImage.UriSource = new Uri(res[0].pictureUrl);
+                bitmapImage.EndInit();
+            }
+
+            if (bitmapImage.UriSource == null)
+            {
+                Steamworks.Data.Image? img = await SteamFriends.GetLargeAvatarAsync(id);
+                if (img.HasValue)
+                {
+                    bitmapImage = GetTextureFromImage(img.Value);
+                }
+            }
+            
+            if (bitmapImage != null)
+            {
+                tSImage.Source = bitmapImage;
             }
 
             return;

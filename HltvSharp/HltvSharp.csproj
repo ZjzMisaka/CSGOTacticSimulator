@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>net48</TargetFrameworks>
+    <RootNamespace>HltvSharp</RootNamespace>
+    <Nullable>disable</Nullable>
+    <Authors>Arttu Kuikka</Authors>
+    <RepositoryUrl>https://github.com/ArttuKuikka/HltvSharp</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/ArttuKuikka/HltvSharp</PackageProjectUrl>
+    <Description>An unofficial C# API for scraping data from hltv.org</Description>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <PackageIcon>logo.png</PackageIcon>
+    <Version>1.11</Version>
+    <IsPublishable>False</IsPublishable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fizzler.Systems.HtmlAgilityPack" Version="1.2.1" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.42" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

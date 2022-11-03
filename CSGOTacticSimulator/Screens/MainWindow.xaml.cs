@@ -1986,7 +1986,24 @@ namespace CSGOTacticSimulator
 
                 foreach (UIElement element in g_infos.Children)
                 {
-                    if (element is TextBlock)
+                    if (element is TSImage)
+                    {
+                        TSImage tSImage = element as TSImage;
+                        if ((long)tSImage.Tag == character.SteamId)
+                        {
+                            if (character.Avatar.Source != null)
+                            {
+                                tSImage.Source = character.Avatar.Source;
+                                tSImage.Visibility = Visibility.Visible;
+                            }
+                            else
+                            {
+                                tSImage.Source = null;
+                                tSImage.Visibility = Visibility.Collapsed;
+                            }
+                        }
+                    }
+                    else if (element is TextBlock)
                     {
                         TextBlock textBlock = (TextBlock)element;
                         if (textBlock == tb_team1 || textBlock == tb_team2)
@@ -2343,6 +2360,10 @@ namespace CSGOTacticSimulator
                 if (item is TextBlock)
                 {
                     (item as TextBlock).Tag = null;
+                }
+                else if (item is TSImage)
+                {
+                    (item as TSImage).Tag = null;
                 }
             }
 
@@ -2855,7 +2876,7 @@ namespace CSGOTacticSimulator
                         character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
                         if (steamInited)
                         {
-                            SteamHelper.GetAvatarAsync((ulong)player.SteamID, character.Avatar);
+                            SteamHelper.GetAvatarAsync((ulong)player.SteamID, player.Name, character.Avatar);
                         }
                     });
                     dic.Add(character.SteamId, character.Number);
@@ -2965,7 +2986,7 @@ namespace CSGOTacticSimulator
                         character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
                         if (steamInited)
                         {
-                            SteamHelper.GetAvatarAsync((ulong)player.SteamID, character.Avatar);
+                            SteamHelper.GetAvatarAsync((ulong)player.SteamID, player.Name, character.Avatar);
                         }
                     });
 
@@ -4936,22 +4957,27 @@ namespace CSGOTacticSimulator
                     {
                         tb_player1.Tag = player.SteamID;
                         tb_team1.Tag = player.SteamID;
+                        img_player1.Tag = player.SteamID;
                     }
                     else if (tb_player2.Tag == null)
                     {
                         tb_player2.Tag = player.SteamID;
+                        img_player2.Tag = player.SteamID;
                     }
                     else if (tb_player3.Tag == null)
                     {
                         tb_player3.Tag = player.SteamID;
+                        img_player3.Tag = player.SteamID;
                     }
                     else if (tb_player4.Tag == null)
                     {
                         tb_player4.Tag = player.SteamID;
+                        img_player4.Tag = player.SteamID;
                     }
                     else if (tb_player5.Tag == null)
                     {
                         tb_player5.Tag = player.SteamID;
+                        img_player5.Tag = player.SteamID;
                     }
                 }
                 else
@@ -4960,22 +4986,27 @@ namespace CSGOTacticSimulator
                     {
                         tb_player6.Tag = player.SteamID;
                         tb_team2.Tag = player.SteamID;
+                        img_player6.Tag = player.SteamID;
                     }
                     else if (tb_player7.Tag == null)
                     {
                         tb_player7.Tag = player.SteamID;
+                        img_player7.Tag = player.SteamID;
                     }
                     else if (tb_player8.Tag == null)
                     {
                         tb_player8.Tag = player.SteamID;
+                        img_player8.Tag = player.SteamID;
                     }
                     else if (tb_player9.Tag == null)
                     {
                         tb_player9.Tag = player.SteamID;
+                        img_player9.Tag = player.SteamID;
                     }
                     else if (tb_player10.Tag == null)
                     {
                         tb_player10.Tag = player.SteamID;
+                        img_player10.Tag = player.SteamID;
                     }
                 }
             });
@@ -6382,6 +6413,17 @@ namespace CSGOTacticSimulator
                     Canvas.SetTop(character.OtherImg, GetWndPoint(mapPoint, ImgType.Nothing).Y);
 
                     c_runcanvas.Children.Add(character.OtherImg);
+                }
+            }
+        }
+
+        private void OnTbPlayerSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            foreach (UIElement element in g_infos.Children)
+            {
+                if (element is TSImage)
+                {
+                    (element as TSImage).Height = e.PreviousSize.Height;
                 }
             }
         }
