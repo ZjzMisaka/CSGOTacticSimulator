@@ -4317,14 +4317,14 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "SayText")
                     {
-                        SayText("Server", (eventArgs as SayTextEventArgs).Text);
+                        SayText("Server", (eventArgs as SayTextEventArgs).Text.Replace("\n", ""));
                     }
                 }
                 else if (currentEvent.Item2 is SayText2EventArgs)
                 {
                     if (currentEvent.Item3 == "SayText2")
                     {
-                        SayText((eventArgs as SayText2EventArgs).Sender.Name, (eventArgs as SayText2EventArgs).Text);
+                        SayText((eventArgs as SayText2EventArgs).Sender.Name, (eventArgs as SayText2EventArgs).Text.Replace("\n", ""));
                     }
                 }
             }
@@ -4335,6 +4335,7 @@ namespace CSGOTacticSimulator
             te_editor.Dispatcher.Invoke(() =>
             {
                 te_editor.Text += "[" + name + "] " + text + "\n";
+                te_editor.ScrollToEnd();
             });
         }
 
