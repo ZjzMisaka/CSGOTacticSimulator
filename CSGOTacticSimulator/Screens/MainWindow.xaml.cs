@@ -63,6 +63,7 @@ namespace CSGOTacticSimulator
         private XshdSyntaxDefinition codeXshd = null;
         private XshdSyntaxDefinition logXshd = null;
         private System.Timers.Timer resizeTimer = new System.Timers.Timer(100) { Enabled = false };
+        private System.Timers.Timer textBlockResizeTimer = new System.Timers.Timer(100) { Enabled = false };
         private int currentTScore = -1;
         private int currentCTScore = -1;
         private string currentTName = "";
@@ -91,6 +92,7 @@ namespace CSGOTacticSimulator
             this.Height = int.Parse(IniHelper.ReadIni("Window", "Height"));
 
             resizeTimer.Elapsed += new ElapsedEventHandler(ResizingDone);
+            textBlockResizeTimer.Elapsed += new ElapsedEventHandler(TextBlockResizingDone);
 
             //快速搜索功能
             SearchPanel.Install(te_editor.TextArea);
@@ -3311,7 +3313,7 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser nowParser = (parseSender as DemoParser); 
+                DemoParser nowParser = (parseSender as DemoParser);
                 CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, null);
                 parseE.Sender = parseE.Sender.Copy();
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "SayText2", 0));
@@ -4478,7 +4480,7 @@ namespace CSGOTacticSimulator
 
                 if (eventList[m].Item3 == "SmokeNadeEnded")
                 {
-                    if (((SmokeEventArgs)eventList[m].Item2).ThrownBy.SteamID != 0 &&((SmokeEventArgs)eventList[m].Item2).ThrownBy.SteamID != eventArgs.ThrownBy.SteamID)
+                    if (((SmokeEventArgs)eventList[m].Item2).ThrownBy.SteamID != 0 && ((SmokeEventArgs)eventList[m].Item2).ThrownBy.SteamID != eventArgs.ThrownBy.SteamID)
                     {
                         continue;
                     }
@@ -4737,7 +4739,7 @@ namespace CSGOTacticSimulator
                 // 因此最妥当的写法是检查回合内这位玩家的燃烧弹投掷事件与NadeStart事件数量是否对得上
                 // 但是这种情况基本不存在, 所以就不这么写了
                 // *** 不是我故意用这种奇葩写法, 而是因为燃烧弹熄灭事件只存在于服务器, 无法判断 ***
-                else if (weapon == EquipmentElement.Incendiary  && eventList[n].Item3 == "WeaponFired" && ((WeaponFiredEventArgs)eventList[n].Item2).Weapon.Weapon == EquipmentElement.Incendiary)
+                else if (weapon == EquipmentElement.Incendiary && eventList[n].Item3 == "WeaponFired" && ((WeaponFiredEventArgs)eventList[n].Item2).Weapon.Weapon == EquipmentElement.Incendiary)
                 {
                     if (((WeaponFiredEventArgs)eventList[n].Item2).Shooter.SteamID != playerThrow.SteamID)
                     {
@@ -6419,11 +6421,29 @@ namespace CSGOTacticSimulator
 
         private void OnTbPlayerSizeChanged(object sender, SizeChangedEventArgs e)
         {
+            textBlockResizeTimer.Stop();
+            textBlockResizeTimer.Start();
+        }
+        private void TextBlockResizingDone(object sender, ElapsedEventArgs e)
+        {
+            textBlockResizeTimer.Stop();
+
+            c_runcanvas.Dispatcher.Invoke(() =>
+            {
+                if (i_map.Source != null)
+                {
+                    TextBlocknSizeChanged();
+                }
+            });
+        }
+
+        private void TextBlocknSizeChanged()
+        {
             foreach (UIElement element in g_infos.Children)
             {
                 if (element is TSImage)
                 {
-                    (element as TSImage).Height = e.PreviousSize.Height;
+                    (element as TSImage).Height = tb_player1.ActualHeight;
                 }
             }
         }
