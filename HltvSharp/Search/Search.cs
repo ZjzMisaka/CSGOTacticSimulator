@@ -58,6 +58,10 @@ namespace HltvSharp
         public async Task<List<PlayerSearchItem>> Players(string SearchQuery)
         {
             var Results = await GetSearchResults(SearchQuery);
+            if (Results == null)
+            {
+                return null;
+            }
 
             var PlayerList = new List<PlayerSearchItem>();
 
@@ -270,7 +274,15 @@ namespace HltvSharp
 
             var client = new HttpClient();
 
-            var content = await client.GetStringAsync(url);
+            string content = "";
+            try
+            {
+                content = await client.GetStringAsync(url);
+            }
+            catch
+            {
+                return null;
+            }
             JArray results = JArray.Parse(content);
             var result = results[0];
 

@@ -29,23 +29,32 @@ namespace CSGOTacticSimulator.Helper
             return true;
         }
 
-        public static async void GetAvatarAsync(ulong steamId, string name, TSImage tSImage)
+        public static async void GetAvatarAsync(ulong steamId, string name, TSImage tSImage, bool steamInited, Dictionary<string, string> proAvatarLinkDic)
         {
             SteamId id = new SteamId();
             id.Value = steamId;
-            var Search = new HltvSharp.Search();
-            List<PlayerSearchItem> res = await Search.Players(name);
-
             BitmapImage bitmapImage = new BitmapImage();
 
-            if (res != null && res.Count > 0)
+            if (proAvatarLinkDic.ContainsKey(name))
             {
                 bitmapImage.BeginInit();
-                bitmapImage.UriSource = new Uri(res[0].pictureUrl);
+                bitmapImage.UriSource = new Uri(proAvatarLinkDic[name]);
                 bitmapImage.EndInit();
             }
+            else
+            {
+                var Search = new HltvSharp.Search();
+                List<PlayerSearchItem> res = await Search.Players(name);
+                if (res != null && res.Count > 0)
+                {
+                    bitmapImage.BeginInit();
+                    bitmapImage.UriSource = new Uri(res[0].pictureUrl);
+                    proAvatarLinkDic[name] = res[0].pictureUrl;
+                    bitmapImage.EndInit();
+                }
+            }
 
-            if (bitmapImage.UriSource == null)
+            if (bitmapImage.UriSource == null && steamInited)
             {
                 Steamworks.Data.Image? img = await SteamFriends.GetLargeAvatarAsync(id);
                 if (img.HasValue)

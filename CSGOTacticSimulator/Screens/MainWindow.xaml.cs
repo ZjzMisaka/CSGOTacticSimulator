@@ -77,6 +77,7 @@ namespace CSGOTacticSimulator
         private List<string> mapList = null;
         private bool isNeedAutomaticGuidance = false;
         private bool steamInited = false;
+        private Dictionary<string, string> proAvatarLinkDic = new Dictionary<string, string>();
 
         public List<Point> mouseMovePathInPreview = new List<Point>();
         public List<Point> keyDownInPreview = new List<Point>();
@@ -2876,10 +2877,7 @@ namespace CSGOTacticSimulator
                     this.Dispatcher.Invoke(() =>
                     {
                         character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
-                        if (steamInited)
-                        {
-                            SteamHelper.GetAvatarAsync((ulong)player.SteamID, player.Name, character.Avatar);
-                        }
+                        SteamHelper.GetAvatarAsync((ulong)player.SteamID, player.Name, character.Avatar, steamInited, proAvatarLinkDic);
                     });
                     dic.Add(character.SteamId, character.Number);
 
@@ -2986,10 +2984,7 @@ namespace CSGOTacticSimulator
                     this.Dispatcher.Invoke(() =>
                     {
                         character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
-                        if (steamInited)
-                        {
-                            SteamHelper.GetAvatarAsync((ulong)player.SteamID, player.Name, character.Avatar);
-                        }
+                        SteamHelper.GetAvatarAsync((ulong)player.SteamID, player.Name, character.Avatar, steamInited, proAvatarLinkDic);
                     });
 
                     dic.Add(character.SteamId, character.Number);
