@@ -2412,7 +2412,7 @@ namespace CSGOTacticSimulator
             totalThread.Start();
             ThreadHelper.AddThread(totalThread);
 
-            List<int> loggedRoundList = new List<int>();
+            Dictionary<int, List<string>> loggedRoundDic = new Dictionary<int, List<string>>();
 
             parser.ParseHeader();
             if (!parser.Map.ToUpper().Contains(cb_select_mapimg.SelectedValue.ToString().ToUpper()))
@@ -2913,29 +2913,29 @@ namespace CSGOTacticSimulator
                 }
                 te_editor.Dispatcher.Invoke(() =>
                 {
-                    if (loggedRoundList.Count >= 1 && loggedRoundList.Last() == demoParser.TScore + demoParser.CTScore + 1)
+                    if (loggedRoundDic.Keys.Count >= 1 && loggedRoundDic.Keys.Contains(demoParser.TScore + demoParser.CTScore + 1))
                     {
                         te_editor.Dispatcher.Invoke(() =>
                         {
-                            List<string> splitedList = te_editor.Text.Trim().Split("\n".ToCharArray()).ToList();
-                            if (splitedList.Count >= 1)
+                            foreach (string str in loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1])
                             {
-                                splitedList.RemoveAt(splitedList.Count - 1);
+                                te_editor.Text = te_editor.Text.Replace(str, "");
                             }
-                            te_editor.Text = String.Join("\n", splitedList);
-                            if (te_editor.Text.Length > 0)
-                            {
-                                te_editor.Text += "\n";
-                            }
-                            te_editor.ScrollToEnd();
                         });
                     }
-                    if ((loggedRoundList.Count >= 1 && loggedRoundList.Last() == demoParser.TScore + demoParser.CTScore + 1) || (!loggedRoundList.Contains(demoParser.TScore + demoParser.CTScore + 1)))
+                    string preloadedStr = "";
+                    if (demoParser.TScore + demoParser.CTScore > 0)
                     {
-                        te_editor.Text += "Round " + (demoParser.TScore + demoParser.CTScore + 1) + ": [T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "]\n";
-                        loggedRoundList.Add(demoParser.TScore + demoParser.CTScore + 1);
-                        te_editor.ScrollToEnd();
+                        preloadedStr = "Round " + (demoParser.TScore + demoParser.CTScore) + " Pre-loaded\n";
                     }
+                    string roundStr = "Round " + (demoParser.TScore + demoParser.CTScore + 1) + ": [T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "]\n";
+                    te_editor.Text += preloadedStr + roundStr;
+                    if (!loggedRoundDic.ContainsKey(demoParser.TScore + demoParser.CTScore + 1) || (loggedRoundDic.ContainsKey(demoParser.TScore + demoParser.CTScore + 1) && loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1] == null))
+                    {
+                        loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1] = new List<string>();
+                    }
+                    loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1].Add(preloadedStr + roundStr);
+                    te_editor.ScrollToEnd();
                 });
 
                 DemoParser nowParser = (parseSender as DemoParser);
@@ -3030,31 +3030,31 @@ namespace CSGOTacticSimulator
                 }
                 te_editor.Dispatcher.Invoke(() =>
                 {
-                    if (loggedRoundList.Count >= 1 && loggedRoundList.Last() == demoParser.TScore + demoParser.CTScore + 1)
+                    if (loggedRoundDic.Keys.Count >= 1 && loggedRoundDic.Keys.Contains(demoParser.TScore + demoParser.CTScore + 1))
                     {
                         te_editor.Dispatcher.Invoke(() =>
                         {
-                            List<string> splitedList = te_editor.Text.Trim().Split("\n".ToCharArray()).ToList();
-                            if (splitedList.Count >= 1)
+                            foreach (string str in loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1])
                             {
-                                splitedList.RemoveAt(splitedList.Count - 1);
+                                te_editor.Text = te_editor.Text.Replace(str, "");
                             }
-                            te_editor.Text = String.Join("\n", splitedList);
-                            if (te_editor.Text.Length > 0)
-                            {
-                                te_editor.Text += "\n";
-                            }
-                            te_editor.ScrollToEnd();
                         });
                     }
-                    if ((loggedRoundList.Count >= 1 && loggedRoundList.Last() == demoParser.TScore + demoParser.CTScore + 1) || (!loggedRoundList.Contains(demoParser.TScore + demoParser.CTScore + 1)))
+                    if (isRoundAnnounceMatchStarted)
                     {
-                        if (isRoundAnnounceMatchStarted)
+                        string preloadedStr = "";
+                        if (demoParser.TScore + demoParser.CTScore > 0)
                         {
-                            te_editor.Text += "Round " + (demoParser.TScore + demoParser.CTScore + 1) + ": [T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "]\n";
-                            loggedRoundList.Add(demoParser.TScore + demoParser.CTScore + 1);
-                            te_editor.ScrollToEnd();
+                            preloadedStr = "Round " + (demoParser.TScore + demoParser.CTScore) + " Pre-loaded\n";
                         }
+                        string roundStr = "Round " + (demoParser.TScore + demoParser.CTScore + 1) + ": [T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "]\n";
+                        te_editor.Text += preloadedStr + roundStr;
+                        if (!loggedRoundDic.ContainsKey(demoParser.TScore + demoParser.CTScore + 1) || (loggedRoundDic.ContainsKey(demoParser.TScore + demoParser.CTScore + 1) && loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1] == null))
+                        {
+                            loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1] = new List<string>();
+                        }
+                        loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1].Add(preloadedStr + roundStr);
+                        te_editor.ScrollToEnd();
                     }
                 });
 

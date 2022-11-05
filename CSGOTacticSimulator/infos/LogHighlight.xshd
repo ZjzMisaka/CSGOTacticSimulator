@@ -11,6 +11,7 @@
   <RuleSet>
 
     <Keywords color="RoundKeywords">
+      <Word>Pre-loaded</Word>
       <Word>Round</Word>
       <Word>: </Word>
     </Keywords>
