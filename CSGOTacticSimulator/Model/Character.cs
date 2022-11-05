@@ -116,6 +116,8 @@ namespace CSGOTacticSimulator.Model
         private TSImage otherImg = new TSImage();
         public TSImage StatusImg { get => statusImg; set => statusImg = value; }
         private TSImage statusImg = new TSImage();
+        public TSImage Avatar { get => avatar; set => avatar = value; }
+        private TSImage avatar = new TSImage();
         public Label CharacterLabel { get => characterLabel; set => characterLabel = value; }
         private Label characterLabel = new Label();
         public Label NumberLabel { get => numberLabel; set => numberLabel = value; }

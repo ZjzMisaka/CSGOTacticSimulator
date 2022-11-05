@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSGOTacticSimulator", "CSGO
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoInfo", "demoinfo\DemoInfo\DemoInfo.csproj", "{22D4CFC7-6810-4C18-A353-71A49782394F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facepunch.Steamworks.Win32", "Facepunch.Steamworks\Facepunch.Steamworks.Win32.csproj", "{B6C720A0-CC55-43CA-A16B-B3A26C290B41}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HltvSharp", "HltvSharp\HltvSharp.csproj", "{3F90459A-5BFA-40B2-A4AC-4FC093275F48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Bitstream-Debugging|Any CPU = Bitstream-Debugging|Any CPU
@@ -36,6 +40,26 @@ Global
 		{22D4CFC7-6810-4C18-A353-71A49782394F}.SavePropValues|Any CPU.Build.0 = SavePropValues|Any CPU
 		{22D4CFC7-6810-4C18-A353-71A49782394F}.YoloDebug|Any CPU.ActiveCfg = YoloDebug|Any CPU
 		{22D4CFC7-6810-4C18-A353-71A49782394F}.YoloDebug|Any CPU.Build.0 = YoloDebug|Any CPU
+		{B6C720A0-CC55-43CA-A16B-B3A26C290B41}.Bitstream-Debugging|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6C720A0-CC55-43CA-A16B-B3A26C290B41}.Bitstream-Debugging|Any CPU.Build.0 = Debug|Any CPU
+		{B6C720A0-CC55-43CA-A16B-B3A26C290B41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6C720A0-CC55-43CA-A16B-B3A26C290B41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6C720A0-CC55-43CA-A16B-B3A26C290B41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6C720A0-CC55-43CA-A16B-B3A26C290B41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6C720A0-CC55-43CA-A16B-B3A26C290B41}.SavePropValues|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6C720A0-CC55-43CA-A16B-B3A26C290B41}.SavePropValues|Any CPU.Build.0 = Debug|Any CPU
+		{B6C720A0-CC55-43CA-A16B-B3A26C290B41}.YoloDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6C720A0-CC55-43CA-A16B-B3A26C290B41}.YoloDebug|Any CPU.Build.0 = Debug|Any CPU
+		{3F90459A-5BFA-40B2-A4AC-4FC093275F48}.Bitstream-Debugging|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F90459A-5BFA-40B2-A4AC-4FC093275F48}.Bitstream-Debugging|Any CPU.Build.0 = Debug|Any CPU
+		{3F90459A-5BFA-40B2-A4AC-4FC093275F48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F90459A-5BFA-40B2-A4AC-4FC093275F48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F90459A-5BFA-40B2-A4AC-4FC093275F48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F90459A-5BFA-40B2-A4AC-4FC093275F48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F90459A-5BFA-40B2-A4AC-4FC093275F48}.SavePropValues|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F90459A-5BFA-40B2-A4AC-4FC093275F48}.SavePropValues|Any CPU.Build.0 = Debug|Any CPU
+		{3F90459A-5BFA-40B2-A4AC-4FC093275F48}.YoloDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F90459A-5BFA-40B2-A4AC-4FC093275F48}.YoloDebug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

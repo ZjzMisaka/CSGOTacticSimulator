@@ -63,21 +63,24 @@ namespace CSGOTacticSimulator
         private XshdSyntaxDefinition codeXshd = null;
         private XshdSyntaxDefinition logXshd = null;
         private System.Timers.Timer resizeTimer = new System.Timers.Timer(100) { Enabled = false };
-        private Dictionary<UIElement, Point> elementPointDic = new Dictionary<UIElement, Point>();
+        private System.Timers.Timer textBlockResizeTimer = new System.Timers.Timer(100) { Enabled = false };
         private int currentTScore = -1;
         private int currentCTScore = -1;
         private string currentTName = "";
         private string currentCTName = "";
+        private Stopwatch stopWatch = null;
+        private Stopwatch stopWatchThisRound = null;
+        private List<Stopwatch> stopwatchList = new List<Stopwatch>();
+        private int offset = 0;
+        private bool isForward = false;
+        private bool isBackward = false;
+        private List<string> mapList = null;
+        private bool isNeedAutomaticGuidance = false;
+        private bool steamInited = false;
+        private Dictionary<string, string> proAvatarLinkDic = new Dictionary<string, string>();
+
         public List<Point> mouseMovePathInPreview = new List<Point>();
         public List<Point> keyDownInPreview = new List<Point>();
-        public Stopwatch stopWatch = null;
-        public Stopwatch stopWatchThisRound = null;
-        public List<Stopwatch> stopwatchList = new List<Stopwatch>();
-        public int offset = 0;
-        public bool isForward = false;
-        public bool isBackward = false;
-        public List<string> mapList = null;
-        public bool isNeedAutomaticGuidance = false;
 
         public MainWindow()
         {
@@ -90,6 +93,7 @@ namespace CSGOTacticSimulator
             this.Height = int.Parse(IniHelper.ReadIni("Window", "Height"));
 
             resizeTimer.Elapsed += new ElapsedEventHandler(ResizingDone);
+            textBlockResizeTimer.Elapsed += new ElapsedEventHandler(TextBlockResizingDone);
 
             //快速搜索功能
             SearchPanel.Install(te_editor.TextArea);
@@ -120,6 +124,8 @@ namespace CSGOTacticSimulator
 
             AddMapsFromFolder(GlobalDictionary.mapFolderPath);
             tb_select_folder.Text = GlobalDictionary.mapFolderPath;
+
+            steamInited = SteamHelper.InitSteamClient();
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -1983,7 +1989,24 @@ namespace CSGOTacticSimulator
 
                 foreach (UIElement element in g_infos.Children)
                 {
-                    if (element is TextBlock)
+                    if (element is TSImage)
+                    {
+                        TSImage tSImage = element as TSImage;
+                        if ((long)tSImage.Tag == character.SteamId)
+                        {
+                            if (character.Avatar.Source != null)
+                            {
+                                tSImage.Source = character.Avatar.Source;
+                                tSImage.Visibility = Visibility.Visible;
+                            }
+                            else
+                            {
+                                tSImage.Source = null;
+                                tSImage.Visibility = Visibility.Collapsed;
+                            }
+                        }
+                    }
+                    else if (element is TextBlock)
                     {
                         TextBlock textBlock = (TextBlock)element;
                         if (textBlock == tb_team1 || textBlock == tb_team2)
@@ -2340,6 +2363,10 @@ namespace CSGOTacticSimulator
                 if (item is TextBlock)
                 {
                     (item as TextBlock).Tag = null;
+                }
+                else if (item is TSImage)
+                {
+                    (item as TSImage).Tag = null;
                 }
             }
 
@@ -2850,6 +2877,7 @@ namespace CSGOTacticSimulator
                     this.Dispatcher.Invoke(() =>
                     {
                         character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
+                        SteamHelper.GetAvatarAsync((ulong)player.SteamID, player.Name, character.Avatar, steamInited, proAvatarLinkDic);
                     });
                     dic.Add(character.SteamId, character.Number);
 
@@ -2956,6 +2984,7 @@ namespace CSGOTacticSimulator
                     this.Dispatcher.Invoke(() =>
                     {
                         character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
+                        SteamHelper.GetAvatarAsync((ulong)player.SteamID, player.Name, character.Avatar, steamInited, proAvatarLinkDic);
                     });
 
                     dic.Add(character.SteamId, character.Number);
@@ -3279,7 +3308,7 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                DemoParser nowParser = (parseSender as DemoParser); 
+                DemoParser nowParser = (parseSender as DemoParser);
                 CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, null);
                 parseE.Sender = parseE.Sender.Copy();
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "SayText2", 0));
@@ -4446,7 +4475,7 @@ namespace CSGOTacticSimulator
 
                 if (eventList[m].Item3 == "SmokeNadeEnded")
                 {
-                    if (((SmokeEventArgs)eventList[m].Item2).ThrownBy.SteamID != 0 &&((SmokeEventArgs)eventList[m].Item2).ThrownBy.SteamID != eventArgs.ThrownBy.SteamID)
+                    if (((SmokeEventArgs)eventList[m].Item2).ThrownBy.SteamID != 0 && ((SmokeEventArgs)eventList[m].Item2).ThrownBy.SteamID != eventArgs.ThrownBy.SteamID)
                     {
                         continue;
                     }
@@ -4705,7 +4734,7 @@ namespace CSGOTacticSimulator
                 // 因此最妥当的写法是检查回合内这位玩家的燃烧弹投掷事件与NadeStart事件数量是否对得上
                 // 但是这种情况基本不存在, 所以就不这么写了
                 // *** 不是我故意用这种奇葩写法, 而是因为燃烧弹熄灭事件只存在于服务器, 无法判断 ***
-                else if (weapon == EquipmentElement.Incendiary  && eventList[n].Item3 == "WeaponFired" && ((WeaponFiredEventArgs)eventList[n].Item2).Weapon.Weapon == EquipmentElement.Incendiary)
+                else if (weapon == EquipmentElement.Incendiary && eventList[n].Item3 == "WeaponFired" && ((WeaponFiredEventArgs)eventList[n].Item2).Weapon.Weapon == EquipmentElement.Incendiary)
                 {
                     if (((WeaponFiredEventArgs)eventList[n].Item2).Shooter.SteamID != playerThrow.SteamID)
                     {
@@ -4925,22 +4954,27 @@ namespace CSGOTacticSimulator
                     {
                         tb_player1.Tag = player.SteamID;
                         tb_team1.Tag = player.SteamID;
+                        img_player1.Tag = player.SteamID;
                     }
                     else if (tb_player2.Tag == null)
                     {
                         tb_player2.Tag = player.SteamID;
+                        img_player2.Tag = player.SteamID;
                     }
                     else if (tb_player3.Tag == null)
                     {
                         tb_player3.Tag = player.SteamID;
+                        img_player3.Tag = player.SteamID;
                     }
                     else if (tb_player4.Tag == null)
                     {
                         tb_player4.Tag = player.SteamID;
+                        img_player4.Tag = player.SteamID;
                     }
                     else if (tb_player5.Tag == null)
                     {
                         tb_player5.Tag = player.SteamID;
+                        img_player5.Tag = player.SteamID;
                     }
                 }
                 else
@@ -4949,22 +4983,27 @@ namespace CSGOTacticSimulator
                     {
                         tb_player6.Tag = player.SteamID;
                         tb_team2.Tag = player.SteamID;
+                        img_player6.Tag = player.SteamID;
                     }
                     else if (tb_player7.Tag == null)
                     {
                         tb_player7.Tag = player.SteamID;
+                        img_player7.Tag = player.SteamID;
                     }
                     else if (tb_player8.Tag == null)
                     {
                         tb_player8.Tag = player.SteamID;
+                        img_player8.Tag = player.SteamID;
                     }
                     else if (tb_player9.Tag == null)
                     {
                         tb_player9.Tag = player.SteamID;
+                        img_player9.Tag = player.SteamID;
                     }
                     else if (tb_player10.Tag == null)
                     {
                         tb_player10.Tag = player.SteamID;
+                        img_player10.Tag = player.SteamID;
                     }
                 }
             });
@@ -6371,6 +6410,35 @@ namespace CSGOTacticSimulator
                     Canvas.SetTop(character.OtherImg, GetWndPoint(mapPoint, ImgType.Nothing).Y);
 
                     c_runcanvas.Children.Add(character.OtherImg);
+                }
+            }
+        }
+
+        private void OnTbPlayerSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            textBlockResizeTimer.Stop();
+            textBlockResizeTimer.Start();
+        }
+        private void TextBlockResizingDone(object sender, ElapsedEventArgs e)
+        {
+            textBlockResizeTimer.Stop();
+
+            c_runcanvas.Dispatcher.Invoke(() =>
+            {
+                if (i_map.Source != null)
+                {
+                    TextBlocknSizeChanged();
+                }
+            });
+        }
+
+        private void TextBlocknSizeChanged()
+        {
+            foreach (UIElement element in g_infos.Children)
+            {
+                if (element is TSImage)
+                {
+                    (element as TSImage).Height = tb_player1.ActualHeight;
                 }
             }
         }
