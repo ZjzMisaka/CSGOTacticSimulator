@@ -126,4 +126,6 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |~~[StatsHelix/demoinfo](https://github.com/StatsHelix/demoinfo)~~ [akiver/CSGO-Demos-Manager/demoinfo](https://github.com/akiver/CSGO-Demos-Manager/tree/main/demoinfo)|MIT, GPL-2.0|
 |[ZjzMisaka/CustomizableMessageBox](https://github.com/ZjzMisaka/CustomizableMessageBox)|WTFPL|
 |[simpleradar/CSGOMaps](http://simpleradar.com/)|Unknown|
-|[ICONS8](https://icons8.com)|Unknown|
+|[ICONS8](https://icons8.com)|[Link](https://icons8.com/license)|
+|[Facepunch/Facepunch.Steamworks](https://github.com/Facepunch/Facepunch.Steamworks)|MIT|
+|[ArttuKuikka/HltvSharp](https://github.com/ArttuKuikka/HltvSharp)|[Issue](https://github.com/ArttuKuikka/HltvSharp/issues/9)|
