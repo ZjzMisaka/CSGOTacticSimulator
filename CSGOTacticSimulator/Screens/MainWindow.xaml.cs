@@ -365,6 +365,9 @@ namespace CSGOTacticSimulator
                 case ImgType.Props:
                     widthAndHeight = GlobalDictionary.PropsWidthAndHeight;
                     break;
+                case ImgType.Gun:
+                    widthAndHeight = GlobalDictionary.GunWidthAndHeight;
+                    break;
                 case ImgType.Nothing:
                     widthAndHeight = 0;
                     break;
@@ -392,6 +395,9 @@ namespace CSGOTacticSimulator
                     break;
                 case ImgType.Missile:
                     widthAndHeight = GlobalDictionary.MissileWidthAndHeight;
+                    break;
+                case ImgType.Gun:
+                    widthAndHeight = GlobalDictionary.GunWidthAndHeight;
                     break;
                 case ImgType.Nothing:
                     widthAndHeight = 0;
@@ -3286,11 +3292,27 @@ namespace CSGOTacticSimulator
             //};
             parser.PlayerDropWeapon += (parseSender, parseE) =>
             {
-
+                if ((parser.CTScore + parser.TScore + 1) < roundNumber)
+                {
+                    return;
+                }
+                DemoParser nowParser = (parseSender as DemoParser);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, null);
+                parseE.Weapon = new Equipment(parseE.Weapon.OriginalString);
+                parseE.Player = parseE.Player.Copy();
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "PlayerDropWeapon", 0));
             };
             parser.PlayerPickWeapon += (parseSender, parseE) =>
             {
-
+                if ((parser.CTScore + parser.TScore + 1) < roundNumber)
+                {
+                    return;
+                }
+                DemoParser nowParser = (parseSender as DemoParser);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, null);
+                parseE.Weapon = new Equipment(parseE.Weapon.OriginalString);
+                parseE.Player = parseE.Player.Copy();
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "PlayerPickWeapon", 0));
             };
             parser.SayText += (parseSender, parseE) =>
             {
@@ -3404,6 +3426,7 @@ namespace CSGOTacticSimulator
             TimeSpan roundTimeSpan = new TimeSpan(0, 1, 56);
             TimeSpan timeSpanWhenBombPlanted = new TimeSpan(0);
             TimeSpan offsetWhenBombPlanted = new TimeSpan(0);
+            List<TSImage> droppedImgList = new List<TSImage>();
 
             // 奇技淫巧
             // 防止中止下包 / 中止拆包后对应图标不消失
@@ -4342,6 +4365,140 @@ namespace CSGOTacticSimulator
                     }
 
                 }
+                else if (currentEvent.Item2 is PlayerDropWeaponEventArgs)
+                {
+                    if (currentEvent.Item3 == "PlayerDropWeapon")
+                    {
+                        
+                        if (currentEvent.Item2 as PlayerDropWeaponEventArgs == null)
+                        {
+                            continue;
+                        }
+                        Character character = CharacterHelper.GetCharacter((currentEvent.Item2 as PlayerDropWeaponEventArgs).Player.SteamID);
+                        if (character == null)
+                        {
+                            continue;
+                        }
+                        if (CheckIfDropIsFromThrowOrPlant((PlayerDropWeaponEventArgs)currentEvent.Item2, eventList, i, usedMissileDic))
+                        {
+                            continue;
+                        }
+
+                        string[] files = Directory.GetFiles(System.IO.Path.Combine(Global.GlobalDictionary.exePath, "img"), "*.png", SearchOption.TopDirectoryOnly);
+
+                        foreach (string file in files)
+                        {
+                            if (file.ToLower().Contains("effect"))
+                            {
+                                continue;
+                            }
+                            if (System.IO.Path.GetFileNameWithoutExtension(file).ToLower().Contains((currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Weapon.ToString().ToLower()))
+                            {
+                                this.Dispatcher.Invoke(() =>
+                                {
+                                    TSImage tSImage = new TSImage();
+                                    tSImage.TagStr = (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Weapon.ToString();
+                                    
+                                    DemoInfo.Player player = (currentEvent.Item2 as PlayerDropWeaponEventArgs).Player;
+                                    double tan = Math.Tan(player.ViewDirectionX * Math.PI / 180);
+                                    Point direction = new Point(0, 0);
+                                    if (player.IsAlive)
+                                    {
+                                        if (player.ViewDirectionX < -270 || (player.ViewDirectionX > -90 && player.ViewDirectionX < 90) || player.ViewDirectionX > 270)
+                                        {
+                                            direction = new Point(1, tan);
+                                        }
+                                        else if ((player.ViewDirectionX > 90 && player.ViewDirectionX < 270) || (player.ViewDirectionX < -90 && player.ViewDirectionX > -270))
+                                        {
+                                            direction = new Point(-1, -tan);
+                                        }
+                                        else if (player.ViewDirectionX == 90 || player.ViewDirectionX == -270)
+                                        {
+                                            direction = new Point(0, 1);
+                                        }
+                                        else if (player.ViewDirectionX == 270 || player.ViewDirectionX == -90)
+                                        {
+                                            direction = new Point(0, -1);
+                                        }
+                                        direction = VectorHelper.GetUnitVector(new Point(0, 0), direction);
+                                        tSImage.MapPoint = new Point(character.MapPoint.X + direction.X * 30, character.MapPoint.Y + direction.Y * 30);
+                                    }
+                                    else
+                                    {
+                                        Random rd = new Random();
+                                        tSImage.MapPoint = new Point(character.MapPoint.X + rd.Next(-30, 30), character.MapPoint.Y + rd.Next(-30, 30));
+                                    }
+                                    tSImage.Source = new BitmapImage(new Uri(file));
+                                    tSImage.Opacity = 1;
+                                    if ((currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Grenade)
+                                    {
+                                        tSImage.Width = GlobalDictionary.MissileWidthAndHeight;
+                                        tSImage.Height = GlobalDictionary.MissileWidthAndHeight;
+                                        tSImage.ImgType = ImgType.Missile;
+                                    }
+                                    else if ((currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Equipment)
+                                    {
+                                        tSImage.Width = GlobalDictionary.PropsWidthAndHeight;
+                                        tSImage.Height = GlobalDictionary.PropsWidthAndHeight;
+                                        tSImage.ImgType = ImgType.Props;
+                                    }
+                                    else
+                                    {
+                                        tSImage.Width = GlobalDictionary.GunWidthAndHeight;
+                                        tSImage.Height = GlobalDictionary.GunWidthAndHeight;
+                                        tSImage.ImgType = ImgType.Gun;
+                                    }
+                                    Point wndPoint = GetWndPoint(tSImage.MapPoint, ImgType.MissileEffect);
+                                    Canvas.SetLeft(tSImage, wndPoint.X);
+                                    Canvas.SetTop(tSImage, wndPoint.Y);
+                                    c_runcanvas.Children.Add(tSImage);
+
+                                    droppedImgList.Add(tSImage);
+                                });
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (currentEvent.Item2 is PlayerPickWeaponEventArgs)
+                {
+                    if (currentEvent.Item3 == "PlayerPickWeapon")
+                    {
+                        if (currentEvent.Item2 as PlayerPickWeaponEventArgs == null)
+                        {
+                            continue;
+                        }
+                        Character character = CharacterHelper.GetCharacter((currentEvent.Item2 as PlayerPickWeaponEventArgs).Player.SteamID);
+                        if (character == null)
+                        {
+                            continue;
+                        }
+
+                        double distance = -1;
+                        TSImage pickImg = null;
+                        foreach (TSImage img in droppedImgList)
+                        {
+                            if ((currentEvent.Item2 as PlayerPickWeaponEventArgs).Weapon.Weapon.ToString() == img.TagStr)
+                            {
+                                double newDistance = VectorHelper.GetDistance(img.MapPoint, character.MapPoint);
+                                if (distance == -1 || distance > newDistance)
+                                {
+                                    distance = newDistance;
+                                    pickImg = img;
+                                }
+                            }
+                        }
+
+                        if (pickImg != null)
+                        {
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                c_runcanvas.Children.Remove(pickImg);
+                                droppedImgList.Remove(pickImg);
+                            });
+                        }
+                    }
+                }
                 else if (currentEvent.Item2 is SayTextEventArgs)
                 {
                     if (currentEvent.Item3 == "SayText")
@@ -4357,6 +4514,37 @@ namespace CSGOTacticSimulator
                     }
                 }
             }
+        }
+
+        private bool CheckIfDropIsFromThrowOrPlant(PlayerDropWeaponEventArgs playerDropWeaponEventArgs, List<Tuple<CurrentInfo, EventArgs, string, int>> eventList, int i, Dictionary<int, int> usedMissileDic)
+        {
+            int tickCount = 0;
+            for (int m = i; m > 0; --m)
+            {
+                if (eventList[m].Item2 is TickDoneEventArgs)
+                {
+                    ++tickCount;
+                }
+                if (tickCount == 200)
+                {
+                    return false;
+                }
+                if ((eventList[m].Item2 is BombEventArgs) && eventList[m].Item3 == "BombPlanted")
+                {
+                    if ((eventList[m].Item2 as BombEventArgs).Player.SteamID == playerDropWeaponEventArgs.Player.SteamID)
+                    {
+                        return true;
+                    }
+                }
+                if (usedMissileDic.ContainsKey(m))
+                {
+                    if ((eventList[m].Item2 as WeaponFiredEventArgs).Weapon.OriginalString == playerDropWeaponEventArgs.Weapon.OriginalString && (eventList[m].Item2 as WeaponFiredEventArgs).Shooter.SteamID == playerDropWeaponEventArgs.Player.SteamID)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         private void SayText(string name, string text)
@@ -6374,6 +6562,11 @@ namespace CSGOTacticSimulator
                     {
                         img.Width = GlobalDictionary.PropsWidthAndHeight;
                         img.Height = GlobalDictionary.PropsWidthAndHeight;
+                    }
+                    else if (img.ImgType == ImgType.Gun)
+                    {
+                        img.Width = GlobalDictionary.GunWidthAndHeight;
+                        img.Height = GlobalDictionary.GunWidthAndHeight;
                     }
 
                     Canvas.SetLeft(img, wndPoint.X);

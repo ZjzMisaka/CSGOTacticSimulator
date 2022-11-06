@@ -98,6 +98,7 @@ namespace CSGOTacticSimulator.Global
         MissileEffect,
         ExplosionEffect,
         Props,
+        Gun,
         Nothing
     }
     static public class GlobalDictionary
@@ -114,6 +115,7 @@ namespace CSGOTacticSimulator.Global
         private static int propsWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "Props"));
         private static int missileEffectWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "MissileEffect"));
         private static int explosionEffectWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "ExplosionEffect"));
+        private static int gunWidthAndHeight = int.Parse(IniHelper.ReadIni("View", "Gun"));
 
         static public int animationFreshTime = int.Parse(IniHelper.ReadIni("Setting", "AnimationFreshTime"));   // 刷新间隔
         static public int forwardTimeSpan = (int)(double.Parse(IniHelper.ReadIni("Setting", "ForwardTimeSpan")) * 1000);
@@ -129,6 +131,7 @@ namespace CSGOTacticSimulator.Global
         public static int PropsWidthAndHeight { get => (int)(propsWidthAndHeight * ImageRatio); set => propsWidthAndHeight = value; }
         public static int MissileEffectWidthAndHeight { get => (int)(missileEffectWidthAndHeight * ImageRatio); set => missileEffectWidthAndHeight = value; }
         public static int ExplosionEffectWidthAndHeight { get => (int)(explosionEffectWidthAndHeight * ImageRatio); set => explosionEffectWidthAndHeight = value; }
+        public static int GunWidthAndHeight { get => (int)(gunWidthAndHeight * ImageRatio); set => gunWidthAndHeight = value; }
         public static double ImageRatio
         {
             get => imageRatio;
