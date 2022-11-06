@@ -4499,8 +4499,9 @@ namespace CSGOTacticSimulator
                         }
                         else
                         {
+                            direction = GlobalDictionary.GetNextDirection();
                             Random rd = new Random();
-                            tSImage.MapPoint = new Point(mapPoint.X + rd.Next(-30, 30), mapPoint.Y + rd.Next(-30, 30));
+                            tSImage.MapPoint = new Point(mapPoint.X + direction.X * rd.Next(10, 30), mapPoint.Y + direction.Y * rd.Next(10, 30));
                         }
                         tSImage.Source = new BitmapImage(new Uri(file));
                         tSImage.Opacity = 1;

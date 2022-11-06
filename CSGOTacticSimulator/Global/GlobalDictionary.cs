@@ -234,5 +234,27 @@ namespace CSGOTacticSimulator.Global
             ErrorIcon = new System.Windows.Media.Imaging.BitmapImage(new Uri(GlobalDictionary.errorPath)),
             ButtonStyleList = new List<Style> { CustomizableMessageBox.Prefab.GetButtonStyle(ButtonStyleName.White) },
         };
+
+        static private List<Point> directionList = new List<Point>()
+        {
+            new Point (Math.Cos(45), Math.Cos(45)),
+            new Point(Math.Cos(45) * -1, Math.Cos(45) * -1),
+            new Point(Math.Cos(45) * 1, Math.Cos(45) * -1),
+            new Point(Math.Cos(45) * -1, Math.Cos(45) * 1),
+            new Point(1, 0),
+            new Point(0, 1),
+            new Point(1, 1),
+            new Point(0, 0)
+        };
+        static private int directionIndex = new Random().Next(8);
+        static public Point GetNextDirection()
+        {
+            ++directionIndex;
+            if (directionIndex >= 8)
+            {
+                directionIndex = 0;
+            }
+            return directionList[directionIndex];
+        }
     }
 }
