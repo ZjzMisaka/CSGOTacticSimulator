@@ -112,6 +112,8 @@ namespace CSGOTacticSimulator.Model
         private int number = Global.GlobalDictionary.charatersNumber++;
         public TSImage CharacterImg { get => characterImg; set => characterImg = value; }
         private TSImage characterImg = new TSImage();
+        public TSImage ActiveWeaponImg { get => activeWeaponImg; set => activeWeaponImg = value; }
+        private TSImage activeWeaponImg = new TSImage();
         public TSImage OtherImg { get => otherImg; set => otherImg = value; }
         private TSImage otherImg = new TSImage();
         public TSImage StatusImg { get => statusImg; set => statusImg = value; }

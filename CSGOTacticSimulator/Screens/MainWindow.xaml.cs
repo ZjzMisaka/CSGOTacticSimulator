@@ -3608,6 +3608,7 @@ namespace CSGOTacticSimulator
                             {
                                 foreach (Character character in CharacterHelper.GetCharacters())
                                 {
+                                    character.ActiveWeaponImg.Visibility = Visibility.Collapsed;
                                     character.OtherImg.Visibility = Visibility.Collapsed;
                                     character.StatusImg.Visibility = Visibility.Collapsed;
                                 }
@@ -3652,6 +3653,13 @@ namespace CSGOTacticSimulator
                         if (dic.ContainsKey(victimSteamID))
                         {
                             Character victimCharacter = CharacterHelper.GetCharacter(dic[victimSteamID]);
+                            if (victimCharacter.ActiveWeaponImg.Visibility == Visibility.Visible)
+                            {
+                                this.Dispatcher.Invoke(() =>
+                                {
+                                    victimCharacter.ActiveWeaponImg.Visibility = Visibility.Collapsed;
+                                });
+                            }
                             if (victimCharacter.OtherImg.Visibility == Visibility.Visible)
                             {
                                 this.Dispatcher.Invoke(() =>
@@ -4213,6 +4221,10 @@ namespace CSGOTacticSimulator
                                 c_runcanvas.Children.Remove(character.CharacterImg);
                                 c_runcanvas.Children.Remove(nameLabel);
                                 c_runcanvas.Children.Remove(numberLabel);
+                                if (character.ActiveWeaponImg.Visibility == Visibility.Visible)
+                                {
+                                    c_runcanvas.Children.Remove(character.ActiveWeaponImg);
+                                }
                                 if (character.OtherImg.Visibility == Visibility.Visible)
                                 {
                                     c_runcanvas.Children.Remove(character.OtherImg);
@@ -4238,11 +4250,54 @@ namespace CSGOTacticSimulator
                                 Canvas.SetLeft(character.CharacterImg, endWndPoint.X);
                                 Canvas.SetTop(character.CharacterImg, endWndPoint.Y);
 
+                                if (player.ActiveWeapon != null)
+                                {
+                                    character.ActiveWeaponImg.Visibility = Visibility.Visible;
+                                    Point activeWeaponImgWndPoint = new Point();
+                                    
+                                    if (player.ActiveWeapon.Class == EquipmentClass.Grenade)
+                                    {
+                                        character.ActiveWeaponImg.Width = GlobalDictionary.MissileWidthAndHeight;
+                                        character.ActiveWeaponImg.Height = GlobalDictionary.MissileWidthAndHeight;
+                                        character.ActiveWeaponImg.ImgType = ImgType.Missile;
+                                        activeWeaponImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 3 / 8, endWndPoint.Y - character.CharacterImg.Height * 1.5);
+                                    }
+                                    else if (player.ActiveWeapon.Class == EquipmentClass.Equipment)
+                                    {
+                                        character.ActiveWeaponImg.Width = GlobalDictionary.PropsWidthAndHeight;
+                                        character.ActiveWeaponImg.Height = GlobalDictionary.PropsWidthAndHeight;
+                                        character.ActiveWeaponImg.ImgType = ImgType.Props;
+                                        activeWeaponImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 2 / 8, endWndPoint.Y - character.CharacterImg.Height * 1);
+                                    }
+                                    else
+                                    {
+                                        character.ActiveWeaponImg.Width = GlobalDictionary.GunWidthAndHeight;
+                                        character.ActiveWeaponImg.Height = GlobalDictionary.GunWidthAndHeight;
+                                        character.ActiveWeaponImg.ImgType = ImgType.Gun;
+                                        activeWeaponImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 5 / 8, endWndPoint.Y - character.CharacterImg.Height * 2);
+                                    }
+                                    character.ActiveWeaponImg.MapPoint = GetMapPoint(activeWeaponImgWndPoint, ImgType.Nothing);
+                                    string[] files = Directory.GetFiles(System.IO.Path.Combine(Global.GlobalDictionary.exePath, "img"), "*.png", SearchOption.TopDirectoryOnly);
+                                    foreach (string file in files)
+                                    {
+                                        if (file.ToLower().Contains("effect"))
+                                        {
+                                            continue;
+                                        }
+                                        if (System.IO.Path.GetFileNameWithoutExtension(file).ToLower().Contains(player.ActiveWeapon.Weapon.ToString().ToLower()))
+                                        {
+                                            character.ActiveWeaponImg.Source = new BitmapImage(new Uri(file));
+                                        }
+                                    }
+                                    Canvas.SetLeft(character.ActiveWeaponImg, activeWeaponImgWndPoint.X);
+                                    Canvas.SetTop(character.ActiveWeaponImg, activeWeaponImgWndPoint.Y);
+                                }
+
                                 if (character.OtherImg.Visibility == Visibility.Visible && character.StatusImg.Visibility == Visibility.Visible)
                                 {
                                     character.OtherImg.Width = character.CharacterImg.Width * 1.5;
                                     character.OtherImg.Height = character.CharacterImg.Height * 1.5;
-                                    Point otherImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * -3 / 8, endWndPoint.Y - character.CharacterImg.Height);
+                                    Point otherImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width, endWndPoint.Y - character.CharacterImg.Height * -3 / 8);
                                     character.OtherImg.MapPoint = GetMapPoint(otherImgWndPoint, ImgType.Nothing);
                                     character.OtherImg.ImgType = ImgType.Nothing;
                                     Canvas.SetLeft(character.OtherImg, otherImgWndPoint.X);
@@ -4250,7 +4305,7 @@ namespace CSGOTacticSimulator
 
                                     character.StatusImg.Width = character.CharacterImg.Width * 1.5;
                                     character.StatusImg.Height = character.CharacterImg.Height * 1.5;
-                                    Point statusImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 8 / 8, endWndPoint.Y - character.CharacterImg.Height);
+                                    Point statusImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width, endWndPoint.Y - character.CharacterImg.Height * 8 / 8);
                                     character.StatusImg.MapPoint = GetMapPoint(statusImgWndPoint, ImgType.Nothing);
                                     character.StatusImg.ImgType = ImgType.Nothing;
                                     Canvas.SetLeft(character.StatusImg, statusImgWndPoint.X);
@@ -4262,7 +4317,7 @@ namespace CSGOTacticSimulator
                                     {
                                         character.OtherImg.Width = character.CharacterImg.Width * 1.5;
                                         character.OtherImg.Height = character.CharacterImg.Height * 1.5;
-                                        Point otherImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 3 / 8, endWndPoint.Y - character.CharacterImg.Height);
+                                        Point otherImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width, endWndPoint.Y - character.CharacterImg.Height * 3 / 8);
                                         character.OtherImg.MapPoint = GetMapPoint(otherImgWndPoint, ImgType.Nothing);
                                         character.OtherImg.ImgType = ImgType.Nothing;
                                         Canvas.SetLeft(character.OtherImg, otherImgWndPoint.X);
@@ -4272,7 +4327,7 @@ namespace CSGOTacticSimulator
                                     {
                                         character.StatusImg.Width = character.CharacterImg.Width * 1.5;
                                         character.StatusImg.Height = character.CharacterImg.Height * 1.5;
-                                        Point statusImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 3 / 8, endWndPoint.Y - character.CharacterImg.Height);
+                                        Point statusImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width, endWndPoint.Y - character.CharacterImg.Height * 3 / 8);
                                         character.StatusImg.MapPoint = GetMapPoint(statusImgWndPoint, ImgType.Nothing);
                                         character.StatusImg.ImgType = ImgType.Nothing;
                                         Canvas.SetLeft(character.StatusImg, statusImgWndPoint.X);
@@ -4304,6 +4359,10 @@ namespace CSGOTacticSimulator
                                 c_runcanvas.Children.Add(character.CharacterImg);
                                 c_runcanvas.Children.Add(CreateChacterlabel(character, endWndPoint, player.HP));
                                 c_runcanvas.Children.Add(CreateChacterNumberlabel(character, endWndPoint));
+                                if (character.ActiveWeaponImg.Visibility == Visibility.Visible)
+                                {
+                                    c_runcanvas.Children.Add(character.ActiveWeaponImg);
+                                }
                                 if (character.OtherImg.Visibility == Visibility.Visible)
                                 {
                                     c_runcanvas.Children.Add(character.OtherImg);
