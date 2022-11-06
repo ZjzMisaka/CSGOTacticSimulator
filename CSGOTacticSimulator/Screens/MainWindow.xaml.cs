@@ -3545,6 +3545,14 @@ namespace CSGOTacticSimulator
                         {
                             SayText((eventArgs as SayText2EventArgs).Sender.Name, (eventArgs as SayText2EventArgs).Text);
                         }
+                        else if (currentEvent.Item3 == "PlayerDropWeapon")
+                        {
+                            PlayerDropWeapon(currentEvent, eventList, i, usedMissileDic, droppedImgList);
+                        }
+                        else if (currentEvent.Item3 == "PlayerPickWeapon")
+                        {
+                            PlayerPickWeapon(currentEvent, droppedImgList);
+                        }
 
                         this.Dispatcher.Invoke(() =>
                         {
@@ -4369,134 +4377,14 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "PlayerDropWeapon")
                     {
-                        
-                        if (currentEvent.Item2 as PlayerDropWeaponEventArgs == null)
-                        {
-                            continue;
-                        }
-                        Character character = CharacterHelper.GetCharacter((currentEvent.Item2 as PlayerDropWeaponEventArgs).Player.SteamID);
-                        if (character == null)
-                        {
-                            continue;
-                        }
-                        if (CheckIfDropIsFromThrowOrPlant((PlayerDropWeaponEventArgs)currentEvent.Item2, eventList, i, usedMissileDic))
-                        {
-                            continue;
-                        }
-
-                        string[] files = Directory.GetFiles(System.IO.Path.Combine(Global.GlobalDictionary.exePath, "img"), "*.png", SearchOption.TopDirectoryOnly);
-
-                        foreach (string file in files)
-                        {
-                            if (file.ToLower().Contains("effect"))
-                            {
-                                continue;
-                            }
-                            if (System.IO.Path.GetFileNameWithoutExtension(file).ToLower().Contains((currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Weapon.ToString().ToLower()))
-                            {
-                                this.Dispatcher.Invoke(() =>
-                                {
-                                    TSImage tSImage = new TSImage();
-                                    tSImage.TagStr = (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Weapon.ToString();
-                                    
-                                    DemoInfo.Player player = (currentEvent.Item2 as PlayerDropWeaponEventArgs).Player;
-                                    double tan = Math.Tan(player.ViewDirectionX * Math.PI / 180);
-                                    Point direction = new Point(0, 0);
-                                    if (player.IsAlive)
-                                    {
-                                        if (player.ViewDirectionX < -270 || (player.ViewDirectionX > -90 && player.ViewDirectionX < 90) || player.ViewDirectionX > 270)
-                                        {
-                                            direction = new Point(1, tan);
-                                        }
-                                        else if ((player.ViewDirectionX > 90 && player.ViewDirectionX < 270) || (player.ViewDirectionX < -90 && player.ViewDirectionX > -270))
-                                        {
-                                            direction = new Point(-1, -tan);
-                                        }
-                                        else if (player.ViewDirectionX == 90 || player.ViewDirectionX == -270)
-                                        {
-                                            direction = new Point(0, 1);
-                                        }
-                                        else if (player.ViewDirectionX == 270 || player.ViewDirectionX == -90)
-                                        {
-                                            direction = new Point(0, -1);
-                                        }
-                                        direction = VectorHelper.GetUnitVector(new Point(0, 0), direction);
-                                        tSImage.MapPoint = new Point(character.MapPoint.X + direction.X * 30, character.MapPoint.Y + direction.Y * 30);
-                                    }
-                                    else
-                                    {
-                                        Random rd = new Random();
-                                        tSImage.MapPoint = new Point(character.MapPoint.X + rd.Next(-30, 30), character.MapPoint.Y + rd.Next(-30, 30));
-                                    }
-                                    tSImage.Source = new BitmapImage(new Uri(file));
-                                    tSImage.Opacity = 1;
-                                    if ((currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Grenade)
-                                    {
-                                        tSImage.Width = GlobalDictionary.MissileWidthAndHeight;
-                                        tSImage.Height = GlobalDictionary.MissileWidthAndHeight;
-                                        tSImage.ImgType = ImgType.Missile;
-                                    }
-                                    else if ((currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Equipment)
-                                    {
-                                        tSImage.Width = GlobalDictionary.PropsWidthAndHeight;
-                                        tSImage.Height = GlobalDictionary.PropsWidthAndHeight;
-                                        tSImage.ImgType = ImgType.Props;
-                                    }
-                                    else
-                                    {
-                                        tSImage.Width = GlobalDictionary.GunWidthAndHeight;
-                                        tSImage.Height = GlobalDictionary.GunWidthAndHeight;
-                                        tSImage.ImgType = ImgType.Gun;
-                                    }
-                                    Point wndPoint = GetWndPoint(tSImage.MapPoint, ImgType.MissileEffect);
-                                    Canvas.SetLeft(tSImage, wndPoint.X);
-                                    Canvas.SetTop(tSImage, wndPoint.Y);
-                                    c_runcanvas.Children.Add(tSImage);
-
-                                    droppedImgList.Add(tSImage);
-                                });
-                                break;
-                            }
-                        }
+                        PlayerDropWeapon(currentEvent, eventList, i, usedMissileDic, droppedImgList);
                     }
                 }
                 else if (currentEvent.Item2 is PlayerPickWeaponEventArgs)
                 {
                     if (currentEvent.Item3 == "PlayerPickWeapon")
                     {
-                        if (currentEvent.Item2 as PlayerPickWeaponEventArgs == null)
-                        {
-                            continue;
-                        }
-                        Character character = CharacterHelper.GetCharacter((currentEvent.Item2 as PlayerPickWeaponEventArgs).Player.SteamID);
-                        if (character == null)
-                        {
-                            continue;
-                        }
-
-                        double distance = -1;
-                        TSImage pickImg = null;
-                        foreach (TSImage img in droppedImgList)
-                        {
-                            if ((currentEvent.Item2 as PlayerPickWeaponEventArgs).Weapon.Weapon.ToString() == img.TagStr)
-                            {
-                                double newDistance = VectorHelper.GetDistance(img.MapPoint, character.MapPoint);
-                                if (distance == -1 || distance > newDistance)
-                                {
-                                    distance = newDistance;
-                                    pickImg = img;
-                                }
-                            }
-                        }
-
-                        if (pickImg != null)
-                        {
-                            this.Dispatcher.Invoke(() =>
-                            {
-                                c_runcanvas.Children.Remove(pickImg);
-                                droppedImgList.Remove(pickImg);
-                            });
-                        }
+                        PlayerPickWeapon(currentEvent, droppedImgList);
                     }
                 }
                 else if (currentEvent.Item2 is SayTextEventArgs)
@@ -4512,6 +4400,136 @@ namespace CSGOTacticSimulator
                     {
                         SayText((eventArgs as SayText2EventArgs).Sender.Name, (eventArgs as SayText2EventArgs).Text.Replace("\n", ""));
                     }
+                }
+            }
+        }
+
+        private void PlayerPickWeapon(Tuple<CurrentInfo, EventArgs, string, int> currentEvent, List<TSImage> droppedImgList)
+        {
+            if (currentEvent.Item2 as PlayerPickWeaponEventArgs == null)
+            {
+                return;
+            }
+            Character character = CharacterHelper.GetCharacter((currentEvent.Item2 as PlayerPickWeaponEventArgs).Player.SteamID);
+            if (character == null)
+            {
+                return;
+            }
+
+            double distance = -1;
+            TSImage pickImg = null;
+            foreach (TSImage img in droppedImgList)
+            {
+                if ((currentEvent.Item2 as PlayerPickWeaponEventArgs).Weapon.Weapon.ToString() == img.TagStr)
+                {
+                    double newDistance = VectorHelper.GetDistance(img.MapPoint, character.MapPoint);
+                    if (distance == -1 || distance > newDistance)
+                    {
+                        distance = newDistance;
+                        pickImg = img;
+                    }
+                }
+            }
+
+            if (pickImg != null)
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    c_runcanvas.Children.Remove(pickImg);
+                    droppedImgList.Remove(pickImg);
+                });
+            }
+        }
+
+        private void PlayerDropWeapon(Tuple<CurrentInfo, EventArgs, string, int> currentEvent, List<Tuple<CurrentInfo, EventArgs, string, int>> eventList, int i, Dictionary<int, int> usedMissileDic, List<TSImage> droppedImgList)
+        {
+            if (currentEvent.Item2 as PlayerDropWeaponEventArgs == null)
+            {
+                return;
+            }
+            Character character = CharacterHelper.GetCharacter((currentEvent.Item2 as PlayerDropWeaponEventArgs).Player.SteamID);
+            if (character == null)
+            {
+                return;
+            }
+            if (CheckIfDropIsFromThrowOrPlant((PlayerDropWeaponEventArgs)currentEvent.Item2, eventList, i, usedMissileDic))
+            {
+                return;
+            }
+
+            string[] files = Directory.GetFiles(System.IO.Path.Combine(Global.GlobalDictionary.exePath, "img"), "*.png", SearchOption.TopDirectoryOnly);
+
+            foreach (string file in files)
+            {
+                if (file.ToLower().Contains("effect"))
+                {
+                    continue;
+                }
+                if (System.IO.Path.GetFileNameWithoutExtension(file).ToLower().Contains((currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Weapon.ToString().ToLower()))
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        TSImage tSImage = new TSImage();
+                        tSImage.TagStr = (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Weapon.ToString();
+
+                        DemoInfo.Player player = (currentEvent.Item2 as PlayerDropWeaponEventArgs).Player;
+                        double tan = Math.Tan(player.ViewDirectionX * Math.PI / 180);
+                        Point direction = new Point(0, 0);
+                        Point mapPoint = DemoPointToMapPoint(player.Position, currentEvent.Item1.Map);
+                        if (player.IsAlive)
+                        {
+                            if (player.ViewDirectionX < -270 || (player.ViewDirectionX > -90 && player.ViewDirectionX < 90) || player.ViewDirectionX > 270)
+                            {
+                                direction = new Point(1, tan);
+                            }
+                            else if ((player.ViewDirectionX > 90 && player.ViewDirectionX < 270) || (player.ViewDirectionX < -90 && player.ViewDirectionX > -270))
+                            {
+                                direction = new Point(-1, -tan);
+                            }
+                            else if (player.ViewDirectionX == 90 || player.ViewDirectionX == -270)
+                            {
+                                direction = new Point(0, 1);
+                            }
+                            else if (player.ViewDirectionX == 270 || player.ViewDirectionX == -90)
+                            {
+                                direction = new Point(0, -1);
+                            }
+                            direction = VectorHelper.GetUnitVector(new Point(0, 0), direction);
+                            tSImage.MapPoint = new Point(mapPoint.X + direction.X * 30, mapPoint.Y + direction.Y * 30);
+                        }
+                        else
+                        {
+                            Random rd = new Random();
+                            tSImage.MapPoint = new Point(mapPoint.X + rd.Next(-30, 30), mapPoint.Y + rd.Next(-30, 30));
+                        }
+                        tSImage.Source = new BitmapImage(new Uri(file));
+                        tSImage.Opacity = 1;
+                        if ((currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Grenade)
+                        {
+                            tSImage.Width = GlobalDictionary.MissileWidthAndHeight;
+                            tSImage.Height = GlobalDictionary.MissileWidthAndHeight;
+                            tSImage.ImgType = ImgType.Missile;
+                        }
+                        else if ((currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Equipment)
+                        {
+                            tSImage.Width = GlobalDictionary.PropsWidthAndHeight;
+                            tSImage.Height = GlobalDictionary.PropsWidthAndHeight;
+                            tSImage.ImgType = ImgType.Props;
+                        }
+                        else
+                        {
+                            tSImage.Width = GlobalDictionary.GunWidthAndHeight;
+                            tSImage.Height = GlobalDictionary.GunWidthAndHeight;
+                            tSImage.ImgType = ImgType.Gun;
+                        }
+                        Point wndPoint = GetWndPoint(tSImage.MapPoint, ImgType.MissileEffect);
+                        Canvas.SetLeft(tSImage, wndPoint.X);
+                        Canvas.SetTop(tSImage, wndPoint.Y);
+                        c_runcanvas.Children.Add(tSImage);
+
+                        droppedImgList.Add(tSImage);
+                    });
+                    break;
                 }
             }
         }
