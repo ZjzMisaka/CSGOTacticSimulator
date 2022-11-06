@@ -24,6 +24,17 @@ namespace CSGOTacticSimulator.Helper
         {
             return characters[number];
         }
+        static public Character GetCharacter(long steamId)
+        {
+            foreach (Character character in characters)
+            {
+                if (character.SteamId == steamId)
+                {
+                    return character;
+                }
+            }
+            return null;
+        }
 
         static public void AddIntoNameDic(string name, int number)
         {
