@@ -204,6 +204,7 @@
             <CheckBox x:Name="cb_show_drop_gun" Margin="5" Foreground="White" IsChecked="False">是否显示武器掉落</CheckBox>
             <CheckBox x:Name="cb_show_drop_missile" Margin="5" Foreground="White" IsChecked="True">是否显示投掷物掉落</CheckBox>
             <CheckBox x:Name="cb_show_drop_other" Margin="5" Foreground="White" IsChecked="True">是否显示其他掉落</CheckBox>
+            <CheckBox x:Name="cb_skip_freeze_time" Margin="5" Foreground="White" IsChecked="True">是否跳过准备阶段</CheckBox>
         </StackPanel>
     </Grid>
 </Window>

@@ -4081,7 +4081,12 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "TickDone")
                     {
-                        if (stopWatchThisRound == null || !isFreezetimeEnded)
+                        bool isSkipFreezeTime = false;
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            isSkipFreezeTime = (bool)cb_skip_freeze_time.IsChecked;
+                        });
+                        if (stopWatchThisRound == null || (isSkipFreezeTime && !isFreezetimeEnded))
                         {
                             continue;
                         }
