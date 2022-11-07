@@ -5021,7 +5021,7 @@ namespace CSGOTacticSimulator
                     {
                         continue;
                     }
-                    usedMissileDic.Add(i, n);
+                    usedMissileDic[i] = n;
                     endTick = eventList[n].Item1.CurrentTick;
                     if (tickTime == -1)
                     {
@@ -5040,7 +5040,7 @@ namespace CSGOTacticSimulator
                     {
                         continue;
                     }
-                    usedMissileDic.Add(i, n);
+                    usedMissileDic[i] = n;
                     endTick = eventList[n].Item1.CurrentTick;
                     if (tickTime == -1)
                     {
@@ -5059,7 +5059,7 @@ namespace CSGOTacticSimulator
                     {
                         continue;
                     }
-                    usedMissileDic.Add(i, n);
+                    usedMissileDic[i] = n;
                     endTick = eventList[n].Item1.CurrentTick;
                     missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as SmokeEventArgs).Position, currentInfo.Map);
                     break;
@@ -5070,7 +5070,7 @@ namespace CSGOTacticSimulator
                     {
                         continue;
                     }
-                    usedMissileDic.Add(i, n);
+                    usedMissileDic[i] = n;
                     endTick = eventList[n].Item1.CurrentTick;
                     missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FireEventArgs).Position, currentInfo.Map);
                     break;
@@ -5110,7 +5110,7 @@ namespace CSGOTacticSimulator
                     {
                         continue;
                     }
-                    usedMissileDic.Add(i, n);
+                    usedMissileDic[i] = n;
                     endTick = eventList[n].Item1.CurrentTick;
                     missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as DecoyEventArgs).Position, currentInfo.Map);
                     break;
