@@ -4261,6 +4261,7 @@ namespace CSGOTacticSimulator
                                         character.ActiveWeaponImg.Height = GlobalDictionary.MissileWidthAndHeight;
                                         character.ActiveWeaponImg.ImgType = ImgType.Missile;
                                         activeWeaponImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 3 / 8, endWndPoint.Y - character.CharacterImg.Height * 1.5);
+                                        character.ActiveWeaponImg.MapPoint = GetMapPoint(activeWeaponImgWndPoint, ImgType.Missile);
                                     }
                                     else if (player.ActiveWeapon.Class == EquipmentClass.Equipment)
                                     {
@@ -4268,6 +4269,7 @@ namespace CSGOTacticSimulator
                                         character.ActiveWeaponImg.Height = GlobalDictionary.PropsWidthAndHeight;
                                         character.ActiveWeaponImg.ImgType = ImgType.Props;
                                         activeWeaponImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 2 / 8, endWndPoint.Y - character.CharacterImg.Height * 1);
+                                        character.ActiveWeaponImg.MapPoint = GetMapPoint(activeWeaponImgWndPoint, ImgType.Props);
                                     }
                                     else
                                     {
@@ -4275,8 +4277,8 @@ namespace CSGOTacticSimulator
                                         character.ActiveWeaponImg.Height = GlobalDictionary.GunWidthAndHeight;
                                         character.ActiveWeaponImg.ImgType = ImgType.Gun;
                                         activeWeaponImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 5 / 8, endWndPoint.Y - character.CharacterImg.Height * 2);
+                                        character.ActiveWeaponImg.MapPoint = GetMapPoint(activeWeaponImgWndPoint, ImgType.Gun);
                                     }
-                                    character.ActiveWeaponImg.MapPoint = GetMapPoint(activeWeaponImgWndPoint, ImgType.Nothing);
                                     string[] files = Directory.GetFiles(System.IO.Path.Combine(Global.GlobalDictionary.exePath, "img"), "*.png", SearchOption.TopDirectoryOnly);
                                     foreach (string file in files)
                                     {
@@ -4297,7 +4299,7 @@ namespace CSGOTacticSimulator
                                 {
                                     character.OtherImg.Width = character.CharacterImg.Width * 1.5;
                                     character.OtherImg.Height = character.CharacterImg.Height * 1.5;
-                                    Point otherImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width, endWndPoint.Y - character.CharacterImg.Height * -3 / 8);
+                                    Point otherImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 1.5, endWndPoint.Y - character.CharacterImg.Height * -3 / 8);
                                     character.OtherImg.MapPoint = GetMapPoint(otherImgWndPoint, ImgType.Nothing);
                                     character.OtherImg.ImgType = ImgType.Nothing;
                                     Canvas.SetLeft(character.OtherImg, otherImgWndPoint.X);
@@ -4305,7 +4307,7 @@ namespace CSGOTacticSimulator
 
                                     character.StatusImg.Width = character.CharacterImg.Width * 1.5;
                                     character.StatusImg.Height = character.CharacterImg.Height * 1.5;
-                                    Point statusImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width, endWndPoint.Y - character.CharacterImg.Height * 8 / 8);
+                                    Point statusImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 1.5, endWndPoint.Y - character.CharacterImg.Height * 8 / 8);
                                     character.StatusImg.MapPoint = GetMapPoint(statusImgWndPoint, ImgType.Nothing);
                                     character.StatusImg.ImgType = ImgType.Nothing;
                                     Canvas.SetLeft(character.StatusImg, statusImgWndPoint.X);
@@ -4317,7 +4319,7 @@ namespace CSGOTacticSimulator
                                     {
                                         character.OtherImg.Width = character.CharacterImg.Width * 1.5;
                                         character.OtherImg.Height = character.CharacterImg.Height * 1.5;
-                                        Point otherImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width, endWndPoint.Y - character.CharacterImg.Height * 3 / 8);
+                                        Point otherImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 1.5, endWndPoint.Y - character.CharacterImg.Height * 3 / 8);
                                         character.OtherImg.MapPoint = GetMapPoint(otherImgWndPoint, ImgType.Nothing);
                                         character.OtherImg.ImgType = ImgType.Nothing;
                                         Canvas.SetLeft(character.OtherImg, otherImgWndPoint.X);
@@ -4327,7 +4329,7 @@ namespace CSGOTacticSimulator
                                     {
                                         character.StatusImg.Width = character.CharacterImg.Width * 1.5;
                                         character.StatusImg.Height = character.CharacterImg.Height * 1.5;
-                                        Point statusImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width, endWndPoint.Y - character.CharacterImg.Height * 3 / 8);
+                                        Point statusImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 1.5, endWndPoint.Y - character.CharacterImg.Height * 3 / 8);
                                         character.StatusImg.MapPoint = GetMapPoint(statusImgWndPoint, ImgType.Nothing);
                                         character.StatusImg.ImgType = ImgType.Nothing;
                                         Canvas.SetLeft(character.StatusImg, statusImgWndPoint.X);
@@ -4515,6 +4517,13 @@ namespace CSGOTacticSimulator
             {
                 return;
             }
+            if ((currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Heavy ||
+                (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.SMG ||
+                (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Pistol ||
+                (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Rifle)
+            {
+                return;
+            }
 
             string[] files = Directory.GetFiles(System.IO.Path.Combine(Global.GlobalDictionary.exePath, "img"), "*.png", SearchOption.TopDirectoryOnly);
 
@@ -4535,6 +4544,7 @@ namespace CSGOTacticSimulator
                         double tan = Math.Tan(player.ViewDirectionX * Math.PI / 180);
                         Point direction = new Point(0, 0);
                         Point mapPoint = DemoPointToMapPoint(player.Position, currentEvent.Item1.Map);
+                        Point wndPoint = new Point();
                         if (player.IsAlive)
                         {
                             if (player.ViewDirectionX < -270 || (player.ViewDirectionX > -90 && player.ViewDirectionX < 90) || player.ViewDirectionX > 270)
@@ -4569,20 +4579,22 @@ namespace CSGOTacticSimulator
                             tSImage.Width = GlobalDictionary.MissileWidthAndHeight;
                             tSImage.Height = GlobalDictionary.MissileWidthAndHeight;
                             tSImage.ImgType = ImgType.Missile;
+                            wndPoint = GetWndPoint(tSImage.MapPoint, ImgType.Missile);
                         }
                         else if ((currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Equipment)
                         {
                             tSImage.Width = GlobalDictionary.PropsWidthAndHeight;
                             tSImage.Height = GlobalDictionary.PropsWidthAndHeight;
                             tSImage.ImgType = ImgType.Props;
+                            wndPoint = GetWndPoint(tSImage.MapPoint, ImgType.Props);
                         }
                         else
                         {
                             tSImage.Width = GlobalDictionary.GunWidthAndHeight;
                             tSImage.Height = GlobalDictionary.GunWidthAndHeight;
                             tSImage.ImgType = ImgType.Gun;
+                            wndPoint = GetWndPoint(tSImage.MapPoint, ImgType.Gun);
                         }
-                        Point wndPoint = GetWndPoint(tSImage.MapPoint, ImgType.MissileEffect);
                         Canvas.SetLeft(tSImage, wndPoint.X);
                         Canvas.SetTop(tSImage, wndPoint.Y);
                         c_runcanvas.Children.Add(tSImage);
@@ -4603,7 +4615,7 @@ namespace CSGOTacticSimulator
                 {
                     ++tickCount;
                 }
-                if (tickCount == 200)
+                if (tickCount == 80)
                 {
                     return false;
                 }
