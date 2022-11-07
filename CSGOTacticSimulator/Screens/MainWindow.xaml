@@ -194,7 +194,10 @@
                 <TextBlock x:Name="tb_player10" Grid.Column="3" Grid.Row="5" Visibility="Visible" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
             </Grid>
         </Grid>
-        <Button x:Name="btn_minimize" Style="{StaticResource Style.ImageBackgroundButton}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="30" Width="30" Height="30" Click="btn_minimize_Click"></Button>
-        <Button x:Name="btn_restore" Style="{StaticResource Style.ImageBackgroundButton}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="30, 30, 75, 30" Width="30" Height="30" Visibility="Collapsed" Click="btn_restore_Click"></Button>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="30">
+            <Button x:Name="btn_setting" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Visibility="Visible" Click="btn_setting_Click"></Button>
+            <Button x:Name="btn_restore" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Visibility="Collapsed" Click="btn_restore_Click"></Button>
+            <Button x:Name="btn_minimize" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Click="btn_minimize_Click"></Button>
+        </StackPanel>
     </Grid>
 </Window>

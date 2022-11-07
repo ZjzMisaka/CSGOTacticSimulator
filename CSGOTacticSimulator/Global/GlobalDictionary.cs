@@ -159,6 +159,7 @@ namespace CSGOTacticSimulator.Global
         static public string errorPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "Error")).Replace("/", "\\");
         static public string minimizePath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "Minimize")).Replace("/", "\\");
         static public string restorePath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "Restore")).Replace("/", "\\");
+        static public string settingPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "Setting")).Replace("/", "\\");
         static public string forwardPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "Forward")).Replace("/", "\\");
         static public string backwardPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "Backward")).Replace("/", "\\");
         static public string autoPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "Auto")).Replace("/", "\\");
@@ -189,6 +190,7 @@ namespace CSGOTacticSimulator.Global
         static public ImageBrush backgroundBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.backgroundPath)), Stretch = Stretch.Fill };
         static public ImageBrush minimizeBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.minimizePath)), Stretch = Stretch.Uniform };
         static public ImageBrush restoreBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.restorePath)), Stretch = Stretch.Uniform };
+        static public ImageBrush settingBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.settingPath)), Stretch = Stretch.Uniform };
         static public ImageBrush forwardBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.forwardPath)), Stretch = Stretch.Uniform };
         static public ImageBrush backwardBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.backwardPath)), Stretch = Stretch.Uniform };
         static public ImageBrush autoBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri(GlobalDictionary.autoPath)), Stretch = Stretch.Uniform };

@@ -112,6 +112,7 @@ namespace CSGOTacticSimulator
             this.Background = GlobalDictionary.backgroundBrush;
             btn_minimize.Background = GlobalDictionary.minimizeBrush;
             btn_restore.Background = GlobalDictionary.restoreBrush;
+            btn_setting.Background = GlobalDictionary.settingBrush;
             btn_preview.Background = GlobalDictionary.previewBrush;
             btn_run.Background = GlobalDictionary.runBrush;
             btn_pause.Background = GlobalDictionary.pauseBrush;
@@ -5495,6 +5496,9 @@ namespace CSGOTacticSimulator
         private void btn_restore_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Normal;
+        }
+        private void btn_setting_Click(object sender, RoutedEventArgs e)
+        {
         }
 
         private void c_paintcanvas_MouseMove(object sender, MouseEventArgs e)
