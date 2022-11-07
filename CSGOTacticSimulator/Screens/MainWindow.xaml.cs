@@ -2330,12 +2330,10 @@ namespace CSGOTacticSimulator
             propertiesSetter.EnableCloseButton = true;
             int res = MessageBox.Show(propertiesSetter, new RefreshList {
                 new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50, Height = 32, FontSize = 20 },
-                new CheckBox() { Content = "自动显示信息面板" , VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 150, Foreground = new SolidColorBrush(Colors.White), IsChecked = true},
                 new ButtonSpacer(200),
                 "OK" }, "需要观看第几回合? ", "选择回合数", MessageBoxImage.Question);
 
             int roundNumber = 0;
-            bool isAutoShowInfoPanel = true;
             if (res == -1)
             {
                 return;
@@ -2349,7 +2347,6 @@ namespace CSGOTacticSimulator
                     MessageBox.Show(newPropertiesSetter, "请输入数字", "错误", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
-                isAutoShowInfoPanel = (MessageBox.ButtonList[1] as CheckBox).IsChecked == true ? true : false;
             }
 
             Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>> eventDic = new Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>();
@@ -2402,7 +2399,7 @@ namespace CSGOTacticSimulator
                     stopwatchList.Clear();
 
                     Thread analizeDemoThread = new Thread(AnalizeDemo);
-                    analizeDemoThread.Start(new Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float, bool>(eventDic, roundNumber, dic, tickTime, firstFreezetimeEndedTime, isAutoShowInfoPanel));
+                    analizeDemoThread.Start(new Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float>(eventDic, roundNumber, dic, tickTime, firstFreezetimeEndedTime));
                     ThreadHelper.AddThread(analizeDemoThread);
                     ++roundNumber;
                     analizeDemoThread.Join();
@@ -3392,13 +3389,12 @@ namespace CSGOTacticSimulator
 
         private void AnalizeDemo(object obj)
         {
-            Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float, bool> tupleTemp = (Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float, bool>)obj;
+            Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float> tupleTemp = (Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float>)obj;
             Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>> eventDic = tupleTemp.Item1;
             int roundNumber = tupleTemp.Item2;
             Dictionary<long, int> dic = tupleTemp.Item3;
             float tickTime = tupleTemp.Item4;
             float firstFreezetimeEndedTime = tupleTemp.Item5;
-            bool isAutoShowInfoPanel = tupleTemp.Item6;
             // double runSpeed = double.Parse(IniHelper.ReadIni("RunSpeed", character.Weapon.ToString()));
             //double missileSpeed = double.Parse(IniHelper.ReadIni("Missile", "Speed"));
 
@@ -3431,7 +3427,7 @@ namespace CSGOTacticSimulator
             TimeSpan roundTimeSpan = new TimeSpan(0, 1, 56);
             TimeSpan timeSpanWhenBombPlanted = new TimeSpan(0);
             TimeSpan offsetWhenBombPlanted = new TimeSpan(0);
-            List<TSImage> droppedImgList = new List<TSImage>();
+            Dictionary<TSImage, int> droppedImgDic = new Dictionary<TSImage, int>();
 
             // 奇技淫巧
             // 防止中止下包 / 中止拆包后对应图标不消失
@@ -3552,11 +3548,11 @@ namespace CSGOTacticSimulator
                         }
                         else if (currentEvent.Item3 == "PlayerDropWeapon")
                         {
-                            PlayerDropWeapon(currentEvent, eventList, i, usedMissileDic, droppedImgList);
+                            PlayerDropWeapon(currentEvent, eventList, i, usedMissileDic, droppedImgDic);
                         }
                         else if (currentEvent.Item3 == "PlayerPickWeapon")
                         {
-                            PlayerPickWeapon(currentEvent, droppedImgList);
+                            PlayerPickWeapon(currentEvent, droppedImgDic);
                         }
 
                         this.Dispatcher.Invoke(() =>
@@ -3609,6 +3605,18 @@ namespace CSGOTacticSimulator
                             {
                                 usedMissileDic.Remove(i);
                             }
+                            List<TSImage> removeList = new List<TSImage>();
+                            foreach (TSImage item in droppedImgDic.Keys)
+                            {
+                                if (droppedImgDic[item] == i)
+                                {
+                                    removeList.Add(item);
+                                }
+                            }
+                            foreach (TSImage item in removeList)
+                            {
+                                droppedImgDic.Remove(item);
+                            }
                             this.Dispatcher.Invoke(() =>
                             {
                                 foreach (Character character in CharacterHelper.GetCharacters())
@@ -3618,6 +3626,10 @@ namespace CSGOTacticSimulator
                                     character.StatusImg.Visibility = Visibility.Collapsed;
                                 }
                                 c_runcanvas.Children.Clear();
+                                foreach (TSImage item in droppedImgDic.Keys)
+                                {
+                                    c_runcanvas.Children.Add(item);
+                                }
                             });
 
                             continue;
@@ -3691,6 +3703,11 @@ namespace CSGOTacticSimulator
                             continue;
                         }
 
+                        bool isAutoShowInfoPanel = false;
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            isAutoShowInfoPanel = (bool)cb_auto_show_pannel.IsChecked;
+                        });
                         if (isAutoShowInfoPanel)
                         {
                             AutoShowDefaultInfoPanel();
@@ -3706,6 +3723,11 @@ namespace CSGOTacticSimulator
                             continue;
                         }
 
+                        bool isAutoShowInfoPanel = false;
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            isAutoShowInfoPanel = (bool)cb_auto_show_pannel.IsChecked;
+                        });
                         if (isAutoShowInfoPanel)
                         {
                             AutoShowDefaultInfoPanel();
@@ -3723,6 +3745,11 @@ namespace CSGOTacticSimulator
                             continue;
                         }
 
+                        bool isAutoShowInfoPanel = false;
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            isAutoShowInfoPanel = (bool)cb_auto_show_pannel.IsChecked;
+                        });
                         if (isAutoShowInfoPanel)
                         {
                             AutoShowPersonalInfoPanel();
@@ -4443,14 +4470,14 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "PlayerDropWeapon")
                     {
-                        PlayerDropWeapon(currentEvent, eventList, i, usedMissileDic, droppedImgList);
+                        PlayerDropWeapon(currentEvent, eventList, i, usedMissileDic, droppedImgDic);
                     }
                 }
                 else if (currentEvent.Item2 is PlayerPickWeaponEventArgs)
                 {
                     if (currentEvent.Item3 == "PlayerPickWeapon")
                     {
-                        PlayerPickWeapon(currentEvent, droppedImgList);
+                        PlayerPickWeapon(currentEvent, droppedImgDic);
                     }
                 }
                 else if (currentEvent.Item2 is SayTextEventArgs)
@@ -4470,7 +4497,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void PlayerPickWeapon(Tuple<CurrentInfo, EventArgs, string, int> currentEvent, List<TSImage> droppedImgList)
+        private void PlayerPickWeapon(Tuple<CurrentInfo, EventArgs, string, int> currentEvent, Dictionary<TSImage, int> droppedImgDic)
         {
             if (currentEvent.Item2 as PlayerPickWeaponEventArgs == null)
             {
@@ -4484,7 +4511,7 @@ namespace CSGOTacticSimulator
 
             double distance = -1;
             TSImage pickImg = null;
-            foreach (TSImage img in droppedImgList)
+            foreach (TSImage img in droppedImgDic.Keys)
             {
                 if ((currentEvent.Item2 as PlayerPickWeaponEventArgs).Weapon.Weapon.ToString() == img.TagStr)
                 {
@@ -4502,12 +4529,12 @@ namespace CSGOTacticSimulator
                 this.Dispatcher.Invoke(() =>
                 {
                     c_runcanvas.Children.Remove(pickImg);
-                    droppedImgList.Remove(pickImg);
+                    droppedImgDic.Remove(pickImg);
                 });
             }
         }
 
-        private void PlayerDropWeapon(Tuple<CurrentInfo, EventArgs, string, int> currentEvent, List<Tuple<CurrentInfo, EventArgs, string, int>> eventList, int i, Dictionary<int, int> usedMissileDic, List<TSImage> droppedImgList)
+        private void PlayerDropWeapon(Tuple<CurrentInfo, EventArgs, string, int> currentEvent, List<Tuple<CurrentInfo, EventArgs, string, int>> eventList, int i, Dictionary<int, int> usedMissileDic, Dictionary<TSImage, int> droppedImgDic)
         {
             if (currentEvent.Item2 as PlayerDropWeaponEventArgs == null)
             {
@@ -4522,13 +4549,45 @@ namespace CSGOTacticSimulator
             {
                 return;
             }
-            if ((currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Heavy ||
-                (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.SMG ||
-                (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Pistol ||
-                (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Rifle ||
-                (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.OriginalString.Contains("weapon_knife"))
+            bool isShowGun = false;
+            bool isShowMissile = false;
+            bool isShowOther = false;
+            this.Dispatcher.Invoke(() =>
             {
-                return;
+                isShowGun = (bool)cb_show_drop_gun.IsChecked;
+            });
+            this.Dispatcher.Invoke(() =>
+            {
+                isShowMissile = (bool)cb_show_drop_missile.IsChecked;
+            });
+            this.Dispatcher.Invoke(() =>
+            {
+                isShowOther = (bool)cb_show_drop_other.IsChecked;
+            });
+            if (!isShowGun)
+            {
+                if ((currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Heavy ||
+                    (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.SMG ||
+                    (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Pistol ||
+                    (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Rifle ||
+                    (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.OriginalString.Contains("weapon_knife"))
+                {
+                    return;
+                }
+            }
+            if (!isShowMissile)
+            {
+                if ((currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Grenade)
+                {
+                    return;
+                }
+            }
+            if (!isShowOther)
+            {
+                if ((currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Equipment && !(currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.OriginalString.Contains("weapon_knife"))
+                {
+                    return;
+                }
             }
 
             string[] files = Directory.GetFiles(System.IO.Path.Combine(Global.GlobalDictionary.exePath, "img"), "*.png", SearchOption.TopDirectoryOnly);
@@ -4605,7 +4664,7 @@ namespace CSGOTacticSimulator
                         Canvas.SetTop(tSImage, wndPoint.Y);
                         c_runcanvas.Children.Add(tSImage);
 
-                        droppedImgList.Add(tSImage);
+                        droppedImgDic.Add(tSImage, i);
                     });
                     break;
                 }
@@ -5504,6 +5563,14 @@ namespace CSGOTacticSimulator
         }
         private void btn_setting_Click(object sender, RoutedEventArgs e)
         {
+            if (sp_setting.Visibility == Visibility.Visible)
+            {
+                sp_setting.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                sp_setting.Visibility = Visibility.Visible;
+            }
         }
 
         private void c_paintcanvas_MouseMove(object sender, MouseEventArgs e)

@@ -199,5 +199,11 @@
             <Button x:Name="btn_restore" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Visibility="Collapsed" Click="btn_restore_Click"></Button>
             <Button x:Name="btn_minimize" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Click="btn_minimize_Click"></Button>
         </StackPanel>
+        <StackPanel x:Name="sp_setting" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="65" Background="Gray" Opacity="0.85" Visibility="Collapsed">
+            <CheckBox x:Name="cb_auto_show_pannel" Margin="5" Foreground="White" IsChecked="True">是否自动显示信息面板</CheckBox>
+            <CheckBox x:Name="cb_show_drop_gun" Margin="5" Foreground="White" IsChecked="False">是否显示武器掉落</CheckBox>
+            <CheckBox x:Name="cb_show_drop_missile" Margin="5" Foreground="White" IsChecked="True">是否显示投掷物掉落</CheckBox>
+            <CheckBox x:Name="cb_show_drop_other" Margin="5" Foreground="White" IsChecked="True">是否显示其他掉落</CheckBox>
+        </StackPanel>
     </Grid>
 </Window>
