@@ -52,6 +52,8 @@ namespace DemoInfo
 
         internal int ActiveWeaponID;
 
+        public Equipment CopiedActiveWeapon { get; set; }
+
         public Equipment ActiveWeapon
         {
             get

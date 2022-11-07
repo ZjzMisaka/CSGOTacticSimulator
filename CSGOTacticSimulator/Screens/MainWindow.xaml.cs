@@ -3184,6 +3184,10 @@ namespace CSGOTacticSimulator
                     copiedPlayer.AdditionaInformations.Ping = playingParticipant.AdditionaInformations.Ping;
                     copiedPlayer.AdditionaInformations.Clantag = playingParticipant.AdditionaInformations.Clantag;
                     copiedPlayer.AdditionaInformations.TotalCashSpent = playingParticipant.AdditionaInformations.Assists;
+                    if (playingParticipant.ActiveWeapon != null)
+                    {
+                        copiedPlayer.CopiedActiveWeapon = new Equipment(playingParticipant.ActiveWeapon.OriginalString);
+                    }
                     nowParticipants.Add(copiedPlayer);
 
                     List<Equipment> missileEquipList = new List<Equipment>();
@@ -4251,12 +4255,12 @@ namespace CSGOTacticSimulator
                                 Canvas.SetLeft(character.CharacterImg, endWndPoint.X);
                                 Canvas.SetTop(character.CharacterImg, endWndPoint.Y);
 
-                                if (player.ActiveWeapon != null)
+                                if (player.CopiedActiveWeapon != null)
                                 {
                                     character.ActiveWeaponImg.Visibility = Visibility.Visible;
                                     Point activeWeaponImgWndPoint = new Point();
-                                    
-                                    if (player.ActiveWeapon.Class == EquipmentClass.Grenade)
+
+                                    if (player.CopiedActiveWeapon.Class == EquipmentClass.Grenade)
                                     {
                                         character.ActiveWeaponImg.Width = GlobalDictionary.MissileWidthAndHeight;
                                         character.ActiveWeaponImg.Height = GlobalDictionary.MissileWidthAndHeight;
@@ -4264,7 +4268,7 @@ namespace CSGOTacticSimulator
                                         activeWeaponImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 3 / 8, endWndPoint.Y - character.CharacterImg.Height * 1.5);
                                         character.ActiveWeaponImg.MapPoint = GetMapPoint(activeWeaponImgWndPoint, ImgType.Missile);
                                     }
-                                    else if (player.ActiveWeapon.Class == EquipmentClass.Equipment)
+                                    else if (player.CopiedActiveWeapon.Class == EquipmentClass.Equipment)
                                     {
                                         character.ActiveWeaponImg.Width = GlobalDictionary.PropsWidthAndHeight;
                                         character.ActiveWeaponImg.Height = GlobalDictionary.PropsWidthAndHeight;
@@ -4287,7 +4291,7 @@ namespace CSGOTacticSimulator
                                         {
                                             continue;
                                         }
-                                        if (System.IO.Path.GetFileNameWithoutExtension(file).ToLower().Contains(player.ActiveWeapon.Weapon.ToString().ToLower()))
+                                        if (System.IO.Path.GetFileNameWithoutExtension(file).ToLower().Contains(player.CopiedActiveWeapon.Weapon.ToString().ToLower()))
                                         {
                                             character.ActiveWeaponImg.Source = new BitmapImage(new Uri(file));
                                         }
@@ -4521,7 +4525,8 @@ namespace CSGOTacticSimulator
             if ((currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Heavy ||
                 (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.SMG ||
                 (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Pistol ||
-                (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Rifle)
+                (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.Class == EquipmentClass.Rifle ||
+                (currentEvent.Item2 as PlayerDropWeaponEventArgs).Weapon.OriginalString.Contains("weapon_knife"))
             {
                 return;
             }
