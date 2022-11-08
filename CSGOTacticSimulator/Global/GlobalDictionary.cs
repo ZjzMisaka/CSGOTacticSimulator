@@ -120,6 +120,14 @@ namespace CSGOTacticSimulator.Global
         static public int animationFreshTime = int.Parse(IniHelper.ReadIni("Setting", "AnimationFreshTime"));   // 刷新间隔
         static public int forwardTimeSpan = (int)(double.Parse(IniHelper.ReadIni("Setting", "ForwardTimeSpan")) * 1000);
         static public int backwardTimeSpan = (int)(double.Parse(IniHelper.ReadIni("Setting", "BackwardTimeSpan")) * 1000);
+        static public bool autoShowPannel = bool.Parse(IniHelper.ReadIni("Setting", "AutoShowPannel"));
+        static public bool showDropGun = bool.Parse(IniHelper.ReadIni("Setting", "ShowDropGun"));
+        static public bool showDropMissile = bool.Parse(IniHelper.ReadIni("Setting", "ShowDropMissile"));
+        static public bool showDropOther = bool.Parse(IniHelper.ReadIni("Setting", "ShowDropOther"));
+        static public bool skipFreezeTime = bool.Parse(IniHelper.ReadIni("Setting", "SkipFreezeTime"));
+        static public bool showLoad = bool.Parse(IniHelper.ReadIni("Setting", "ShowLoad"));
+        static public bool showKill = bool.Parse(IniHelper.ReadIni("Setting", "ShowKill"));
+        static public bool showSay = bool.Parse(IniHelper.ReadIni("Setting", "ShowSay"));
 
         static public double walkToRunRatio = double.Parse(IniHelper.ReadIni("Ratio", "WalkToRun"));
         static public double squatToRunRatio = double.Parse(IniHelper.ReadIni("Ratio", "SquatToRun"));

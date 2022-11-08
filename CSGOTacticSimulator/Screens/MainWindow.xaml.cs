@@ -123,6 +123,15 @@ namespace CSGOTacticSimulator
             btn_backward.Background = GlobalDictionary.backwardBrush;
             btn_auto.Background = GlobalDictionary.autoBrush;
 
+            cb_auto_show_pannel.IsChecked = GlobalDictionary.autoShowPannel;
+            cb_show_drop_gun.IsChecked = GlobalDictionary.showDropGun;
+            cb_show_drop_missile.IsChecked = GlobalDictionary.showDropMissile;
+            cb_show_drop_other.IsChecked = GlobalDictionary.showDropOther;
+            cb_skip_freeze_time.IsChecked = GlobalDictionary.skipFreezeTime;
+            cb_show_load.IsChecked = GlobalDictionary.showLoad;
+            cb_show_kill.IsChecked = GlobalDictionary.showKill;
+            cb_show_say.IsChecked = GlobalDictionary.showSay;
+
             AddMapsFromFolder(GlobalDictionary.mapFolderPath);
             tb_select_folder.Text = GlobalDictionary.mapFolderPath;
 
@@ -150,8 +159,16 @@ namespace CSGOTacticSimulator
 
             IniHelper.WriteIni("Window", "Width", this.Width.ToString());
             IniHelper.WriteIni("Window", "Height", this.Height.ToString());
+            IniHelper.WriteIni("Setting", "AutoShowPannel", ((bool)cb_auto_show_pannel.IsChecked).ToString());
+            IniHelper.WriteIni("Setting", "ShowDropGun", ((bool)cb_show_drop_gun.IsChecked).ToString());
+            IniHelper.WriteIni("Setting", "ShowDropMissile", ((bool)cb_show_drop_missile.IsChecked).ToString());
+            IniHelper.WriteIni("Setting", "ShowDropOther", ((bool)cb_show_drop_other.IsChecked).ToString());
+            IniHelper.WriteIni("Setting", "SkipFreezeTime", ((bool)cb_skip_freeze_time.IsChecked).ToString());
+            IniHelper.WriteIni("Setting", "ShowLoad", ((bool)cb_show_load.IsChecked).ToString());
+            IniHelper.WriteIni("Setting", "ShowKill", ((bool)cb_show_kill.IsChecked).ToString());
+            IniHelper.WriteIni("Setting", "ShowSay", ((bool)cb_show_say.IsChecked).ToString());
 
-            Application.Current.Shutdown(-1);
+            Environment.Exit(0);
         }
 
 
@@ -4368,7 +4385,7 @@ namespace CSGOTacticSimulator
                                     {
                                         character.OtherImg.Width = character.CharacterImg.Width * 1.5;
                                         character.OtherImg.Height = character.CharacterImg.Height * 1.5;
-                                        Point otherImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 1.5, endWndPoint.Y - character.CharacterImg.Height * 3 / 8);
+                                        Point otherImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 1.5, endWndPoint.Y - character.CharacterImg.Height * 2 / 8);
                                         character.OtherImg.MapPoint = GetMapPoint(otherImgWndPoint, ImgType.Nothing);
                                         character.OtherImg.ImgType = ImgType.Nothing;
                                         Canvas.SetLeft(character.OtherImg, otherImgWndPoint.X);
@@ -4378,7 +4395,7 @@ namespace CSGOTacticSimulator
                                     {
                                         character.StatusImg.Width = character.CharacterImg.Width * 1.5;
                                         character.StatusImg.Height = character.CharacterImg.Height * 1.5;
-                                        Point statusImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 1.5, endWndPoint.Y - character.CharacterImg.Height * 3 / 8);
+                                        Point statusImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 1.5, endWndPoint.Y - character.CharacterImg.Height * 2 / 8);
                                         character.StatusImg.MapPoint = GetMapPoint(statusImgWndPoint, ImgType.Nothing);
                                         character.StatusImg.ImgType = ImgType.Nothing;
                                         Canvas.SetLeft(character.StatusImg, statusImgWndPoint.X);
