@@ -2933,19 +2933,22 @@ namespace CSGOTacticSimulator
                             }
                         });
                     }
-                    string preloadedStr = "";
-                    if (demoParser.TScore + demoParser.CTScore > 0)
+                    if (cb_show_load.IsChecked == true)
                     {
-                        preloadedStr = "Round " + (demoParser.TScore + demoParser.CTScore) + " Pre-loaded\n";
+                        string preloadedStr = "";
+                        if (demoParser.TScore + demoParser.CTScore > 0)
+                        {
+                            preloadedStr = "Round " + (demoParser.TScore + demoParser.CTScore) + " Pre-loaded\n";
+                        }
+                        string roundStr = "Round " + (demoParser.TScore + demoParser.CTScore + 1) + ": [T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "]\n";
+                        te_editor.Text += preloadedStr + roundStr;
+                        if (!loggedRoundDic.ContainsKey(demoParser.TScore + demoParser.CTScore + 1) || (loggedRoundDic.ContainsKey(demoParser.TScore + demoParser.CTScore + 1) && loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1] == null))
+                        {
+                            loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1] = new List<string>();
+                        }
+                        loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1].Add(preloadedStr + roundStr);
+                        te_editor.ScrollToEnd();
                     }
-                    string roundStr = "Round " + (demoParser.TScore + demoParser.CTScore + 1) + ": [T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "]\n";
-                    te_editor.Text += preloadedStr + roundStr;
-                    if (!loggedRoundDic.ContainsKey(demoParser.TScore + demoParser.CTScore + 1) || (loggedRoundDic.ContainsKey(demoParser.TScore + demoParser.CTScore + 1) && loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1] == null))
-                    {
-                        loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1] = new List<string>();
-                    }
-                    loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1].Add(preloadedStr + roundStr);
-                    te_editor.ScrollToEnd();
                 });
 
                 DemoParser nowParser = (parseSender as DemoParser);
@@ -3052,19 +3055,22 @@ namespace CSGOTacticSimulator
                     }
                     if (isRoundAnnounceMatchStarted)
                     {
-                        string preloadedStr = "";
-                        if (demoParser.TScore + demoParser.CTScore > 0)
+                        if (cb_show_load.IsChecked == true)
                         {
-                            preloadedStr = "Round " + (demoParser.TScore + demoParser.CTScore) + " Pre-loaded\n";
+                            string preloadedStr = "";
+                            if (demoParser.TScore + demoParser.CTScore > 0)
+                            {
+                                preloadedStr = "Round " + (demoParser.TScore + demoParser.CTScore) + " Pre-loaded\n";
+                            }
+                            string roundStr = "Round " + (demoParser.TScore + demoParser.CTScore + 1) + ": [T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "]\n";
+                            te_editor.Text += preloadedStr + roundStr;
+                            if (!loggedRoundDic.ContainsKey(demoParser.TScore + demoParser.CTScore + 1) || (loggedRoundDic.ContainsKey(demoParser.TScore + demoParser.CTScore + 1) && loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1] == null))
+                            {
+                                loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1] = new List<string>();
+                            }
+                            loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1].Add(preloadedStr + roundStr);
+                            te_editor.ScrollToEnd();
                         }
-                        string roundStr = "Round " + (demoParser.TScore + demoParser.CTScore + 1) + ": [T: " + demoParser.TScore + "; CT: " + demoParser.CTScore + "]\n";
-                        te_editor.Text += preloadedStr + roundStr;
-                        if (!loggedRoundDic.ContainsKey(demoParser.TScore + demoParser.CTScore + 1) || (loggedRoundDic.ContainsKey(demoParser.TScore + demoParser.CTScore + 1) && loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1] == null))
-                        {
-                            loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1] = new List<string>();
-                        }
-                        loggedRoundDic[demoParser.TScore + demoParser.CTScore + 1].Add(preloadedStr + roundStr);
-                        te_editor.ScrollToEnd();
                     }
                 });
 
@@ -4717,8 +4723,11 @@ namespace CSGOTacticSimulator
         {
             te_editor.Dispatcher.Invoke(() =>
             {
-                te_editor.Text += "[" + name + "] " + text + "\n";
-                te_editor.ScrollToEnd();
+                if (cb_show_say.IsChecked == true)
+                {
+                    te_editor.Text += "[" + name + "] " + text + "\n";
+                    te_editor.ScrollToEnd();
+                }
             });
         }
 
@@ -5237,64 +5246,67 @@ namespace CSGOTacticSimulator
         {
             te_editor.Dispatcher.Invoke(() =>
             {
-                string skipInfo = "";
-                if (isSkip)
+                if (cb_show_kill.IsChecked == true)
                 {
-                    skipInfo = " (blind or with flash information is unknown)";
-                }
-
-                string headShotStr = "";
-                if (playerKilledEventArgs.Headshot)
-                {
-                    headShotStr += " [headshot]";
-                }
-
-                string blindStr = "";
-                foreach (long steamId in dic.Keys)
-                {
-                    if (playerKilledEventArgs.Killer != null && playerKilledEventArgs.Killer.SteamID == steamId)
+                    string skipInfo = "";
+                    if (isSkip)
                     {
-                        if (CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Visibility == Visibility.Visible)
+                        skipInfo = " (blind or with flash information is unknown)";
+                    }
+
+                    string headShotStr = "";
+                    if (playerKilledEventArgs.Headshot)
+                    {
+                        headShotStr += " [headshot]";
+                    }
+
+                    string blindStr = "";
+                    foreach (long steamId in dic.Keys)
+                    {
+                        if (playerKilledEventArgs.Killer != null && playerKilledEventArgs.Killer.SteamID == steamId)
                         {
-                            blindStr += " [blind]";
+                            if (CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Visibility == Visibility.Visible)
+                            {
+                                blindStr += " [blind]";
+                            }
                         }
                     }
-                }
 
-                string withFlashStr = "";
-                long withFlashSteamId = -1;
-                foreach (long steamId in dic.Keys)
-                {
-                    if (playerKilledEventArgs.Victim != null && playerKilledEventArgs.Victim.SteamID == steamId)
+                    string withFlashStr = "";
+                    long withFlashSteamId = -1;
+                    foreach (long steamId in dic.Keys)
                     {
-                        if (CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Visibility == Visibility.Visible)
+                        if (playerKilledEventArgs.Victim != null && playerKilledEventArgs.Victim.SteamID == steamId)
                         {
-                            withFlashSteamId = (long)CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Tag;
-                            withFlashStr += (" [with flashbang by " + CharacterHelper.GetCharacter(dic[withFlashSteamId]).Name + "]");
+                            if (CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Visibility == Visibility.Visible)
+                            {
+                                withFlashSteamId = (long)CharacterHelper.GetCharacter(dic[steamId]).StatusImg.Tag;
+                                withFlashStr += (" [with flashbang by " + CharacterHelper.GetCharacter(dic[withFlashSteamId]).Name + "]");
+                            }
                         }
                     }
-                }
 
-                string assisterStr = "";
-                if (playerKilledEventArgs.Assister != null && playerKilledEventArgs.Assister.SteamID != withFlashSteamId)
-                {
-                    string teammateStr = "";
-                    if (playerKilledEventArgs.Assister != null && playerKilledEventArgs.Victim != null && playerKilledEventArgs.Assister.Team == playerKilledEventArgs.Victim.Team)
+                    string assisterStr = "";
+                    if (playerKilledEventArgs.Assister != null && playerKilledEventArgs.Assister.SteamID != withFlashSteamId)
                     {
-                        teammateStr = " (team damage)";
+                        string teammateStr = "";
+                        if (playerKilledEventArgs.Assister != null && playerKilledEventArgs.Victim != null && playerKilledEventArgs.Assister.Team == playerKilledEventArgs.Victim.Team)
+                        {
+                            teammateStr = " (team damage)";
+                        }
+                        assisterStr = " [with " + playerKilledEventArgs.Assister.Name + teammateStr + "]";
                     }
-                    assisterStr = " [with " + playerKilledEventArgs.Assister.Name + teammateStr + "]";
-                }
 
-                string teamkillStr = "";
-                if (playerKilledEventArgs.Killer != null && playerKilledEventArgs.Victim != null && playerKilledEventArgs.Killer.Team == playerKilledEventArgs.Victim.Team)
-                {
-                    teamkillStr = " [team kill]";
-                }
+                    string teamkillStr = "";
+                    if (playerKilledEventArgs.Killer != null && playerKilledEventArgs.Victim != null && playerKilledEventArgs.Killer.Team == playerKilledEventArgs.Victim.Team)
+                    {
+                        teamkillStr = " [team kill]";
+                    }
 
-                string killerWeaponString = playerKilledEventArgs.Weapon.Weapon.ToString();
-                te_editor.Text += "Round " + (currentInfo.CtScore + currentInfo.TScore + 1) + ": " + playerKilledEventArgs.Killer.Name + " killed " + playerKilledEventArgs.Victim.Name + " by " + killerWeaponString + headShotStr + assisterStr + blindStr + withFlashStr + teamkillStr + skipInfo + "\n";
-                te_editor.ScrollToEnd();
+                    string killerWeaponString = playerKilledEventArgs.Weapon.Weapon.ToString();
+                    te_editor.Text += "Round " + (currentInfo.CtScore + currentInfo.TScore + 1) + ": " + playerKilledEventArgs.Killer.Name + " killed " + playerKilledEventArgs.Victim.Name + " by " + killerWeaponString + headShotStr + assisterStr + blindStr + withFlashStr + teamkillStr + skipInfo + "\n";
+                    te_editor.ScrollToEnd();
+                }
             });
         }
 
