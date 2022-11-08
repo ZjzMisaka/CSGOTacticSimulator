@@ -157,16 +157,16 @@ namespace CSGOTacticSimulator
             }
             Stop();
 
-            IniHelper.WriteIni("Window", "Width", this.Width.ToString());
-            IniHelper.WriteIni("Window", "Height", this.Height.ToString());
-            IniHelper.WriteIni("Setting", "AutoShowPannel", ((bool)cb_auto_show_pannel.IsChecked).ToString());
-            IniHelper.WriteIni("Setting", "ShowDropGun", ((bool)cb_show_drop_gun.IsChecked).ToString());
-            IniHelper.WriteIni("Setting", "ShowDropMissile", ((bool)cb_show_drop_missile.IsChecked).ToString());
-            IniHelper.WriteIni("Setting", "ShowDropOther", ((bool)cb_show_drop_other.IsChecked).ToString());
-            IniHelper.WriteIni("Setting", "SkipFreezeTime", ((bool)cb_skip_freeze_time.IsChecked).ToString());
-            IniHelper.WriteIni("Setting", "ShowLoad", ((bool)cb_show_load.IsChecked).ToString());
-            IniHelper.WriteIni("Setting", "ShowKill", ((bool)cb_show_kill.IsChecked).ToString());
-            IniHelper.WriteIni("Setting", "ShowSay", ((bool)cb_show_say.IsChecked).ToString());
+            IniHelper.WriteIni("Window", "Width", " " + this.Width.ToString());
+            IniHelper.WriteIni("Window", "Height", " " + this.Height.ToString());
+            IniHelper.WriteIni("Setting", "AutoShowPannel", " " + ((bool)cb_auto_show_pannel.IsChecked).ToString());
+            IniHelper.WriteIni("Setting", "ShowDropGun", " " + ((bool)cb_show_drop_gun.IsChecked).ToString());
+            IniHelper.WriteIni("Setting", "ShowDropMissile", " " + ((bool)cb_show_drop_missile.IsChecked).ToString());
+            IniHelper.WriteIni("Setting", "ShowDropOther", " " + ((bool)cb_show_drop_other.IsChecked).ToString());
+            IniHelper.WriteIni("Setting", "SkipFreezeTime", " " + ((bool)cb_skip_freeze_time.IsChecked).ToString());
+            IniHelper.WriteIni("Setting", "ShowLoad", " " + ((bool)cb_show_load.IsChecked).ToString());
+            IniHelper.WriteIni("Setting", "ShowKill", " " + ((bool)cb_show_kill.IsChecked).ToString());
+            IniHelper.WriteIni("Setting", "ShowSay", " " + ((bool)cb_show_say.IsChecked).ToString());
 
             Environment.Exit(0);
         }
