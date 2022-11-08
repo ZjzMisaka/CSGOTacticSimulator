@@ -4264,15 +4264,15 @@ namespace CSGOTacticSimulator
                                 c_runcanvas.Children.Remove(character.CharacterImg);
                                 c_runcanvas.Children.Remove(nameLabel);
                                 c_runcanvas.Children.Remove(numberLabel);
-                                if (character.ActiveWeaponImg.Visibility == Visibility.Visible)
+                                if (c_runcanvas.Children.Contains(character.ActiveWeaponImg))
                                 {
                                     c_runcanvas.Children.Remove(character.ActiveWeaponImg);
                                 }
-                                if (character.OtherImg.Visibility == Visibility.Visible)
+                                if (c_runcanvas.Children.Contains(character.OtherImg))
                                 {
                                     c_runcanvas.Children.Remove(character.OtherImg);
                                 }
-                                if (character.StatusImg.Visibility == Visibility.Visible)
+                                if (c_runcanvas.Children.Contains(character.StatusImg))
                                 {
                                     c_runcanvas.Children.Remove(character.StatusImg);
                                 }
@@ -6813,6 +6813,11 @@ namespace CSGOTacticSimulator
                     (element as TSImage).Height = tb_player1.ActualHeight;
                 }
             }
+        }
+
+        private void sp_setting_MouseLeave(object sender, MouseEventArgs e)
+        {
+            sp_setting.Visibility = Visibility.Collapsed;
         }
     }
 }
