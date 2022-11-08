@@ -2411,6 +2411,10 @@ namespace CSGOTacticSimulator
                 }
 
                 roundNumber = -1;
+                this.Dispatcher.Invoke(() =>
+                {
+                    Stop();
+                });
             });
             totalThread.Name = "totalThread";
             totalThread.Start();
@@ -2433,6 +2437,8 @@ namespace CSGOTacticSimulator
             int lastPlayerKilledIndex = 0;
 
             te_editor.Text = "";
+            te_editor.IsReadOnly = true;
+
             if (float.IsNaN(parser.TickTime))
             {
                 int resTickTime = MessageBox.Show(propertiesSetter, new RefreshList { new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50, Height = 32, FontSize = 20 }, new ButtonSpacer(350), "OK" }, "该demo是多少ticks的?", "未知ticks", MessageBoxImage.Information);
@@ -5435,6 +5441,8 @@ namespace CSGOTacticSimulator
                 me_pov.Visibility = Visibility.Collapsed;
                 g_povcontroller.Visibility = Visibility.Collapsed;
             }
+
+            te_editor.IsReadOnly = false;
         }
 
         void te_editor_TextArea_TextEntered(object sender, TextCompositionEventArgs e)
