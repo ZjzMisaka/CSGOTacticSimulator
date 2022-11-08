@@ -151,8 +151,6 @@
         </Canvas>
         <Canvas x:Name="c_previewcanvas">
         </Canvas>
-        <Canvas x:Name="c_paintcanvas" Background="Transparent" IsHitTestVisible="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseMove="c_paintcanvas_MouseMove">
-        </Canvas>
         <Grid Margin="30, 80, 30, 30">
             <Grid x:Name="g_infos" Tag="DefaultInfo" Margin="10, 30" HorizontalAlignment="Left" VerticalAlignment="Center" Opacity="0.85" Background="Gray" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
@@ -194,6 +192,8 @@
                 <TextBlock x:Name="tb_player10" Grid.Column="3" Grid.Row="5" Visibility="Visible" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
             </Grid>
         </Grid>
+        <Canvas x:Name="c_paintcanvas" Background="Transparent" IsHitTestVisible="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseMove="c_paintcanvas_MouseMove">
+        </Canvas>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="30">
             <Button x:Name="btn_setting" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Visibility="Visible" Click="btn_setting_Click"></Button>
             <Button x:Name="btn_restore" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Visibility="Collapsed" Click="btn_restore_Click"></Button>
