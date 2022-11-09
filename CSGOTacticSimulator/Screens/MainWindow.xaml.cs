@@ -315,6 +315,7 @@ namespace CSGOTacticSimulator
             name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
             name.Padding = new Thickness(0);
             name.Margin = new Thickness(0);
+            name.Tag = "name|" + character.SteamId;
             if (hp >= 0)
             {
                 name.Content += " [" + hp + "]";
@@ -336,6 +337,7 @@ namespace CSGOTacticSimulator
             number.Content = character.Number;
             number.Padding = new Thickness(0);
             number.Margin = new Thickness(0);
+            number.Tag = "number|" + character.SteamId;
 
             Canvas.SetLeft(number, wndPoint.X);
             Canvas.SetTop(number, wndPoint.Y + character.CharacterImg.Height);
@@ -343,6 +345,24 @@ namespace CSGOTacticSimulator
             character.NumberLabel = number;
 
             return number;
+        }
+
+        private Label CreateAmmolabel(Character character, string ammoInMagazineCount, Point wndPoint)
+        {
+            Label ammoInMagazine = new Label();
+            ammoInMagazine.IsHitTestVisible = false;
+            ammoInMagazine.Foreground = new SolidColorBrush(Colors.White);
+            ammoInMagazine.FontSize *= GlobalDictionary.ImageRatio * 1.0;
+            ammoInMagazine.Content = ammoInMagazineCount;
+            ammoInMagazine.Padding = new Thickness(0);
+            ammoInMagazine.Margin = new Thickness(0);
+            ammoInMagazine.Tag = "ammo|" + character.SteamId; ;
+            Canvas.SetLeft(ammoInMagazine, wndPoint.X + character.CharacterImg.Width * 3 / 4);
+            Canvas.SetTop(ammoInMagazine, wndPoint.Y - character.CharacterImg.Height * 2);
+
+            character.AmmoInMagazine = ammoInMagazine;
+
+            return ammoInMagazine;
         }
 
         public void NewCharacter(Character character, Point mapPoint)
@@ -3215,6 +3235,7 @@ namespace CSGOTacticSimulator
                     if (playingParticipant.ActiveWeapon != null)
                     {
                         copiedPlayer.CopiedActiveWeapon = new Equipment(playingParticipant.ActiveWeapon.OriginalString);
+                        copiedPlayer.CopiedActiveWeapon.AmmoInMagazine = playingParticipant.ActiveWeapon.AmmoInMagazine;
                     }
                     nowParticipants.Add(copiedPlayer);
 
@@ -4224,6 +4245,7 @@ namespace CSGOTacticSimulator
 
                             Label nameLabel = null;
                             Label numberLabel = null;
+                            Label ammoLabel = null;
                             if (!dic.ContainsKey(player.SteamID))
                             {
                                 continue;
@@ -4237,13 +4259,22 @@ namespace CSGOTacticSimulator
                             {
                                 foreach (FrameworkElement frameworkElement in c_runcanvas.Children)
                                 {
-                                    if (frameworkElement is Label)
+                                    if (frameworkElement is Label && (frameworkElement as Label).Tag != null)
                                     {
-                                        if ((frameworkElement as Label).Content.ToString().Contains((character.Name == "" ? character.Number.ToString() : character.Name)))
+                                        string[] splited = (frameworkElement as Label).Tag.ToString().Split('|');
+                                        if (splited[1] != character.SteamId.ToString())
+                                        {
+                                            continue;
+                                        }
+                                        if (splited[0] == "ammo")
+                                        {
+                                            ammoLabel = (Label)frameworkElement;
+                                        }
+                                        else if (splited[0] == "name")
                                         {
                                             nameLabel = (Label)frameworkElement;
                                         }
-                                        else if ((frameworkElement as Label).Content.ToString() == character.Number.ToString())
+                                        else if (splited[0] == "number")
                                         {
                                             numberLabel = (Label)frameworkElement;
                                         }
@@ -4305,6 +4336,10 @@ namespace CSGOTacticSimulator
                                 c_runcanvas.Children.Remove(character.CharacterImg);
                                 c_runcanvas.Children.Remove(nameLabel);
                                 c_runcanvas.Children.Remove(numberLabel);
+                                if (ammoLabel != null)
+                                {
+                                    c_runcanvas.Children.Remove(ammoLabel);
+                                }
                                 if (c_runcanvas.Children.Contains(character.ActiveWeaponImg))
                                 {
                                     c_runcanvas.Children.Remove(character.ActiveWeaponImg);
@@ -4346,6 +4381,7 @@ namespace CSGOTacticSimulator
                                         character.ActiveWeaponImg.ImgType = ImgType.Missile;
                                         activeWeaponImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 3 / 8, endWndPoint.Y - character.CharacterImg.Height * 1.5);
                                         character.ActiveWeaponImg.MapPoint = GetMapPoint(activeWeaponImgWndPoint, ImgType.Missile);
+                                        character.AmmoInMagazine.Visibility = Visibility.Collapsed;
                                     }
                                     else if (player.CopiedActiveWeapon.Class == EquipmentClass.Equipment)
                                     {
@@ -4354,14 +4390,17 @@ namespace CSGOTacticSimulator
                                         character.ActiveWeaponImg.ImgType = ImgType.Props;
                                         activeWeaponImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 2 / 8, endWndPoint.Y - character.CharacterImg.Height * 1);
                                         character.ActiveWeaponImg.MapPoint = GetMapPoint(activeWeaponImgWndPoint, ImgType.Props);
+                                        character.AmmoInMagazine.Visibility = Visibility.Collapsed;
                                     }
                                     else
                                     {
                                         character.ActiveWeaponImg.Width = GlobalDictionary.GunWidthAndHeight;
                                         character.ActiveWeaponImg.Height = GlobalDictionary.GunWidthAndHeight;
                                         character.ActiveWeaponImg.ImgType = ImgType.Gun;
-                                        activeWeaponImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 5 / 8, endWndPoint.Y - character.CharacterImg.Height * 2);
+                                        activeWeaponImgWndPoint = new Point(endWndPoint.X - character.CharacterImg.Width * 6 / 8, endWndPoint.Y - character.CharacterImg.Height * 2);
                                         character.ActiveWeaponImg.MapPoint = GetMapPoint(activeWeaponImgWndPoint, ImgType.Gun);
+                                        character.AmmoInMagazine.Visibility = Visibility.Visible;
+                                        c_runcanvas.Children.Add(CreateAmmolabel(character, player.CopiedActiveWeapon.AmmoInMagazine.ToString(), endWndPoint));
                                     }
                                     string[] files = Directory.GetFiles(System.IO.Path.Combine(Global.GlobalDictionary.exePath, "img"), "*.png", SearchOption.TopDirectoryOnly);
                                     foreach (string file in files)
@@ -6742,11 +6781,20 @@ namespace CSGOTacticSimulator
             }
 
             List<Character> characterList = CharacterHelper.GetCharacters();
+            Dictionary<string, string> ammoDic = new Dictionary<string, string>();
 
             foreach (UIElement obj in uIElementList)
             {
                 if (obj is Label)
                 {
+                    if ((obj as Label).Tag != null)
+                    {
+                        string[] splited = (obj as Label).Tag.ToString().Split('|');
+                        if (splited[0] == "ammo")
+                        {
+                            ammoDic.Add(splited[1], (obj as Label).Content.ToString());
+                        }
+                    }
                     c_runcanvas.Children.Remove(obj);
                 }
                 else if (obj is Line)
@@ -6818,6 +6866,12 @@ namespace CSGOTacticSimulator
 
                     c_runcanvas.Children.Add(img);
                 }
+            }
+
+            foreach (string steamId in ammoDic.Keys)
+            {
+                Character character = CharacterHelper.GetCharacter(long.Parse(steamId));
+                c_runcanvas.Children.Add(CreateAmmolabel(character, ammoDic[steamId], GetWndPoint(character.MapPoint, ImgType.Character)));
             }
 
             foreach (Character character in characterList)

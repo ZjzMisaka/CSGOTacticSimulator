@@ -124,6 +124,8 @@ namespace CSGOTacticSimulator.Model
         private Label characterLabel = new Label();
         public Label NumberLabel { get => numberLabel; set => numberLabel = value; }
         private Label numberLabel = new Label();
+        public Label AmmoInMagazine { get => ammoInMagazine; set => ammoInMagazine = value; }
+        private Label ammoInMagazine = new Label();
         public AdditionalPlayerInformation AdditionalPlayerInformation { get => additionalPlayerInformation; set => additionalPlayerInformation = value; }
         private AdditionalPlayerInformation additionalPlayerInformation = new AdditionalPlayerInformation();
         public LastAliveInfo LastAliveInfo { get => lastAliveInfo; set => lastAliveInfo = value; }
