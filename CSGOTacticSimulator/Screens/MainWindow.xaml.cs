@@ -306,7 +306,7 @@ namespace CSGOTacticSimulator
             OnSizeChanged(this, null);
         }
 
-        private Label CreateChacterlabel(Character character, Point wndPoint, int hp)
+        private Label CreateChacterlabel(Character character, Point wndPoint)
         {
             Label name = new Label();
             name.IsHitTestVisible = false;
@@ -316,13 +316,46 @@ namespace CSGOTacticSimulator
             name.Padding = new Thickness(0);
             name.Margin = new Thickness(0);
             name.Tag = "name|" + character.SteamId;
+
+            string khStr = "";
+            if (character.Armor > 0)
+            {
+                khStr += "🦺";
+            }
+            if (character.HasHelmet)
+            {
+                khStr += "⛑";
+            }
+            if (khStr != "")
+            {
+                khStr = " | " + khStr;
+            }
+
+            if (character.Hp >= 0)
+            {
+                name.Content += " [" + character.Hp + khStr + "]";
+            }
+            Canvas.SetLeft(name, wndPoint.X + character.CharacterImg.Width / 2);
+            Canvas.SetTop(name, wndPoint.Y + character.CharacterImg.Height);
+
+            character.CharacterLabel = name;
+
+            return name;
+        }
+
+        private Label CreateChacterlabel(Character character, Point wndPoint, int hp)
+        {
+            Label name = new Label();
+            name.IsHitTestVisible = false;
+            name.Padding = new Thickness(0);
+            name.Margin = new Thickness(0);
+            name.Tag = "name|" + character.SteamId;
             if (hp >= 0)
             {
                 name.Content += " [" + hp + "]";
             }
             Canvas.SetLeft(name, wndPoint.X + character.CharacterImg.Width / 2);
             Canvas.SetTop(name, wndPoint.Y + character.CharacterImg.Height);
-
             character.CharacterLabel = name;
 
             return name;
@@ -1969,6 +2002,20 @@ namespace CSGOTacticSimulator
                             equips = "none";
                         }
 
+                        string khStr = "";
+                        if (character.Armor > 0)
+                        {
+                            khStr += "🦺";
+                        }
+                        if (character.HasHelmet)
+                        {
+                            khStr += "⛑";
+                        }
+                        if (khStr != "")
+                        {
+                            khStr = " | " + khStr;
+                        }
+
                         tb_infos.Text =
                         "Number: " + character.Number +
                         "\nName: " + character.Name +
@@ -1976,7 +2023,7 @@ namespace CSGOTacticSimulator
                         "\n🧨Missiles: " + missileEquipments +
                         "\n⚙Equipment: " + equips +
                         "\n💴Money: " + money +
-                        "\n♥HP: " + character.Hp;
+                        "\n♥HP: " + character.Hp + khStr;
                     }
 
                     break;
@@ -2135,6 +2182,20 @@ namespace CSGOTacticSimulator
                                     equips = "none";
                                 }
 
+                                string khStr = "";
+                                if (character.Armor > 0)
+                                {
+                                    khStr += "🦺";
+                                }
+                                if (character.HasHelmet)
+                                {
+                                    khStr += "⛑";
+                                }
+                                if (khStr != "")
+                                {
+                                    khStr = " | " + khStr;
+                                }
+
                                 textBlock.Text =
                                 "Number: " + character.Number +
                                 "\nName: " + character.Name +
@@ -2142,7 +2203,7 @@ namespace CSGOTacticSimulator
                                 "\n🧨Missiles: " + missileEquipments +
                                 "\n⚙Equipment: " + equips +
                                 "\n💴Money: " + money +
-                                "\n♥HP: " + character.Hp;
+                                "\n♥HP: " + character.Hp + khStr;
                             }
                             else
                             {
@@ -4347,6 +4408,8 @@ namespace CSGOTacticSimulator
                                 character.WeaponEquipmentList = weaponEquipList;
                                 character.EquipList = equipList;
                                 character.Hp = player.HP;
+                                character.Armor = player.Armor;
+                                character.HasHelmet = player.HasHelmet;
                                 character.Money = player.Money;
                                 character.IsT = player.Team == Team.Terrorist;
                                 character.IsAlive = player.IsAlive;
@@ -4515,7 +4578,7 @@ namespace CSGOTacticSimulator
                                 character.CharacterImg.MapPoint = endMapPoint;
                                 character.CharacterImg.ImgType = ImgType.Character;
                                 c_runcanvas.Children.Add(character.CharacterImg);
-                                c_runcanvas.Children.Add(CreateChacterlabel(character, endWndPoint, player.HP));
+                                c_runcanvas.Children.Add(CreateChacterlabel(character, endWndPoint));
                                 c_runcanvas.Children.Add(CreateChacterNumberlabel(character, endWndPoint));
                                 if (character.ActiveWeaponImg.Visibility == Visibility.Visible)
                                 {
@@ -6866,7 +6929,7 @@ namespace CSGOTacticSimulator
                         {
                             if (character.CharacterImg.Equals(img))
                             {
-                                c_runcanvas.Children.Add(CreateChacterlabel(character, wndPoint, character.Hp));
+                                c_runcanvas.Children.Add(CreateChacterlabel(character, wndPoint));
                                 c_runcanvas.Children.Add(CreateChacterNumberlabel(character, wndPoint));
                             }
                         }

@@ -64,6 +64,10 @@ namespace CSGOTacticSimulator.Model
         private int hp = 0;
         public int Money { get => money; set => money = value; }
         private int money = 0;
+        public int Armor { get => armor; set => armor = value; }
+        private int armor = 0;
+        public bool HasHelmet { get => hasHelmet; set => hasHelmet = value; }
+        private bool hasHelmet = false;
         public Weapon Weapon { get => weapon; set => weapon = value; }
         private Weapon weapon = Weapon.Knife;
         public List<Equipment> WeaponEquipmentList { get => weaponEquipmentList; set => weaponEquipmentList = value; }
