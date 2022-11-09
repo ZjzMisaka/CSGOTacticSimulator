@@ -131,6 +131,7 @@ namespace CSGOTacticSimulator
             cb_show_load.IsChecked = GlobalDictionary.showLoad;
             cb_show_kill.IsChecked = GlobalDictionary.showKill;
             cb_show_say.IsChecked = GlobalDictionary.showSay;
+            cb_show_bought.IsChecked = GlobalDictionary.showBought;
 
             AddMapsFromFolder(GlobalDictionary.mapFolderPath);
             tb_select_folder.Text = GlobalDictionary.mapFolderPath;
@@ -167,6 +168,7 @@ namespace CSGOTacticSimulator
             IniHelper.WriteIni("Setting", "ShowLoad", " " + ((bool)cb_show_load.IsChecked).ToString());
             IniHelper.WriteIni("Setting", "ShowKill", " " + ((bool)cb_show_kill.IsChecked).ToString());
             IniHelper.WriteIni("Setting", "ShowSay", " " + ((bool)cb_show_say.IsChecked).ToString());
+            IniHelper.WriteIni("Setting", "ShowBought", " " + ((bool)cb_show_bought.IsChecked).ToString());
 
             Environment.Exit(0);
         }
@@ -3366,6 +3368,18 @@ namespace CSGOTacticSimulator
                 parseE.Sender = parseE.Sender.Copy();
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "SayText2", 0));
             };
+            parser.PlayerBuy += (parseSender, parseE) =>
+            {
+                if ((parser.CTScore + parser.TScore + 1) < roundNumber)
+                {
+                    return;
+                }
+                DemoParser nowParser = (parseSender as DemoParser);
+                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, null);
+                parseE.Player = parseE.Player.Copy();
+                parseE.Weapon = new Equipment(parseE.Weapon.OriginalString);
+                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "PlayerBuy", 0));
+            };
 
             te_editor.Text = "";
             Thread analyzeThread = new Thread(() =>
@@ -3582,6 +3596,10 @@ namespace CSGOTacticSimulator
                         else if (currentEvent.Item3 == "PlayerPickWeapon")
                         {
                             PlayerPickWeapon(currentEvent, droppedImgDic);
+                        }
+                        else if (currentEvent.Item3 == "PlayerBuy")
+                        {
+                            PrintBoughtLog((eventArgs as PlayerBuyEventArgs).Player.Name, (eventArgs as PlayerBuyEventArgs).Weapon.Weapon.ToString());
                         }
 
                         this.Dispatcher.Invoke(() =>
@@ -4528,6 +4546,13 @@ namespace CSGOTacticSimulator
                         SayText((eventArgs as SayText2EventArgs).Sender.Name, (eventArgs as SayText2EventArgs).Text.Replace("\n", ""));
                     }
                 }
+                else if (currentEvent.Item2 is PlayerBuyEventArgs)
+                {
+                    if (currentEvent.Item3 == "PlayerBuy")
+                    {
+                        PrintBoughtLog((eventArgs as PlayerBuyEventArgs).Player.Name, (eventArgs as PlayerBuyEventArgs).Weapon.Weapon.ToString());
+                    }
+                }
             }
         }
 
@@ -4743,6 +4768,17 @@ namespace CSGOTacticSimulator
                 if (cb_show_say.IsChecked == true)
                 {
                     te_editor.Text += "[" + name + "] " + text + "\n";
+                    te_editor.ScrollToEnd();
+                }
+            });
+        }
+        private void PrintBoughtLog(string name, string text)
+        {
+            te_editor.Dispatcher.Invoke(() =>
+            {
+                if (cb_show_bought.IsChecked == true)
+                {
+                    te_editor.Text += "[" + name + "] bought " + text + "\n";
                     te_editor.ScrollToEnd();
                 }
             });

@@ -6,9 +6,14 @@
   <Color name="TagRule" fontWeight="bold" foreground="#ff33aa33" />
   <Color name="RoundKeywords" foreground="#aa33aa33" />
   <Color name="KillInfoKeywords" foreground="#ea4436" />
+  <Color name="DoKeywords" foreground="#ee8811" />
 
   <!-- This is the main ruleset. -->
   <RuleSet>
+    
+    <Keywords color="DoKeywords">
+      <Word>bought</Word>
+    </Keywords>
 
     <Keywords color="RoundKeywords">
       <Word>Pre-loaded</Word>
