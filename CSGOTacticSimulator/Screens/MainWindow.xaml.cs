@@ -2501,6 +2501,10 @@ namespace CSGOTacticSimulator
                     }
                 }
             }
+            else
+            {
+                tickTime = parser.TickTime;
+            }
             parser.DecoyNadeEnded += (parseSender, parseE) =>
             {
                 if ((parser.CTScore + parser.TScore + 1) < roundNumber)
@@ -3204,10 +3208,6 @@ namespace CSGOTacticSimulator
                 {
                     return;
                 }
-                if (!isRoundAnnounceMatchStarted)
-                {
-                    return;
-                }
                 //for (int i = 1; i < parser.Participants.Count(); ++i)
                 //{
                 //    dic[parser.Participants.ElementAt(i).SteamID].Add(new Tuple<DemoParser, EventArgs, string>(parseSenderClone, parseE, "TickDone"));
@@ -3475,6 +3475,7 @@ namespace CSGOTacticSimulator
 
             stopWatch = new Stopwatch();
             stopWatch.Start();
+            stopWatchThisRound = new Stopwatch();
             float elapsedTimeMillisecondInDemo = 0;
 
             int thisOffset = 0;
@@ -3771,6 +3772,14 @@ namespace CSGOTacticSimulator
                             continue;
                         }
 
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            if (!(bool)cb_skip_freeze_time.IsChecked)
+                            {
+                                stopWatchThisRound.Start();
+                            }
+                        });
+
                         bool isAutoShowInfoPanel = false;
                         this.Dispatcher.Invoke(() =>
                         {
@@ -3790,6 +3799,14 @@ namespace CSGOTacticSimulator
                         {
                             continue;
                         }
+
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            if (!(bool)cb_skip_freeze_time.IsChecked)
+                            {
+                                stopWatchThisRound.Start();
+                            }
+                        });
 
                         bool isAutoShowInfoPanel = false;
                         this.Dispatcher.Invoke(() =>
@@ -4001,8 +4018,11 @@ namespace CSGOTacticSimulator
                             continue;
                         }
 
-                        stopWatchThisRound = new Stopwatch();
-                        stopWatchThisRound.Start();
+                        if (!stopWatchThisRound.IsRunning)
+                        {
+                            stopWatchThisRound.Start();
+                        }
+                        
                         isFreezetimeEnded = true;
                     }
                 }
@@ -4010,7 +4030,7 @@ namespace CSGOTacticSimulator
                 {
                     if (currentEvent.Item3 == "WeaponFired")
                     {
-                        if (stopWatchThisRound == null || !isFreezetimeEnded)
+                        if (!isFreezetimeEnded)
                         {
                             continue;
                         }
@@ -4154,7 +4174,7 @@ namespace CSGOTacticSimulator
                         {
                             isSkipFreezeTime = (bool)cb_skip_freeze_time.IsChecked;
                         });
-                        if (stopWatchThisRound == null || (isSkipFreezeTime && !isFreezetimeEnded))
+                        if (!stopWatchThisRound.IsRunning || (isSkipFreezeTime && !isFreezetimeEnded))
                         {
                             continue;
                         }
@@ -6871,7 +6891,10 @@ namespace CSGOTacticSimulator
             foreach (string steamId in ammoDic.Keys)
             {
                 Character character = CharacterHelper.GetCharacter(long.Parse(steamId));
-                c_runcanvas.Children.Add(CreateAmmolabel(character, ammoDic[steamId], GetWndPoint(character.MapPoint, ImgType.Character)));
+                if (character != null)
+                {
+                    c_runcanvas.Children.Add(CreateAmmolabel(character, ammoDic[steamId], GetWndPoint(character.MapPoint, ImgType.Character)));
+                }
             }
 
             foreach (Character character in characterList)
