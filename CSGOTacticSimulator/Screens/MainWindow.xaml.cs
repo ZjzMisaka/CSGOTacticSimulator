@@ -3490,6 +3490,27 @@ namespace CSGOTacticSimulator
             List<KeyValuePair<int, TSImage>> missileEffectKeyValuePairList = new List<KeyValuePair<int, TSImage>>();
             List<KeyValuePair<KeyValuePair<int, int>, TSImage>> missileKeyValuePairList = new List<KeyValuePair<KeyValuePair<int, int>, TSImage>>();
             TimeSpan roundTimeSpan = new TimeSpan(0, 1, 56);
+            this.Dispatcher.Invoke(() =>
+            {
+                if (!(bool)cb_skip_freeze_time.IsChecked)
+                {
+                    for (int i = 0; i < eventList.Count; ++i)
+                    {
+                        Tuple<CurrentInfo, EventArgs, string, int> currentEvent = eventList[i];
+                        if (currentEvent.Item3 == "FreezetimeEnded")
+                        {
+                            CurrentInfo currentInfo = currentEvent.Item1;
+                            if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber)
+                            {
+                                break;
+                            }
+
+                            float freezeTime = currentInfo.CurrentTime - eventList[0].Item1.CurrentTime;
+                            roundTimeSpan += new TimeSpan(0, 0, 0, 0, (int)(freezeTime * 1000));
+                        }
+                    }
+                }
+            });
             TimeSpan timeSpanWhenBombPlanted = new TimeSpan(0);
             TimeSpan offsetWhenBombPlanted = new TimeSpan(0);
             Dictionary<TSImage, int> droppedImgDic = new Dictionary<TSImage, int>();
@@ -3511,6 +3532,14 @@ namespace CSGOTacticSimulator
                 {
                     character.CharacterImg.Width = GlobalDictionary.CharacterWidthAndHeight;
                     character.CharacterImg.Height = GlobalDictionary.CharacterWidthAndHeight;
+                }
+            });
+
+            this.Dispatcher.Invoke(() =>
+            {
+                if (!(bool)cb_skip_freeze_time.IsChecked)
+                {
+                    stopWatchThisRound.Start();
                 }
             });
 
@@ -3772,14 +3801,6 @@ namespace CSGOTacticSimulator
                             continue;
                         }
 
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            if (!(bool)cb_skip_freeze_time.IsChecked)
-                            {
-                                stopWatchThisRound.Start();
-                            }
-                        });
-
                         bool isAutoShowInfoPanel = false;
                         this.Dispatcher.Invoke(() =>
                         {
@@ -3799,14 +3820,6 @@ namespace CSGOTacticSimulator
                         {
                             continue;
                         }
-
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            if (!(bool)cb_skip_freeze_time.IsChecked)
-                            {
-                                stopWatchThisRound.Start();
-                            }
-                        });
 
                         bool isAutoShowInfoPanel = false;
                         this.Dispatcher.Invoke(() =>
@@ -5565,6 +5578,9 @@ namespace CSGOTacticSimulator
                 me_pov.Visibility = Visibility.Collapsed;
                 g_povcontroller.Visibility = Visibility.Collapsed;
             }
+
+            HideDefaultInfo();
+            HidePersonalInfo();
 
             te_editor.IsReadOnly = false;
         }
