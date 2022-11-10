@@ -47,25 +47,28 @@ namespace CSGOTacticSimulator.Helper
                 {
                     var Search = new HltvSharp.Search();
                     List<PlayerSearchItem> res = await Search.Players(name);
-                    foreach (PlayerSearchItem item in res)
+                    if (res != null)
                     {
-                        if (item.nickName == name)
+                        foreach (PlayerSearchItem item in res)
                         {
-                            bitmapImage.BeginInit();
-                            bitmapImage.UriSource = new Uri(item.pictureUrl);
-                            proAvatarLinkDic[name] = item.pictureUrl;
-                            bitmapImage.EndInit();
-                            break;
+                            if (item.nickName == name)
+                            {
+                                bitmapImage.BeginInit();
+                                bitmapImage.UriSource = new Uri(item.pictureUrl);
+                                proAvatarLinkDic[name] = item.pictureUrl;
+                                bitmapImage.EndInit();
+                                break;
+                            }
                         }
-                    }
-                    if (bitmapImage.UriSource == null)
-                    {
-                        if (res != null && res.Count > 0)
+                        if (bitmapImage.UriSource == null)
                         {
-                            bitmapImage.BeginInit();
-                            bitmapImage.UriSource = new Uri(res[0].pictureUrl);
-                            proAvatarLinkDic[name] = res[0].pictureUrl;
-                            bitmapImage.EndInit();
+                            if (res.Count > 0)
+                            {
+                                bitmapImage.BeginInit();
+                                bitmapImage.UriSource = new Uri(res[0].pictureUrl);
+                                proAvatarLinkDic[name] = res[0].pictureUrl;
+                                bitmapImage.EndInit();
+                            }
                         }
                     }
                 }
