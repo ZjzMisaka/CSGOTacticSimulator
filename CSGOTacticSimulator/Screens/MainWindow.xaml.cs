@@ -62,6 +62,7 @@ namespace CSGOTacticSimulator
         private Selector selector = null;
         private XshdSyntaxDefinition codeXshd = null;
         private XshdSyntaxDefinition logXshd = null;
+        private System.Timers.Timer hideMouseTimer = new System.Timers.Timer(1000) { Enabled = false };
         private System.Timers.Timer resizeTimer = new System.Timers.Timer(100) { Enabled = false };
         private System.Timers.Timer textBlockResizeTimer = new System.Timers.Timer(100) { Enabled = false };
         private int currentTScore = -1;
@@ -92,6 +93,7 @@ namespace CSGOTacticSimulator
             this.Width = int.Parse(IniHelper.ReadIni("Window", "Width"));
             this.Height = int.Parse(IniHelper.ReadIni("Window", "Height"));
 
+            hideMouseTimer.Elapsed += new ElapsedEventHandler(HideMouse);
             resizeTimer.Elapsed += new ElapsedEventHandler(ResizingDone);
             textBlockResizeTimer.Elapsed += new ElapsedEventHandler(TextBlockResizingDone);
 
@@ -2392,7 +2394,6 @@ namespace CSGOTacticSimulator
 
         private void ReadDemo(string filePath)
         {
-            nowRunningType = RunningType.DEM;
             ResizeMode = ResizeMode.CanResizeWithGrip;
             te_editor.Dispatcher.Invoke(() =>
             {
@@ -2474,6 +2475,9 @@ namespace CSGOTacticSimulator
                 }
             }
 
+            nowRunningType = RunningType.DEM;
+            hideMouseTimer.Stop();
+            hideMouseTimer.Start();
 
             btn_pause.Tag = "R";
             btn_pause.Background = GlobalDictionary.pauseBrush;
@@ -5620,6 +5624,8 @@ namespace CSGOTacticSimulator
 
         private void Stop(List<string> threadNameList = null)
         {
+            nowRunningType = RunningType.NONE;
+
             ThreadHelper.StopAllThread(threadNameList);
             CommandHelper.commands.Clear();
             animations.Clear();
@@ -5641,6 +5647,8 @@ namespace CSGOTacticSimulator
                 me_pov.Visibility = Visibility.Collapsed;
                 g_povcontroller.Visibility = Visibility.Collapsed;
             }
+
+            hideMouseTimer.Stop();
 
             HideDefaultInfo();
             HidePersonalInfo();
@@ -6849,6 +6857,16 @@ namespace CSGOTacticSimulator
             });
         }
 
+        private void HideMouse(object sender, ElapsedEventArgs e)
+        {
+            hideMouseTimer.Stop();
+
+            c_runcanvas.Dispatcher.Invoke(() =>
+            {
+                Mouse.OverrideCursor = Cursors.None;
+            });
+        }
+
         private void MainSizeChanged()
         {
             GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
@@ -7039,6 +7057,17 @@ namespace CSGOTacticSimulator
         private void sp_setting_MouseLeave(object sender, MouseEventArgs e)
         {
             sp_setting.Visibility = Visibility.Collapsed;
+        }
+
+        private void Window_MouseMove(object sender, MouseEventArgs e)
+        {
+            Mouse.OverrideCursor = null;
+
+            hideMouseTimer.Stop();
+            if (nowRunningType == RunningType.DEM)
+            {
+                hideMouseTimer.Start();
+            }
         }
     }
 }
