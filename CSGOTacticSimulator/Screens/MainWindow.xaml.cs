@@ -2462,7 +2462,7 @@ namespace CSGOTacticSimulator
                     MessageBox.CloseNow(3);
                 }
             });
-            TextBox tb = new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50, Height = 32, FontSize = 20 };
+            TextBox tb = new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50, Height = 25, FontSize = 16 };
             tb.PreviewTextInput += (s, e) =>
             {
                 TextBox textBox = s as TextBox;
@@ -2585,7 +2585,7 @@ namespace CSGOTacticSimulator
 
             if (float.IsNaN(parser.TickTime))
             {
-                int resTickTime = MessageBox.Show(propertiesSetter, new RefreshList { new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50, Height = 32, FontSize = 20 }, new ButtonSpacer(350), "OK" }, "该demo是多少ticks的?", "未知ticks", MessageBoxImage.Information);
+                int resTickTime = MessageBox.Show(propertiesSetter, new RefreshList { new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50, Height = 25, FontSize = 16 }, new ButtonSpacer(350), "OK" }, "该demo是多少ticks的?", "未知ticks", MessageBoxImage.Information);
                 if (resTickTime == -1)
                 {
                     return;
@@ -6143,53 +6143,53 @@ namespace CSGOTacticSimulator
             // set entirety speed
             // set camp
             // create character
-            Button buttonSpeed = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
+            Button buttonSpeed = new Button() { Visibility = Visibility.Visible, Height = 25, FontSize = 16 };
             buttonSpeed.Content = "设置速度";
-            Button buttonCamp = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
+            Button buttonCamp = new Button() { Visibility = Visibility.Visible, Height = 25, FontSize = 16 };
             buttonCamp.Content = "设置阵营";
-            Button buttonCreateCharacter = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
+            Button buttonCreateCharacter = new Button() { Visibility = Visibility.Visible, Height = 25, FontSize = 16 };
             buttonCreateCharacter.Content = "创建角色";
             buttonSpeed.Click += delegate (object sender, RoutedEventArgs e)
             {
-                MessageBox.ButtonList = new RefreshList { new Label() { Content = "设置速度", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, new TextBox() { Width = 60, Height = 32, FontSize = 20, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 10, 0, 10) }, new ButtonSpacer(200), "OK" };
+                MessageBox.ButtonList = new RefreshList { new Label() { Content = "设置速度", FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, new TextBox() { Width = 60, Height = 25, FontSize = 16, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 10, 0, 10) }, new ButtonSpacer(200), "OK" };
                 MessageBox.MessageBoxImageType = MessageBoxImage.None;
                 MessageBox.MessageText = "填写速度比率";
             };
             buttonCamp.Click += delegate (object sender, RoutedEventArgs e)
             {
                 ComboBox comboBox = new ComboBox();
-                comboBox.FontSize = 20;
+                comboBox.FontSize = 16;
                 comboBox.Width = 60;
-                comboBox.Height = 32;
+                comboBox.Height = 25;
                 comboBox.Margin = new Thickness(0, 10, 0, 10);
                 comboBox.VerticalContentAlignment = VerticalAlignment.Center;
-                comboBox.Items.Add(new ComboBoxItem() { Content = "T", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
-                comboBox.Items.Add(new ComboBoxItem() { Content = "CT", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBox.Items.Add(new ComboBoxItem() { Content = "T", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBox.Items.Add(new ComboBoxItem() { Content = "CT", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 comboBox.SelectedIndex = 0;
-                MessageBox.ButtonList = new RefreshList { new Label() { Content = "设置阵营", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, new ButtonSpacer(200), "OK" };
+                MessageBox.ButtonList = new RefreshList { new Label() { Content = "设置阵营", FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, new ButtonSpacer(200), "OK" };
                 MessageBox.MessageBoxImageType = MessageBoxImage.None;
                 MessageBox.MessageText = "选择主视角阵营";
             };
             buttonCreateCharacter.Click += delegate (object sender, RoutedEventArgs e)
             {
                 ComboBox comboBox = new ComboBox();
-                comboBox.FontSize = 20;
+                comboBox.FontSize = 16;
                 comboBox.Width = 60;
-                comboBox.Height = 32;
+                comboBox.Height = 25;
                 comboBox.VerticalContentAlignment = VerticalAlignment.Center;
-                comboBox.Items.Add(new ComboBoxItem() { Content = "T", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
-                comboBox.Items.Add(new ComboBoxItem() { Content = "CT", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBox.Items.Add(new ComboBoxItem() { Content = "T", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBox.Items.Add(new ComboBoxItem() { Content = "CT", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 comboBox.SelectedIndex = 0;
 
                 TextBox textBoxName = new TextBox();
-                textBoxName.FontSize = 20;
+                textBoxName.FontSize = 16;
                 textBoxName.Width = 60;
-                textBoxName.Height = 32;
+                textBoxName.Height = 25;
                 textBoxName.IsEnabled = false;
                 textBoxName.VerticalContentAlignment = VerticalAlignment.Center;
-                textBoxName.Height = 32;
+                textBoxName.Height = 25;
                 CheckBox checkBoxName = new CheckBox();
-                checkBoxName.FontSize = 20;
+                checkBoxName.FontSize = 16;
                 checkBoxName.Width = 60;
                 checkBoxName.Content = "别名";
                 checkBoxName.VerticalContentAlignment = VerticalAlignment.Center;
@@ -6219,7 +6219,7 @@ namespace CSGOTacticSimulator
                 gridName.Height = 50;
                 gridName.Margin = new Thickness(5);
 
-                MessageBox.ButtonList = new RefreshList { new Label() { Content = "创建角色", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, gridName, new ButtonSpacer(50), "OK" };
+                MessageBox.ButtonList = new RefreshList { new Label() { Content = "创建角色", FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, gridName, new ButtonSpacer(50), "OK" };
                 MessageBox.MessageBoxImageType = MessageBoxImage.None;
                 MessageBox.MessageText = "选择角色阵营和坐标";
             };
@@ -6288,13 +6288,13 @@ namespace CSGOTacticSimulator
             // do
             // wait for
             // wait until
-            Button buttonGive = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
+            Button buttonGive = new Button() { Visibility = Visibility.Visible, Height = 25, FontSize = 16 };
             buttonGive.Content = "装备";
-            Button buttonSet = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
+            Button buttonSet = new Button() { Visibility = Visibility.Visible, Height = 25, FontSize = 16 };
             buttonSet.Content = "设置";
-            Button buttonDo = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
+            Button buttonDo = new Button() { Visibility = Visibility.Visible, Height = 25, FontSize = 16 };
             buttonDo.Content = "动作";
-            Button buttonWait = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
+            Button buttonWait = new Button() { Visibility = Visibility.Visible, Height = 25, FontSize = 16 };
             buttonWait.Content = "等待";
 
             buttonGive.Click += delegate (object sender, RoutedEventArgs e)
@@ -6308,8 +6308,8 @@ namespace CSGOTacticSimulator
                 multiSelectComboBox.ItemsSource.Add("闪1 - Flashbang");
                 multiSelectComboBox.ItemsSource.Add("闪2 - Flashbang");
                 multiSelectComboBox.ItemsSource.Add("诱 - Decoy");
-                multiSelectComboBox.Height = 32;
-                multiSelectComboBox.FontSize = 20;
+                multiSelectComboBox.Height = 25;
+                multiSelectComboBox.FontSize = 16;
                 multiSelectComboBox.VerticalContentAlignment = VerticalAlignment.Center;
                 multiSelectComboBox.Margin = new Thickness(0, 5, 0, 5);
                 //multiSelectComboBox.SelectedItemsChanged += delegate (object s, SelectedItemsChangedEventArgs sice) 
@@ -6317,30 +6317,30 @@ namespace CSGOTacticSimulator
                 //};
 
                 ComboBox comboBoxProps = new ComboBox();
-                comboBoxProps.Height = 32;
+                comboBoxProps.Height = 25;
                 comboBoxProps.Margin = new Thickness(0, 5, 0, 5);
                 comboBoxProps.VerticalContentAlignment = VerticalAlignment.Center;
-                comboBoxProps.FontSize = 20;
-                comboBoxProps.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBoxProps.FontSize = 16;
+                comboBoxProps.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 foreach (Props props in Enum.GetValues(typeof(Props)))
                 {
                     if (props == Props.Nothing)
                     {
                         continue;
                     }
-                    comboBoxProps.Items.Add(new ComboBoxItem() { Content = props.ToString().ToLower(), FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBoxProps.Items.Add(new ComboBoxItem() { Content = props.ToString().ToLower(), FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 }
                 comboBoxProps.SelectedIndex = 0;
 
                 ComboBox comboBoxWeapon = new ComboBox();
-                comboBoxWeapon.Height = 32;
+                comboBoxWeapon.Height = 25;
                 comboBoxWeapon.Margin = new Thickness(0, 5, 0, 5);
                 comboBoxWeapon.VerticalContentAlignment = VerticalAlignment.Center;
-                comboBoxWeapon.FontSize = 20;
-                comboBoxWeapon.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBoxWeapon.FontSize = 16;
+                comboBoxWeapon.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 foreach (Weapon weapon in Enum.GetValues(typeof(Weapon)))
                 {
-                    comboBoxWeapon.Items.Add(new ComboBoxItem() { Content = weapon.ToString().ToLower(), FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBoxWeapon.Items.Add(new ComboBoxItem() { Content = weapon.ToString().ToLower(), FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 }
                 comboBoxWeapon.SelectedIndex = 0;
 
@@ -6361,7 +6361,7 @@ namespace CSGOTacticSimulator
                 grid.Width = 350;
 
                 MessageBox.ButtonList = new RefreshList {
-                    new Label() { Content = "装备", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
+                    new Label() { Content = "装备", Width = 60, FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
                     grid,
                     "OK"
                 };
@@ -6371,26 +6371,26 @@ namespace CSGOTacticSimulator
             buttonSet.Click += delegate (object sender, RoutedEventArgs e)
             {
                 ComboBox comboBoxStatus = new ComboBox();
-                comboBoxStatus.Height = 32;
+                comboBoxStatus.Height = 25;
                 comboBoxStatus.Margin = new Thickness(0, 5, 0, 5);
                 comboBoxStatus.VerticalContentAlignment = VerticalAlignment.Center;
-                comboBoxStatus.FontSize = 20;
-                comboBoxStatus.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBoxStatus.FontSize = 16;
+                comboBoxStatus.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 foreach (Model.Status status in Enum.GetValues(typeof(Model.Status)))
                 {
-                    comboBoxStatus.Items.Add(new ComboBoxItem() { Content = status.ToString().ToLower(), FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBoxStatus.Items.Add(new ComboBoxItem() { Content = status.ToString().ToLower(), FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 }
                 comboBoxStatus.SelectedIndex = 0;
 
                 ComboBox comboBoxVerticalPosition = new ComboBox();
-                comboBoxVerticalPosition.Height = 32;
+                comboBoxVerticalPosition.Height = 25;
                 comboBoxVerticalPosition.Margin = new Thickness(0, 5, 0, 5);
                 comboBoxVerticalPosition.VerticalContentAlignment = VerticalAlignment.Center;
-                comboBoxVerticalPosition.FontSize = 20;
-                comboBoxVerticalPosition.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBoxVerticalPosition.FontSize = 16;
+                comboBoxVerticalPosition.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 foreach (VerticalPosition verticalPosition in Enum.GetValues(typeof(VerticalPosition)))
                 {
-                    comboBoxVerticalPosition.Items.Add(new ComboBoxItem() { Content = verticalPosition.ToString().ToLower(), FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBoxVerticalPosition.Items.Add(new ComboBoxItem() { Content = verticalPosition.ToString().ToLower(), FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 }
                 comboBoxVerticalPosition.SelectedIndex = 0;
 
@@ -6406,7 +6406,7 @@ namespace CSGOTacticSimulator
                 grid.Height = 84;
 
                 MessageBox.ButtonList = new RefreshList {
-                    new Label() { Content = "设置", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
+                    new Label() { Content = "设置", Width = 60, FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
                     grid,
                     "OK"
                 };
@@ -6416,37 +6416,37 @@ namespace CSGOTacticSimulator
             buttonDo.Click += delegate (object sender, RoutedEventArgs e)
             {
                 ComboBox comboBox = new ComboBox();
-                comboBox.Height = 32;
-                comboBox.FontSize = 20;
+                comboBox.Height = 25;
+                comboBox.FontSize = 16;
                 comboBox.Width = 160;
                 comboBox.Margin = new Thickness(0, 5, 0, 5);
                 comboBox.VerticalContentAlignment = VerticalAlignment.Center;
                 foreach (DoWithProps doWithProps in Enum.GetValues(typeof(DoWithProps)))
                 {
-                    comboBox.Items.Add(new ComboBoxItem() { Content = doWithProps.ToString().ToLower(), FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBox.Items.Add(new ComboBoxItem() { Content = doWithProps.ToString().ToLower(), FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 }
                 comboBox.SelectedIndex = 0;
-                MessageBox.ButtonList = new RefreshList { new Label() { Content = "动作", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, new ButtonSpacer(200), "OK" };
+                MessageBox.ButtonList = new RefreshList { new Label() { Content = "动作", FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, new ButtonSpacer(200), "OK" };
                 MessageBox.MessageBoxImageType = MessageBoxImage.None;
                 MessageBox.MessageText = "选择要进行的动作";
             };
             buttonWait.Click += delegate (object sender, RoutedEventArgs e)
             {
                 ComboBox comboBox = new ComboBox();
-                comboBox.Height = 32;
-                comboBox.FontSize = 20;
+                comboBox.Height = 25;
+                comboBox.FontSize = 16;
                 comboBox.Width = 80;
                 comboBox.Margin = new Thickness(0, 5, 0, 5);
                 comboBox.VerticalContentAlignment = VerticalAlignment.Center;
-                comboBox.Items.Add(new ComboBoxItem() { Content = "等待", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
-                comboBox.Items.Add(new ComboBoxItem() { Content = "等待至", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBox.Items.Add(new ComboBoxItem() { Content = "等待", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBox.Items.Add(new ComboBoxItem() { Content = "等待至", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 comboBox.SelectedIndex = 0;
                 MessageBox.ButtonList = new RefreshList
                 {
-                    new Label() { Content = "等待", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
+                    new Label() { Content = "等待", FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
                     comboBox,
-                    new TextBox() { Width = 60, FontSize = 20, Height = 32, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 10, 0, 10) },
-                    new Label() { Content = "秒", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
+                    new TextBox() { Width = 60, FontSize = 16, Height = 25, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 10, 0, 10) },
+                    new Label() { Content = "秒", FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
                     new ButtonSpacer(140),
                     "OK"
                 };
@@ -6534,38 +6534,38 @@ namespace CSGOTacticSimulator
             // automove
             // throw
             // shoot
-            Button buttonMove = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
+            Button buttonMove = new Button() { Visibility = Visibility.Visible, Height = 25, FontSize = 16 };
             buttonMove.Content = "移动";
-            Button buttonAutoMove = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
+            Button buttonAutoMove = new Button() { Visibility = Visibility.Visible, Height = 25, FontSize = 16 };
             buttonAutoMove.Content = "寻路";
             if (keyDownInPreview.Count < 2)
             {
                 buttonAutoMove.IsEnabled = false;
             }
-            Button buttonThrow = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
+            Button buttonThrow = new Button() { Visibility = Visibility.Visible, Height = 25, FontSize = 16 };
             buttonThrow.Content = "投掷";
-            Button buttonShoot = new Button() { Visibility = Visibility.Visible, Height = 32, FontSize = 20 };
+            Button buttonShoot = new Button() { Visibility = Visibility.Visible, Height = 25, FontSize = 16 };
             buttonShoot.Content = "射击";
             buttonMove.Click += delegate (object sender, RoutedEventArgs e)
             {
                 ComboBox comboBoxRecord = new ComboBox();
-                comboBoxRecord.Height = 32;
+                comboBoxRecord.Height = 25;
                 comboBoxRecord.Margin = new Thickness(0, 5, 0, 5);
                 comboBoxRecord.VerticalContentAlignment = VerticalAlignment.Center;
-                comboBoxRecord.FontSize = 20;
-                comboBoxRecord.Items.Add(new ComboBoxItem() { Content = "使用完整路径", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
-                comboBoxRecord.Items.Add(new ComboBoxItem() { Content = "仅使用起始点", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBoxRecord.FontSize = 16;
+                comboBoxRecord.Items.Add(new ComboBoxItem() { Content = "使用完整路径", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBoxRecord.Items.Add(new ComboBoxItem() { Content = "仅使用起始点", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 comboBoxRecord.SelectedIndex = 0;
 
                 ComboBox comboBoxMove = new ComboBox();
-                comboBoxMove.Height = 32;
+                comboBoxMove.Height = 25;
                 comboBoxMove.Margin = new Thickness(0, 5, 0, 5);
                 comboBoxMove.VerticalContentAlignment = VerticalAlignment.Center;
-                comboBoxMove.FontSize = 20;
-                comboBoxMove.Items.Add(new ComboBoxItem() { Content = "Run", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
-                comboBoxMove.Items.Add(new ComboBoxItem() { Content = "Walk", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
-                comboBoxMove.Items.Add(new ComboBoxItem() { Content = "Squat", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
-                comboBoxMove.Items.Add(new ComboBoxItem() { Content = "Teleport", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBoxMove.FontSize = 16;
+                comboBoxMove.Items.Add(new ComboBoxItem() { Content = "Run", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBoxMove.Items.Add(new ComboBoxItem() { Content = "Walk", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBoxMove.Items.Add(new ComboBoxItem() { Content = "Squat", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBoxMove.Items.Add(new ComboBoxItem() { Content = "Teleport", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 comboBoxMove.SelectedIndex = 0;
                 comboBoxMove.SelectionChanged += delegate (object senderSelectionChanged, SelectionChangedEventArgs eSelectionChanged)
                 {
@@ -6592,7 +6592,7 @@ namespace CSGOTacticSimulator
                 grid.Height = 84;
 
                 MessageBox.ButtonList = new RefreshList {
-                    new Label() { Content = "移动", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
+                    new Label() { Content = "移动", Width = 60, FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
                     grid,
                     "OK"
                 };
@@ -6601,10 +6601,10 @@ namespace CSGOTacticSimulator
             };
             buttonAutoMove.Click += delegate (object sender, RoutedEventArgs e)
             {
-                Label labelStartLayer = new Label() { Content = "起始层数", Foreground = new SolidColorBrush(Colors.White), FontSize = 20, Height = 32 };
-                TextBox textBoxStartLayer = new TextBox() { FontSize = 20, Height = 32, Width = 50, VerticalContentAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Left, Name = "textBoxStartLayer" };
-                Label labelEndLayer = new Label() { Content = "结束层数", Foreground = new SolidColorBrush(Colors.White), FontSize = 20, Height = 32 };
-                TextBox textBoxEndLayer = new TextBox() { FontSize = 20, Height = 32, Width = 50, VerticalContentAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Left, Name = "textBoxEndLayer" };
+                Label labelStartLayer = new Label() { Content = "起始层数", Foreground = new SolidColorBrush(Colors.White), FontSize = 16, Height = 25 };
+                TextBox textBoxStartLayer = new TextBox() { FontSize = 16, Height = 25, Width = 50, VerticalContentAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Left, Name = "textBoxStartLayer" };
+                Label labelEndLayer = new Label() { Content = "结束层数", Foreground = new SolidColorBrush(Colors.White), FontSize = 16, Height = 25 };
+                TextBox textBoxEndLayer = new TextBox() { FontSize = 16, Height = 25, Width = 50, VerticalContentAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Left, Name = "textBoxEndLayer" };
                 if (keyDownInPreview.Count < 2 || keyDownInPreview.Count > 2)
                 {
                     textBoxStartLayer.Text = "0";
@@ -6614,15 +6614,15 @@ namespace CSGOTacticSimulator
                 }
 
                 ComboBox comboBoxVolumeLimit = new ComboBox();
-                comboBoxVolumeLimit.Height = 32;
+                comboBoxVolumeLimit.Height = 25;
                 comboBoxVolumeLimit.Width = 100;
                 comboBoxVolumeLimit.Margin = new Thickness(0, 5, 0, 5);
                 comboBoxVolumeLimit.VerticalContentAlignment = VerticalAlignment.Center;
-                comboBoxVolumeLimit.FontSize = 20;
-                comboBoxVolumeLimit.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBoxVolumeLimit.FontSize = 16;
+                comboBoxVolumeLimit.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 foreach (VolumeLimit volumeLimit in Enum.GetValues(typeof(VolumeLimit)))
                 {
-                    comboBoxVolumeLimit.Items.Add(new ComboBoxItem() { Content = volumeLimit.ToString().ToLower(), FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBoxVolumeLimit.Items.Add(new ComboBoxItem() { Content = volumeLimit.ToString().ToLower(), FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 }
                 comboBoxVolumeLimit.SelectedIndex = 0;
 
@@ -6650,7 +6650,7 @@ namespace CSGOTacticSimulator
                 grid.Height = 84;
 
                 MessageBox.ButtonList = new RefreshList {
-                    new Label() { Content = "寻路", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
+                    new Label() { Content = "寻路", Width = 60, FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
                     grid,
                     comboBoxVolumeLimit,
                     "OK"
@@ -6661,20 +6661,20 @@ namespace CSGOTacticSimulator
             buttonThrow.Click += delegate (object sender, RoutedEventArgs e)
             {
                 ComboBox comboBoxMissile = new ComboBox();
-                comboBoxMissile.Height = 32;
+                comboBoxMissile.Height = 25;
                 comboBoxMissile.Width = 130;
                 comboBoxMissile.Margin = new Thickness(0, 5, 0, 5);
                 comboBoxMissile.VerticalContentAlignment = VerticalAlignment.Center;
-                comboBoxMissile.FontSize = 20;
-                comboBoxMissile.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBoxMissile.FontSize = 16;
+                comboBoxMissile.Items.Add(new ComboBoxItem() { Content = "-", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 foreach (Missile missile in Enum.GetValues(typeof(Missile)))
                 {
-                    comboBoxMissile.Items.Add(new ComboBoxItem() { Content = missile.ToString().ToLower(), FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBoxMissile.Items.Add(new ComboBoxItem() { Content = missile.ToString().ToLower(), FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
                 }
                 comboBoxMissile.SelectedIndex = 0;
 
                 MessageBox.ButtonList = new RefreshList {
-                    new Label() { Content = "投掷", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
+                    new Label() { Content = "投掷", Width = 60, FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
                     comboBoxMissile,
                     "OK"
                 };
@@ -6683,8 +6683,8 @@ namespace CSGOTacticSimulator
             };
             buttonShoot.Click += delegate (object sender, RoutedEventArgs e)
             {
-                CheckBox cb = new CheckBox() { Content = "射击某角色", FontSize = 20, Foreground = new SolidColorBrush(Colors.White), Height = 32 };
-                TextBox tb = new TextBox() { Width = 60, VerticalContentAlignment = VerticalAlignment.Center, FontSize = 20, Height = 32, HorizontalAlignment = HorizontalAlignment.Left };
+                CheckBox cb = new CheckBox() { Content = "射击某角色", FontSize = 16, Foreground = new SolidColorBrush(Colors.White), Height = 25 };
+                TextBox tb = new TextBox() { Width = 60, VerticalContentAlignment = VerticalAlignment.Center, FontSize = 16, Height = 25, HorizontalAlignment = HorizontalAlignment.Left };
                 tb.IsEnabled = false;
                 cb.Click += delegate (object cbSender, RoutedEventArgs cbE)
                 {
@@ -6714,14 +6714,14 @@ namespace CSGOTacticSimulator
                 ComboBox comboBox = new ComboBox();
                 comboBox.Margin = new Thickness(0, 10, 0, 10);
                 comboBox.VerticalContentAlignment = VerticalAlignment.Center;
-                comboBox.FontSize = 20;
-                comboBox.Items.Add(new ComboBoxItem() { Content = "Live", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
-                comboBox.Items.Add(new ComboBoxItem() { Content = "Die", FontSize = 20, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
-                comboBox.Height = 32;
+                comboBox.FontSize = 16;
+                comboBox.Items.Add(new ComboBoxItem() { Content = "Live", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBox.Items.Add(new ComboBoxItem() { Content = "Die", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                comboBox.Height = 25;
                 comboBox.SelectedIndex = 0;
 
                 MessageBox.ButtonList = new RefreshList {
-                    new Label() { Content = "射击", Width = 60, FontSize = 20, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
+                    new Label() { Content = "射击", Width = 60, FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center },
                     grid,
                     comboBox,
                     "OK"

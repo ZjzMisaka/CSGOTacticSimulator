@@ -224,9 +224,9 @@ namespace CSGOTacticSimulator.Global
 
         static public PropertiesSetter propertiesSetter = new PropertiesSetter()
         {
-            ButtonFontSize = 20,
-            MessageFontSize = 20,
-            TitleFontSize = 20,
+            ButtonFontSize = 16,
+            MessageFontSize = 16,
+            TitleFontSize = 18,
             WindowWidth = 500,
             WindowMinHeight = 250,
             ButtonPanelColor = new MessageBoxColor("#F03A3A3A"),
