@@ -22,6 +22,7 @@ using System.Net;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Security.Policy;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Timers;
 using System.Windows;
@@ -2428,9 +2429,15 @@ namespace CSGOTacticSimulator
                     MessageBox.CloseNow(3);
                 }
             });
+            TextBox tb = new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50, Height = 32, FontSize = 20 };
+            tb.PreviewTextInput += (s, e) =>
+            {
+                TextBox textBox = s as TextBox;
+                e.Handled = Regex.IsMatch(e.Text, "[^0-9]+");
+            };
             propertiesSetter.EnableCloseButton = true;
             int res = MessageBox.Show(propertiesSetter, new RefreshList {
-                new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(5, 10, 5, 10), Width = 50, Height = 32, FontSize = 20 },
+                tb,
                 new ButtonSpacer(200),
                 "OK" }, "需要观看第几回合? ", "选择回合数", MessageBoxImage.Question);
 
