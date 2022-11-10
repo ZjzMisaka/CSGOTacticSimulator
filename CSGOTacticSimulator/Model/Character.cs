@@ -12,6 +12,7 @@ using CSGOTacticSimulator.Global;
 using System.Windows.Media.Imaging;
 using DemoInfo;
 using CSGOTacticSimulator.Controls;
+using System.Windows.Input;
 
 namespace CSGOTacticSimulator.Model
 {
@@ -139,6 +140,7 @@ namespace CSGOTacticSimulator.Model
         {
             CharacterImg.MouseEnter += wnd.ShowCharacterInfos;
             CharacterImg.MouseLeftButtonDown += wnd.ShowPov;
+            CharacterImg.Cursor = Cursors.Hand;
 
             CharacterImg.Width = GlobalDictionary.CharacterWidthAndHeight;
             CharacterImg.Height = GlobalDictionary.CharacterWidthAndHeight;

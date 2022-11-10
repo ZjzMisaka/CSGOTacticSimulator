@@ -129,6 +129,7 @@ namespace CSGOTacticSimulator.Global
         static public bool showKill = bool.Parse(IniHelper.ReadIni("Setting", "ShowKill"));
         static public bool showSay = bool.Parse(IniHelper.ReadIni("Setting", "ShowSay"));
         static public bool showBought = bool.Parse(IniHelper.ReadIni("Setting", "showBought"));
+        static public int avatarMode = int.Parse(IniHelper.ReadIni("Setting", "AvatarMode"));
 
         static public double walkToRunRatio = double.Parse(IniHelper.ReadIni("Ratio", "WalkToRun"));
         static public double squatToRunRatio = double.Parse(IniHelper.ReadIni("Ratio", "SquatToRun"));

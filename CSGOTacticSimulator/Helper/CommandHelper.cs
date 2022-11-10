@@ -256,6 +256,7 @@ namespace CSGOTacticSimulator.Helper
                             int number = int.Parse(tag.Substring(tag.IndexOf("Number: ") + 8, tag.IndexOf("Name: ") - (tag.IndexOf("Number: ") + 9)));
                             mainWindow.CreateCommandInWindow(number);
                         };
+                        characterImg.Cursor = Cursors.Hand;
                         previewElements.Add(characterImg);
 
                         Label labelName = new Label();

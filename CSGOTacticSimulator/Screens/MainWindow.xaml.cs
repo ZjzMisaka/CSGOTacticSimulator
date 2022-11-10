@@ -134,7 +134,24 @@ namespace CSGOTacticSimulator
             cb_show_load.IsChecked = GlobalDictionary.showLoad;
             cb_show_kill.IsChecked = GlobalDictionary.showKill;
             cb_show_say.IsChecked = GlobalDictionary.showSay;
-            cb_show_bought.IsChecked = GlobalDictionary.showBought;
+            cb_show_bought.IsChecked  = GlobalDictionary.showBought;
+            if (GlobalDictionary.avatarMode == 1)
+            {
+                rb_avatar_auto.IsChecked = true;
+            }
+            else if (GlobalDictionary.avatarMode == 2)
+            {
+                rb_avatar_hltv_only.IsChecked = true;
+            }
+            else if (GlobalDictionary.avatarMode == 3)
+            {
+                rb_avatar_steam_only.IsChecked = true;
+            }
+            else if (GlobalDictionary.avatarMode == 4)
+            {
+                rb_avatar_none.IsChecked = true;
+            }
+
 
             AddMapsFromFolder(GlobalDictionary.mapFolderPath);
             tb_select_folder.Text = GlobalDictionary.mapFolderPath;
@@ -172,6 +189,22 @@ namespace CSGOTacticSimulator
             IniHelper.WriteIni("Setting", "ShowKill", " " + ((bool)cb_show_kill.IsChecked).ToString());
             IniHelper.WriteIni("Setting", "ShowSay", " " + ((bool)cb_show_say.IsChecked).ToString());
             IniHelper.WriteIni("Setting", "ShowBought", " " + ((bool)cb_show_bought.IsChecked).ToString());
+            if (rb_avatar_auto.IsChecked == true)
+            {
+                IniHelper.WriteIni("Setting", "AvatarMode", " 1");
+            }
+            else if (rb_avatar_hltv_only.IsChecked == true)
+            {
+                IniHelper.WriteIni("Setting", "AvatarMode", " 2");
+            }
+            else if (rb_avatar_steam_only.IsChecked == true)
+            {
+                IniHelper.WriteIni("Setting", "AvatarMode", " 3");
+            }
+            else if (rb_avatar_none.IsChecked == true)
+            {
+                IniHelper.WriteIni("Setting", "AvatarMode", " 4");
+            }
 
             Environment.Exit(0);
         }
@@ -3002,7 +3035,7 @@ namespace CSGOTacticSimulator
                     this.Dispatcher.Invoke(() =>
                     {
                         character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
-                        SteamHelper.GetAvatarAsync((ulong)player.SteamID, player.Name, character.Avatar, steamInited, proAvatarLinkDic);
+                        SteamHelper.GetAvatarAsync((ulong)player.SteamID, player.Name, character.Avatar, steamInited, proAvatarLinkDic, (bool)rb_avatar_auto.IsChecked, (bool)rb_avatar_hltv_only.IsChecked, (bool)rb_avatar_steam_only.IsChecked, (bool)rb_avatar_none.IsChecked);
                     });
                     dic.Add(character.SteamId, character.Number);
 
@@ -3112,7 +3145,7 @@ namespace CSGOTacticSimulator
                     this.Dispatcher.Invoke(() =>
                     {
                         character = new Character(player.Name, player.SteamID, camp, camp, mapPoint, this);
-                        SteamHelper.GetAvatarAsync((ulong)player.SteamID, player.Name, character.Avatar, steamInited, proAvatarLinkDic);
+                        SteamHelper.GetAvatarAsync((ulong)player.SteamID, player.Name, character.Avatar, steamInited, proAvatarLinkDic, (bool)rb_avatar_auto.IsChecked, (bool)rb_avatar_hltv_only.IsChecked, (bool)rb_avatar_steam_only.IsChecked, (bool)rb_avatar_none.IsChecked);
                     });
 
                     dic.Add(character.SteamId, character.Number);

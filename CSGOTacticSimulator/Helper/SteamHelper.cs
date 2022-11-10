@@ -29,51 +29,57 @@ namespace CSGOTacticSimulator.Helper
             return true;
         }
 
-        public static async void GetAvatarAsync(ulong steamId, string name, TSImage tSImage, bool steamInited, Dictionary<string, string> proAvatarLinkDic)
+        public static async void GetAvatarAsync(ulong steamId, string name, TSImage tSImage, bool steamInited, Dictionary<string, string> proAvatarLinkDic, bool avatarAuto, bool avatarHltvOnly, bool avatarSteamOnly, bool avatarNone)
         {
             SteamId id = new SteamId();
             id.Value = steamId;
             BitmapImage bitmapImage = new BitmapImage();
 
-            if (proAvatarLinkDic.ContainsKey(name))
+            if (avatarAuto || avatarHltvOnly)
             {
-                bitmapImage.BeginInit();
-                bitmapImage.UriSource = new Uri(proAvatarLinkDic[name]);
-                bitmapImage.EndInit();
-            }
-            else
-            {
-                var Search = new HltvSharp.Search();
-                List<PlayerSearchItem> res = await Search.Players(name);
-                foreach (PlayerSearchItem item in res)
+                if (proAvatarLinkDic.ContainsKey(name))
                 {
-                    if (item.nickName == name)
-                    {
-                        bitmapImage.BeginInit();
-                        bitmapImage.UriSource = new Uri(item.pictureUrl);
-                        proAvatarLinkDic[name] = item.pictureUrl;
-                        bitmapImage.EndInit();
-                        break;
-                    }
+                    bitmapImage.BeginInit();
+                    bitmapImage.UriSource = new Uri(proAvatarLinkDic[name]);
+                    bitmapImage.EndInit();
                 }
-                if (bitmapImage.UriSource == null)
+                else
                 {
-                    if (res != null && res.Count > 0)
+                    var Search = new HltvSharp.Search();
+                    List<PlayerSearchItem> res = await Search.Players(name);
+                    foreach (PlayerSearchItem item in res)
                     {
-                        bitmapImage.BeginInit();
-                        bitmapImage.UriSource = new Uri(res[0].pictureUrl);
-                        proAvatarLinkDic[name] = res[0].pictureUrl;
-                        bitmapImage.EndInit();
+                        if (item.nickName == name)
+                        {
+                            bitmapImage.BeginInit();
+                            bitmapImage.UriSource = new Uri(item.pictureUrl);
+                            proAvatarLinkDic[name] = item.pictureUrl;
+                            bitmapImage.EndInit();
+                            break;
+                        }
+                    }
+                    if (bitmapImage.UriSource == null)
+                    {
+                        if (res != null && res.Count > 0)
+                        {
+                            bitmapImage.BeginInit();
+                            bitmapImage.UriSource = new Uri(res[0].pictureUrl);
+                            proAvatarLinkDic[name] = res[0].pictureUrl;
+                            bitmapImage.EndInit();
+                        }
                     }
                 }
             }
 
-            if (bitmapImage.UriSource == null && steamInited)
+            if (avatarAuto || avatarSteamOnly)
             {
-                Steamworks.Data.Image? img = await SteamFriends.GetLargeAvatarAsync(id);
-                if (img.HasValue)
+                if (bitmapImage.UriSource == null && steamInited)
                 {
-                    bitmapImage = GetTextureFromImage(img.Value);
+                    Steamworks.Data.Image? img = await SteamFriends.GetLargeAvatarAsync(id);
+                    if (img.HasValue)
+                    {
+                        bitmapImage = GetTextureFromImage(img.Value);
+                    }
                 }
             }
             

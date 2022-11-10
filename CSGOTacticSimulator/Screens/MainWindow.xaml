@@ -199,16 +199,25 @@
             <Button x:Name="btn_restore" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Visibility="Collapsed" Click="btn_restore_Click"></Button>
             <Button x:Name="btn_minimize" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Click="btn_minimize_Click"></Button>
         </StackPanel>
-        <StackPanel x:Name="sp_setting" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="65" Background="Gray" Opacity="0.85" Visibility="Collapsed" MouseLeave="sp_setting_MouseLeave">
-            <CheckBox x:Name="cb_auto_show_pannel" Margin="5" Foreground="White">是否自动显示信息面板</CheckBox>
-            <CheckBox x:Name="cb_show_drop_gun" Margin="5" Foreground="White">是否显示武器掉落</CheckBox>
-            <CheckBox x:Name="cb_show_drop_missile" Margin="5" Foreground="White">是否显示投掷物掉落</CheckBox>
-            <CheckBox x:Name="cb_show_drop_other" Margin="5" Foreground="White">是否显示其他掉落</CheckBox>
-            <CheckBox x:Name="cb_skip_freeze_time" Margin="5" Foreground="White">是否跳过准备阶段</CheckBox>
-            <CheckBox x:Name="cb_show_load" Margin="5" Foreground="White">是否显示加载日志</CheckBox>
-            <CheckBox x:Name="cb_show_kill" Margin="5" Foreground="White">是否显示击杀日志</CheckBox>
-            <CheckBox x:Name="cb_show_say" Margin="5" Foreground="White">是否显示发言日志</CheckBox>
-            <CheckBox x:Name="cb_show_bought" Margin="5" Foreground="White">是否显示购买日志</CheckBox>
-        </StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0, 65, 61, 0">
+            <StackPanel x:Name="sp_setting" Background="Gray" Opacity="0.85" Visibility="Collapsed" MouseLeave="sp_setting_MouseLeave">
+                <TextBlock FontWeight="ExtraBold" Margin="5" Foreground="White">运行</TextBlock>
+                <CheckBox x:Name="cb_auto_show_pannel" Margin="5" Foreground="White">是否自动显示信息面板</CheckBox>
+                <CheckBox x:Name="cb_show_drop_gun" Margin="5" Foreground="White">是否显示武器掉落</CheckBox>
+                <CheckBox x:Name="cb_show_drop_missile" Margin="5" Foreground="White">是否显示投掷物掉落</CheckBox>
+                <CheckBox x:Name="cb_show_drop_other" Margin="5" Foreground="White">是否显示其他掉落</CheckBox>
+                <CheckBox x:Name="cb_skip_freeze_time" Margin="5" Foreground="White">是否跳过准备阶段</CheckBox>
+                <TextBlock FontWeight="ExtraBold" Margin="5" Foreground="White">日志</TextBlock>
+                <CheckBox x:Name="cb_show_load" Margin="5" Foreground="White">是否显示加载日志</CheckBox>
+                <CheckBox x:Name="cb_show_kill" Margin="5" Foreground="White">是否显示击杀日志</CheckBox>
+                <CheckBox x:Name="cb_show_say" Margin="5" Foreground="White">是否显示发言日志</CheckBox>
+                <CheckBox x:Name="cb_show_bought" Margin="5" Foreground="White">是否显示购买日志</CheckBox>
+                <TextBlock FontWeight="ExtraBold" Margin="5" Foreground="White">头像</TextBlock>
+                <RadioButton x:Name="rb_avatar_auto" GroupName="setting_avatar" Margin="5" Foreground="White">自动加载头像</RadioButton>
+                <RadioButton x:Name="rb_avatar_hltv_only" GroupName="setting_avatar" Margin="5" Foreground="White">只从Hltv获取头像</RadioButton>
+                <RadioButton x:Name="rb_avatar_steam_only" GroupName="setting_avatar" Margin="5" Foreground="White">只从Steam获取头像</RadioButton>
+                <RadioButton x:Name="rb_avatar_none" GroupName="setting_avatar" Margin="5" Foreground="White">不获取头像</RadioButton>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Window>
