@@ -4,6 +4,12 @@
              xmlns:local="clr-namespace:CSGOTacticSimulator"
              StartupUri="Screens/MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="i18n\StringResource.zh-CN.xaml" />
+                <ResourceDictionary Source="i18n\StringResource.ja-JP.xaml" />
+                <ResourceDictionary Source="i18n\StringResource.en-US.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

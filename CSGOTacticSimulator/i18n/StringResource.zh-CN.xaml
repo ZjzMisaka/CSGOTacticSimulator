@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="MapFolder">设定文件夹: </sys:String>
+    <sys:String x:Key="Map">地图: </sys:String>
+    <sys:String x:Key="Frame">框架: </sys:String>
+    <sys:String x:Key="ScriptOrDemo">脚本 / DEMO: </sys:String>
+    <sys:String x:Key="Coordinate">坐标:</sys:String>
+    
+    <sys:String x:Key="Language">语言</sys:String>
+    <sys:String x:Key="Run">运行</sys:String>
+    <sys:String x:Key="AutoShowPanel">是否自动显示信息面板</sys:String>
+    <sys:String x:Key="ShowDropGun">是否显示武器掉落</sys:String>
+    <sys:String x:Key="ShowDropMissile">是否显示投掷物掉落</sys:String>
+    <sys:String x:Key="ShowDropOther">是否显示其他掉落</sys:String>
+    <sys:String x:Key="SkipFreezeTime">是否跳过准备阶段</sys:String>
+    <sys:String x:Key="Log">日志</sys:String>
+    <sys:String x:Key="ShowLoad">是否显示加载日志</sys:String>
+    <sys:String x:Key="ShowKill">是否显示击杀日志</sys:String>
+    <sys:String x:Key="ShowSay">是否显示发言日志</sys:String>
+    <sys:String x:Key="ShowBought">是否显示购买日志</sys:String>
+    <sys:String x:Key="Avatar">头像</sys:String>
+    <sys:String x:Key="AvatarAuto">自动加载头像</sys:String>
+    <sys:String x:Key="AvatarHltvOnly">只从Hltv获取头像</sys:String>
+    <sys:String x:Key="AvatarSteamOnly">只从Steam获取头像</sys:String>
+    <sys:String x:Key="AvatarNone">不获取头像</sys:String>
+</ResourceDictionary>

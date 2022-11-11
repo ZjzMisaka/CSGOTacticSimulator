@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="MapFolder">Set folder:</sys:String>
+    <sys:String x:Key="Map">Map:</sys:String>
+    <sys:String x:Key="Frame">Frame:</sys:String>
+    <sys:String x:Key="ScriptOrDemo">Script / Demo:</sys:String>
+    <sys:String x:Key="Coordinate">Position:</sys:String>
+
+    <sys:String x:Key="Language">Language</sys:String>
+    <sys:String x:Key="Run">Run</sys:String>
+    <sys:String x:Key="AutoShowPanel">Whether to automatically display the information panel</sys:String>
+    <sys:String x:Key="ShowDropGun">Whether to show weapon drops</sys:String>
+    <sys:String x:Key="ShowDropMissile">Whether to show the drop of the projectile</sys:String>
+    <sys:String x:Key="ShowDropOther">Whether to show other drops</sys:String>
+    <sys:String x:Key="SkipFreezeTime">Whether to skip the preparation phase</sys:String>
+    <sys:String x:Key="Log">Log</sys:String>
+    <sys:String x:Key="ShowLoad">Whether to show loading log</sys:String>
+    <sys:String x:Key="ShowKill">Whether to show kill log</sys:String>
+    <sys:String x:Key="ShowSay">Whether to show the speech log</sys:String>
+    <sys:String x:Key="ShowBought">Whether to show the purchase log</sys:String>
+    <sys:String x:Key="Avatar">Avatar</sys:String>
+    <sys:String x:Key="AvatarAuto">Autoload avatars</sys:String>
+    <sys:String x:Key="AvatarHltvOnly">Get avatars only from Hltv</sys:String>
+    <sys:String x:Key="AvatarSteamOnly">Get avatars only from Steam</sys:String>
+    <sys:String x:Key="AvatarNone">Not get avatar</sys:String>
+</ResourceDictionary>

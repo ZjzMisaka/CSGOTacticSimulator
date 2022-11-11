@@ -80,6 +80,8 @@ namespace CSGOTacticSimulator
         private bool isNeedAutomaticGuidance = false;
         private bool steamInited = false;
         private Dictionary<string, string> proAvatarLinkDic = new Dictionary<string, string>();
+        private List<ResourceDictionary> dictionaryList = new List<ResourceDictionary>();
+        private Dictionary<string, string> cultureDic = new Dictionary<string, string>();
 
         public List<Point> mouseMovePathInPreview = new List<Point>();
         public List<Point> keyDownInPreview = new List<Point>();
@@ -93,6 +95,37 @@ namespace CSGOTacticSimulator
         {
             this.Width = int.Parse(IniHelper.ReadIni("Window", "Width"));
             this.Height = int.Parse(IniHelper.ReadIni("Window", "Height"));
+
+            List<string> items = new List<string>();
+            foreach (ResourceDictionary dictionary in Application.Current.Resources.MergedDictionaries)
+            {
+                if (dictionary.Source != null)
+                {
+                    string originalString = dictionary.Source.OriginalString;
+                    CultureInfo cultureInfo = new CultureInfo(originalString.Substring(originalString.IndexOf(".") + 1, (originalString.LastIndexOf(".") - originalString.IndexOf(".") - 1)), false);
+                    string nativeName = cultureInfo.NativeName;
+                    items.Add(nativeName);
+                    cultureDic.Add(nativeName, cultureInfo.Name);
+                }
+            }
+            cb_language.ItemsSource = items;
+            string language = GlobalDictionary.language;
+            if (String.IsNullOrWhiteSpace(language))
+            {
+                language = Thread.CurrentThread.CurrentUICulture.Name;
+            }
+            foreach (ResourceDictionary dictionary in Application.Current.Resources.MergedDictionaries)
+            {
+                dictionaryList.Add(dictionary);
+            }
+            foreach (string nativeName in cultureDic.Keys)
+            {
+                if (cultureDic[nativeName] == language)
+                {
+                    cb_language.SelectedItem = nativeName;
+                }
+            }
+            ChangeLanguage(language, dictionaryList);
 
             hideMouseTimer.Elapsed += new ElapsedEventHandler(HideMouse);
             resizeTimer.Elapsed += new ElapsedEventHandler(ResizingDone);
@@ -159,6 +192,22 @@ namespace CSGOTacticSimulator
             steamInited = SteamHelper.InitSteamClient();
         }
 
+        private void ChangeLanguage(string language, List<ResourceDictionary> dictionaryList)
+        {
+            string requestedCulture = string.Format(@"i18n\StringResource.{0}.xaml", language);
+            ResourceDictionary resourceDictionary = dictionaryList.FirstOrDefault(d => d.Source != null && d.Source.OriginalString.Equals(requestedCulture));
+            if (resourceDictionary == null)
+            {
+                requestedCulture = @"Resources\StringResource.zh-CN.xaml";
+                resourceDictionary = dictionaryList.FirstOrDefault(d => d.Source.OriginalString.Equals(requestedCulture));
+            }
+            if (resourceDictionary != null)
+            {
+                Application.Current.Resources.MergedDictionaries.Remove(resourceDictionary);
+                Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
+            }
+        }
+
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (c_paintcanvas.IsHitTestVisible == false)
@@ -205,6 +254,7 @@ namespace CSGOTacticSimulator
             {
                 IniHelper.WriteIni("Setting", "AvatarMode", " 4");
             }
+            IniHelper.WriteIni("Setting", "Language", " " + cultureDic[cb_language.SelectedItem.ToString()]);
 
             Environment.Exit(0);
         }
@@ -7108,6 +7158,12 @@ namespace CSGOTacticSimulator
             {
                 hideMouseTimer.Start();
             }
+        }
+
+        private void cb_language_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string language = cultureDic[cb_language.SelectedItem.ToString()];
+            ChangeLanguage(language, dictionaryList);
         }
     }
 }

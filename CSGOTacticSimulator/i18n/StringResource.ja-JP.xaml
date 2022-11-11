@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="MapFolder">フォルダ設定:</sys:String>
+    <sys:String x:Key="Map">マップ:</sys:String>
+    <sys:String x:Key="Frame">フレーム:</sys:String>
+    <sys:String x:Key="ScriptOrDemo">スクリプト / デモ:</sys:String>
+    <sys:String x:Key="Coordinate">座標:</sys:String>
+
+    <sys:String x:Key="Language">言語</sys:String>
+    <sys:String x:Key="Run">実行</sys:String>
+    <sys:String x:Key="AutoShowPanel">情報パネルを自動的に表示するか</sys:String>
+    <sys:String x:Key="ShowDropGun">ドロップ武器を表示するか</sys:String>
+    <sys:String x:Key="ShowDropMissile">発射体のドロップを表示するか</sys:String>
+    <sys:String x:Key="ShowDropOther">他のドロップを表示するか</sys:String>
+    <sys:String x:Key="SkipFreezeTime">準備フェーズをスキップするか</sys:String>
+    <sys:String x:Key="Log">ログ</sys:String>
+    <sys:String x:Key="ShowLoad">ローディングログを表示するか</sys:String>
+    <sys:String x:Key="ShowKill">キルログを表示するか</sys:String>
+    <sys:String x:Key="ShowSay">発話ログを表示するか</sys:String>
+    <sys:String x:Key="ShowBought">購入履歴を表示するか</sys:String>
+    <sys:String x:Key="Avatar">アバター</sys:String>
+    <sys:String x:Key="AvatarAuto">アバターを自動ロード</sys:String>
+    <sys:String x:Key="AvatarHltvOnly">Hltvからのみアバターを取得</sys:String>
+    <sys:String x:Key="AvatarSteamOnly">Steam からのみアバターを取得</sys:String>
+    <sys:String x:Key="AvatarNone">アバターを取得しない</sys:String>
+</ResourceDictionary>

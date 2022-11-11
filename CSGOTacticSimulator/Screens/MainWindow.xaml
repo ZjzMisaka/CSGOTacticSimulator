@@ -79,15 +79,15 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
-                <Label x:Name="lb_select_folder" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="设定文件夹: " FontSize="16" Foreground="White"></Label>
+                <Label x:Name="lb_select_folder" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{DynamicResource MapFolder}" FontSize="16" Foreground="White"></Label>
                 <TextBox x:Name="tb_select_folder" Width="200" Height="30" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" TextChanged="tb_select_folder_TextChanged"></TextBox>
                 <Button x:Name="btn_select_folder" Style="{StaticResource Style.TextContentButton}" Width="50" Height="30" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="..." FontSize="16" PreviewMouseLeftButtonUp="btn_select_folder_PreviewMouseLeftButtonUp" ></Button>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
-                <Label x:Name="lb_select_mapimg" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="选择地图: " FontSize="16" Foreground="White"></Label>
+                <Label x:Name="lb_select_mapimg" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{DynamicResource Map}" FontSize="16" Foreground="White"></Label>
                 <ComboBox x:Name="cb_select_mapimg" Margin="10, 0, 0, 0" Width="200" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" SelectionChanged="cb_select_mapimg_SelectionChanged" />
-                <Label x:Name="lb_select_frame" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="选择框架: " FontSize="16" Foreground="White" Margin="15, 0, 0, 0"></Label>
+                <Label x:Name="lb_select_frame" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{DynamicResource Frame}" FontSize="16" Foreground="White" Margin="15, 0, 0, 0"></Label>
                 <ComboBox x:Name="cb_select_mapframe" Margin="10, 0, 0, 0" Width="200" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" SelectionChanged="cb_select_mapframe_SelectionChanged" />
             </StackPanel>
 
@@ -101,7 +101,7 @@
             <GridSplitter x:Name="gs_gridsplitter" BorderBrush="Black" BorderThickness="1, 0, 1, 0" Width="5" Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" Background="Gray"  HorizontalAlignment="Center" Panel.ZIndex="100"/>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="2">
-                <Label x:Name="lb_select_script_demo" Height="30" Margin="0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="脚本 / DEMO: " FontSize="16" Foreground="White"></Label>
+                <Label x:Name="lb_select_script_demo" Height="30" Margin="0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{DynamicResource ScriptOrDemo}" FontSize="16" Foreground="White"></Label>
                 <TextBox x:Name="tb_select_file" Width="200" Height="30" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" KeyDown="Tb_select_file_KeyDown"></TextBox>
                 <Button x:Name="btn_select_file" Style="{StaticResource Style.TextContentButton}" Width="50" Height="30" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Content="..." FontSize="16" Click="btn_select_file_Click" />
             </StackPanel>
@@ -121,7 +121,7 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="0, 5, 5, 0">
-                    <Label x:Name="lb_point" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="坐标: " FontSize="16" Foreground="White"></Label>
+                    <Label x:Name="lb_point" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{DynamicResource Coordinate}" FontSize="16" Foreground="White"></Label>
                     <TextBox x:Name="tb_point" Width="160" Height="30" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" IsReadOnly="True"></TextBox>
                     <Button x:Name="btn_point" Style="{StaticResource Style.TextContentButton}" Width="50" Height="30" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="复制" FontSize="16" Click="btn_point_Click" ></Button>
                 </StackPanel>
@@ -202,22 +202,32 @@
         </StackPanel>
         <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0, 65, 61, 0">
             <StackPanel x:Name="sp_setting" Background="Gray" Opacity="0.9" Visibility="Collapsed" MouseLeave="sp_setting_MouseLeave">
-                <TextBlock FontWeight="ExtraBold" Margin="5" Foreground="White">运行</TextBlock>
-                <CheckBox x:Name="cb_auto_show_pannel" Margin="5" Foreground="White">是否自动显示信息面板</CheckBox>
-                <CheckBox x:Name="cb_show_drop_gun" Margin="5" Foreground="White">是否显示武器掉落</CheckBox>
-                <CheckBox x:Name="cb_show_drop_missile" Margin="5" Foreground="White">是否显示投掷物掉落</CheckBox>
-                <CheckBox x:Name="cb_show_drop_other" Margin="5" Foreground="White">是否显示其他掉落</CheckBox>
-                <CheckBox x:Name="cb_skip_freeze_time" Margin="5" Foreground="White">是否跳过准备阶段</CheckBox>
-                <TextBlock FontWeight="ExtraBold" Margin="5" Foreground="White">日志</TextBlock>
-                <CheckBox x:Name="cb_show_load" Margin="5" Foreground="White">是否显示加载日志</CheckBox>
-                <CheckBox x:Name="cb_show_kill" Margin="5" Foreground="White">是否显示击杀日志</CheckBox>
-                <CheckBox x:Name="cb_show_say" Margin="5" Foreground="White">是否显示发言日志</CheckBox>
-                <CheckBox x:Name="cb_show_bought" Margin="5" Foreground="White">是否显示购买日志</CheckBox>
-                <TextBlock FontWeight="ExtraBold" Margin="5" Foreground="White">头像</TextBlock>
-                <RadioButton x:Name="rb_avatar_auto" GroupName="setting_avatar" Margin="5" Foreground="White">自动加载头像</RadioButton>
-                <RadioButton x:Name="rb_avatar_hltv_only" GroupName="setting_avatar" Margin="5" Foreground="White">只从Hltv获取头像</RadioButton>
-                <RadioButton x:Name="rb_avatar_steam_only" GroupName="setting_avatar" Margin="5" Foreground="White">只从Steam获取头像</RadioButton>
-                <RadioButton x:Name="rb_avatar_none" GroupName="setting_avatar" Margin="5" Foreground="White">不获取头像</RadioButton>
+                <TextBlock FontWeight="ExtraBold" Margin="5" Foreground="White" Text="{DynamicResource Language}"></TextBlock>
+                <ComboBox x:Name="cb_language" Margin="5" Foreground="Gray" SelectionChanged="cb_language_SelectionChanged">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="Background" Value="Gray" />
+                            <Setter Property="BorderBrush" Value="Gray" />
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                </ComboBox>
+                <TextBlock FontWeight="ExtraBold" Margin="5" Foreground="White" Text="{DynamicResource Run}"></TextBlock>
+                <CheckBox x:Name="cb_auto_show_pannel" Margin="5" Foreground="White" Content="{DynamicResource AutoShowPanel}"></CheckBox>
+                <CheckBox x:Name="cb_show_drop_gun" Margin="5" Foreground="White" Content="{DynamicResource ShowDropGun}"></CheckBox>
+                <CheckBox x:Name="cb_show_drop_missile" Margin="5" Foreground="White" Content="{DynamicResource ShowDropMissile}"></CheckBox>
+                <CheckBox x:Name="cb_show_drop_other" Margin="5" Foreground="White" Content="{DynamicResource ShowDropOther}"></CheckBox>
+                <CheckBox x:Name="cb_skip_freeze_time" Margin="5" Foreground="White" Content="{DynamicResource SkipFreezeTime}"></CheckBox>
+                <TextBlock FontWeight="ExtraBold" Margin="5" Foreground="White" Text="{DynamicResource Log}"></TextBlock>
+                <CheckBox x:Name="cb_show_load" Margin="5" Foreground="White" Content="{DynamicResource ShowLoad}"></CheckBox>
+                <CheckBox x:Name="cb_show_kill" Margin="5" Foreground="White" Content="{DynamicResource ShowKill}"></CheckBox>
+                <CheckBox x:Name="cb_show_say" Margin="5" Foreground="White" Content="{DynamicResource ShowSay}"></CheckBox>
+                <CheckBox x:Name="cb_show_bought" Margin="5" Foreground="White" Content="{DynamicResource ShowBought}"></CheckBox>
+                <TextBlock FontWeight="ExtraBold" Margin="5" Foreground="White" Text="{DynamicResource Avatar}"></TextBlock>
+                <RadioButton x:Name="rb_avatar_auto" GroupName="setting_avatar" Margin="5" Foreground="White" Content="{DynamicResource AvatarAuto}"></RadioButton>
+                <RadioButton x:Name="rb_avatar_hltv_only" GroupName="setting_avatar" Margin="5" Foreground="White" Content="{DynamicResource AvatarHltvOnly}"></RadioButton>
+                <RadioButton x:Name="rb_avatar_steam_only" GroupName="setting_avatar" Margin="5" Foreground="White" Content="{DynamicResource AvatarSteamOnly}"></RadioButton>
+                <RadioButton x:Name="rb_avatar_none" GroupName="setting_avatar" Margin="5" Foreground="White" Content="{DynamicResource AvatarNone}"></RadioButton>
             </StackPanel>
         </ScrollViewer>
     </Grid>
