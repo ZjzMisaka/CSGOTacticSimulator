@@ -4819,6 +4819,7 @@ namespace CSGOTacticSimulator
             {
                 this.Dispatcher.Invoke(() =>
                 {
+                    pickImg.Visibility = Visibility.Collapsed;
                     c_runcanvas.Children.Remove(pickImg);
                     droppedImgDic.Remove(pickImg);
                 });
@@ -5253,31 +5254,32 @@ namespace CSGOTacticSimulator
                 {
                     if (getTickDoneCount <= 30)
                     {
+                        equipListNext = eventList[n].Item1.MissileEquipDic[playerThrow.SteamID];
+                        int equipListNextCount = -1;
+                        if (equipListNext == null)
+                        {
+                            equipListNextCount = 0;
+                        }
+                        else
+                        {
+                            equipListNextCount = equipListNext.Count();
+                        }
+                        if (equipList.Count() != equipListNextCount)
+                        {
+                            // continue
+                            return false;
+                        }
+
                         ++getTickDoneCount;
                     }
                     else
                     {
-                        equipListNext = eventList[n].Item1.MissileEquipDic[playerThrow.SteamID];
                         break;
                     }
                 }
             }
-            int equipListNextCount = -1;
-            if (equipListNext == null)
-            {
-                equipListNextCount = 0;
-            }
-            else
-            {
-                equipListNextCount = equipListNext.Count();
-            }
-            if (equipList.Count() == equipListNextCount)
-            {
-                // continue
-                return true;
-            }
 
-            return false;
+            return true;
         }
 
         private bool ThrowMissile(CurrentInfo currentInfo, EventArgs eventArgs, string eventName, int characterNumber, List<Tuple<CurrentInfo, EventArgs, string, int>> eventList, int i, Dictionary<int, int> usedMissileDic, List<KeyValuePair<KeyValuePair<int, int>, TSImage>> missileKeyValuePairList, float tickTime)
