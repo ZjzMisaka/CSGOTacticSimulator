@@ -3360,6 +3360,7 @@ namespace CSGOTacticSimulator
                 CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants);
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "FreezetimeEnded", 0));
             };
+            CurrentInfo lactTickCurrentInfo = null;
             parser.TickDone += (parseSender, parseE) =>
             {
                 if ((parser.CTScore + parser.TScore + 1) < roundNumber)
@@ -3376,6 +3377,9 @@ namespace CSGOTacticSimulator
                 Dictionary<long, List<Equipment>> missileEquipDic = new Dictionary<long, List<Equipment>>();
                 Dictionary<long, List<Equipment>> weaponEquipDic = new Dictionary<long, List<Equipment>>();
                 Dictionary<long, List<Equipment>> equipmentDic = new Dictionary<long, List<Equipment>>();
+
+                List<EventArgs> playerPickWeaponEventArgsList = new List<EventArgs>();
+                List<EventArgs> playerDropWeaponEventArgsList = new List<EventArgs>();
 
                 foreach (Player playingParticipant in nowParser.PlayingParticipants)
                 {
@@ -3422,10 +3426,62 @@ namespace CSGOTacticSimulator
                     missileEquipDic[playingParticipant.SteamID] = missileEquipList;
                     weaponEquipDic[playingParticipant.SteamID] = weaponEquipList;
                     equipmentDic[playingParticipant.SteamID] = equipmentList;
+
+
+                    // 由于PlayerPickWeapon和PlayerDropWeapon有时不触发, 因此改用手动与上一tick玩家的装备作比较来判断是否捡起或丢弃物品
+                    if (lactTickCurrentInfo != null && ((lactTickCurrentInfo.CtScore + lactTickCurrentInfo.TScore + 1) >= roundNumber))
+                    {
+                        if (!lactTickCurrentInfo.MissileEquipDic.ContainsKey(playingParticipant.SteamID))
+                        {
+                            lactTickCurrentInfo.MissileEquipDic[playingParticipant.SteamID] = new List<Equipment>();
+                        }
+                        if (!lactTickCurrentInfo.WeaponEquipDic.ContainsKey(playingParticipant.SteamID))
+                        {
+                            lactTickCurrentInfo.WeaponEquipDic[playingParticipant.SteamID] = new List<Equipment>();
+                        }
+                        if (!lactTickCurrentInfo.EquipDic.ContainsKey(playingParticipant.SteamID))
+                        {
+                            lactTickCurrentInfo.EquipDic[playingParticipant.SteamID] = new List<Equipment>();
+                        }
+                        if (lactTickCurrentInfo.MissileEquipDic[playingParticipant.SteamID].Count < missileEquipList.Count)
+                        {
+                            AddIntoPickOrDropListInTick(missileEquipList, lactTickCurrentInfo.MissileEquipDic[playingParticipant.SteamID], playerPickWeaponEventArgsList, copiedPlayer, true);
+                        }
+                        else if (lactTickCurrentInfo.MissileEquipDic[playingParticipant.SteamID].Count > missileEquipList.Count)
+                        {
+                            AddIntoPickOrDropListInTick(lactTickCurrentInfo.MissileEquipDic[playingParticipant.SteamID], missileEquipList, playerDropWeaponEventArgsList, copiedPlayer, false);
+                        }
+                        if (lactTickCurrentInfo.WeaponEquipDic[playingParticipant.SteamID].Count < weaponEquipList.Count)
+                        {
+                            AddIntoPickOrDropListInTick(weaponEquipList, lactTickCurrentInfo.WeaponEquipDic[playingParticipant.SteamID], playerPickWeaponEventArgsList, copiedPlayer, true);
+                        }
+                        else if (lactTickCurrentInfo.WeaponEquipDic[playingParticipant.SteamID].Count > weaponEquipList.Count)
+                        {
+                            AddIntoPickOrDropListInTick(lactTickCurrentInfo.WeaponEquipDic[playingParticipant.SteamID], weaponEquipList, playerDropWeaponEventArgsList, copiedPlayer, false);
+                        }
+                        if (lactTickCurrentInfo.EquipDic[playingParticipant.SteamID].Count < equipmentList.Count)
+                        {
+                            AddIntoPickOrDropListInTick(equipmentList, lactTickCurrentInfo.EquipDic[playingParticipant.SteamID], playerPickWeaponEventArgsList, copiedPlayer, true);
+                        }
+                        else if (lactTickCurrentInfo.EquipDic[playingParticipant.SteamID].Count > equipmentList.Count)
+                        {
+                            AddIntoPickOrDropListInTick(lactTickCurrentInfo.EquipDic[playingParticipant.SteamID], equipmentList, playerDropWeaponEventArgsList, copiedPlayer, false);
+                        }
+                    }
                 }
 
                 CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, nowParticipants, missileEquipDic, weaponEquipDic, equipmentDic);
+                lactTickCurrentInfo = currentInfo;
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "TickDone", 0));
+
+                foreach (PlayerPickWeaponEventArgs item in playerPickWeaponEventArgsList)
+                {
+                    eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, item, "PlayerPickWeapon", 0));
+                }
+                foreach (PlayerDropWeaponEventArgs item in playerDropWeaponEventArgsList)
+                {
+                    eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, item, "PlayerDropWeapon", 0));
+                }
             };
             parser.PlayerKilled += (parseSender, parseE) =>
             {
@@ -3502,30 +3558,30 @@ namespace CSGOTacticSimulator
             //parser.RankUpdate += (parseSender, parseE) =>
             //{
             //};
-            parser.PlayerDropWeapon += (parseSender, parseE) =>
-            {
-                if ((parser.CTScore + parser.TScore + 1) < roundNumber)
-                {
-                    return;
-                }
-                DemoParser nowParser = (parseSender as DemoParser);
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, null);
-                parseE.Weapon = new Equipment(parseE.Weapon.OriginalString);
-                parseE.Player = parseE.Player.Copy();
-                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "PlayerDropWeapon", 0));
-            };
-            parser.PlayerPickWeapon += (parseSender, parseE) =>
-            {
-                if ((parser.CTScore + parser.TScore + 1) < roundNumber)
-                {
-                    return;
-                }
-                DemoParser nowParser = (parseSender as DemoParser);
-                CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, null);
-                parseE.Weapon = new Equipment(parseE.Weapon.OriginalString);
-                parseE.Player = parseE.Player.Copy();
-                eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "PlayerPickWeapon", 0));
-            };
+            //parser.PlayerDropWeapon += (parseSender, parseE) =>
+            //{
+            //    if ((parser.CTScore + parser.TScore + 1) < roundNumber)
+            //    {
+            //        return;
+            //    }
+            //    DemoParser nowParser = (parseSender as DemoParser);
+            //    CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, null);
+            //    parseE.Weapon = new Equipment(parseE.Weapon.OriginalString);
+            //    parseE.Player = parseE.Player.Copy();
+            //    eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "PlayerDropWeapon", 0));
+            //};
+            //parser.PlayerPickWeapon += (parseSender, parseE) =>
+            //{
+            //    if ((parser.CTScore + parser.TScore + 1) < roundNumber)
+            //    {
+            //        return;
+            //    }
+            //    DemoParser nowParser = (parseSender as DemoParser);
+            //    CurrentInfo currentInfo = new CurrentInfo(nowParser.TScore, nowParser.CTScore, nowParser.TClanName, nowParser.CTClanName, nowParser.CurrentTick, nowParser.CurrentTime, nowParser.Map, nowParser.TickTime, null);
+            //    parseE.Weapon = new Equipment(parseE.Weapon.OriginalString);
+            //    parseE.Player = parseE.Player.Copy();
+            //    eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "PlayerPickWeapon", 0));
+            //};
             parser.SayText += (parseSender, parseE) =>
             {
                 if ((parser.CTScore + parser.TScore + 1) < roundNumber)
@@ -3607,6 +3663,45 @@ namespace CSGOTacticSimulator
             analyzeThread.Name = "analyzeThread";
             analyzeThread.Start();
             ThreadHelper.AddThread(analyzeThread);
+        }
+
+        private void AddIntoPickOrDropListInTick(List<Equipment> bigEquipList, List<Equipment> smallEquipList, List<EventArgs> eventArgsList, Player copiedPlayer, bool isPick)
+        {
+            List<Equipment> sameEquipList = new List<Equipment>();
+            foreach (Equipment item in bigEquipList)
+            {
+                bool isSame = false;
+                foreach (Equipment lastTickItem in smallEquipList)
+                {
+                    if (!sameEquipList.Contains(lastTickItem) && lastTickItem.OriginalString == item.OriginalString)
+                    {
+                        isSame = true;
+                        sameEquipList.Add(lastTickItem);
+                        break;
+                    }
+                }
+                if (isSame)
+                {
+                    continue;
+                }
+                else
+                {
+                    if (isPick)
+                    {
+                        PlayerPickWeaponEventArgs playerPickWeaponEventArgs = new PlayerPickWeaponEventArgs();
+                        playerPickWeaponEventArgs.Player = copiedPlayer.Copy();
+                        playerPickWeaponEventArgs.Weapon = new Equipment(item.OriginalString);
+                        eventArgsList.Add(playerPickWeaponEventArgs);
+                    }
+                    else
+                    {
+                        PlayerDropWeaponEventArgs playerDropWeaponEventArgs = new PlayerDropWeaponEventArgs();
+                        playerDropWeaponEventArgs.Player = copiedPlayer.Copy();
+                        playerDropWeaponEventArgs.Weapon = new Equipment(item.OriginalString);
+                        eventArgsList.Add(playerDropWeaponEventArgs);
+                    }
+                }
+            }
         }
 
         private void AnalizeDemo(object obj)
