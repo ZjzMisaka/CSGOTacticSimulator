@@ -24,4 +24,11 @@
     <sys:String x:Key="AvatarHltvOnly">只从Hltv获取头像</sys:String>
     <sys:String x:Key="AvatarSteamOnly">只从Steam获取头像</sys:String>
     <sys:String x:Key="AvatarNone">不获取头像</sys:String>
+
+    <sys:String x:Key="File">文件</sys:String>
+    <sys:String x:Key="NotFound">不存在</sys:String>
+    <sys:String x:Key="Error">错误</sys:String>
+    <sys:String x:Key="ChooseRoundText">需要观看第几回合</sys:String>
+    <sys:String x:Key="ChooseRound">选择回合数</sys:String>
+    <sys:String x:Key="PleaseEnterANumber">请输入数字</sys:String>
 </ResourceDictionary>

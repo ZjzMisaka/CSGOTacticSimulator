@@ -24,4 +24,11 @@
     <sys:String x:Key="AvatarHltvOnly">Hltvからのみアバターを取得</sys:String>
     <sys:String x:Key="AvatarSteamOnly">Steam からのみアバターを取得</sys:String>
     <sys:String x:Key="AvatarNone">アバターを取得しない</sys:String>
+
+    <sys:String x:Key="File">ファイル</sys:String>
+    <sys:String x:Key="NotFound">が見つかりません</sys:String>
+    <sys:String x:Key="Error">エラー</sys:String>
+    <sys:String x:Key="ChooseRoundText">どのラウンドを見るか</sys:String>
+    <sys:String x:Key="ChooseRound">ラウンド数を選択してください</sys:String>
+    <sys:String x:Key="PleaseEnterANumber">数字を入力してください</sys:String>
 </ResourceDictionary>

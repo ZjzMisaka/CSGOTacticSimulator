@@ -24,4 +24,11 @@
     <sys:String x:Key="AvatarHltvOnly">Get avatars only from Hltv</sys:String>
     <sys:String x:Key="AvatarSteamOnly">Get avatars only from Steam</sys:String>
     <sys:String x:Key="AvatarNone">Not get avatar</sys:String>
+
+    <sys:String x:Key="File">File</sys:String>
+    <sys:String x:Key="NotFound">not found</sys:String>
+    <sys:String x:Key="Error">Error</sys:String>
+    <sys:String x:Key="ChooseRoundText">Which rounds to watch</sys:String>
+    <sys:String x:Key="ChooseRound">Select the number of rounds</sys:String>
+    <sys:String x:Key="PleaseEnterANumber">Please key in numbers</sys:String>
 </ResourceDictionary>

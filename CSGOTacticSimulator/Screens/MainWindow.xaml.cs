@@ -2451,7 +2451,7 @@ namespace CSGOTacticSimulator
             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
             ofd.InitialDirectory = folder;
             ofd.DefaultExt = ".txt";
-            ofd.Filter = "脚本或demo (*.txt, *.dem)|*.txt; *.dem";
+            ofd.Filter = Application.Current.FindResource("ScriptOrDemo").ToString() + " (*.txt, *.dem)|*.txt; *.dem";
             if (ofd.ShowDialog() == true)
             {
                 string filePath = ofd.FileName;
@@ -2461,7 +2461,7 @@ namespace CSGOTacticSimulator
                     {
                         PropertiesSetter newPropertiesSetter = new PropertiesSetter(GlobalDictionary.propertiesSetter);
                         newPropertiesSetter.CloseTimer = new MessageBoxCloseTimer(3, 0);
-                        MessageBox.Show(newPropertiesSetter, "文件\n" + filePath + "\n不存在", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(newPropertiesSetter, Application.Current.FindResource("File").ToString() + "\n" + filePath + "\n" + Application.Current.FindResource("NotFound").ToString(), Application.Current.FindResource("Error").ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
                     tb_select_file.Text = filePath;
@@ -2492,7 +2492,7 @@ namespace CSGOTacticSimulator
             {
                 PropertiesSetter newPropertiesSetter = new PropertiesSetter(GlobalDictionary.propertiesSetter);
                 newPropertiesSetter.CloseTimer = new MessageBoxCloseTimer(3, 0);
-                MessageBox.Show(newPropertiesSetter, "文件\n" + filePath + "\n不存在", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(newPropertiesSetter, Application.Current.FindResource("File").ToString() + "\n" + filePath + "\n" + Application.Current.FindResource("NotFound").ToString(), Application.Current.FindResource("Error").ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -2503,7 +2503,10 @@ namespace CSGOTacticSimulator
             PropertiesSetter propertiesSetter = new PropertiesSetter(GlobalDictionary.propertiesSetter);
             propertiesSetter.LoadedEventHandler = new RoutedEventHandler((s, e) =>
             {
-                (MessageBox.ButtonList[0] as TextBox).Focus();
+                if (MessageBox.ButtonList.Count > 0 && MessageBox.ButtonList[0] is TextBox)
+                {
+                    (MessageBox.ButtonList[0] as TextBox).Focus();
+                }
             });
             propertiesSetter.KeyDownEventHandler += new KeyEventHandler((s, e) =>
             {
@@ -2522,7 +2525,7 @@ namespace CSGOTacticSimulator
             int res = MessageBox.Show(propertiesSetter, new RefreshList {
                 tb,
                 new ButtonSpacer(200),
-                "OK" }, "需要观看第几回合? ", "选择回合数", MessageBoxImage.Question);
+                "OK" }, Application.Current.FindResource("ChooseRoundText").ToString(), Application.Current.FindResource("ChooseRound").ToString(), MessageBoxImage.Question);
 
             int roundNumber = 0;
             if (res == -1)
@@ -2535,7 +2538,7 @@ namespace CSGOTacticSimulator
                 {
                     PropertiesSetter newPropertiesSetter = new PropertiesSetter(propertiesSetter);
                     newPropertiesSetter.CloseTimer = new MessageBoxCloseTimer(3, 0);
-                    MessageBox.Show(newPropertiesSetter, "请输入数字", "错误", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(newPropertiesSetter, Application.Current.FindResource("PleaseEnterANumber").ToString(), Application.Current.FindResource("Error").ToString(), MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
             }
