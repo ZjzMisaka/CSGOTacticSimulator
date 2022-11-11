@@ -2,6 +2,10 @@
 CSGO战术模拟器 <br />
  ![CSGOTacticSimulator](https://www.iaders.com/wp-content/uploads/2020/05/CTS.png) <br />
  [English ReadMe](https://github.com/ZjzMisaka/CSGOTacticSimulator/blob/master/README.md) <br />
+## multi-language
+- [x] 简体中文
+- [x] 日本語
+- [x] English
 ##
 *(v2.8.0 screenshot)* </br>
 ![cts110902](https://user-images.githubusercontent.com/16731853/200872444-213ea3da-3776-4338-be3c-f57108c998ce.jpg)
