@@ -2451,7 +2451,7 @@ namespace CSGOTacticSimulator
             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
             ofd.InitialDirectory = folder;
             ofd.DefaultExt = ".txt";
-            ofd.Filter = Application.Current.FindResource("ScriptOrDemo").ToString() + " (*.txt, *.dem)|*.txt; *.dem";
+            ofd.Filter = Application.Current.FindResource("ScriptOrDemoFile").ToString() + " (*.txt, *.dem)|*.txt; *.dem";
             if (ofd.ShowDialog() == true)
             {
                 string filePath = ofd.FileName;

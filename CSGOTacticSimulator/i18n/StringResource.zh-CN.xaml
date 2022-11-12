@@ -1,10 +1,10 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
-    <sys:String x:Key="MapFolder">设定文件夹: </sys:String>
-    <sys:String x:Key="Map">地图: </sys:String>
-    <sys:String x:Key="Frame">框架: </sys:String>
-    <sys:String x:Key="ScriptOrDemo">脚本 / DEMO: </sys:String>
+    <sys:String x:Key="MapFolder">设定文件夹:</sys:String>
+    <sys:String x:Key="Map">地图:</sys:String>
+    <sys:String x:Key="Frame">框架:</sys:String>
+    <sys:String x:Key="ScriptOrDemo">脚本 / DEMO:</sys:String>
     <sys:String x:Key="Coordinate">坐标:</sys:String>
     
     <sys:String x:Key="Language">语言</sys:String>
@@ -26,6 +26,7 @@
     <sys:String x:Key="AvatarNone">不获取头像</sys:String>
 
     <sys:String x:Key="File">文件</sys:String>
+    <sys:String x:Key="ScriptOrDemoFile">脚本 / DEMO文件</sys:String>
     <sys:String x:Key="NotFound">不存在</sys:String>
     <sys:String x:Key="Error">错误</sys:String>
     <sys:String x:Key="ChooseRoundText">需要观看第几回合</sys:String>

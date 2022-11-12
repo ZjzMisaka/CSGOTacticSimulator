@@ -26,6 +26,7 @@
     <sys:String x:Key="AvatarNone">アバターを取得しない</sys:String>
 
     <sys:String x:Key="File">ファイル</sys:String>
+    <sys:String x:Key="ScriptOrDemoFile">スクリプト / デモファイル</sys:String>
     <sys:String x:Key="NotFound">が見つかりません</sys:String>
     <sys:String x:Key="Error">エラー</sys:String>
     <sys:String x:Key="ChooseRoundText">どのラウンドを見るか</sys:String>
