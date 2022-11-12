@@ -7244,7 +7244,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void sp_setting_MouseLeave(object sender, MouseEventArgs e)
+        private void SettingPanelMouseLeave(object sender, MouseEventArgs e)
         {
             sp_setting.Visibility = Visibility.Collapsed;
         }
