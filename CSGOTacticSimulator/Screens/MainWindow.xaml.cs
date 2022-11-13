@@ -1174,7 +1174,7 @@ namespace CSGOTacticSimulator
             Point startMapPoint = new Point();
             Character character = null;
             int startLayer;
-            Point endMapPoint = new Point();
+            Point endMapPoint;
             int endLayer;
             VolumeLimit volumeLimit;
             if (!command.Contains("from"))
@@ -2435,7 +2435,7 @@ namespace CSGOTacticSimulator
 
         private void btn_select_file_Click(object sender, RoutedEventArgs e)
         {
-            string folder = "";
+            string folder;
             if (tb_select_file.Text.Trim() != "" && Directory.Exists(tb_select_file.Text.Trim()))
             {
                 folder = tb_select_file.Text.Trim();
@@ -5333,7 +5333,7 @@ namespace CSGOTacticSimulator
         {
             // 判断取消投掷
             List<Equipment> equipList = currentInfo.MissileEquipDic[playerThrow.SteamID];
-            List<Equipment> equipListNext = null;
+            List<Equipment> equipListNext;
             int getTickDoneCount = 0;
             for (int n = i + 1; n < eventList.Count(); ++n)
             {
@@ -5350,7 +5350,7 @@ namespace CSGOTacticSimulator
                     if (getTickDoneCount <= 30)
                     {
                         equipListNext = eventList[n].Item1.MissileEquipDic[playerThrow.SteamID];
-                        int equipListNextCount = -1;
+                        int equipListNextCount;
                         if (equipListNext == null)
                         {
                             equipListNextCount = 0;
@@ -6994,7 +6994,6 @@ namespace CSGOTacticSimulator
 
         private void Btn_forward_Click(object sender, RoutedEventArgs e)
         {
-            string filePath = tb_select_file.Text;
             if (nowRunningType == RunningType.DEM && btn_pause.Tag != null && btn_pause.Tag.ToString() == "R")
             {
                 isForward = true;
@@ -7003,7 +7002,6 @@ namespace CSGOTacticSimulator
 
         private void Btn_backward_Click(object sender, RoutedEventArgs e)
         {
-            string filePath = tb_select_file.Text;
             if (nowRunningType == RunningType.DEM && btn_pause.Tag != null && btn_pause.Tag.ToString() == "R")
             {
                 isBackward = true;
