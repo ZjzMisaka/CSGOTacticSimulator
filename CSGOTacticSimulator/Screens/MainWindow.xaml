@@ -7,7 +7,7 @@
         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit" xmlns:controls="clr-namespace:CSGOTacticSimulator.Controls"
         mc:Ignorable="d"
         Title="CSGO Tactics Simulator" Height="1000" Width="1600" AllowsTransparency="True" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip" 
-        Loaded="Window_Loaded" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp" MouseLeftButtonDown="Window_MouseLeftButtonDown" StateChanged="Window_StateChanged" SizeChanged="OnSizeChanged" MouseMove="Window_MouseMove" >
+        Loaded="WindowLoaded" KeyDown="WindowKeyDown" KeyUp="WindowKeyUp" MouseLeftButtonDown="WindowMouseLeftButtonDown" StateChanged="WindowStateChanged" SizeChanged="OnSizeChanged" MouseMove="WindowMouseMove" >
     <Window.Resources>
         <Style x:Key="Style.TextContentButton" TargetType="Button">
             <Setter Property="Width" Value="70"/>
@@ -80,19 +80,19 @@
 
             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
                 <Label x:Name="lb_select_folder" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{DynamicResource MapFolder}" FontSize="16" Foreground="White"></Label>
-                <TextBox x:Name="tb_select_folder" Width="200" Height="30" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" TextChanged="tb_select_folder_TextChanged"></TextBox>
-                <Button x:Name="btn_select_folder" Style="{StaticResource Style.TextContentButton}" Width="50" Height="30" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="..." FontSize="16" PreviewMouseLeftButtonUp="btn_select_folder_PreviewMouseLeftButtonUp" ></Button>
+                <TextBox x:Name="tb_select_folder" Width="200" Height="30" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" TextChanged="TbSelectFolderTextChanged"></TextBox>
+                <Button x:Name="btn_select_folder" Style="{StaticResource Style.TextContentButton}" Width="50" Height="30" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="..." FontSize="16" PreviewMouseLeftButtonUp="BtnSelectFolderPreviewMouseLeftButtonUp" ></Button>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
                 <Label x:Name="lb_select_mapimg" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{DynamicResource Map}" FontSize="16" Foreground="White"></Label>
-                <ComboBox x:Name="cb_select_mapimg" Margin="10, 0, 0, 0" Width="200" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" SelectionChanged="cb_select_mapimg_SelectionChanged" />
+                <ComboBox x:Name="cb_select_mapimg" Margin="10, 0, 0, 0" Width="200" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" SelectionChanged="CbSelectMapimgSelectionChanged" />
                 <Label x:Name="lb_select_frame" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{DynamicResource Frame}" FontSize="16" Foreground="White" Margin="15, 0, 0, 0"></Label>
-                <ComboBox x:Name="cb_select_mapframe" Margin="10, 0, 0, 0" Width="200" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" SelectionChanged="cb_select_mapframe_SelectionChanged" />
+                <ComboBox x:Name="cb_select_mapframe" Margin="10, 0, 0, 0" Width="200" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" SelectionChanged="CbSelectMapframeSelectionChanged" />
             </StackPanel>
 
             <Grid x:Name="g_map" Grid.Row="2" Grid.Column="0" Margin="0, 0, 5, 0" HorizontalAlignment="Left" VerticalAlignment="Center">
-                <Image x:Name="i_map" MouseLeftButtonDown="i_map_MouseLeftButtonDown" MouseRightButtonUp="i_map_MouseRightButtonUp" SizeChanged="OnSizeChanged">
+                <Image x:Name="i_map" MouseLeftButtonDown="IMapMouseLeftButtonDown" MouseRightButtonUp="IMapMouseRightButtonUp" SizeChanged="OnSizeChanged">
                 </Image>
                 <TextBlock x:Name="tb_infos" Visibility="Hidden" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Right" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5" IsHitTestVisible="False" ></TextBlock>
                 <TextBlock x:Name="tb_timer" Visibility="Hidden" Background="Black" Opacity="0.4" Foreground="White" FontSize="15" Text="" TextAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="5" IsHitTestVisible="False" ></TextBlock>
@@ -103,7 +103,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="2">
                 <Label x:Name="lb_select_script_demo" Height="30" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{DynamicResource ScriptOrDemo}" FontSize="16" Foreground="White"></Label>
                 <TextBox x:Name="tb_select_file" Width="200" Height="30" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" KeyDown="Tb_select_file_KeyDown"></TextBox>
-                <Button x:Name="btn_select_file" Style="{StaticResource Style.TextContentButton}" Width="50" Height="30" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Content="..." FontSize="16" Click="btn_select_file_Click" />
+                <Button x:Name="btn_select_file" Style="{StaticResource Style.TextContentButton}" Width="50" Height="30" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Content="..." FontSize="16" Click="BtnSelectFileClick" />
             </StackPanel>
 
             <avalonEdit:TextEditor x:Name="te_editor" WordWrap="True" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" FontSize="16" Margin="5, 0, 0, 0" ShowLineNumbers="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
@@ -112,7 +112,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="btn_auto" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="0" Click="Btn_auto_Click"></Button>
+                <Button x:Name="btn_auto" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="0" Click="BtnAutoClick"></Button>
             </Grid>
 
             <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3">
@@ -123,7 +123,7 @@
                 <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="0, 5, 5, 0">
                     <Label x:Name="lb_point" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{DynamicResource Coordinate}" FontSize="16" Foreground="White"></Label>
                     <TextBox x:Name="tb_point" Width="160" Height="30" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" IsReadOnly="True"></TextBox>
-                    <Button x:Name="btn_point" Style="{StaticResource Style.TextContentButton}" Width="50" Height="30" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="复制" FontSize="16" Click="btn_point_Click" ></Button>
+                    <Button x:Name="btn_point" Style="{StaticResource Style.TextContentButton}" Width="50" Height="30" Margin="10, 0, 0, 0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="复制" FontSize="16" Click="BtnPointClick" ></Button>
                 </StackPanel>
                 <Grid x:Name="g_controller_buttons" Grid.Row="0" Grid.Column="1"  Margin="5, 5, 0, 0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Grid.ColumnDefinitions>
@@ -136,14 +136,14 @@
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="btn_preview" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="0" Click="btn_preview_Click"></Button>
-                    <Button x:Name="btn_run" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="1" Click="btn_run_Click"></Button>
-                    <Button x:Name="btn_backward" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="2" Click="Btn_backward_Click"></Button>
-                    <Button x:Name="btn_pause" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="3" Click="btn_pause_Click"></Button>
-                    <Button x:Name="btn_forward" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="4" Click="Btn_forward_Click"></Button>
-                    <Button x:Name="btn_stop" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="5" Click="btn_stop_Click"></Button>
-                    <Button x:Name="btn_save" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="6" Click="btn_save_Click"></Button>
-                    <Button x:Name="btn_exit" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="7" Click="btn_exit_Click"></Button>
+                    <Button x:Name="btn_preview" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="0" Click="BtnPreviewClick"></Button>
+                    <Button x:Name="btn_run" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="1" Click="BtnRunClick"></Button>
+                    <Button x:Name="btn_backward" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="2" Click="BtnBackwardClick"></Button>
+                    <Button x:Name="btn_pause" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="3" Click="BtnPauseClick"></Button>
+                    <Button x:Name="btn_forward" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="4" Click="BtnForwardClick"></Button>
+                    <Button x:Name="btn_stop" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="5" Click="BtnStopClick"></Button>
+                    <Button x:Name="btn_save" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="6" Click="BtnSaveClick"></Button>
+                    <Button x:Name="btn_exit" Style="{StaticResource Style.ImageBackgroundButton}" FontSize="16" Grid.Column="7" Click="BtnExitClick"></Button>
                 </Grid>
             </Grid>
 
@@ -193,17 +193,17 @@
                 <TextBlock x:Name="tb_player10" Grid.Column="3" Grid.Row="5" Visibility="Visible" Foreground="White" FontSize="15" Text="" TextAlignment="Left" VerticalAlignment="Center" HorizontalAlignment="Left" IsHitTestVisible="False" ></TextBlock>
             </Grid>
         </Grid>
-        <Canvas x:Name="c_paintcanvas" Background="Transparent" IsHitTestVisible="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseMove="c_paintcanvas_MouseMove">
+        <Canvas x:Name="c_paintcanvas" Background="Transparent" IsHitTestVisible="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseMove="CPaintcanvasMouseMove">
         </Canvas>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="30">
-            <Button x:Name="btn_setting" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Visibility="Visible" Click="btn_setting_Click"></Button>
-            <Button x:Name="btn_restore" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Visibility="Collapsed" Click="btn_restore_Click"></Button>
-            <Button x:Name="btn_minimize" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Click="btn_minimize_Click"></Button>
+            <Button x:Name="btn_setting" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Visibility="Visible" Click="BtnSettingClick"></Button>
+            <Button x:Name="btn_restore" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Visibility="Collapsed" Click="BtnRestoreClick"></Button>
+            <Button x:Name="btn_minimize" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Click="BtnMinimizeClick"></Button>
         </StackPanel>
         <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0, 65, 61, 0" MouseLeave="SettingPanelMouseLeave">
             <StackPanel x:Name="sp_setting" Background="Gray" Opacity="0.9" Visibility="Collapsed">
                 <TextBlock FontWeight="ExtraBold" Margin="5" Foreground="White" Text="{DynamicResource Language}"></TextBlock>
-                <ComboBox x:Name="cb_language" Margin="5" Foreground="Gray" SelectionChanged="cb_language_SelectionChanged">
+                <ComboBox x:Name="cb_language" Margin="5" Foreground="Gray" SelectionChanged="CbLanguageSelectionChanged">
                     <ComboBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ComboBoxItem}">
                             <Setter Property="Foreground" Value="White" />

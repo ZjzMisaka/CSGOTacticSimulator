@@ -91,7 +91,7 @@ namespace CSGOTacticSimulator
             InitializeComponent();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void WindowLoaded(object sender, RoutedEventArgs e)
         {
             this.Width = int.Parse(IniHelper.ReadIni("Window", "Width"));
             this.Height = int.Parse(IniHelper.ReadIni("Window", "Height"));
@@ -142,8 +142,8 @@ namespace CSGOTacticSimulator
             logXshd = HighlightingLoader.LoadXshd(logReader);
             te_editor.SyntaxHighlighting = HighlightingLoader.Load(codeXshd, HighlightingManager.Instance);
 
-            te_editor.TextArea.TextEntering += te_editor_TextArea_TextEntering;
-            te_editor.TextArea.TextEntered += te_editor_TextArea_TextEntered;
+            te_editor.TextArea.TextEntering += TeEditorTextAreaTextEntering;
+            te_editor.TextArea.TextEntered += TeEditorTextAreaTextEntered;
 
             this.Background = GlobalDictionary.backgroundBrush;
             btn_minimize.Background = GlobalDictionary.minimizeBrush;
@@ -208,13 +208,13 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void WindowMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (c_paintcanvas.IsHitTestVisible == false)
                 this.DragMove();
         }
 
-        private void btn_exit_Click(object sender, RoutedEventArgs e)
+        private void BtnExitClick(object sender, RoutedEventArgs e)
         {
             int resultIndex = MessageBox.Show(GlobalDictionary.propertiesSetter, new RefreshList { "保存后退出", "直接退出", new ButtonSpacer(100), "取消" }, "是否另存战术脚本", "正在退出程序", MessageBoxImage.Warning);
             if (MessageBox.ButtonList[resultIndex].ToString() == "取消")
@@ -260,7 +260,7 @@ namespace CSGOTacticSimulator
         }
 
 
-        private void i_map_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void IMapMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
             if (i_map.Source != null)
@@ -277,7 +277,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void btn_select_folder_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void BtnSelectFolderPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             System.Windows.Forms.FolderBrowserDialog selectFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             selectFolderDialog.SelectedPath = GlobalDictionary.mapFolderPath;
@@ -291,7 +291,7 @@ namespace CSGOTacticSimulator
             AddMapsFromFolder(folderPath);
         }
 
-        private void tb_select_folder_TextChanged(object sender, TextChangedEventArgs e)
+        private void TbSelectFolderTextChanged(object sender, TextChangedEventArgs e)
         {
             AddMapsFromFolder(tb_select_folder.Text.Trim());
         }
@@ -356,7 +356,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void cb_select_mapimg_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CbSelectMapimgSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBoxItem selectedItem = (ComboBoxItem)cb_select_mapimg.SelectedItem;
             if (selectedItem != null)
@@ -367,7 +367,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void cb_select_mapframe_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CbSelectMapframeSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBoxItem selectedItem = (ComboBoxItem)cb_select_mapframe.SelectedItem;
             if (selectedItem != null)
@@ -378,7 +378,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void Window_StateChanged(object sender, EventArgs e)
+        private void WindowStateChanged(object sender, EventArgs e)
         {
             if (WindowState == WindowState.Normal)
             {
@@ -572,7 +572,7 @@ namespace CSGOTacticSimulator
             return mapPoint;
         }
 
-        private void btn_run_Click(object sender, RoutedEventArgs e)
+        private void BtnRunClick(object sender, RoutedEventArgs e)
         {
             if (i_map.Source == null)
             {
@@ -695,7 +695,7 @@ namespace CSGOTacticSimulator
                 ReadDemo(filePath);
             }
         }
-        private void btn_pause_Click(object sender, RoutedEventArgs e)
+        private void BtnPauseClick(object sender, RoutedEventArgs e)
         {
             if (i_map.Source == null || btn_pause.Tag == null)
             {
@@ -2412,12 +2412,12 @@ namespace CSGOTacticSimulator
             tb_infos.FontSize = (GlobalDictionary.ImageRatio == 0) ? 1 : 15 * GlobalDictionary.ImageRatio * 1.3;
             tb_infos.Text = img.Tag.ToString();
         }
-        private void btn_point_Click(object sender, RoutedEventArgs e)
+        private void BtnPointClick(object sender, RoutedEventArgs e)
         {
             System.Windows.Clipboard.SetDataObject(tb_point.Text);
         }
 
-        private void btn_save_Click(object sender, RoutedEventArgs e)
+        private void BtnSaveClick(object sender, RoutedEventArgs e)
         {
             SaveFile();
         }
@@ -2433,7 +2433,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void btn_select_file_Click(object sender, RoutedEventArgs e)
+        private void BtnSelectFileClick(object sender, RoutedEventArgs e)
         {
             string folder;
             if (tb_select_file.Text.Trim() != "" && Directory.Exists(tb_select_file.Text.Trim()))
@@ -5805,7 +5805,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void btn_stop_Click(object sender, RoutedEventArgs e)
+        private void BtnStopClick(object sender, RoutedEventArgs e)
         {
             Stop();
             gs_gridsplitter.IsEnabled = true;
@@ -5846,7 +5846,7 @@ namespace CSGOTacticSimulator
             te_editor.IsReadOnly = false;
         }
 
-        void te_editor_TextArea_TextEntered(object sender, TextCompositionEventArgs e)
+        void TeEditorTextAreaTextEntered(object sender, TextCompositionEventArgs e)
         {
             if (e.Text == " ")
             {
@@ -5952,7 +5952,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        void te_editor_TextArea_TextEntering(object sender, TextCompositionEventArgs e)
+        void TeEditorTextAreaTextEntering(object sender, TextCompositionEventArgs e)
         {
             if (e.Text.Length > 0 && completionWindow != null)
             {
@@ -5967,15 +5967,15 @@ namespace CSGOTacticSimulator
             // We still want to insert the character that was typed.
         }
 
-        private void btn_minimize_Click(object sender, RoutedEventArgs e)
+        private void BtnMinimizeClick(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
         }
-        private void btn_restore_Click(object sender, RoutedEventArgs e)
+        private void BtnRestoreClick(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Normal;
         }
-        private void btn_setting_Click(object sender, RoutedEventArgs e)
+        private void BtnSettingClick(object sender, RoutedEventArgs e)
         {
             if (sp_setting.Visibility == Visibility.Visible)
             {
@@ -5987,7 +5987,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void c_paintcanvas_MouseMove(object sender, MouseEventArgs e)
+        private void CPaintcanvasMouseMove(object sender, MouseEventArgs e)
         {
             if (Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.LeftShift) && e.LeftButton == MouseButtonState.Pressed)
             {
@@ -6179,7 +6179,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void Window_KeyDown(object sender, KeyEventArgs e)
+        private void WindowKeyDown(object sender, KeyEventArgs e)
         {
             if (Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.Delete))
             {
@@ -6199,7 +6199,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void Window_KeyUp(object sender, KeyEventArgs e)
+        private void WindowKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.LeftCtrl)
             {
@@ -6215,7 +6215,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void btn_preview_Click(object sender, RoutedEventArgs e)
+        private void BtnPreviewClick(object sender, RoutedEventArgs e)
         {
             if (i_map.Source == null)
             {
@@ -6983,7 +6983,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void i_map_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        private void IMapMouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (i_map.Source != null)
             {
@@ -6992,7 +6992,7 @@ namespace CSGOTacticSimulator
             CreateCommandInWindow(new Point(Math.Round((e.GetPosition(i_map).X / GlobalDictionary.ImageRatio), 2), Math.Round((e.GetPosition(i_map).Y / GlobalDictionary.ImageRatio), 2)));
         }
 
-        private void Btn_forward_Click(object sender, RoutedEventArgs e)
+        private void BtnForwardClick(object sender, RoutedEventArgs e)
         {
             if (nowRunningType == RunningType.DEM && btn_pause.Tag != null && btn_pause.Tag.ToString() == "R")
             {
@@ -7000,7 +7000,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void Btn_backward_Click(object sender, RoutedEventArgs e)
+        private void BtnBackwardClick(object sender, RoutedEventArgs e)
         {
             if (nowRunningType == RunningType.DEM && btn_pause.Tag != null && btn_pause.Tag.ToString() == "R")
             {
@@ -7008,7 +7008,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void Btn_auto_Click(object sender, RoutedEventArgs e)
+        private void BtnAutoClick(object sender, RoutedEventArgs e)
         {
             isNeedAutomaticGuidance = true;
         }
@@ -7247,7 +7247,7 @@ namespace CSGOTacticSimulator
             sp_setting.Visibility = Visibility.Collapsed;
         }
 
-        private void Window_MouseMove(object sender, MouseEventArgs e)
+        private void WindowMouseMove(object sender, MouseEventArgs e)
         {
             Mouse.OverrideCursor = null;
 
@@ -7258,7 +7258,7 @@ namespace CSGOTacticSimulator
             }
         }
 
-        private void cb_language_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CbLanguageSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string language = cultureDic[cb_language.SelectedItem.ToString()];
             ChangeLanguage(language, dictionaryList);
