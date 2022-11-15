@@ -120,6 +120,7 @@
     </Compile>
     <Compile Include="Controls\TSImage.cs" />
     <Compile Include="Global\GlobalDictionary.cs" />
+    <Compile Include="Helper\AnalyzeHelper.cs" />
     <Compile Include="Helper\SteamHelper.cs" />
     <Compile Include="Model\Animation.cs" />
     <Compile Include="Helper\CharacterHelper.cs" />
@@ -325,11 +326,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="CTS.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="infos\map.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="img\effect_fire.png">

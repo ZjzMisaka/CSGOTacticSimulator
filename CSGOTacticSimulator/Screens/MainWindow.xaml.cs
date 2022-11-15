@@ -76,7 +76,6 @@ namespace CSGOTacticSimulator
         private int offset = 0;
         private bool isForward = false;
         private bool isBackward = false;
-        private List<string> mapList = null;
         private bool isNeedAutomaticGuidance = false;
         private bool steamInited = false;
         private Dictionary<string, string> proAvatarLinkDic = new Dictionary<string, string>();
@@ -313,28 +312,15 @@ namespace CSGOTacticSimulator
             DirectoryInfo frameDirD = frameDir as DirectoryInfo;
             FileSystemInfo[] frameFiles = frameDirD.GetFileSystemInfos();
 
-            mapList = new List<string>();
-            string line;
-            System.IO.StreamReader file = new System.IO.StreamReader(GlobalDictionary.mapListPath);
-            while ((line = file.ReadLine()) != null)
-            {
-                mapList.Add(line);
-            }
             foreach (FileSystemInfo fileSystemInfo in imgFiles)
             {
                 FileInfo fileInfo = fileSystemInfo as FileInfo;
                 if (fileInfo != null)
                 {
-                    foreach (string map in mapList)
-                    {
-                        if (fileInfo.Name.ToUpper().IndexOf(map.ToUpper()) != -1)
-                        {
-                            ComboBoxItem cbItem = new ComboBoxItem();
-                            cbItem.Content = map;
-                            cbItem.Tag = fileInfo.FullName;
-                            cb_select_mapimg.Items.Add(cbItem);
-                        }
-                    }
+                    ComboBoxItem cbItem = new ComboBoxItem();
+                    cbItem.Content = fileInfo.Name.Split('_')[1];
+                    cbItem.Tag = fileInfo.FullName;
+                    cb_select_mapimg.Items.Add(cbItem);
                 }
             }
 
@@ -975,7 +961,7 @@ namespace CSGOTacticSimulator
             string[] splitedCmd = command.Split(' ');
             int number = CharacterHelper.GetCharacter(splitedCmd[2]).Number;
             Model.VerticalPosition charactorVerticalPosition = Model.VerticalPosition.Upper;
-            for (int i = 0; i < CharacterHelper.GetCharacters().Count; ++i)
+            for (int i = 0; i < characters.Count; ++i)
             {
                 if (characters[i].Number == number)
                 {
@@ -3073,7 +3059,7 @@ namespace CSGOTacticSimulator
                     {
                         continue;
                     }
-                    Point mapPoint = DemoPointToMapPoint(player.Position, demoParser.Map);
+                    Point mapPoint = AnalyzeHelper.DemoPointToMapPoint(player.Position, demoParser.Map);
                     bool camp = false;
                     if (player.Team == Team.Terrorist)
                     {
@@ -3183,7 +3169,7 @@ namespace CSGOTacticSimulator
                     {
                         continue;
                     }
-                    Point mapPoint = DemoPointToMapPoint(player.Position, demoParser.Map);
+                    Point mapPoint = AnalyzeHelper.DemoPointToMapPoint(player.Position, demoParser.Map);
                     bool camp = false;
                     if (player.Team == Team.Terrorist)
                     {
@@ -3844,7 +3830,7 @@ namespace CSGOTacticSimulator
                         }
                         else if (currentEvent.Item3 == "BombPlanted")
                         {
-                            BombPlanted(DemoPointToMapPoint((currentEvent.Item2 as BombEventArgs).Player.Position, currentInfo.Map), CharacterHelper.GetCharacter(currentEvent.Item4), out roundTimeSpan, out timeSpanWhenBombPlanted, out offsetWhenBombPlanted);
+                            BombPlanted(AnalyzeHelper.DemoPointToMapPoint((currentEvent.Item2 as BombEventArgs).Player.Position, currentInfo.Map), CharacterHelper.GetCharacter(currentEvent.Item4), out roundTimeSpan, out timeSpanWhenBombPlanted, out offsetWhenBombPlanted);
                         }
                         else if (currentEvent.Item3 == "BombDefused")
                         {
@@ -4241,7 +4227,7 @@ namespace CSGOTacticSimulator
                             continue;
                         }
 
-                        BombPlanted(DemoPointToMapPoint((currentEvent.Item2 as BombEventArgs).Player.Position, currentInfo.Map), character, out roundTimeSpan, out timeSpanWhenBombPlanted, out offsetWhenBombPlanted);
+                        BombPlanted(AnalyzeHelper.DemoPointToMapPoint((currentEvent.Item2 as BombEventArgs).Player.Position, currentInfo.Map), character, out roundTimeSpan, out timeSpanWhenBombPlanted, out offsetWhenBombPlanted);
                     }
                 }
                 else if (currentEvent.Item2 is BombDefuseEventArgs)
@@ -4345,7 +4331,7 @@ namespace CSGOTacticSimulator
                                 bulletLine.StrokeDashCap = PenLineCap.Triangle;
                                 bulletLine.StrokeEndLineCap = PenLineCap.Triangle;
                                 bulletLine.StrokeStartLineCap = PenLineCap.Square;
-                                Point fromMapPoint = DemoPointToMapPoint(player.Position, currentInfo.Map);
+                                Point fromMapPoint = AnalyzeHelper.DemoPointToMapPoint(player.Position, currentInfo.Map);
                                 Point fromWndPoint = GetWndPoint(fromMapPoint, ImgType.Nothing);
                                 WeaponFiredEventArgs weaponFiredEventArgs = currentEvent.Item2 as WeaponFiredEventArgs;
 
@@ -4370,7 +4356,7 @@ namespace CSGOTacticSimulator
 
                                 direction = VectorHelper.GetUnitVector(new Point(0, 0), direction);
 
-                                Point toMapPoint = DemoPointToMapPoint(player.Position + new DemoInfo.Vector((float)(direction.X * 1000), (float)(direction.Y * 1000), 0), currentInfo.Map);
+                                Point toMapPoint = AnalyzeHelper.DemoPointToMapPoint(player.Position + new DemoInfo.Vector((float)(direction.X * 1000), (float)(direction.Y * 1000), 0), currentInfo.Map);
                                 Point toWndPoint = GetWndPoint(toMapPoint, ImgType.Nothing);
 
                                 List<Point> mapPointList = new List<Point>() { fromMapPoint, toMapPoint };
@@ -4641,7 +4627,7 @@ namespace CSGOTacticSimulator
                                     c_runcanvas.Children.Remove(character.StatusImg);
                                 }
 
-                                endMapPoint = DemoPointToMapPoint(player.IsAlive ? player.Position : player.LastAlivePosition, currentInfo.Map);
+                                endMapPoint = AnalyzeHelper.DemoPointToMapPoint(player.IsAlive ? player.Position : player.LastAlivePosition, currentInfo.Map);
                                 endWndPoint = GetWndPoint(endMapPoint, ImgType.Character);
 
                                 character.CharacterImg.Tag = (nowTime - firstFreezetimeEndedTime) + "|" + (stopWatchThisRound.ElapsedMilliseconds / 1000.0 + offset / 1000);
@@ -4995,7 +4981,7 @@ namespace CSGOTacticSimulator
                         DemoInfo.Player player = (currentEvent.Item2 as PlayerDropWeaponEventArgs).Player;
                         double tan = Math.Tan(player.ViewDirectionX * Math.PI / 180);
                         Point direction = new Point(0, 0);
-                        Point mapPoint = DemoPointToMapPoint(player.Position, currentEvent.Item1.Map);
+                        Point mapPoint = AnalyzeHelper.DemoPointToMapPoint(player.Position, currentEvent.Item1.Map);
                         Point wndPoint = new Point();
                         if (player.IsAlive)
                         {
@@ -5118,7 +5104,7 @@ namespace CSGOTacticSimulator
             this.Dispatcher.Invoke(() =>
             {
                 missileEffectImg = new TSImage();
-                missileEffectImg.MapPoint = DemoPointToMapPoint(eventArgs.Position, currentInfo.Map);
+                missileEffectImg.MapPoint = AnalyzeHelper.DemoPointToMapPoint(eventArgs.Position, currentInfo.Map);
                 missileEffectImg.ImgType = ImgType.MissileEffect;
                 missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.heEffectPath));
 
@@ -5151,7 +5137,7 @@ namespace CSGOTacticSimulator
             this.Dispatcher.Invoke(() =>
             {
                 missileEffectImg = new TSImage();
-                missileEffectImg.MapPoint = DemoPointToMapPoint((eventArgs as FlashEventArgs).Position, currentInfo.Map);
+                missileEffectImg.MapPoint = AnalyzeHelper.DemoPointToMapPoint((eventArgs as FlashEventArgs).Position, currentInfo.Map);
                 missileEffectImg.ImgType = ImgType.MissileEffect;
                 missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.flashEffectPath));
 
@@ -5184,7 +5170,7 @@ namespace CSGOTacticSimulator
             this.Dispatcher.Invoke(() =>
             {
                 missileEffectImg = new TSImage();
-                missileEffectImg.MapPoint = DemoPointToMapPoint(eventArgs.Position, currentInfo.Map);
+                missileEffectImg.MapPoint = AnalyzeHelper.DemoPointToMapPoint(eventArgs.Position, currentInfo.Map);
                 missileEffectImg.ImgType = ImgType.MissileEffect;
                 missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.smokeEffectPath));
 
@@ -5235,7 +5221,7 @@ namespace CSGOTacticSimulator
             this.Dispatcher.Invoke(() =>
             {
                 missileEffectImg = new TSImage();
-                missileEffectImg.MapPoint = DemoPointToMapPoint(eventArgs.Position, currentInfo.Map);
+                missileEffectImg.MapPoint = AnalyzeHelper.DemoPointToMapPoint(eventArgs.Position, currentInfo.Map);
                 missileEffectImg.ImgType = ImgType.MissileEffect;
                 missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.fireEffectPath));
 
@@ -5285,7 +5271,7 @@ namespace CSGOTacticSimulator
             this.Dispatcher.Invoke(() =>
             {
                 missileEffectImg = new TSImage();
-                missileEffectImg.MapPoint = DemoPointToMapPoint(eventArgs.Position, currentInfo.Map);
+                missileEffectImg.MapPoint = AnalyzeHelper.DemoPointToMapPoint(eventArgs.Position, currentInfo.Map);
                 missileEffectImg.ImgType = ImgType.MissileEffect;
                 missileEffectImg.Source = new BitmapImage(new Uri(GlobalDictionary.decoyEffectPath));
 
@@ -5391,7 +5377,7 @@ namespace CSGOTacticSimulator
 
             int endTick = 0;
             double costTime = 0;
-            Point missileStartMapPoint = DemoPointToMapPoint(playerThrow.Position, currentInfo.Map);
+            Point missileStartMapPoint = AnalyzeHelper.DemoPointToMapPoint(playerThrow.Position, currentInfo.Map);
             Point missileEndMapPoint = new Point();
 
             for (int n = i + 1; n < eventList.Count(); ++n)
@@ -5428,7 +5414,7 @@ namespace CSGOTacticSimulator
                     {
                         costTime = tickTime * (eventList[n].Item1.CurrentTick - currentInfo.CurrentTick);
                     }
-                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as GrenadeEventArgs).Position, currentInfo.Map);
+                    missileEndMapPoint = AnalyzeHelper.DemoPointToMapPoint((eventList[n].Item2 as GrenadeEventArgs).Position, currentInfo.Map);
                     break;
                 }
                 else if (weapon == EquipmentElement.Flash && eventList[n].Item3 == "FlashNadeExploded")
@@ -5447,7 +5433,7 @@ namespace CSGOTacticSimulator
                     {
                         costTime = tickTime * (eventList[n].Item1.CurrentTick - currentInfo.CurrentTick);
                     }
-                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FlashEventArgs).Position, currentInfo.Map);
+                    missileEndMapPoint = AnalyzeHelper.DemoPointToMapPoint((eventList[n].Item2 as FlashEventArgs).Position, currentInfo.Map);
                     break;
                 }
                 else if (weapon == EquipmentElement.Smoke && eventList[n].Item3 == "SmokeNadeStarted")
@@ -5458,7 +5444,7 @@ namespace CSGOTacticSimulator
                     }
                     usedMissileDic[i] = n;
                     endTick = eventList[n].Item1.CurrentTick;
-                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as SmokeEventArgs).Position, currentInfo.Map);
+                    missileEndMapPoint = AnalyzeHelper.DemoPointToMapPoint((eventList[n].Item2 as SmokeEventArgs).Position, currentInfo.Map);
                     break;
                 }
                 else if ((weapon == EquipmentElement.Incendiary || weapon == EquipmentElement.Molotov) && eventList[n].Item3 == "FireNadeWithOwnerStarted")
@@ -5469,7 +5455,7 @@ namespace CSGOTacticSimulator
                     }
                     usedMissileDic[i] = n;
                     endTick = eventList[n].Item1.CurrentTick;
-                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as FireEventArgs).Position, currentInfo.Map);
+                    missileEndMapPoint = AnalyzeHelper.DemoPointToMapPoint((eventList[n].Item2 as FireEventArgs).Position, currentInfo.Map);
                     break;
                 }
                 // 奇技淫巧
@@ -5509,7 +5495,7 @@ namespace CSGOTacticSimulator
                     }
                     usedMissileDic[i] = n;
                     endTick = eventList[n].Item1.CurrentTick;
-                    missileEndMapPoint = DemoPointToMapPoint((eventList[n].Item2 as DecoyEventArgs).Position, currentInfo.Map);
+                    missileEndMapPoint = AnalyzeHelper.DemoPointToMapPoint((eventList[n].Item2 as DecoyEventArgs).Position, currentInfo.Map);
                     break;
                 }
             }
@@ -5522,9 +5508,6 @@ namespace CSGOTacticSimulator
 
             Point missileStartWndPoint = GetWndPoint(missileStartMapPoint, ImgType.Missile);
             Point missileEndWndPoint = GetWndPoint(missileEndMapPoint, ImgType.Missile);
-
-
-            List<Character> characters = CharacterHelper.GetCharacters();
 
             c_runcanvas.Dispatcher.Invoke(() =>
             {
@@ -5755,34 +5738,6 @@ namespace CSGOTacticSimulator
                     }
                 }
             });
-        }
-
-        private Point DemoPointToMapPoint(DemoInfo.Vector demoPoint, string mapName)
-        {
-            string[] splitListStr = null;
-            foreach (string map in mapList)
-            {
-                if (mapName.Contains(map.ToLowerInvariant()))
-                {
-                    string[] mapCalibrationDatas = GlobalDictionary.mapCalibrationDatas;
-                    foreach (string mapData in mapCalibrationDatas)
-                    {
-                        string[] mapCalibrationData = mapData.Split(':');
-                        if (mapCalibrationData[0].ToLowerInvariant() == map.ToLowerInvariant())
-                        {
-                            splitListStr = mapCalibrationData[1].Split(',');
-                            break;
-                        }
-                    }
-                }
-            }
-
-            double[] splitList = new double[3];
-            for (int i = 0; i < splitListStr.Count(); ++i)
-            {
-                splitList[i] = double.Parse(splitListStr[i]);
-            }
-            return new Point((demoPoint.X - splitList[0]) / splitList[2], (demoPoint.Y * (-1) + splitList[1]) / splitList[2]);
         }
 
         private void Tb_select_file_KeyDown(object sender, KeyEventArgs e)

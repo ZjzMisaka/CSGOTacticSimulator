@@ -152,7 +152,6 @@ namespace CSGOTacticSimulator.Global
             }
         }
 
-        static public string mapListPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "MapList")).Replace("/", "\\");
         static public string codeHighlightPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "CodeHighlight")).Replace("/", "\\");
         static public string logHighlightPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "LogHighlight")).Replace("/", "\\");
         static public string mapFolderPath = System.IO.Path.Combine(Global.GlobalDictionary.exePath, IniHelper.ReadIni("Path", "MapFolder")).Replace("/", "\\");
