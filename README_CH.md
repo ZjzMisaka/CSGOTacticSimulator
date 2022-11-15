@@ -2,7 +2,7 @@
 CSGO战术模拟器 <br />
  ![CSGOTacticSimulator](https://www.iaders.com/wp-content/uploads/2020/05/CTS.png) <br />
  [English ReadMe](https://github.com/ZjzMisaka/CSGOTacticSimulator/blob/master/README.md) <br />
-## multi-language
+## 多语言
 - [x] 简体中文
 - [x] 日本語
 - [x] English
