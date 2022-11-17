@@ -3756,13 +3756,6 @@ namespace CSGOTacticSimulator
             TimeSpan offsetWhenBombPlanted = new TimeSpan(0);
             Dictionary<TSImage, int> droppedImgDic = new Dictionary<TSImage, int>();
 
-            // 奇技淫巧
-            // 防止中止下包 / 中止拆包后对应图标不消失
-            // 从开始拆包下包起到完成为止如果出现位移或射击, 投掷 (仅下包) , 则隐藏图标
-            // 但如果玩家取消后在原地什么都不干, 则无法判断
-            // *** 不是我故意用这种奇葩写法, 而是因为取消下包, 取消拆包事件只存在于服务器, 无法判断 ***
-            bool beginPlantOrDefuse = false;
-
             this.Dispatcher.Invoke(() =>
             {
                 GlobalDictionary.ImageRatio = i_map.ActualWidth / i_map.Source.Width;
@@ -4141,22 +4134,9 @@ namespace CSGOTacticSimulator
 
                         this.Dispatcher.Invoke(() =>
                         {
-                            beginPlantOrDefuse = true;
-
                             character.OtherImg.Visibility = Visibility.Visible;
                             character.OtherImg.Source = new BitmapImage(new Uri(GlobalDictionary.bombPath));
                             character.OtherImg.Tag = "Plant";
-                        });
-                    }
-                    else if (currentEvent.Item3 == "BombAbortPlant")
-                    {
-                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber)
-                        {
-                            continue;
-                        }
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            character.OtherImg.Visibility = Visibility.Collapsed;
                         });
                     }
                     else if (currentEvent.Item3 == "BombExploded")
@@ -4229,6 +4209,23 @@ namespace CSGOTacticSimulator
                         BombPlanted(AnalyzeHelper.DemoPointToMapPoint((currentEvent.Item2 as BombEventArgs).Player.Position, currentInfo.Map), character, out roundTimeSpan, out timeSpanWhenBombPlanted, out offsetWhenBombPlanted);
                     }
                 }
+                else if (currentEvent.Item2 is BombPlantAbortedArgs)
+                {
+                    BombPlantAbortedArgs thisEventArgs = eventArgs as BombPlantAbortedArgs;
+                    Player player = thisEventArgs.Player;
+                    Character character = CharacterHelper.GetCharacter(characterNumber);
+                    if (currentEvent.Item3 == "BombAbortPlant")
+                    {
+                        if ((currentInfo.TScore + currentInfo.CtScore + 1) != roundNumber)
+                        {
+                            continue;
+                        }
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            character.OtherImg.Visibility = Visibility.Collapsed;
+                        });
+                    }
+                }
                 else if (currentEvent.Item2 is BombDefuseEventArgs)
                 {
                     BombDefuseEventArgs thisEventArgs = eventArgs as BombDefuseEventArgs;
@@ -4242,7 +4239,6 @@ namespace CSGOTacticSimulator
                         }
                         this.Dispatcher.Invoke(() =>
                         {
-                            beginPlantOrDefuse = true;
                             character.OtherImg.Visibility = Visibility.Visible;
                             character.OtherImg.Source = new BitmapImage(new Uri(GlobalDictionary.defuseKitPath));
                             character.OtherImg.Tag = "Defuse";
@@ -4268,7 +4264,7 @@ namespace CSGOTacticSimulator
                         {
                             continue;
                         }
-                        
+
                         isFreezetimeEnded = true;
                     }
                 }
@@ -4290,14 +4286,6 @@ namespace CSGOTacticSimulator
                                 (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Incendiary ||
                                 (currentEvent.Item2 as WeaponFiredEventArgs).Weapon.Weapon == EquipmentElement.Decoy)
                         {
-                            c_runcanvas.Dispatcher.Invoke(() =>
-                            {
-                                if (character.OtherImg.Visibility == Visibility.Visible && character.OtherImg.Tag != null && character.OtherImg.Tag.ToString() == "Plant")
-                                {
-                                    character.OtherImg.Visibility = Visibility.Collapsed;
-                                }
-                            });
-
                             if (ThrowMissile(currentInfo, eventArgs, eventName, characterNumber, eventList, i, usedMissileDic, missileKeyValuePairList, tickTime))
                             {
                                 continue;
@@ -4305,14 +4293,6 @@ namespace CSGOTacticSimulator
                         }
                         else
                         {
-                            c_runcanvas.Dispatcher.Invoke(() =>
-                            {
-                                if (character.OtherImg.Visibility == Visibility.Visible)
-                                {
-                                    character.OtherImg.Visibility = Visibility.Collapsed;
-                                }
-                            });
-
                             Player player = (currentEvent.Item2 as WeaponFiredEventArgs).Shooter;
 
                             Line bulletLine = null;
@@ -4733,20 +4713,6 @@ namespace CSGOTacticSimulator
                                     character.CharacterImg.RenderTransform = new RotateTransform(360 - player.ViewDirectionX, character.CharacterImg.Width / 2, character.CharacterImg.Height / 2);
                                 }
 
-                                c_runcanvas.Dispatcher.Invoke(() =>
-                                {
-                                    if (character.OtherImg.Visibility == Visibility.Visible && !character.CharacterImg.MapPoint.Equals(endMapPoint))
-                                    {
-                                        if (beginPlantOrDefuse)
-                                        {
-                                            beginPlantOrDefuse = false;
-                                        }
-                                        else
-                                        {
-                                            character.OtherImg.Visibility = Visibility.Collapsed;
-                                        }
-                                    }
-                                });
                                 character.CharacterImg.MapPoint = endMapPoint;
                                 character.CharacterImg.ImgType = ImgType.Character;
                                 c_runcanvas.Children.Add(character.CharacterImg);
