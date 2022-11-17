@@ -3084,7 +3084,6 @@ namespace CSGOTacticSimulator
                 if (demoParser.TScore + demoParser.CTScore >= 1)
                 {
                     eventDic[demoParser.TScore + demoParser.CTScore] = eventList;
-                    eventList = new List<Tuple<CurrentInfo, EventArgs, string, int>>();
 
                     if (eventDic.Count >= 1)
                     {
@@ -3108,6 +3107,7 @@ namespace CSGOTacticSimulator
                         }
                     }
                 }
+                //eventList = new List<Tuple<CurrentInfo, EventArgs, string, int>>();
                 te_editor.Dispatcher.Invoke(() =>
                 {
                     if (loggedRoundDic.Keys.Count >= 1 && loggedRoundDic.Keys.Contains(demoParser.TScore + demoParser.CTScore + 1))
@@ -3204,7 +3204,6 @@ namespace CSGOTacticSimulator
                 if (demoParser.TScore + demoParser.CTScore >= 1)
                 {
                     eventDic[demoParser.TScore + demoParser.CTScore] = eventList;
-                    eventList = new List<Tuple<CurrentInfo, EventArgs, string, int>>();
 
                     if (eventDic.Count >= 1)
                     {
@@ -3228,6 +3227,7 @@ namespace CSGOTacticSimulator
                         }
                     }
                 }
+                eventList = new List<Tuple<CurrentInfo, EventArgs, string, int>>();
                 te_editor.Dispatcher.Invoke(() =>
                 {
                     if (loggedRoundDic.Keys.Count >= 1 && loggedRoundDic.Keys.Contains(demoParser.TScore + demoParser.CTScore + 1))
@@ -3729,6 +3729,7 @@ namespace CSGOTacticSimulator
             List<KeyValuePair<int, TSImage>> missileEffectKeyValuePairList = new List<KeyValuePair<int, TSImage>>();
             List<KeyValuePair<KeyValuePair<int, int>, TSImage>> missileKeyValuePairList = new List<KeyValuePair<KeyValuePair<int, int>, TSImage>>();
             TimeSpan roundTimeSpan = new TimeSpan(0, 1, 56);
+            TimeSpan freezeTimeSpan = new TimeSpan(0);
             this.Dispatcher.Invoke(() =>
             {
                 if (!(bool)cb_skip_freeze_time.IsChecked)
@@ -3745,7 +3746,8 @@ namespace CSGOTacticSimulator
                             }
 
                             float freezeTime = currentInfo.CurrentTime - eventList[0].Item1.CurrentTime;
-                            roundTimeSpan += new TimeSpan(0, 0, 0, 0, (int)(freezeTime * 1000));
+                            freezeTimeSpan = new TimeSpan(0, 0, 0, 0, (int)(freezeTime * 1000));
+                            roundTimeSpan += freezeTimeSpan;
                         }
                     }
                 }
@@ -3776,10 +3778,7 @@ namespace CSGOTacticSimulator
 
             this.Dispatcher.Invoke(() =>
             {
-                if (!(bool)cb_skip_freeze_time.IsChecked)
-                {
-                    stopWatchThisRound.Start();
-                }
+                stopWatchThisRound.Start();
             });
 
             for (int i = 0; i < eventList.Count; ++i)
@@ -4269,11 +4268,6 @@ namespace CSGOTacticSimulator
                         {
                             continue;
                         }
-
-                        if (!stopWatchThisRound.IsRunning)
-                        {
-                            stopWatchThisRound.Start();
-                        }
                         
                         isFreezetimeEnded = true;
                     }
@@ -4426,7 +4420,7 @@ namespace CSGOTacticSimulator
                         {
                             isSkipFreezeTime = (bool)cb_skip_freeze_time.IsChecked;
                         });
-                        if (!stopWatchThisRound.IsRunning || (isSkipFreezeTime && !isFreezetimeEnded))
+                        if (isSkipFreezeTime && !isFreezetimeEnded)
                         {
                             continue;
                         }
@@ -4820,7 +4814,7 @@ namespace CSGOTacticSimulator
                             }
                             realCostTime += GlobalDictionary.animationFreshTime;
 
-                            long elapsedTimeMillisecond = stopWatch.ElapsedMilliseconds;
+                            long elapsedTimeMillisecond = stopWatch.ElapsedMilliseconds + freezeTimeSpan.Milliseconds;
                             int sleepTime = (int)(animationFreshTime - (elapsedTimeMillisecond - elapsedTimeMillisecondInDemo));
                             if (sleepTime < 0)
                             {
