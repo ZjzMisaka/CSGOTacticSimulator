@@ -8,19 +8,24 @@ using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using ICSharpCode.AvalonEdit.Search;
+using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 using Newtonsoft.Json;
 using Sdl.MultiSelectComboBox.Themes.Generic;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Net;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -81,6 +86,8 @@ namespace CSGOTacticSimulator
         private Dictionary<string, string> proAvatarLinkDic = new Dictionary<string, string>();
         private List<ResourceDictionary> dictionaryList = new List<ResourceDictionary>();
         private Dictionary<string, string> cultureDic = new Dictionary<string, string>();
+        private Dictionary<AudioFileReader, WaveOut> demoSoundPlayerDic = new Dictionary<AudioFileReader, WaveOut>();
+        private bool isNeedResetDemoVoiceOffset = true;
 
         public List<Point> mouseMovePathInPreview = new List<Point>();
         public List<Point> keyDownInPreview = new List<Point>();
@@ -166,7 +173,7 @@ namespace CSGOTacticSimulator
             cb_show_load.IsChecked = GlobalDictionary.showLoad;
             cb_show_kill.IsChecked = GlobalDictionary.showKill;
             cb_show_say.IsChecked = GlobalDictionary.showSay;
-            cb_show_bought.IsChecked  = GlobalDictionary.showBought;
+            cb_show_bought.IsChecked = GlobalDictionary.showBought;
             if (GlobalDictionary.avatarMode == 1)
             {
                 rb_avatar_auto.IsChecked = true;
@@ -709,6 +716,8 @@ namespace CSGOTacticSimulator
                     }
                 }
 
+                PauseDemoVoice();
+
                 btn_pause.Background = GlobalDictionary.resumeBrush;
 
                 if (me_pov.Visibility == Visibility.Visible)
@@ -736,6 +745,8 @@ namespace CSGOTacticSimulator
                         stopwatch.Start();
                     }
                 }
+
+                ResumeDemoVoice();
 
                 btn_pause.Background = GlobalDictionary.pauseBrush;
 
@@ -2560,6 +2571,65 @@ namespace CSGOTacticSimulator
 
             btn_pause.Tag = "R";
             btn_pause.Background = GlobalDictionary.pauseBrush;
+
+            string tempPath = Path.Combine(GlobalDictionary.exePath, "csgove", "temp");
+            DirectoryInfo tempDir;
+            FileSystemInfo[] soundFileinfoList = null;
+            if (!Directory.Exists(tempPath))
+            {
+                Directory.CreateDirectory(tempPath);
+            }
+            else
+            {
+                tempDir = new DirectoryInfo(tempPath);
+                soundFileinfoList = tempDir.GetFileSystemInfos();  //返回目录中所有文件和子目录
+                foreach (FileSystemInfo i in soundFileinfoList)
+                {
+                    if (i is DirectoryInfo)            //判断是否文件夹
+                    {
+                        DirectoryInfo subdir = new DirectoryInfo(i.FullName);
+                        subdir.Delete(true);          //删除子目录和文件
+                    }
+                    else
+                    {
+                        File.Delete(i.FullName);      //删除指定文件
+                    }
+                }
+            }
+
+            Process p = new Process();
+            //设置要启动的应用程序
+            p.StartInfo.FileName = "cmd.exe";
+            //是否使用操作系统shell启动
+            p.StartInfo.UseShellExecute = false;
+            // 接受来自调用程序的输入信息
+            p.StartInfo.RedirectStandardInput = true;
+            //输出信息
+            p.StartInfo.RedirectStandardOutput = true;
+            // 输出错误
+            p.StartInfo.RedirectStandardError = true;
+            //不显示程序窗口
+            p.StartInfo.CreateNoWindow = true;
+            //启动程序
+            p.Start();
+            //向cmd窗口发送输入信息
+            p.StandardInput.WriteLine("cd csgove");
+            p.StandardInput.WriteLine("csgove.exe" + " -output \"" + tempPath + "\" " + filePath + " " + "&exit");
+            p.StandardInput.AutoFlush = true;
+            //获取输出信息
+            string strOuput = p.StandardOutput.ReadToEnd();
+            //等待程序执行完退出进程
+            p.WaitForExit();
+            p.Close();
+
+            if (soundFileinfoList != null)
+            {
+                foreach (FileSystemInfo i in soundFileinfoList)
+                {
+                    demoSoundPlayerDic.Add(new NAudio.Wave.AudioFileReader(i.FullName), null);
+                }
+            }
+
             Thread totalThread = new Thread(() =>
             {
                 while (true)
@@ -3722,6 +3792,8 @@ namespace CSGOTacticSimulator
             isForward = false;
             isBackward = false;
 
+            isNeedResetDemoVoiceOffset = true;
+
             bool isNeedRefreshPov = false;
             isNeedAutomaticGuidance = false;
 
@@ -3902,6 +3974,8 @@ namespace CSGOTacticSimulator
                         offset += thisOffset;
                         thisOffset = 0;
                     }
+
+                    isNeedResetDemoVoiceOffset = true;
                 }
                 if (isBackward)
                 {
@@ -3971,6 +4045,8 @@ namespace CSGOTacticSimulator
                             thisOffset = 0;
                         }
                     }
+
+                    isNeedResetDemoVoiceOffset = true;
                 }
 
                 if (currentEvent.Item1 == null && currentEvent.Item2 is PlayerKilledEventArgs && isNeedAutomaticGuidance)
@@ -4032,6 +4108,8 @@ namespace CSGOTacticSimulator
                             continue;
                         }
 
+                        isNeedResetDemoVoiceOffset = true;
+
                         bool isAutoShowInfoPanel = false;
                         this.Dispatcher.Invoke(() =>
                         {
@@ -4051,6 +4129,8 @@ namespace CSGOTacticSimulator
                         {
                             continue;
                         }
+
+                        isNeedResetDemoVoiceOffset = true;
 
                         bool isAutoShowInfoPanel = false;
                         this.Dispatcher.Invoke(() =>
@@ -4265,6 +4345,8 @@ namespace CSGOTacticSimulator
                             continue;
                         }
 
+                        isNeedResetDemoVoiceOffset = true;
+
                         isFreezetimeEnded = true;
                     }
                 }
@@ -4403,6 +4485,12 @@ namespace CSGOTacticSimulator
                         if (isSkipFreezeTime && !isFreezetimeEnded)
                         {
                             continue;
+                        }
+
+                        if (isNeedResetDemoVoiceOffset)
+                        {
+                            PlayDemoVoice(currentInfo.CurrentTime);
+                            isNeedResetDemoVoiceOffset = false;
                         }
 
                         List<KeyValuePair<int, TSImage>> usedMissileEffectKeyValuePairList = new List<KeyValuePair<int, TSImage>>();
@@ -4827,6 +4915,62 @@ namespace CSGOTacticSimulator
                     }
                 }
             }
+        }
+
+        private void PlayDemoVoice(float currentTime)
+        {
+            var keys = demoSoundPlayerDic.Keys.ToArray();
+            for (int j = 0; j < keys.Length; ++j)
+            {
+                AudioFileReader audioFileReader = keys[j];
+                if (demoSoundPlayerDic[audioFileReader] == null)
+                {
+                    demoSoundPlayerDic[audioFileReader] = new WaveOut();
+                }
+
+                demoSoundPlayerDic[audioFileReader].Stop();
+                audioFileReader.CurrentTime = TimeSpan.FromSeconds(currentTime);
+                demoSoundPlayerDic[audioFileReader].Volume = 0.1f;
+                demoSoundPlayerDic[audioFileReader].Init(audioFileReader);
+                demoSoundPlayerDic[audioFileReader].Play();
+            }
+        }
+
+        private void PauseDemoVoice()
+        {
+            var keys = demoSoundPlayerDic.Keys.ToArray();
+            for (int j = 0; j < keys.Length; ++j)
+            {
+                AudioFileReader audioFileReader = keys[j];
+                if (demoSoundPlayerDic[audioFileReader] != null)
+                {
+                    demoSoundPlayerDic[audioFileReader].Pause();
+                }
+            }
+        }
+
+        private void ResumeDemoVoice()
+        {
+            var keys = demoSoundPlayerDic.Keys.ToArray();
+            for (int j = 0; j < keys.Length; ++j)
+            {
+                AudioFileReader audioFileReader = keys[j];
+                if (demoSoundPlayerDic[audioFileReader] != null)
+                {
+                    demoSoundPlayerDic[audioFileReader].Resume();
+                }
+            }
+        }
+
+        private void CloseDemoVoice()
+        {
+            var keys = demoSoundPlayerDic.Keys.ToArray();
+            for (int j = 0; j < keys.Length; ++j)
+            {
+                keys[j].Close();
+            }
+
+            demoSoundPlayerDic.Clear();
         }
 
         private void PlayerPickWeapon(Tuple<CurrentInfo, EventArgs, string, int> currentEvent, Dictionary<TSImage, int> droppedImgDic)
@@ -5757,6 +5901,8 @@ namespace CSGOTacticSimulator
 
             HideDefaultInfo();
             HidePersonalInfo();
+
+            CloseDemoVoice();
 
             te_editor.IsReadOnly = false;
         }
