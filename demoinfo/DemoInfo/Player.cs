@@ -93,6 +93,8 @@ namespace DemoInfo
         public Team Team { get; set; }
 
         public bool HasDefuseKit { get; set; }
+        public bool IsDefusing { get; set; }
+        public bool IsPlanting { get; set; }
 
         public bool HasHelmet { get; set; }
 
@@ -134,6 +136,8 @@ namespace DemoInfo
             me.rawWeapons = new Dictionary<int, Equipment>(rawWeapons);
 
             me.HasDefuseKit = HasDefuseKit;
+            me.IsDefusing = IsDefusing;
+            me.IsPlanting = IsPlanting;
             me.HasHelmet = HasHelmet;
 
             if (Position != null)

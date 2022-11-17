@@ -192,6 +192,11 @@ namespace DemoInfo
         public bool HasKit { get; set; }
     }
 
+    public class BombPlantAbortedArgs : EventArgs
+    {
+        public Player Player { get; set; }
+    }
+
     public class PlayerHurtEventArgs : EventArgs
     {
         /// <summary>
@@ -477,6 +482,30 @@ namespace DemoInfo
         /// New Score
         /// </summary>
         public int NewScore { get; set; }
+    }
+
+    public class VoiceInitEventArgs : EventArgs
+    {
+        public int Quality { get; set; }
+
+        public string Codec { get; set; }
+
+        public int Version { get; set; }
+    }
+
+    public class VoiceDataEventArgs : EventArgs
+    {
+        public int Client { get; set; }
+        public bool Proximity { get; set; }
+        public long SteamID { get; set; }
+        public byte[] Data { get; set; }
+        public int AudibleMask { get; set; }
+        public bool Caster { get; set; }
+        public string Format { get; set; }
+        public int SequenceBytes { get; set; }
+        public uint SectionNumber { get; set; }
+        public uint UncompressedSampleOffset { get; set; }
+        public Player Player { get; set; }
     }
 
     public class Equipment
