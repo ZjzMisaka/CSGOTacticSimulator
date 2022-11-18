@@ -230,7 +230,7 @@
                 <RadioButton x:Name="rb_avatar_none" GroupName="setting_avatar" Margin="5" Foreground="White" Content="{DynamicResource AvatarNone}"></RadioButton>
                 <TextBlock FontWeight="ExtraBold" Margin="5" Foreground="White" Text="{DynamicResource Voice}"></TextBlock>
                 <CheckBox x:Name="cb_get_voice" Margin="5" Foreground="White" Content="{DynamicResource GetVoice}"></CheckBox>
-                <Slider x:Name="s_volume" Margin="5" Minimum="0" Maximum="1" ValueChanged="SVolumeValueChanged"></Slider>
+                <Slider x:Name="s_volume" Margin="5" Minimum="0" Maximum="1" SmallChange="0.01" LargeChange="0.1" ValueChanged="SVolumeValueChanged"></Slider>
             </StackPanel>
         </ScrollViewer>
     </Grid>
