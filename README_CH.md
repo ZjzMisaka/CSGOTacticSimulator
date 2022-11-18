@@ -25,6 +25,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 ## 观看DEMO和POV
 - 在文件输入框中输入demo文件的路径可加载demo文件. 
 - 可以选择观看回合数或观看全部回合. 
+- 可以提取demo中的语音. 
 - 按CapsLock键可以查看信息面板. 
 - 按CapsLock + LeftShift键可以切换至计分板. 
 - 观看中点击左边地图上的点时可播放对应玩家当前时刻的pov. 

@@ -25,6 +25,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 ## Watch DEMO&POV
 - Enter the path of the demo file into the file input box to load the demo file.
 - You can choose to watch a round or watch all rounds.
+- You can extract the voice in demo. 
 - Press the CapsLock key to view the information panel. 
 - Press CapsLock + LeftShift key to switch to the scoreboard. 
 - Click the character point on the left map when running the demo then you can watch the pov corresponding to the current time. 
