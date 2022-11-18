@@ -130,8 +130,10 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |[JamesNK/Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)|MIT|
 |[sdl/Multiselect-ComboBox](https://github.com/sdl/Multiselect-ComboBox)|Apache-2.0|
 |~~[StatsHelix/demoinfo](https://github.com/StatsHelix/demoinfo)~~ [akiver/CSGO-Demos-Manager/demoinfo](https://github.com/akiver/CSGO-Demos-Manager/tree/main/demoinfo)|MIT, GPL-2.0|
+|[akiver/csgo-voice-extractor](https://github.com/akiver/csgo-voice-extractor)|MIT|
 |[ZjzMisaka/CustomizableMessageBox](https://github.com/ZjzMisaka/CustomizableMessageBox)|WTFPL|
 |[simpleradar/CSGOMaps](http://simpleradar.com/)|Unknown|
 |[ICONS8](https://icons8.com)|[Link](https://icons8.com/license)|
 |[Facepunch/Facepunch.Steamworks](https://github.com/Facepunch/Facepunch.Steamworks)|MIT|
+|[naudio/NAudio](https://github.com/naudio/NAudio)|MIT|
 |[ArttuKuikka/HltvSharp](https://github.com/ArttuKuikka/HltvSharp)|[Issue](https://github.com/ArttuKuikka/HltvSharp/issues/9)|
