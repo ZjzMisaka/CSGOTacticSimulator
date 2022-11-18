@@ -228,6 +228,9 @@
                 <RadioButton x:Name="rb_avatar_hltv_only" GroupName="setting_avatar" Margin="5" Foreground="White" Content="{DynamicResource AvatarHltvOnly}"></RadioButton>
                 <RadioButton x:Name="rb_avatar_steam_only" GroupName="setting_avatar" Margin="5" Foreground="White" Content="{DynamicResource AvatarSteamOnly}"></RadioButton>
                 <RadioButton x:Name="rb_avatar_none" GroupName="setting_avatar" Margin="5" Foreground="White" Content="{DynamicResource AvatarNone}"></RadioButton>
+                <TextBlock FontWeight="ExtraBold" Margin="5" Foreground="White" Text="{DynamicResource Log}"></TextBlock>
+                <CheckBox x:Name="cb_get_voice" Margin="5" Foreground="White" Content="{DynamicResource ShowLoad}"></CheckBox>
+                <Slider x:Name="s_volume" Margin="5" Minimum="0" Maximum="1" ValueChanged="SVolumeValueChanged"></Slider>
             </StackPanel>
         </ScrollViewer>
     </Grid>

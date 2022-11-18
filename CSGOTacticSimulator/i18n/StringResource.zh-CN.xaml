@@ -24,6 +24,8 @@
     <sys:String x:Key="AvatarHltvOnly">只从Hltv获取头像</sys:String>
     <sys:String x:Key="AvatarSteamOnly">只从Steam获取头像</sys:String>
     <sys:String x:Key="AvatarNone">不获取头像</sys:String>
+    <sys:String x:Key="Voice">声音</sys:String>
+    <sys:String x:Key="GetVoice">是否提取语音</sys:String>
 
     <sys:String x:Key="File">文件</sys:String>
     <sys:String x:Key="ScriptOrDemoFile">脚本 / DEMO文件</sys:String>

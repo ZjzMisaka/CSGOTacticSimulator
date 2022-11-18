@@ -190,7 +190,8 @@ namespace CSGOTacticSimulator
             {
                 rb_avatar_none.IsChecked = true;
             }
-
+            cb_get_voice.IsChecked = GlobalDictionary.getVoice;
+            s_volume.Value = GlobalDictionary.volume;
 
             AddMapsFromFolder(GlobalDictionary.mapFolderPath);
             tb_select_folder.Text = GlobalDictionary.mapFolderPath;
@@ -261,6 +262,8 @@ namespace CSGOTacticSimulator
                 IniHelper.WriteIni("Setting", "AvatarMode", " 4");
             }
             IniHelper.WriteIni("Setting", "Language", " " + cultureDic[cb_language.SelectedItem.ToString()]);
+            IniHelper.WriteIni("Setting", "GetVoice", " " + ((bool)cb_get_voice.IsChecked).ToString());
+            IniHelper.WriteIni("Setting", "Volume", " " + s_volume.Value);
 
             Environment.Exit(0);
         }
@@ -2597,36 +2600,41 @@ namespace CSGOTacticSimulator
                 }
             }
 
-            Process p = new Process();
-            //设置要启动的应用程序
-            p.StartInfo.FileName = "cmd.exe";
-            //是否使用操作系统shell启动
-            p.StartInfo.UseShellExecute = false;
-            // 接受来自调用程序的输入信息
-            p.StartInfo.RedirectStandardInput = true;
-            //输出信息
-            p.StartInfo.RedirectStandardOutput = true;
-            // 输出错误
-            p.StartInfo.RedirectStandardError = true;
-            //不显示程序窗口
-            p.StartInfo.CreateNoWindow = true;
-            //启动程序
-            p.Start();
-            //向cmd窗口发送输入信息
-            p.StandardInput.WriteLine("cd csgove");
-            p.StandardInput.WriteLine("csgove.exe" + " -output \"" + tempPath + "\" " + filePath + " " + "&exit");
-            p.StandardInput.AutoFlush = true;
-            //获取输出信息
-            string strOuput = p.StandardOutput.ReadToEnd();
-            //等待程序执行完退出进程
-            p.WaitForExit();
-            p.Close();
-
-            if (soundFileinfoList != null)
+            if ((bool)cb_get_voice.IsChecked)
             {
-                foreach (FileSystemInfo i in soundFileinfoList)
+                Process p = new Process();
+                //设置要启动的应用程序
+                p.StartInfo.FileName = "cmd.exe";
+                //是否使用操作系统shell启动
+                p.StartInfo.UseShellExecute = false;
+                // 接受来自调用程序的输入信息
+                p.StartInfo.RedirectStandardInput = true;
+                //输出信息
+                p.StartInfo.RedirectStandardOutput = true;
+                // 输出错误
+                p.StartInfo.RedirectStandardError = true;
+                //不显示程序窗口
+                p.StartInfo.CreateNoWindow = true;
+                //启动程序
+                p.Start();
+                //向cmd窗口发送输入信息
+                p.StandardInput.WriteLine("cd csgove");
+                p.StandardInput.WriteLine("csgove.exe" + " -output \"" + tempPath + "\" " + filePath + " " + "&exit");
+                p.StandardInput.AutoFlush = true;
+                //获取输出信息
+                string strOuput = p.StandardOutput.ReadToEnd();
+                //等待程序执行完退出进程
+                p.WaitForExit();
+                p.Close();
+
+                tempDir = new DirectoryInfo(tempPath);
+                soundFileinfoList = tempDir.GetFileSystemInfos();
+                if (soundFileinfoList != null)
                 {
-                    demoSoundPlayerDic.Add(new NAudio.Wave.AudioFileReader(i.FullName), null);
+                    foreach (FileSystemInfo i in soundFileinfoList)
+                    {
+                        demoSoundPlayerDic.Add(new NAudio.Wave.AudioFileReader(i.FullName), null);
+                    }
                 }
             }
 
@@ -4930,7 +4938,10 @@ namespace CSGOTacticSimulator
 
                 demoSoundPlayerDic[audioFileReader].Stop();
                 audioFileReader.CurrentTime = TimeSpan.FromSeconds(currentTime);
-                demoSoundPlayerDic[audioFileReader].Volume = 0.1f;
+                this.Dispatcher.Invoke(() =>
+                {
+                    demoSoundPlayerDic[audioFileReader].Volume = (float)s_volume.Value;
+                });
                 demoSoundPlayerDic[audioFileReader].Init(audioFileReader);
                 demoSoundPlayerDic[audioFileReader].Play();
             }
@@ -7323,6 +7334,19 @@ namespace CSGOTacticSimulator
         {
             string language = cultureDic[cb_language.SelectedItem.ToString()];
             ChangeLanguage(language, dictionaryList);
+        }
+
+        private void SVolumeValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            var keys = demoSoundPlayerDic.Keys.ToArray();
+            for (int j = 0; j < keys.Length; ++j)
+            {
+                AudioFileReader audioFileReader = keys[j];
+                this.Dispatcher.Invoke(() =>
+                {
+                    demoSoundPlayerDic[audioFileReader].Volume = (float)s_volume.Value;
+                });
+            }
         }
     }
 }

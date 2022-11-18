@@ -24,6 +24,8 @@
     <sys:String x:Key="AvatarHltvOnly">Hltvからのみアバターを取得</sys:String>
     <sys:String x:Key="AvatarSteamOnly">Steam からのみアバターを取得</sys:String>
     <sys:String x:Key="AvatarNone">アバターを取得しない</sys:String>
+    <sys:String x:Key="Voice">音声</sys:String>
+    <sys:String x:Key="GetVoice">音を抽出するか</sys:String>
 
     <sys:String x:Key="File">ファイル</sys:String>
     <sys:String x:Key="ScriptOrDemoFile">スクリプト / デモファイル</sys:String>
