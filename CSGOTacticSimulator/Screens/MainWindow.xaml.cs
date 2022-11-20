@@ -4747,16 +4747,27 @@ namespace CSGOTacticSimulator
                                         c_runcanvas.Children.Add(CreateAmmolabel(character, player.CopiedActiveWeapon.AmmoInMagazine.ToString(), endWndPoint));
                                     }
                                     string[] files = Directory.GetFiles(System.IO.Path.Combine(Global.GlobalDictionary.exePath, "img"), "*.png", SearchOption.TopDirectoryOnly);
+                                    bool foundActiveWeaponFile = false;
+                                    string weaponStr = player.CopiedActiveWeapon.Weapon.ToString();
+                                    // 名字和图片文件名对不上时替换, 暂时写死
+                                    weaponStr = weaponStr.Replace("Scout", "ssg08");
+                                    weaponStr = weaponStr.Replace("Incendiary", "incgrenade");
                                     foreach (string file in files)
                                     {
                                         if (file.ToLower().Contains("effect"))
                                         {
                                             continue;
                                         }
-                                        if (System.IO.Path.GetFileNameWithoutExtension(file).ToLower().Contains(player.CopiedActiveWeapon.Weapon.ToString().ToLower()))
+
+                                        if (System.IO.Path.GetFileNameWithoutExtension(file).ToLower().Contains(weaponStr.ToLower()))
                                         {
                                             character.ActiveWeaponImg.Source = new BitmapImage(new Uri(file));
+                                            foundActiveWeaponFile = true;
                                         }
+                                    }
+                                    if (!foundActiveWeaponFile)
+                                    {
+                                        te_editor.Text += "[error] Can't find weapon picture: " + player.CopiedActiveWeapon.Weapon.ToString() + "\n";
                                     }
                                     Canvas.SetLeft(character.ActiveWeaponImg, activeWeaponImgWndPoint.X);
                                     Canvas.SetTop(character.ActiveWeaponImg, activeWeaponImgWndPoint.Y);
