@@ -34,4 +34,10 @@
     <sys:String x:Key="ChooseRoundText">どのラウンドを見るか</sys:String>
     <sys:String x:Key="ChooseRound">ラウンド数を選択してください</sys:String>
     <sys:String x:Key="PleaseEnterANumber">数字を入力してください</sys:String>
+
+    <sys:String x:Key="ExitAfterSaving">保存後に終了します</sys:String>
+    <sys:String x:Key="ExitDirectly">直接終了します</sys:String>
+    <sys:String x:Key="Cancel">キャンセル</sys:String>
+    <sys:String x:Key="WhetherToSaveTacticalScript">戦術的なスクリプトを保存するかどうか</sys:String>
+    <sys:String x:Key="ExitingTheProgram">プログラムを終了します</sys:String>
 </ResourceDictionary>

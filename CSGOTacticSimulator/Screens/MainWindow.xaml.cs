@@ -223,12 +223,12 @@ namespace CSGOTacticSimulator
 
         private void BtnExitClick(object sender, RoutedEventArgs e)
         {
-            int resultIndex = MessageBox.Show(GlobalDictionary.propertiesSetter, new RefreshList { "保存后退出", "直接退出", new ButtonSpacer(100), "取消" }, "是否另存战术脚本", "正在退出程序", MessageBoxImage.Warning);
-            if (MessageBox.ButtonList[resultIndex].ToString() == "取消")
+            int resultIndex = MessageBox.Show(GlobalDictionary.propertiesSetter, new RefreshList { Application.Current.FindResource("ExitAfterSaving").ToString(), Application.Current.FindResource("ExitDirectly").ToString(), new ButtonSpacer(100), Application.Current.FindResource("Cancel").ToString() }, Application.Current.FindResource("WhetherToSaveTacticalScript").ToString(), Application.Current.FindResource("ExitingTheProgram").ToString(), MessageBoxImage.Warning);
+            if (MessageBox.ButtonList[resultIndex].ToString() == Application.Current.FindResource("Cancel").ToString())
             {
                 return;
             }
-            else if (MessageBox.ButtonList[resultIndex].ToString() == "保存后退出")
+            else if (MessageBox.ButtonList[resultIndex].ToString() == Application.Current.FindResource("ExitAfterSaving").ToString())
             {
                 SaveFile();
             }

@@ -34,4 +34,10 @@
     <sys:String x:Key="ChooseRoundText">需要观看第几回合</sys:String>
     <sys:String x:Key="ChooseRound">选择回合数</sys:String>
     <sys:String x:Key="PleaseEnterANumber">请输入数字</sys:String>
+
+    <sys:String x:Key="ExitAfterSaving">保存后退出</sys:String>
+    <sys:String x:Key="ExitDirectly">直接退出</sys:String>
+    <sys:String x:Key="Cancel">取消</sys:String>
+    <sys:String x:Key="WhetherToSaveTacticalScript">是否另存战术脚本</sys:String>
+    <sys:String x:Key="ExitingTheProgram">正在退出程序</sys:String>
 </ResourceDictionary>

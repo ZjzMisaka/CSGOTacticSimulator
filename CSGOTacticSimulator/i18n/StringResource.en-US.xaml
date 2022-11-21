@@ -34,4 +34,10 @@
     <sys:String x:Key="ChooseRoundText">Which rounds to watch</sys:String>
     <sys:String x:Key="ChooseRound">Select the number of rounds</sys:String>
     <sys:String x:Key="PleaseEnterANumber">Please key in numbers</sys:String>
+
+    <sys:String x:Key="ExitAfterSaving">Exit after saving</sys:String>
+    <sys:String x:Key="ExitDirectly">Exit directly</sys:String>
+    <sys:String x:Key="Cancel">Cancel</sys:String>
+    <sys:String x:Key="WhetherToSaveTacticalScript">Whether to save tactical script</sys:String>
+    <sys:String x:Key="ExitingTheProgram">Exiting the program</sys:String>
 </ResourceDictionary>

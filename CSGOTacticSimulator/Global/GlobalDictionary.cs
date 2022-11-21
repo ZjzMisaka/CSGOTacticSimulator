@@ -229,7 +229,7 @@ namespace CSGOTacticSimulator.Global
             ButtonFontSize = 16,
             MessageFontSize = 16,
             TitleFontSize = 18,
-            WindowWidth = 500,
+            WindowWidth = 550,
             WindowMinHeight = 250,
             ButtonPanelColor = new MessageBoxColor("#F03A3A3A"),
             MessagePanelColor = new MessageBoxColor("#F03A3A3A"),
