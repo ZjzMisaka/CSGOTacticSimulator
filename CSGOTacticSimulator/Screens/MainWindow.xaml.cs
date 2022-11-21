@@ -2600,42 +2600,59 @@ namespace CSGOTacticSimulator
                 }
             }
 
+            te_editor.Text = "";
+            te_editor.IsReadOnly = true;
+
+            Thread getSoundThread = null;
             if ((bool)cb_get_voice.IsChecked)
             {
-                Process p = new Process();
-                //设置要启动的应用程序
-                p.StartInfo.FileName = "cmd.exe";
-                //是否使用操作系统shell启动
-                p.StartInfo.UseShellExecute = false;
-                // 接受来自调用程序的输入信息
-                p.StartInfo.RedirectStandardInput = true;
-                //输出信息
-                p.StartInfo.RedirectStandardOutput = true;
-                // 输出错误
-                p.StartInfo.RedirectStandardError = true;
-                //不显示程序窗口
-                p.StartInfo.CreateNoWindow = true;
-                //启动程序
-                p.Start();
-                //向cmd窗口发送输入信息
-                p.StandardInput.WriteLine("cd csgove");
-                p.StandardInput.WriteLine("csgove.exe" + " -output \"" + tempPath + "\" " + filePath + " " + "&exit");
-                p.StandardInput.AutoFlush = true;
-                //获取输出信息
-                string strOuput = p.StandardOutput.ReadToEnd();
-                //等待程序执行完退出进程
-                p.WaitForExit();
-                p.Close();
-
-                tempDir = new DirectoryInfo(tempPath);
-                soundFileinfoList = tempDir.GetFileSystemInfos();
-                if (soundFileinfoList != null)
-                {
-                    foreach (FileSystemInfo i in soundFileinfoList)
+                getSoundThread = new Thread(() => {
+                    this.Dispatcher.Invoke(() =>
                     {
-                        demoSoundPlayerDic.Add(new NAudio.Wave.AudioFileReader(i.FullName), null);
+                        te_editor.Text += "[Extracting sound files from DEMO...]\n";
+                    });
+                    Thread.Sleep(GlobalDictionary.animationFreshTime);
+                    Process p = new Process();
+                    //设置要启动的应用程序
+                    p.StartInfo.FileName = "cmd.exe";
+                    //是否使用操作系统shell启动
+                    p.StartInfo.UseShellExecute = false;
+                    // 接受来自调用程序的输入信息
+                    p.StartInfo.RedirectStandardInput = true;
+                    //输出信息
+                    p.StartInfo.RedirectStandardOutput = true;
+                    // 输出错误
+                    p.StartInfo.RedirectStandardError = true;
+                    //不显示程序窗口
+                    p.StartInfo.CreateNoWindow = true;
+                    //启动程序
+                    p.Start();
+                    //向cmd窗口发送输入信息
+                    p.StandardInput.WriteLine("cd csgove");
+                    p.StandardInput.WriteLine("csgove.exe" + " -output \"" + tempPath + "\" " + filePath + " " + "&exit");
+                    p.StandardInput.AutoFlush = true;
+                    //获取输出信息
+                    string strOuput = p.StandardOutput.ReadToEnd();
+                    //等待程序执行完退出进程
+                    p.WaitForExit();
+                    p.Close();
+
+                    tempDir = new DirectoryInfo(tempPath);
+                    soundFileinfoList = tempDir.GetFileSystemInfos();
+                    if (soundFileinfoList != null)
+                    {
+                        foreach (FileSystemInfo i in soundFileinfoList)
+                        {
+                            demoSoundPlayerDic.Add(new NAudio.Wave.AudioFileReader(i.FullName), null);
+                        }
                     }
-                }
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        te_editor.Text += "[The sound files has been extracted]\n";
+                    });
+                });
+                ThreadHelper.AddThread(getSoundThread);
+                getSoundThread.Start();
             }
 
             Thread totalThread = new Thread(() =>
@@ -2658,6 +2675,12 @@ namespace CSGOTacticSimulator
                     });
 
                     stopwatchList.Clear();
+
+                    if (getSoundThread != null)
+                    {
+                        getSoundThread.Join();
+                        getSoundThread = null;
+                    }
 
                     Thread analizeDemoThread = new Thread(AnalizeDemo);
                     analizeDemoThread.Start(new Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float>(eventDic, roundNumber, dic, tickTime, firstFreezetimeEndedTime));
@@ -2696,9 +2719,6 @@ namespace CSGOTacticSimulator
             }
 
             int lastPlayerKilledIndex = 0;
-
-            te_editor.Text = "";
-            te_editor.IsReadOnly = true;
 
             if (float.IsNaN(parser.TickTime))
             {
@@ -3680,7 +3700,6 @@ namespace CSGOTacticSimulator
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "PlayerBuy", 0));
             };
 
-            te_editor.Text = "";
             Thread analyzeThread = new Thread(() =>
             {
                 try
