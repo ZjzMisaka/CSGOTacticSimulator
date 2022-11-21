@@ -247,6 +247,9 @@ namespace CSGOTacticSimulator.Global
             QuestionIcon = new System.Windows.Media.Imaging.BitmapImage(new Uri(GlobalDictionary.questionPath)),
             ErrorIcon = new System.Windows.Media.Imaging.BitmapImage(new Uri(GlobalDictionary.errorPath)),
             ButtonStyleList = new List<Style> { CustomizableMessageBox.Prefab.GetButtonStyle(ButtonStyleName.White) },
+            ButtonBackgroundList = new List<Brush>() { Brushes.Gray },
+            ButtonFontColor = new MessageBoxColor(Colors.White),
+            ButtonBorderBrushList = new List<Brush>() { Brushes.LightGray },
         };
 
         static private List<Point> directionList = new List<Point>()

@@ -6376,87 +6376,83 @@ namespace CSGOTacticSimulator
             // set entirety speed
             // set camp
             // create character
-            Button buttonSpeed = new Button() { Visibility = Visibility.Visible, Height = 25, FontSize = 16 };
-            buttonSpeed.Content = "设置速度";
-            Button buttonCamp = new Button() { Visibility = Visibility.Visible, Height = 25, FontSize = 16 };
-            buttonCamp.Content = "设置阵营";
-            Button buttonCreateCharacter = new Button() { Visibility = Visibility.Visible, Height = 25, FontSize = 16 };
-            buttonCreateCharacter.Content = "创建角色";
-            buttonSpeed.Click += delegate (object sender, RoutedEventArgs e)
+            int res = MessageBox.Show(propertiesSetter, new RefreshList
             {
-                MessageBox.ButtonList = new RefreshList { new Label() { Content = "设置速度", FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, new TextBox() { Width = 60, Height = 25, FontSize = 16, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 10, 0, 10) }, new ButtonSpacer(200), "OK" };
-                MessageBox.MessageBoxImageType = MessageBoxImage.None;
-                MessageBox.MessageText = "填写速度比率";
-            };
-            buttonCamp.Click += delegate (object sender, RoutedEventArgs e)
-            {
-                ComboBox comboBox = new ComboBox();
-                comboBox.FontSize = 16;
-                comboBox.Width = 60;
-                comboBox.Height = 25;
-                comboBox.Margin = new Thickness(0, 10, 0, 10);
-                comboBox.VerticalContentAlignment = VerticalAlignment.Center;
-                comboBox.Items.Add(new ComboBoxItem() { Content = "T", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
-                comboBox.Items.Add(new ComboBoxItem() { Content = "CT", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
-                comboBox.SelectedIndex = 0;
-                MessageBox.ButtonList = new RefreshList { new Label() { Content = "设置阵营", FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, new ButtonSpacer(200), "OK" };
-                MessageBox.MessageBoxImageType = MessageBoxImage.None;
-                MessageBox.MessageText = "选择主视角阵营";
-            };
-            buttonCreateCharacter.Click += delegate (object sender, RoutedEventArgs e)
-            {
-                ComboBox comboBox = new ComboBox();
-                comboBox.FontSize = 16;
-                comboBox.Width = 60;
-                comboBox.Height = 25;
-                comboBox.VerticalContentAlignment = VerticalAlignment.Center;
-                comboBox.Items.Add(new ComboBoxItem() { Content = "T", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
-                comboBox.Items.Add(new ComboBoxItem() { Content = "CT", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
-                comboBox.SelectedIndex = 0;
+                "设置速度",
+                new RoutedEventHandler((s, e)=>{
+                    MessageBox.ButtonList = new RefreshList { new Label() { Content = "设置速度", FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, new TextBox() { Width = 60, Height = 25, FontSize = 16, VerticalContentAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 10, 0, 10) }, new ButtonSpacer(200), "OK" };
+                    MessageBox.MessageBoxImageType = MessageBoxImage.None;
+                    MessageBox.MessageText = "填写速度比率";
+                }),
+                "设置阵营",
+                new RoutedEventHandler((s, e)=>{
+                    ComboBox comboBox = new ComboBox();
+                    comboBox.FontSize = 16;
+                    comboBox.Width = 60;
+                    comboBox.Height = 25;
+                    comboBox.Margin = new Thickness(0, 10, 0, 10);
+                    comboBox.VerticalContentAlignment = VerticalAlignment.Center;
+                    comboBox.Items.Add(new ComboBoxItem() { Content = "T", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBox.Items.Add(new ComboBoxItem() { Content = "CT", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBox.SelectedIndex = 0;
+                    MessageBox.ButtonList = new RefreshList { new Label() { Content = "设置阵营", FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, new ButtonSpacer(200), "OK" };
+                    MessageBox.MessageBoxImageType = MessageBoxImage.None;
+                    MessageBox.MessageText = "选择主视角阵营";
+                }),
+                "创建角色",
+                new RoutedEventHandler((s, e)=>{
+                    ComboBox comboBox = new ComboBox();
+                    comboBox.FontSize = 16;
+                    comboBox.Width = 60;
+                    comboBox.Height = 25;
+                    comboBox.VerticalContentAlignment = VerticalAlignment.Center;
+                    comboBox.Items.Add(new ComboBoxItem() { Content = "T", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBox.Items.Add(new ComboBoxItem() { Content = "CT", FontSize = 16, VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center });
+                    comboBox.SelectedIndex = 0;
 
-                TextBox textBoxName = new TextBox();
-                textBoxName.FontSize = 16;
-                textBoxName.Width = 60;
-                textBoxName.Height = 25;
-                textBoxName.IsEnabled = false;
-                textBoxName.VerticalContentAlignment = VerticalAlignment.Center;
-                textBoxName.Height = 25;
-                CheckBox checkBoxName = new CheckBox();
-                checkBoxName.FontSize = 16;
-                checkBoxName.Width = 60;
-                checkBoxName.Content = "别名";
-                checkBoxName.VerticalContentAlignment = VerticalAlignment.Center;
-                checkBoxName.Foreground = new SolidColorBrush(Colors.White);
-                checkBoxName.Click += delegate (object cbSender, RoutedEventArgs cbE)
-                {
-                    if (((CheckBox)cbSender).IsChecked == true)
+                    TextBox textBoxName = new TextBox();
+                    textBoxName.FontSize = 16;
+                    textBoxName.Width = 60;
+                    textBoxName.Height = 25;
+                    textBoxName.IsEnabled = false;
+                    textBoxName.VerticalContentAlignment = VerticalAlignment.Center;
+                    textBoxName.Height = 25;
+                    CheckBox checkBoxName = new CheckBox();
+                    checkBoxName.FontSize = 16;
+                    checkBoxName.Width = 60;
+                    checkBoxName.Content = "别名";
+                    checkBoxName.VerticalContentAlignment = VerticalAlignment.Center;
+                    checkBoxName.Foreground = new SolidColorBrush(Colors.White);
+                    checkBoxName.Click += delegate (object cbSender, RoutedEventArgs cbE)
                     {
-                        textBoxName.IsEnabled = true;
-                    }
-                    else
-                    {
-                        textBoxName.Text = "";
-                        textBoxName.IsEnabled = false;
-                    }
-                };
-                Grid gridName = new Grid();
-                RowDefinition rowDefinitionR0 = new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) };
-                RowDefinition rowDefinitionR1 = new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) };
-                gridName.RowDefinitions.Add(rowDefinitionR0);
-                gridName.RowDefinitions.Add(rowDefinitionR1);
-                Grid.SetRow(checkBoxName, 0);
-                Grid.SetRow(textBoxName, 1);
-                gridName.Children.Add(checkBoxName);
-                gridName.Children.Add(textBoxName);
-                gridName.Width = 150;
-                gridName.Height = 50;
-                gridName.Margin = new Thickness(5);
+                        if (((CheckBox)cbSender).IsChecked == true)
+                        {
+                            textBoxName.IsEnabled = true;
+                        }
+                        else
+                        {
+                            textBoxName.Text = "";
+                            textBoxName.IsEnabled = false;
+                        }
+                    };
+                    Grid gridName = new Grid();
+                    RowDefinition rowDefinitionR0 = new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) };
+                    RowDefinition rowDefinitionR1 = new RowDefinition() { Height = new GridLength(1, GridUnitType.Auto) };
+                    gridName.RowDefinitions.Add(rowDefinitionR0);
+                    gridName.RowDefinitions.Add(rowDefinitionR1);
+                    Grid.SetRow(checkBoxName, 0);
+                    Grid.SetRow(textBoxName, 1);
+                    gridName.Children.Add(checkBoxName);
+                    gridName.Children.Add(textBoxName);
+                    gridName.Width = 150;
+                    gridName.Height = 50;
+                    gridName.Margin = new Thickness(5);
 
-                MessageBox.ButtonList = new RefreshList { new Label() { Content = "创建角色", FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, gridName, new ButtonSpacer(50), "OK" };
-                MessageBox.MessageBoxImageType = MessageBoxImage.None;
-                MessageBox.MessageText = "选择角色阵营和坐标";
-            };
-            int res = MessageBox.Show(propertiesSetter, new RefreshList { buttonSpeed, buttonCamp, buttonCreateCharacter }, "选择命令的种类", "创建命令", MessageBoxImage.Question);
+                    MessageBox.ButtonList = new RefreshList { new Label() { Content = "创建角色", FontSize = 16, Foreground = new SolidColorBrush(Colors.White), VerticalAlignment = VerticalAlignment.Center, VerticalContentAlignment = VerticalAlignment.Center }, comboBox, gridName, new ButtonSpacer(50), "OK" };
+                    MessageBox.MessageBoxImageType = MessageBoxImage.None;
+                    MessageBox.MessageText = "选择角色阵营和坐标";
+                }),
+            }, "选择命令的种类", "创建命令", MessageBoxImage.Question);
             if (res == -1)
             {
                 return;
