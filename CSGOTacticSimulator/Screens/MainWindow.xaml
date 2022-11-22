@@ -65,7 +65,7 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <Grid x:Name="g_main_grid"  Margin="30, 70, 30, 30">
+        <Grid x:Name="g_main_grid"  Margin="15, 55, 15, 15">
             <Grid.RowDefinitions>
                 <RowDefinition Height="35"></RowDefinition>
                 <RowDefinition Height="35"></RowDefinition>
@@ -195,7 +195,7 @@
         </Grid>
         <Canvas x:Name="c_paintcanvas" Background="Transparent" IsHitTestVisible="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseMove="CPaintcanvasMouseMove">
         </Canvas>
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="30">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="15">
             <Button x:Name="btn_setting" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Visibility="Visible" Click="BtnSettingClick"></Button>
             <Button x:Name="btn_restore" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Visibility="Collapsed" Click="BtnRestoreClick"></Button>
             <Button x:Name="btn_minimize" Style="{StaticResource Style.ImageBackgroundButton}" Margin="10, 0, 0, 0" Width="30" Height="30" Click="BtnMinimizeClick"></Button>
