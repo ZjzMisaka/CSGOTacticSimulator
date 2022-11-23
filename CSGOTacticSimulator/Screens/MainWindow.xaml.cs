@@ -3742,7 +3742,7 @@ namespace CSGOTacticSimulator
                     }
                 }
             });
-
+            analyzeThread.Priority = ThreadPriority.BelowNormal;
             analyzeThread.Name = "analyzeThread";
             analyzeThread.Start();
             ThreadHelper.AddThread(analyzeThread);
