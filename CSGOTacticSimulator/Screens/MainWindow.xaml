@@ -152,7 +152,7 @@
         </Canvas>
         <Canvas x:Name="c_previewcanvas">
         </Canvas>
-        <Grid Margin="30, 80, 30, 30">
+        <Grid Margin="15, 80, 15, 15">
             <Grid x:Name="g_infos" Tag="DefaultInfo" Margin="10, 30" HorizontalAlignment="Left" VerticalAlignment="Center" Opacity="0.85" Background="Gray" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
