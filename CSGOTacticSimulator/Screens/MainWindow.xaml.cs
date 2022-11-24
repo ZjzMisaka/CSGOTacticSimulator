@@ -4771,6 +4771,7 @@ namespace CSGOTacticSimulator
                                     // 名字和图片文件名对不上时替换, 暂时写死
                                     weaponStr = weaponStr.Replace("Scout", "ssg08");
                                     weaponStr = weaponStr.Replace("Incendiary", "incgrenade");
+                                    weaponStr = weaponStr.Replace("Swag7", "mag7");
                                     foreach (string file in files)
                                     {
                                         if (file.ToLower().Contains("effect"))
