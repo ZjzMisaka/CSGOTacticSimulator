@@ -386,6 +386,7 @@ namespace CSGOTacticSimulator
             }
 
             OnSizeChanged(this, null);
+            SetSettingPanelMargin();
         }
 
         private Label CreateChacterlabel(Character character, Point wndPoint)
