@@ -6378,6 +6378,7 @@ namespace CSGOTacticSimulator
                 characterImg.Source = new BitmapImage(new Uri(GlobalDictionary.friendlyAliveUpperPath));
                 characterImg.Width = GlobalDictionary.CharacterWidthAndHeight;
                 characterImg.Height = GlobalDictionary.CharacterWidthAndHeight;
+                characterImg.Cursor = Cursors.Hand;
                 Point charactorWndPoint = GetWndPoint(mapNode.nodePoint, ImgType.Character);
                 Canvas.SetLeft(characterImg, charactorWndPoint.X);
                 Canvas.SetTop(characterImg, charactorWndPoint.Y);
