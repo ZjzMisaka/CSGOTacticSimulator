@@ -6080,6 +6080,8 @@ namespace CSGOTacticSimulator
         }
         private void BtnSettingClick(object sender, RoutedEventArgs e)
         {
+            SetSettingPanelMargin();
+
             if (sp_setting.Visibility == Visibility.Visible)
             {
                 sp_setting.Visibility = Visibility.Collapsed;
@@ -7374,6 +7376,20 @@ namespace CSGOTacticSimulator
                     demoSoundPlayerDic[audioFileReader].Volume = (float)s_volume.Value;
                 });
             }
+        }
+
+        private void SetSettingPanelMargin()
+        {
+            double right = 15;
+            if (btn_minimize.Visibility == Visibility.Visible)
+            {
+                right += btn_minimize.Width + btn_minimize.Margin.Left;
+            }
+            if (btn_restore.Visibility == Visibility.Visible)
+            {
+                right += btn_restore.Width + btn_restore.Margin.Left;
+            }
+            sv_setting.Margin = new Thickness(0, 45, right, 0);
         }
     }
 }
