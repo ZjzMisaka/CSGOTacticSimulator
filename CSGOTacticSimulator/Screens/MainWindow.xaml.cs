@@ -4773,6 +4773,8 @@ namespace CSGOTacticSimulator
                                     weaponStr = weaponStr.Replace("Scout", "ssg08");
                                     weaponStr = weaponStr.Replace("Incendiary", "incgrenade");
                                     weaponStr = weaponStr.Replace("Swag7", "mag7");
+                                    weaponStr = weaponStr.Replace("DualBarettas", "elite");
+                                    weaponStr = weaponStr.Replace("Zeus", "taser");
                                     foreach (string file in files)
                                     {
                                         if (file.ToLower().Contains("effect"))
@@ -4789,6 +4791,7 @@ namespace CSGOTacticSimulator
                                     if (!foundActiveWeaponFile)
                                     {
                                         te_editor.Text += "[error] Can't find weapon picture: " + player.CopiedActiveWeapon.Weapon.ToString() + "\n";
+                                        te_editor.ScrollToEnd();
                                     }
                                     Canvas.SetLeft(character.ActiveWeaponImg, activeWeaponImgWndPoint.X);
                                     Canvas.SetTop(character.ActiveWeaponImg, activeWeaponImgWndPoint.Y);
