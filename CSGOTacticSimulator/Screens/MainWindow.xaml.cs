@@ -582,7 +582,7 @@ namespace CSGOTacticSimulator
             }
 
             Stop();
-            ThreadHelper.cts = new CancellationTokenSource();
+            ThreadHelper.ReNewCancellationTokenSource();
 
             string filePath = tb_select_file.Text;
             if (Path.GetExtension(filePath) == ".txt" || filePath == "")
@@ -922,7 +922,7 @@ namespace CSGOTacticSimulator
             double timeDouble = 0;
             Task timerTask = new Task(async () =>
             {
-                while (timeDouble <= 90 && !ThreadHelper.cts.IsCancellationRequested)
+                while (timeDouble <= 90 && !ThreadHelper.CheckIsCancellationRequested())
                 {
                     ThreadHelper.manualEvent.WaitOne();
                     await Task.Delay(GlobalDictionary.animationFreshTime);
@@ -932,7 +932,7 @@ namespace CSGOTacticSimulator
                         tb_timer.Text = Math.Round((timeDouble + GlobalDictionary.animationFreshTime / 1000.0), 2).ToString();
                     });
                 }
-            }, ThreadHelper.cts.Token);
+            }, ThreadHelper.GetToken());
             timerTask.Start();
             ThreadHelper.AddThread(timerTask);
         }
@@ -1448,7 +1448,7 @@ namespace CSGOTacticSimulator
                         nowTime = double.Parse(tb_timer.Text);
                     });
                 }
-                while (nowTime < second && !ThreadHelper.cts.IsCancellationRequested);
+                while (nowTime < second && !ThreadHelper.CheckIsCancellationRequested());
 
                 characters[characters.IndexOf(character)].IsRunningAnimation = false;
                 animations[animations.IndexOf(animation)].status = Helper.Status.Finished;
@@ -1457,7 +1457,7 @@ namespace CSGOTacticSimulator
                 {
                     TraversalAnimations();
                 }));
-            }, ThreadHelper.cts.Token);
+            }, ThreadHelper.GetToken());
             waitUntilTask.Start();
             ThreadHelper.AddThread(waitUntilTask);
         }
@@ -1487,7 +1487,7 @@ namespace CSGOTacticSimulator
                 {
                     TraversalAnimations();
                 }));
-            }, ThreadHelper.cts.Token);
+            }, ThreadHelper.GetToken());
             waitForTask.Start();
             ThreadHelper.AddThread(waitForTask);
         }
@@ -1581,7 +1581,7 @@ namespace CSGOTacticSimulator
                 {
                     TraversalAnimations();
                 }));
-            }, ThreadHelper.cts.Token);
+            }, ThreadHelper.GetToken());
             defuseTask.Start();
             ThreadHelper.AddThread(defuseTask);
         }
@@ -1665,10 +1665,10 @@ namespace CSGOTacticSimulator
                         {
                             c_runcanvas.Children.Remove(explosionImage);
                         });
-                    }, ThreadHelper.cts.Token);
+                    }, ThreadHelper.GetToken());
                     explosionTask.Start();
                     ThreadHelper.AddThread(explosionTask);
-                }, ThreadHelper.cts.Token);
+                }, ThreadHelper.GetToken());
                 plantTask.Start();
                 ThreadHelper.AddThread(plantTask);
             }
@@ -1814,7 +1814,7 @@ namespace CSGOTacticSimulator
                         TraversalAnimations();
                     }));
 
-                }, ThreadHelper.cts.Token);
+                }, ThreadHelper.GetToken());
                 moveTask.Start();
                 ThreadHelper.AddThread(moveTask);
             }
@@ -1953,7 +1953,7 @@ namespace CSGOTacticSimulator
                         c_runcanvas.Children.Remove(missileEffectImg);
                     }
                 });
-            }, ThreadHelper.cts.Token);
+            }, ThreadHelper.GetToken());
             throwTask.Start();
             ThreadHelper.AddThread(throwTask);
 
@@ -2017,7 +2017,7 @@ namespace CSGOTacticSimulator
                 {
                     c_runcanvas.Children.Remove(bulletLine);
                 });
-            }, ThreadHelper.cts.Token);
+            }, ThreadHelper.GetToken());
             shootTask.Start();
             ThreadHelper.AddThread(shootTask);
 
@@ -2488,7 +2488,7 @@ namespace CSGOTacticSimulator
                 {
                     tb_select_file.Text = filePath;
                     Stop();
-                    ThreadHelper.cts = new CancellationTokenSource();
+                    ThreadHelper.ReNewCancellationTokenSource();
                     ReadDemo(filePath);
                 }
             }
@@ -2668,14 +2668,14 @@ namespace CSGOTacticSimulator
                     {
                         te_editor.Text += "[The sound files has been extracted]\n";
                     });
-                }, ThreadHelper.cts.Token);
+                }, ThreadHelper.GetToken());
                 ThreadHelper.AddThread(getSoundTask);
                 getSoundTask.Start();
             }
 
             Task totalTask = new Task(async () =>
             {
-                while (!ThreadHelper.cts.IsCancellationRequested)
+                while (!ThreadHelper.CheckIsCancellationRequested(ThreadHelper.KillPriority.Heigher))
                 {
                     while (nowCanRun != roundNumber)
                     {
@@ -2704,9 +2704,9 @@ namespace CSGOTacticSimulator
                     int roundNumberTemp = roundNumber;
                     Task analizeDemoTask = new Task(() => {
                         AnalizeDemo(new Tuple<Dictionary<int, List<Tuple<CurrentInfo, EventArgs, string, int>>>, int, Dictionary<long, int>, float, float>(eventDic, roundNumberTemp, dic, tickTime, firstFreezetimeEndedTime));
-                    }, ThreadHelper.cts.Token);
+                    }, ThreadHelper.GetToken(ThreadHelper.KillPriority.Heigher));
                     analizeDemoTask.Start();
-                    ThreadHelper.AddThread(analizeDemoTask);
+                    ThreadHelper.AddThread(analizeDemoTask, ThreadHelper.KillPriority.Heigher);
                     ++roundNumber;
                     await analizeDemoTask;
 
@@ -2721,7 +2721,7 @@ namespace CSGOTacticSimulator
                 {
                     Stop();
                 });
-            }, ThreadHelper.cts.Token);
+            }, ThreadHelper.GetToken(ThreadHelper.KillPriority.Heigher));
             totalTask.Start();
             ThreadHelper.AddThread(totalTask);
 
@@ -3725,14 +3725,14 @@ namespace CSGOTacticSimulator
             {
                 try
                 {
-                    while (roundNumber != -1 && !ThreadHelper.cts.IsCancellationRequested)
+                    while (roundNumber != -1 && !ThreadHelper.CheckIsCancellationRequested())
                     {
                         if (nowCanRun < roundNumber)
                         {
                             if (!parser.ParseNextTick())
                             {
                                 eventDic[parser.TScore + parser.CTScore] = eventList;
-                                while (roundNumber != -1 && !ThreadHelper.cts.IsCancellationRequested)
+                                while (roundNumber != -1 && !ThreadHelper.CheckIsCancellationRequested())
                                 {
                                     if (nowCanRun < roundNumber)
                                     {
@@ -3764,7 +3764,7 @@ namespace CSGOTacticSimulator
                         });
                     }
                 }
-            }, ThreadHelper.cts.Token);
+            }, ThreadHelper.GetToken());
             // analyzeTask.Priority = ThreadPriority.BelowNormal;
             analyzeTask.Start();
             ThreadHelper.AddThread(analyzeTask);
@@ -3897,7 +3897,7 @@ namespace CSGOTacticSimulator
 
             for (int i = 0; i < eventList.Count; ++i)
             {
-                if (ThreadHelper.cts.IsCancellationRequested)
+                if (ThreadHelper.CheckIsCancellationRequested(ThreadHelper.KillPriority.Heigher))
                 {
                     break;
                 }
@@ -4250,7 +4250,7 @@ namespace CSGOTacticSimulator
                             {
                                 character.StatusImg.Visibility = Visibility.Collapsed;
                             });
-                        }, ThreadHelper.cts.Token);
+                        }, ThreadHelper.GetToken());
                         blindTask.Start();
                         ThreadHelper.AddThread(blindTask);
                     }
@@ -4322,7 +4322,7 @@ namespace CSGOTacticSimulator
                                         c_runcanvas.Children.Remove(explosionImage);
                                     }
                                 });
-                            }, ThreadHelper.cts.Token);
+                            }, ThreadHelper.GetToken());
                             removeExplosionImageTask.Start();
                             ThreadHelper.AddThread(removeExplosionImageTask);
                         });
@@ -4490,7 +4490,7 @@ namespace CSGOTacticSimulator
                                 {
                                     c_runcanvas.Children.Remove(bulletLine);
                                 });
-                            }, ThreadHelper.cts.Token);
+                            }, ThreadHelper.GetToken());
                             shootTask.Start();
                             ThreadHelper.AddThread(shootTask);
                         }
@@ -5307,7 +5307,7 @@ namespace CSGOTacticSimulator
                         c_runcanvas.Children.Remove(missileEffectImg);
                     }
                 });
-            }, ThreadHelper.cts.Token);
+            }, ThreadHelper.GetToken());
             effectTask.Start();
             ThreadHelper.AddThread(effectTask);
         }
@@ -5341,7 +5341,7 @@ namespace CSGOTacticSimulator
                         c_runcanvas.Children.Remove(missileEffectImg);
                     }
                 });
-            }, ThreadHelper.cts.Token);
+            }, ThreadHelper.GetToken());
             effectTask.Start();
             ThreadHelper.AddThread(effectTask);
         }
@@ -6251,7 +6251,7 @@ namespace CSGOTacticSimulator
                         {
                             HideDefaultInfo();
                         });
-                    }, ThreadHelper.cts.Token);
+                    }, ThreadHelper.GetToken());
                     showInfoTask.Start();
                     ThreadHelper.AddThread(showInfoTask);
                 }
@@ -6273,7 +6273,7 @@ namespace CSGOTacticSimulator
                         {
                             HidePersonalInfo();
                         });
-                    }, ThreadHelper.cts.Token);
+                    }, ThreadHelper.GetToken());
                     showInfoTask.Start();
                     ThreadHelper.AddThread(showInfoTask);
                 }
