@@ -917,12 +917,12 @@ namespace CSGOTacticSimulator
         {
             tb_timer.Text = "0";
             double timeDouble = 0;
-            Task timerTask = new Task(() =>
+            Task timerTask = new Task(async () =>
             {
                 while (timeDouble <= 90 && !ThreadHelper.cts.IsCancellationRequested)
                 {
                     ThreadHelper.manualEvent.WaitOne();
-                    Task.Delay(GlobalDictionary.animationFreshTime);
+                    await Task.Delay(GlobalDictionary.animationFreshTime);
                     timeDouble = timeDouble + GlobalDictionary.animationFreshTime / 1000.0;
                     tb_timer.Dispatcher.Invoke(() =>
                     {
@@ -1433,12 +1433,12 @@ namespace CSGOTacticSimulator
             animations[animations.IndexOf(animation)].status = Helper.Status.Running;
 
             double second = (double)animation.objectPara[0];
-            Task waitUntilTask = new Task(() =>
+            Task waitUntilTask = new Task(async () =>
             {
                 double nowTime = 0;
                 do
                 {
-                    Task.Delay((int)(GlobalDictionary.animationFreshTime));
+                    await Task.Delay((int)(GlobalDictionary.animationFreshTime));
                     ThreadHelper.manualEvent.WaitOne();
                     tb_timer.Dispatcher.Invoke(() =>
                     {
@@ -1472,9 +1472,9 @@ namespace CSGOTacticSimulator
             animations[animations.IndexOf(animation)].status = Helper.Status.Running;
 
             double second = (double)animation.objectPara[0];
-            Task waitForTask = new Task(() =>
+            Task waitForTask = new Task(async () =>
             {
-                Task.Delay((int)(second * 1000));
+                await Task.Delay((int)(second * 1000));
                 ThreadHelper.manualEvent.WaitOne();
 
                 characters[characters.IndexOf(character)].IsRunningAnimation = false;
@@ -1553,9 +1553,9 @@ namespace CSGOTacticSimulator
                 animations[animations.IndexOf(animation)].status = Helper.Status.Finished;
                 return;
             }
-            Task defuseTask = new Task(() =>
+            Task defuseTask = new Task(async () =>
             {
-                Task.Delay(defuseTime * 1000);
+                await Task.Delay(defuseTime * 1000);
                 ThreadHelper.manualEvent.WaitOne();
 
                 if (character.Status == Model.Status.Dead)
@@ -1610,9 +1610,9 @@ namespace CSGOTacticSimulator
                 explosionImage.Height = GlobalDictionary.ExplosionEffectWidthAndHeight;
                 Point explosionWndPoint = GetWndPoint(character.MapPoint, ImgType.ExplosionEffect);
                 Task explosionTask = null;
-                Task plantTask = new Task(() =>
+                Task plantTask = new Task(async () =>
                 {
-                    Task.Delay(4000);
+                    await Task.Delay(4000);
                     ThreadHelper.manualEvent.WaitOne();
 
                     if (character.Status == Model.Status.Dead)
@@ -1638,9 +1638,9 @@ namespace CSGOTacticSimulator
                         TraversalAnimations();
                     }));
 
-                    explosionTask = new Task(() =>
+                    explosionTask = new Task(async () =>
                     {
-                        Task.Delay(30000);
+                        await Task.Delay(30000);
                         ThreadHelper.manualEvent.WaitOne();
                         if (bombDefused)
                         {
@@ -1754,7 +1754,7 @@ namespace CSGOTacticSimulator
             {
                 Point nowWndPoint = startWndPoint;
                 Task moveTask = null;
-                moveTask = new Task(() =>
+                moveTask = new Task(async () =>
                 {
                     foreach (Point endWndPoint in endWndPointList)
                     {
@@ -1796,7 +1796,7 @@ namespace CSGOTacticSimulator
                                 }
                             });
 
-                            Task.Delay(animationFreshTime);
+                            await Task.Delay(animationFreshTime);
                             ThreadHelper.manualEvent.WaitOne();
                         }
 
@@ -1900,7 +1900,7 @@ namespace CSGOTacticSimulator
                 }));
 
             }
-            Task throwTask = new Task(() =>
+            Task throwTask = new Task(async () =>
             {
                 Point nowWndPoint = startWndPoint;
                 foreach (Point wndPoint in wndPoints)
@@ -1921,7 +1921,7 @@ namespace CSGOTacticSimulator
                             c_runcanvas.Children.Add(missileImg);
                         });
 
-                        Task.Delay(animationFreshTime);
+                        await Task.Delay(animationFreshTime);
                         ThreadHelper.manualEvent.WaitOne();
                     }
                     startWndPoint = nowWndPoint;
@@ -1941,7 +1941,7 @@ namespace CSGOTacticSimulator
                     Canvas.SetTop(missileEffectImg, nowWndPoint.Y);
                     c_runcanvas.Children.Add(missileEffectImg);
                 });
-                Task.Delay(effectLifeSpan * 1000);
+                await Task.Delay(effectLifeSpan * 1000);
                 ThreadHelper.manualEvent.WaitOne();
                 c_runcanvas.Dispatcher.Invoke(() =>
                 {
@@ -2006,9 +2006,9 @@ namespace CSGOTacticSimulator
             bulletLine.Y2 = toWndPoint.Y;
             c_runcanvas.Children.Add(bulletLine);
 
-            Task shootTask = new Task(() =>
+            Task shootTask = new Task(async () =>
             {
-                Task.Delay(500);
+                await Task.Delay(500);
                 ThreadHelper.manualEvent.WaitOne();
                 c_runcanvas.Dispatcher.Invoke(() =>
                 {
@@ -2676,7 +2676,7 @@ namespace CSGOTacticSimulator
                 {
                     while (nowCanRun != roundNumber)
                     {
-                        Task.Delay(GlobalDictionary.animationFreshTime);
+                        await Task.Delay(GlobalDictionary.animationFreshTime);
                         ThreadHelper.manualEvent.WaitOne();
                     }
 
@@ -3718,7 +3718,7 @@ namespace CSGOTacticSimulator
                 eventList.Add(new Tuple<CurrentInfo, EventArgs, string, int>(currentInfo, parseE, "PlayerBuy", 0));
             };
 
-            Task analyzeTask = new Task(() =>
+            Task analyzeTask = new Task(async () =>
             {
                 try
                 {
@@ -3737,7 +3737,7 @@ namespace CSGOTacticSimulator
                                     }
                                     else
                                     {
-                                        Task.Delay(GlobalDictionary.animationFreshTime);
+                                        await Task.Delay(GlobalDictionary.animationFreshTime);
                                         ThreadHelper.manualEvent.WaitOne();
                                     }
                                 }
@@ -3745,7 +3745,7 @@ namespace CSGOTacticSimulator
                         }
                         else
                         {
-                            Task.Delay(GlobalDictionary.animationFreshTime);
+                            await Task.Delay(GlobalDictionary.animationFreshTime);
                             ThreadHelper.manualEvent.WaitOne();
                         }
                     }
@@ -4239,9 +4239,9 @@ namespace CSGOTacticSimulator
                             character.StatusImg.Tag = (currentEvent.Item2 as BlindEventArgs).Attacker.SteamID;
                         });
 
-                        Task blindTask = new Task(() =>
+                        Task blindTask = new Task(async () =>
                         {
-                            Task.Delay((int)((currentEvent.Item2 as BlindEventArgs).FlashDuration * 1000));
+                            await Task.Delay((int)((currentEvent.Item2 as BlindEventArgs).FlashDuration * 1000));
                             ThreadHelper.manualEvent.WaitOne();
                             this.Dispatcher.Invoke(() =>
                             {
@@ -4308,9 +4308,9 @@ namespace CSGOTacticSimulator
                             Canvas.SetTop(explosionImage, explosionWndPoint.Y);
                             c_runcanvas.Children.Add(explosionImage);
 
-                            Task removeExplosionImageTask = new Task(() =>
+                            Task removeExplosionImageTask = new Task(async () =>
                             {
-                                Task.Delay((int)(GlobalDictionary.heLifespan * 1000));
+                                await Task.Delay((int)(GlobalDictionary.heLifespan * 1000));
                                 ThreadHelper.manualEvent.WaitOne();
                                 c_runcanvas.Dispatcher.Invoke(() =>
                                 {
@@ -4479,9 +4479,9 @@ namespace CSGOTacticSimulator
                                 c_runcanvas.Children.Add(bulletLine);
                             });
 
-                            Task shootTask = new Task(() =>
+                            Task shootTask = new Task(async () =>
                             {
-                                Task.Delay(150);
+                                await Task.Delay(150);
                                 ThreadHelper.manualEvent.WaitOne();
                                 c_runcanvas.Dispatcher.Invoke(() =>
                                 {
@@ -5293,9 +5293,9 @@ namespace CSGOTacticSimulator
                 Canvas.SetTop(missileEffectImg, wndPoint.Y);
                 c_runcanvas.Children.Add(missileEffectImg);
             });
-            Task effectTask = new Task(() =>
+            Task effectTask = new Task(async () =>
             {
-                Task.Delay((int)(GlobalDictionary.heLifespan * 1000));
+                await Task.Delay((int)(GlobalDictionary.heLifespan * 1000));
                 ThreadHelper.manualEvent.WaitOne();
                 c_runcanvas.Dispatcher.Invoke(() =>
                 {
@@ -5327,9 +5327,9 @@ namespace CSGOTacticSimulator
                 Canvas.SetTop(missileEffectImg, wndPoint.Y);
                 c_runcanvas.Children.Add(missileEffectImg);
             });
-            Task effectTask = new Task(() =>
+            Task effectTask = new Task(async () =>
             {
-                Task.Delay((int)(GlobalDictionary.flashbangLifespan * 1000));
+                await Task.Delay((int)(GlobalDictionary.flashbangLifespan * 1000));
                 ThreadHelper.manualEvent.WaitOne();
                 c_runcanvas.Dispatcher.Invoke(() =>
                 {
@@ -6240,9 +6240,9 @@ namespace CSGOTacticSimulator
                 {
                     ResetInfoPanelFontStyle();
                     ShowDefaultInfo();
-                    Task showInfoTask = new Task(() =>
+                    Task showInfoTask = new Task(async () =>
                     {
-                        Task.Delay(5 * 1000);
+                        await Task.Delay(5 * 1000);
                         ThreadHelper.manualEvent.WaitOne();
                         this.Dispatcher.Invoke(() =>
                         {
@@ -6262,9 +6262,9 @@ namespace CSGOTacticSimulator
                 if (!Keyboard.IsKeyDown(Key.CapsLock))
                 {
                     ShowPersonalInfo();
-                    Task showInfoTask = new Task(() =>
+                    Task showInfoTask = new Task(async () =>
                     {
-                        Task.Delay(5 * 1000);
+                        await Task.Delay(5 * 1000);
                         ThreadHelper.manualEvent.WaitOne();
                         this.Dispatcher.Invoke(() =>
                         {
