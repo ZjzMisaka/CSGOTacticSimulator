@@ -19,21 +19,24 @@ namespace CSGOTacticSimulator.Helper
 
         public enum KillPriority { Default, Heigher, Lower };
 
-        static public void StopAllThread()
+        static public async Task<bool> StopAllThread()
         {
             if (heigherKillPriorityCts != null && !heigherKillPriorityCts.IsCancellationRequested)
             {
                 heigherKillPriorityCts.Cancel();
 
-                Task.WaitAll(heigherKillPriorityTaskList.ToArray());
+                // Task.WaitAll(heigherKillPriorityTaskList.ToArray());
+                await Task.WhenAll(heigherKillPriorityTaskList);
 
                 heigherKillPriorityTaskList.Clear();
             }
+
             if (cts != null && !cts.IsCancellationRequested)
             {
                 cts.Cancel();
 
-                Task.WaitAll(taskList.ToArray());
+                // Task.WaitAll(taskList.ToArray());
+                await Task.WhenAll(taskList);
 
                 taskList.Clear();
             }
@@ -41,10 +44,13 @@ namespace CSGOTacticSimulator.Helper
             {
                 lowerKillPriorityCts.Cancel();
 
-                Task.WaitAll(lowerKillPriorityTaskList.ToArray());
+                // Task.WaitAll(lowerKillPriorityTaskList.ToArray());
+                await Task.WhenAll(lowerKillPriorityTaskList);
 
                 lowerKillPriorityTaskList.Clear();
             }
+
+            return true;
         }
 
         static public void PauseAllThread()
