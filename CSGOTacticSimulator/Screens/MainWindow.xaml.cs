@@ -432,6 +432,9 @@ namespace CSGOTacticSimulator
         {
             Label name = new Label();
             name.IsHitTestVisible = false;
+            name.Foreground = new SolidColorBrush(Colors.White);
+            name.FontSize *= GlobalDictionary.ImageRatio * 1.3;
+            name.Content = character.Name == "" ? character.Number.ToString() : character.Name;
             name.Padding = new Thickness(0);
             name.Margin = new Thickness(0);
             name.Tag = "name|" + character.SteamId;
@@ -1450,7 +1453,7 @@ namespace CSGOTacticSimulator
                 characters[characters.IndexOf(character)].IsRunningAnimation = false;
                 animations[animations.IndexOf(animation)].status = Helper.Status.Finished;
 
-                Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+                await Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
                 {
                     TraversalAnimations();
                 }));
@@ -1480,7 +1483,7 @@ namespace CSGOTacticSimulator
                 characters[characters.IndexOf(character)].IsRunningAnimation = false;
                 animations[animations.IndexOf(animation)].status = Helper.Status.Finished;
 
-                Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+                await Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
                 {
                     TraversalAnimations();
                 }));
@@ -1574,7 +1577,7 @@ namespace CSGOTacticSimulator
                 characters[characters.IndexOf(character)].IsRunningAnimation = false;
                 animations[animations.IndexOf(animation)].status = Helper.Status.Finished;
 
-                Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+                await Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
                 {
                     TraversalAnimations();
                 }));
@@ -1633,7 +1636,7 @@ namespace CSGOTacticSimulator
                     characters[characters.IndexOf(character)].IsRunningAnimation = false;
                     animations[animations.IndexOf(animation)].status = Helper.Status.Finished;
 
-                    Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+                    await Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
                     {
                         TraversalAnimations();
                     }));
@@ -1806,7 +1809,7 @@ namespace CSGOTacticSimulator
                     characters[characters.IndexOf(character)].IsRunningAnimation = false;
                     animations[animations.IndexOf(animation)].status = Helper.Status.Finished;
 
-                    Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
+                    await Application.Current.Dispatcher.BeginInvoke(new System.Action(() =>
                     {
                         TraversalAnimations();
                     }));
