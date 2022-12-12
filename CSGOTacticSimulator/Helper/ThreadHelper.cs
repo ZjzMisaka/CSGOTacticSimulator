@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 #pragma warning disable CS0618
 
@@ -7,59 +9,109 @@ namespace CSGOTacticSimulator.Helper
 {
     static public class ThreadHelper
     {
-        static private List<Thread> listThread = new List<Thread>();
+        static public CancellationTokenSource heigherKillPriorityCts;
+        static public CancellationTokenSource lowerKillPriorityCts;
+        static public CancellationTokenSource cts;
+        static public ManualResetEvent manualEvent = new ManualResetEvent(true);
+        static private List<Task> heigherKillPriorityTaskList = new List<Task>();
+        static private List<Task> lowerKillPriorityTaskList = new List<Task>();
+        static private List<Task> taskList = new List<Task>();
 
-        static public void StopAllThread(List<string> threadNameList = null)
+        public enum KillPriority { Default, Heigher, Lower };
+
+        static public async Task<bool> StopAllThread()
         {
-            for (int i = listThread.Count - 1; i >= 0; --i)
+            if (heigherKillPriorityCts != null && !heigherKillPriorityCts.IsCancellationRequested)
             {
-                if(threadNameList != null && threadNameList.Contains(listThread[i].Name))
-                {
-                    continue;
-                }
-                if (!((listThread[i].ThreadState & (ThreadState.Suspended | ThreadState.WaitSleepJoin)) == 0))
-                {
-                    try
-                    {
-                        listThread[i].Resume();
-                    }
-                    catch
-                    {
-                        // DO NOTHING
-                    }
-                }
-                listThread[i].Abort();
-                listThread.RemoveAt(i);
+                heigherKillPriorityCts.Cancel();
+
+                // Task.WaitAll(heigherKillPriorityTaskList.ToArray());
+                await Task.WhenAll(heigherKillPriorityTaskList);
+
+                heigherKillPriorityTaskList.Clear();
             }
+
+            if (cts != null && !cts.IsCancellationRequested)
+            {
+                cts.Cancel();
+
+                // Task.WaitAll(taskList.ToArray());
+                await Task.WhenAll(taskList);
+
+                taskList.Clear();
+            }
+            if (lowerKillPriorityCts != null && !lowerKillPriorityCts.IsCancellationRequested)
+            {
+                lowerKillPriorityCts.Cancel();
+
+                // Task.WaitAll(lowerKillPriorityTaskList.ToArray());
+                await Task.WhenAll(lowerKillPriorityTaskList);
+
+                lowerKillPriorityTaskList.Clear();
+            }
+
+            return true;
         }
 
         static public void PauseAllThread()
         {
-            for (int i = listThread.Count - 1; i >= 0; --i)
-            {
-                if (listThread[i].IsAlive)
-                {
-                    listThread[i].Suspend();
-                }
-            }
+            manualEvent.Reset();
         }
 
         static public void RestartAllThread()
         {
-            for (int i = listThread.Count - 1; i >= 0; --i)
+            manualEvent.Set();
+        }
+
+        static public void AddThread(Task task, KillPriority priority = KillPriority.Default)
+        {
+            if (priority == KillPriority.Default)
             {
-                if (listThread[i].IsAlive && listThread[i].ThreadState == ThreadState.Suspended
-                    || listThread[i].IsAlive && listThread[i].ThreadState == (ThreadState.SuspendRequested | ThreadState.WaitSleepJoin))
-                {
-                    listThread[i].Resume();
-                }
+                taskList.Add(task);
+            }
+            else if (priority == KillPriority.Heigher)
+            {
+                heigherKillPriorityTaskList.Add(task);
+            }
+            else if (priority == KillPriority.Lower)
+            {
+                lowerKillPriorityTaskList.Add(task);
             }
         }
 
-        static public void AddThread(Thread thread)
+        static public void ReNewCancellationTokenSource()
         {
-            listThread.Add(thread);
+            cts = new CancellationTokenSource();
+            heigherKillPriorityCts = new CancellationTokenSource();
+            lowerKillPriorityCts = new CancellationTokenSource();
         }
 
+        static public bool CheckIsCancellationRequested(KillPriority priority = KillPriority.Default)
+        {
+            if (priority == KillPriority.Heigher)
+            {
+                return heigherKillPriorityCts.IsCancellationRequested;
+            }
+            else if (priority == KillPriority.Lower)
+            {
+                return lowerKillPriorityCts.IsCancellationRequested;
+            }
+
+            return cts.IsCancellationRequested;
+        }
+
+        static public CancellationToken GetToken(KillPriority priority = KillPriority.Default)
+        {
+            if (priority == KillPriority.Heigher)
+            {
+                return heigherKillPriorityCts.Token;
+            }
+            else if (priority == KillPriority.Lower)
+            {
+                return lowerKillPriorityCts.Token;
+            }
+
+            return cts.Token;
+        }
     }
 }
