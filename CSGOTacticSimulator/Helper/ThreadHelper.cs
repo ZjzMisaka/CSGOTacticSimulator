@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 #pragma warning disable CS0618
 
@@ -7,58 +8,31 @@ namespace CSGOTacticSimulator.Helper
 {
     static public class ThreadHelper
     {
-        static private List<Thread> listThread = new List<Thread>();
+        static public CancellationTokenSource cts;
+        static public ManualResetEvent manualEvent = new ManualResetEvent(true);
+        static private List<Task> listTask = new List<Task>();
 
-        static public void StopAllThread(List<string> threadNameList = null)
+        static public void StopAllThread()
         {
-            for (int i = listThread.Count - 1; i >= 0; --i)
+            if (cts != null && !cts.IsCancellationRequested)
             {
-                if(threadNameList != null && threadNameList.Contains(listThread[i].Name))
-                {
-                    continue;
-                }
-                if (!((listThread[i].ThreadState & (ThreadState.Suspended | ThreadState.WaitSleepJoin)) == 0))
-                {
-                    try
-                    {
-                        listThread[i].Resume();
-                    }
-                    catch
-                    {
-                        // DO NOTHING
-                    }
-                }
-                listThread[i].Abort();
-                listThread.RemoveAt(i);
+                cts.Cancel();
             }
         }
 
         static public void PauseAllThread()
         {
-            for (int i = listThread.Count - 1; i >= 0; --i)
-            {
-                if (listThread[i].IsAlive)
-                {
-                    listThread[i].Suspend();
-                }
-            }
+            manualEvent.Reset();
         }
 
         static public void RestartAllThread()
         {
-            for (int i = listThread.Count - 1; i >= 0; --i)
-            {
-                if (listThread[i].IsAlive && listThread[i].ThreadState == ThreadState.Suspended
-                    || listThread[i].IsAlive && listThread[i].ThreadState == (ThreadState.SuspendRequested | ThreadState.WaitSleepJoin))
-                {
-                    listThread[i].Resume();
-                }
-            }
+            manualEvent.Set();
         }
 
-        static public void AddThread(Thread thread)
+        static public void AddThread(Task task)
         {
-            listThread.Add(thread);
+            listTask.Add(task);
         }
 
     }
