@@ -40,6 +40,7 @@ namespace CSGOTacticSimulator.Helper
 
                 taskList.Clear();
             }
+
             if (lowerKillPriorityCts != null && !lowerKillPriorityCts.IsCancellationRequested)
             {
                 lowerKillPriorityCts.Cancel();

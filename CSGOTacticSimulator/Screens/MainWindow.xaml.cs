@@ -4789,6 +4789,7 @@ namespace CSGOTacticSimulator
                                     weaponStr = weaponStr.Replace("Swag7", "mag7");
                                     weaponStr = weaponStr.Replace("DualBarettas", "elite");
                                     weaponStr = weaponStr.Replace("Zeus", "taser");
+                                    weaponStr = weaponStr.Replace("Revolver", "r8");
                                     foreach (string file in files)
                                     {
                                         if (file.ToLower().Contains("effect"))
