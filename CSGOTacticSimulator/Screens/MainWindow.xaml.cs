@@ -5935,10 +5935,16 @@ namespace CSGOTacticSimulator
         {
             nowRunningType = RunningType.NONE;
 
-            // 由于async / await的传染性, 不得不写出奇丑无比的代码
+            // 由于async/await的传染性, 不得不写出奇丑无比的代码
             bool res = false;
+            int tryCount = 0;
             while (!res)
             {
+                if (tryCount > 100)
+                {
+                    Environment.Exit(0);
+                }
+
                 Task<bool> taskRes = ThreadHelper.StopAllThread().WaitAsync(new TimeSpan(0, 0, 0, 0, 100));
                 if (taskRes != null)
                 {
@@ -5950,6 +5956,7 @@ namespace CSGOTacticSimulator
                     { }
                 }
                 Thread.Sleep(100);
+                ++tryCount;
             }
 
             CommandHelper.commands.Clear();
