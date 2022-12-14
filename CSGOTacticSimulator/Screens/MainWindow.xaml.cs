@@ -2,6 +2,8 @@
 using CSGOTacticSimulator.Global;
 using CSGOTacticSimulator.Helper;
 using CSGOTacticSimulator.Model;
+using CSGSI;
+using CSGSI.Nodes;
 using CustomizableMessageBox;
 using DemoInfo;
 using ICSharpCode.AvalonEdit.CodeCompletion;
@@ -34,6 +36,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -43,8 +46,21 @@ using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Linq;
 using static CustomizableMessageBox.MessageBox;
+using static System.Net.Mime.MediaTypeNames;
+using Application = System.Windows.Application;
+using Button = System.Windows.Controls.Button;
+using CheckBox = System.Windows.Controls.CheckBox;
+using ComboBox = System.Windows.Controls.ComboBox;
+using Cursors = System.Windows.Input.Cursors;
+using Image = System.Windows.Controls.Image;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using KeyEventHandler = System.Windows.Input.KeyEventHandler;
+using Label = System.Windows.Controls.Label;
+using MapNode = CSGOTacticSimulator.Model.MapNode;
 using MessageBox = CustomizableMessageBox.MessageBox;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using Path = System.IO.Path;
+using TextBox = System.Windows.Controls.TextBox;
 
 namespace CSGOTacticSimulator
 {
@@ -90,6 +106,7 @@ namespace CSGOTacticSimulator
         private Dictionary<string, string> cultureDic = new Dictionary<string, string>();
         private Dictionary<AudioFileReader, WaveOut> demoSoundPlayerDic = new Dictionary<AudioFileReader, WaveOut>();
         private bool isNeedResetDemoVoiceOffset = true;
+        private GameStateListener gsl;
 
         public List<Point> mouseMovePathInPreview = new List<Point>();
         public List<Point> keyDownInPreview = new List<Point>();
@@ -5905,23 +5922,105 @@ namespace CSGOTacticSimulator
             });
         }
 
-        private void Tb_select_file_KeyDown(object sender, KeyEventArgs e)
+        private void TbSelectFileKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                string filePath = tb_select_file.Text;
-                if (File.Exists(filePath))
+                string text = tb_select_file.Text.Trim();
+                if (File.Exists(text))
                 {
-                    if (Path.GetExtension(filePath) == ".txt")
+                    if (Path.GetExtension(text) == ".txt")
                     {
-                        te_editor.Text = File.ReadAllText(filePath);
-                        tb_select_file.Text = filePath;
+                        te_editor.Text = File.ReadAllText(text);
+                        tb_select_file.Text = text;
                     }
                     else
                     {
-                        ReadDemo(filePath);
+                        ReadDemo(text);
                     }
                 }
+                else
+                {
+                    ListenGameState(text);
+                }
+            }
+        }
+
+        private void ListenGameState(string text)
+        {
+            gsl = new GameStateListener(@"http://localhost:1024/");
+            gsl.BombDefused += (e) =>
+            {
+
+            };
+            gsl.BombExploded += (e) =>
+            {
+
+            };
+            gsl.BombPlanted += (e) =>
+            {
+
+            };
+            gsl.PlayerFlashed += (e) =>
+            {
+
+            };
+            gsl.RoundPhaseChanged += (e) =>
+            {
+
+            };
+            gsl.RoundBegin += (e) =>
+            {
+
+            };
+            gsl.RoundEnd += (e) =>
+            {
+
+            };
+            if (!gsl.Start())
+            {
+                MessageBox.Show(GlobalDictionary.propertiesSetter, new RefreshList { new ButtonSpacer(250), "确定" }, "监听失败", "错误", MessageBoxImage.Error);
+                return;
+            }
+
+            Task listenTask = Task.Run(async () =>
+            {
+                while (true)
+                {
+                    if (gsl.CurrentGameState == null)
+                    {
+                        await Task.Delay(GlobalDictionary.animationFreshTime);
+                        continue;
+                    }
+                    AllPlayersNode players = gsl.CurrentGameState.AllPlayers;
+                    GrenadesNode grenades = gsl.CurrentGameState.Grenades;
+                    CSGSI.Nodes.MapNode map = gsl.CurrentGameState.Map;
+                    RoundNode round = gsl.CurrentGameState.Round;
+                    BombNode bomb = gsl.CurrentGameState.Bomb;
+
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        DrawFrame(players, grenades, map, round, bomb);
+                    });
+
+                    await Task.Delay(GlobalDictionary.animationFreshTime);
+                }
+            });
+        }
+
+        private void DrawFrame(AllPlayersNode players, GrenadesNode grenades, CSGSI.Nodes.MapNode map, RoundNode round, BombNode bomb)
+        {
+            c_runcanvas.Children.Clear();
+
+            foreach (PlayerNode player in players)
+            {
+                Point mapPoint = AnalyzeHelper.DemoPointToMapPoint(new DemoInfo.Vector((float)player.Position.X, (float)player.Position.Y, (float)player.Position.Z), map.Name);
+                Character character = new Character(player.Name, long.Parse(player.SteamID), player.Team == PlayerTeam.CT, player.Team == PlayerTeam.T, mapPoint, this);
+                Point wndPoint = GetWndPoint(mapPoint, ImgType.Character);
+                Canvas.SetLeft(character.CharacterImg, wndPoint.X);
+                Canvas.SetTop(character.CharacterImg, wndPoint.Y);
+                c_runcanvas.Children.Add(character.CharacterImg);
+                c_runcanvas.Children.Add(CreateChacterlabel(character, wndPoint, -1));
             }
         }
 
@@ -6896,9 +6995,9 @@ namespace CSGOTacticSimulator
             buttonAutoMove.Click += delegate (object sender, RoutedEventArgs e)
             {
                 Label labelStartLayer = new Label() { Content = "起始层数", Foreground = new SolidColorBrush(Colors.White), FontSize = 16, Height = 25 };
-                TextBox textBoxStartLayer = new TextBox() { FontSize = 16, Height = 25, Width = 50, VerticalContentAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Left, Name = "textBoxStartLayer" };
+                TextBox textBoxStartLayer = new TextBox() { FontSize = 16, Height = 25, Width = 50, VerticalContentAlignment = VerticalAlignment.Center, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, Name = "textBoxStartLayer" };
                 Label labelEndLayer = new Label() { Content = "结束层数", Foreground = new SolidColorBrush(Colors.White), FontSize = 16, Height = 25 };
-                TextBox textBoxEndLayer = new TextBox() { FontSize = 16, Height = 25, Width = 50, VerticalContentAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Left, Name = "textBoxEndLayer" };
+                TextBox textBoxEndLayer = new TextBox() { FontSize = 16, Height = 25, Width = 50, VerticalContentAlignment = VerticalAlignment.Center, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, Name = "textBoxEndLayer" };
                 if (keyDownInPreview.Count < 2 || keyDownInPreview.Count > 2)
                 {
                     textBoxStartLayer.Text = "0";
@@ -6978,7 +7077,7 @@ namespace CSGOTacticSimulator
             buttonShoot.Click += delegate (object sender, RoutedEventArgs e)
             {
                 CheckBox cb = new CheckBox() { Content = "射击某角色", FontSize = 16, Foreground = new SolidColorBrush(Colors.White), Height = 25 };
-                TextBox tb = new TextBox() { Width = 60, VerticalContentAlignment = VerticalAlignment.Center, FontSize = 16, Height = 25, HorizontalAlignment = HorizontalAlignment.Left };
+                TextBox tb = new TextBox() { Width = 60, VerticalContentAlignment = VerticalAlignment.Center, FontSize = 16, Height = 25, HorizontalAlignment = System.Windows.HorizontalAlignment.Left };
                 tb.IsEnabled = false;
                 cb.Click += delegate (object cbSender, RoutedEventArgs cbE)
                 {

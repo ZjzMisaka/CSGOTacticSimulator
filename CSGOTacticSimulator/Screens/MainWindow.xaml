@@ -102,7 +102,7 @@
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="2">
                 <Label x:Name="lb_select_script_demo" Height="30" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{DynamicResource ScriptOrDemo}" FontSize="16" Foreground="White"></Label>
-                <TextBox x:Name="tb_select_file" Width="200" Height="30" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" KeyDown="Tb_select_file_KeyDown"></TextBox>
+                <TextBox x:Name="tb_select_file" Width="200" Height="30" Margin="0, 0, 10, 0" HorizontalAlignment="Right" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" KeyDown="TbSelectFileKeyDown"></TextBox>
                 <Button x:Name="btn_select_file" Style="{StaticResource Style.TextContentButton}" Width="50" Height="30" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Content="..." FontSize="16" Click="BtnSelectFileClick" />
             </StackPanel>
 
