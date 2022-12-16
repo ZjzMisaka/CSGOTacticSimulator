@@ -6006,6 +6006,7 @@ namespace CSGOTacticSimulator
                     await Task.Delay(GlobalDictionary.animationFreshTime);
                 }
             });
+            ThreadHelper.AddThread(listenTask);
         }
 
         private void DrawFrame(AllPlayersNode players, GrenadesNode grenades, CSGSI.Nodes.MapNode map, RoundNode round, BombNode bomb)
@@ -6016,11 +6017,36 @@ namespace CSGOTacticSimulator
             {
                 Point mapPoint = AnalyzeHelper.DemoPointToMapPoint(new DemoInfo.Vector((float)player.Position.X, (float)player.Position.Y, (float)player.Position.Z), map.Name);
                 Character character = new Character(player.Name, long.Parse(player.SteamID), player.Team == PlayerTeam.CT, player.Team == PlayerTeam.T, mapPoint, this);
+                character.CharacterImg.RenderTransform = new RotateTransform(360 - player.Forward.X, character.CharacterImg.Width / 2, character.CharacterImg.Height / 2);
                 Point wndPoint = GetWndPoint(mapPoint, ImgType.Character);
                 Canvas.SetLeft(character.CharacterImg, wndPoint.X);
                 Canvas.SetTop(character.CharacterImg, wndPoint.Y);
                 c_runcanvas.Children.Add(character.CharacterImg);
                 c_runcanvas.Children.Add(CreateChacterlabel(character, wndPoint, -1));
+
+                //double tan = Math.Tan(player.ViewDirectionX * Math.PI / 180);
+                //Point direction = new Point();
+                //if (player.ViewDirectionX < -270 || (player.ViewDirectionX > -90 && player.ViewDirectionX < 90) || player.ViewDirectionX > 270)
+                //{
+                //    direction = new Point(1, tan);
+                //}
+                //else if ((player.ViewDirectionX > 90 && player.ViewDirectionX < 270) || (player.ViewDirectionX < -90 && player.ViewDirectionX > -270))
+                //{
+                //    direction = new Point(-1, -tan);
+                //}
+                //else if (player.ViewDirectionX == 90 || player.ViewDirectionX == -270)
+                //{
+                //    direction = new Point(0, 1);
+                //}
+                //else if (player.ViewDirectionX == 270 || player.ViewDirectionX == -90)
+                //{
+                //    direction = new Point(0, -1);
+                //}
+                //direction = VectorHelper.GetUnitVector(new Point(0, 0), direction);
+                //Point toMapPoint = AnalyzeHelper.DemoPointToMapPoint(player.Position + new DemoInfo.Vector((float)(direction.X * 1000), (float)(direction.Y * 1000), 0), currentInfo.Map);
+                //Point toWndPoint = GetWndPoint(toMapPoint, ImgType.Nothing);
+
+
             }
         }
 
