@@ -4,7 +4,7 @@
     <sys:String x:Key="MapFolder">Set folder:</sys:String>
     <sys:String x:Key="Map">Map:</sys:String>
     <sys:String x:Key="Frame">Frame:</sys:String>
-    <sys:String x:Key="ScriptOrDemo">Script / Demo:</sys:String>
+    <sys:String x:Key="Source">Source:</sys:String>
     <sys:String x:Key="Coordinate">Position:</sys:String>
 
     <sys:String x:Key="Language">Language</sys:String>

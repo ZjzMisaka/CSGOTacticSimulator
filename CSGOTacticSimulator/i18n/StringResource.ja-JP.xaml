@@ -4,7 +4,7 @@
     <sys:String x:Key="MapFolder">フォルダ設定:</sys:String>
     <sys:String x:Key="Map">マップ:</sys:String>
     <sys:String x:Key="Frame">フレーム:</sys:String>
-    <sys:String x:Key="ScriptOrDemo">スクリプト / デモ:</sys:String>
+    <sys:String x:Key="Source">プレイソース:</sys:String>
     <sys:String x:Key="Coordinate">座標:</sys:String>
 
     <sys:String x:Key="Language">言語</sys:String>

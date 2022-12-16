@@ -4,7 +4,7 @@
     <sys:String x:Key="MapFolder">设定文件夹:</sys:String>
     <sys:String x:Key="Map">地图:</sys:String>
     <sys:String x:Key="Frame">框架:</sys:String>
-    <sys:String x:Key="ScriptOrDemo">脚本 / DEMO:</sys:String>
+    <sys:String x:Key="Source">播放源:</sys:String>
     <sys:String x:Key="Coordinate">坐标:</sys:String>
     
     <sys:String x:Key="Language">语言</sys:String>
