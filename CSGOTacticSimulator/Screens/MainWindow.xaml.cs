@@ -6,6 +6,7 @@ using CSGSI;
 using CSGSI.Nodes;
 using CustomizableMessageBox;
 using DemoInfo;
+using HltvSharp.Models;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
@@ -60,6 +61,8 @@ using MapNode = CSGOTacticSimulator.Model.MapNode;
 using MessageBox = CustomizableMessageBox.MessageBox;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using Path = System.IO.Path;
+using Player = DemoInfo.Player;
+using Team = DemoInfo.Team;
 using TextBox = System.Windows.Controls.TextBox;
 
 namespace CSGOTacticSimulator
@@ -4234,28 +4237,11 @@ namespace CSGOTacticSimulator
                         }
 
                         Character character = CharacterHelper.GetCharacter(characterNumber);
-                        if (character.Status == Model.Status.Dead)
+                        BlindEventArgs blindEventArgs = currentEvent.Item2 as BlindEventArgs;
+                        if (!PlayerBlinded(character, blindEventArgs.Attacker.SteamID, (float)blindEventArgs.FlashDuration))
                         {
                             continue;
                         }
-
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            character.StatusImg.Visibility = Visibility.Visible;
-                            character.StatusImg.Source = new BitmapImage(new Uri(GlobalDictionary.eyePath));
-                            character.StatusImg.Tag = (currentEvent.Item2 as BlindEventArgs).Attacker.SteamID;
-                        });
-
-                        Task blindTask = Task.Run(async () =>
-                        {
-                            await Task.Delay((int)((currentEvent.Item2 as BlindEventArgs).FlashDuration * 1000));
-                            ThreadHelper.manualEvent.WaitOne();
-                            this.Dispatcher.Invoke(() =>
-                            {
-                                character.StatusImg.Visibility = Visibility.Collapsed;
-                            });
-                        }, ThreadHelper.GetToken());
-                        ThreadHelper.AddThread(blindTask);
                     }
                 }
                 else if (currentEvent.Item2 is BombEventArgs)
@@ -4285,49 +4271,7 @@ namespace CSGOTacticSimulator
                             continue;
                         }
 
-                        c_runcanvas.Dispatcher.Invoke(() =>
-                        {
-                            TSImage bombImage = null;
-                            foreach (FrameworkElement frameworkElement in c_runcanvas.Children)
-                            {
-                                if (frameworkElement is TSImage && (frameworkElement as TSImage).TagStr == "Bomb")
-                                {
-                                    bombImage = frameworkElement as TSImage;
-                                }
-                            }
-                            if (bombImage == null)
-                            {
-                                return;
-                            }
-
-                            TSImage explosionImage = new TSImage();
-                            explosionImage.Source = new BitmapImage(new Uri(GlobalDictionary.explosionPath));
-                            explosionImage.Width = GlobalDictionary.ExplosionEffectWidthAndHeight;
-                            explosionImage.Height = GlobalDictionary.ExplosionEffectWidthAndHeight;
-                            Point explosionWndPoint = bombImage.MapPoint;
-                            c_runcanvas.Children.Remove(bombImage);
-                            explosionImage.MapPoint = explosionWndPoint;
-                            explosionImage.ImgType = ImgType.ExplosionEffect;
-
-                            explosionWndPoint = GetWndPoint(explosionWndPoint, ImgType.ExplosionEffect);
-                            Canvas.SetLeft(explosionImage, explosionWndPoint.X);
-                            Canvas.SetTop(explosionImage, explosionWndPoint.Y);
-                            c_runcanvas.Children.Add(explosionImage);
-
-                            Task removeExplosionImageTask = Task.Run(async () =>
-                            {
-                                await Task.Delay((int)(GlobalDictionary.heLifespan * 1000));
-                                ThreadHelper.manualEvent.WaitOne();
-                                c_runcanvas.Dispatcher.Invoke(() =>
-                                {
-                                    if (c_runcanvas.Children.Contains(explosionImage))
-                                    {
-                                        c_runcanvas.Children.Remove(explosionImage);
-                                    }
-                                });
-                            }, ThreadHelper.GetToken());
-                            ThreadHelper.AddThread(removeExplosionImageTask);
-                        });
+                        BombExploded();
                     }
                     else if (currentEvent.Item3 == "BombDefused")
                     {
@@ -5051,6 +4995,34 @@ namespace CSGOTacticSimulator
             demoSoundPlayerDic.Clear();
         }
 
+        private bool PlayerBlinded(Character character, long attackerSteamID, float flashDuration)
+        {
+            if (character.Status == Model.Status.Dead)
+            {
+                return false;
+            }
+
+            this.Dispatcher.Invoke(() =>
+            {
+                character.StatusImg.Visibility = Visibility.Visible;
+                character.StatusImg.Source = new BitmapImage(new Uri(GlobalDictionary.eyePath));
+                character.StatusImg.Tag = attackerSteamID;
+            });
+
+            Task blindTask = Task.Run(async () =>
+            {
+                await Task.Delay((int)(flashDuration * 1000));
+                ThreadHelper.manualEvent.WaitOne();
+                this.Dispatcher.Invoke(() =>
+                {
+                    character.StatusImg.Visibility = Visibility.Collapsed;
+                });
+            }, ThreadHelper.GetToken());
+            ThreadHelper.AddThread(blindTask);
+
+            return true;
+        }
+
         private void PlayerPickWeapon(Tuple<CurrentInfo, EventArgs, string, int> currentEvent, Dictionary<TSImage, int> droppedImgDic)
         {
             if (currentEvent.Item2 as PlayerPickWeaponEventArgs == null)
@@ -5742,6 +5714,16 @@ namespace CSGOTacticSimulator
 
             c_runcanvas.Dispatcher.Invoke(() =>
             {
+                character.OtherImg.Visibility = Visibility.Collapsed;
+            });
+
+            BombPlanted(mapPoint);
+        }
+
+        private void BombPlanted(Point mapPoint)
+        {
+            c_runcanvas.Dispatcher.Invoke(() =>
+            {
                 TSImage bombImage = new TSImage();
                 bombImage.Source = new BitmapImage(new Uri(GlobalDictionary.bombPath));
                 bombImage.Width = GlobalDictionary.PropsWidthAndHeight;
@@ -5752,11 +5734,56 @@ namespace CSGOTacticSimulator
                 bombImage.ImgType = ImgType.Props;
                 Point bombWndPoint = GetWndPoint(mapPoint, ImgType.Props);
 
-                character.OtherImg.Visibility = Visibility.Collapsed;
-
                 Canvas.SetLeft(bombImage, bombWndPoint.X);
                 Canvas.SetTop(bombImage, bombWndPoint.Y);
                 c_runcanvas.Children.Add(bombImage);
+            });
+        }
+
+        private void BombExploded()
+        {
+            c_runcanvas.Dispatcher.Invoke(() =>
+            {
+                TSImage bombImage = null;
+                foreach (FrameworkElement frameworkElement in c_runcanvas.Children)
+                {
+                    if (frameworkElement is TSImage && (frameworkElement as TSImage).TagStr == "Bomb")
+                    {
+                        bombImage = frameworkElement as TSImage;
+                    }
+                }
+                if (bombImage == null)
+                {
+                    return;
+                }
+
+                TSImage explosionImage = new TSImage();
+                explosionImage.Source = new BitmapImage(new Uri(GlobalDictionary.explosionPath));
+                explosionImage.Width = GlobalDictionary.ExplosionEffectWidthAndHeight;
+                explosionImage.Height = GlobalDictionary.ExplosionEffectWidthAndHeight;
+                Point explosionWndPoint = bombImage.MapPoint;
+                c_runcanvas.Children.Remove(bombImage);
+                explosionImage.MapPoint = explosionWndPoint;
+                explosionImage.ImgType = ImgType.ExplosionEffect;
+
+                explosionWndPoint = GetWndPoint(explosionWndPoint, ImgType.ExplosionEffect);
+                Canvas.SetLeft(explosionImage, explosionWndPoint.X);
+                Canvas.SetTop(explosionImage, explosionWndPoint.Y);
+                c_runcanvas.Children.Add(explosionImage);
+
+                Task removeExplosionImageTask = Task.Run(async () =>
+                {
+                    await Task.Delay((int)(GlobalDictionary.heLifespan * 1000));
+                    ThreadHelper.manualEvent.WaitOne();
+                    c_runcanvas.Dispatcher.Invoke(() =>
+                    {
+                        if (c_runcanvas.Children.Contains(explosionImage))
+                        {
+                            c_runcanvas.Children.Remove(explosionImage);
+                        }
+                    });
+                }, ThreadHelper.GetToken());
+                ThreadHelper.AddThread(removeExplosionImageTask);
             });
         }
 
@@ -5949,33 +5976,47 @@ namespace CSGOTacticSimulator
         private void ListenGameState(string text)
         {
             gsl = new GameStateListener(@"http://localhost:1024/");
+            if (gsl.CurrentGameState == null)
+            {
+                // TODO
+                return;
+            }
+            AllPlayersNode players = gsl.CurrentGameState.AllPlayers;
+            GrenadesNode grenades = gsl.CurrentGameState.Grenades;
+            CSGSI.Nodes.MapNode map = gsl.CurrentGameState.Map;
+            RoundNode round = gsl.CurrentGameState.Round;
+            BombNode bomb = gsl.CurrentGameState.Bomb;
             gsl.BombDefused += (e) =>
             {
-
+                BombDefused(CharacterHelper.GetCharacter(long.Parse(e.Defuser.SteamID)));
             };
             gsl.BombExploded += (e) =>
             {
-
+                BombExploded();
             };
             gsl.BombPlanted += (e) =>
             {
-
+                Point mapPoint = AnalyzeHelper.DemoPointToMapPoint(new DemoInfo.Vector((float)e.Planter.Position.X, (float)e.Planter.Position.Y, (float)e.Planter.Position.Z), map.Name);
+                BombPlanted(mapPoint);
             };
             gsl.PlayerFlashed += (e) =>
             {
-
+                PlayerBlinded(CharacterHelper.GetCharacter(long.Parse(e.Player.SteamID)), long.Parse(e.Player.SteamID), e.Flashed);
             };
             gsl.RoundPhaseChanged += (e) =>
             {
-
+                if (e.CurrentPhase == RoundPhase.FreezeTime)
+                { 
+                    // TODO
+                }
             };
             gsl.RoundBegin += (e) =>
             {
-
+                CharacterHelper.ClearCharacters();
             };
             gsl.RoundEnd += (e) =>
             {
-
+                // TODO
             };
             if (!gsl.Start())
             {
@@ -5992,11 +6033,6 @@ namespace CSGOTacticSimulator
                         await Task.Delay(GlobalDictionary.animationFreshTime);
                         continue;
                     }
-                    AllPlayersNode players = gsl.CurrentGameState.AllPlayers;
-                    GrenadesNode grenades = gsl.CurrentGameState.Grenades;
-                    CSGSI.Nodes.MapNode map = gsl.CurrentGameState.Map;
-                    RoundNode round = gsl.CurrentGameState.Round;
-                    BombNode bomb = gsl.CurrentGameState.Bomb;
 
                     this.Dispatcher.Invoke(() =>
                     {
@@ -6016,35 +6052,61 @@ namespace CSGOTacticSimulator
             foreach (PlayerNode player in players)
             {
                 Point mapPoint = AnalyzeHelper.DemoPointToMapPoint(new DemoInfo.Vector((float)player.Position.X, (float)player.Position.Y, (float)player.Position.Z), map.Name);
-                Character character = new Character(player.Name, long.Parse(player.SteamID), player.Team == PlayerTeam.CT, player.Team == PlayerTeam.T, mapPoint, this);
-                character.CharacterImg.RenderTransform = new RotateTransform(360 - player.Forward.X, character.CharacterImg.Width / 2, character.CharacterImg.Height / 2);
+                Character character = CharacterHelper.GetCharacter(long.Parse(player.SteamID));
+                if (character == null)
+                {
+                    character = new Character(player.Name, long.Parse(player.SteamID), player.Team == PlayerTeam.CT, player.Team == PlayerTeam.T, mapPoint, this);
+                    CharacterHelper.AddCharacter(character);
+                }
+                double tan = player.Forward.Y / player.Forward.X;
+                double angle = Math.Atan(tan) / Math.PI * 180;
+                character.CharacterImg.RenderTransform = new RotateTransform(angle);
                 Point wndPoint = GetWndPoint(mapPoint, ImgType.Character);
                 Canvas.SetLeft(character.CharacterImg, wndPoint.X);
                 Canvas.SetTop(character.CharacterImg, wndPoint.Y);
+                Point fromMapPoint = mapPoint;
                 c_runcanvas.Children.Add(character.CharacterImg);
                 c_runcanvas.Children.Add(CreateChacterlabel(character, wndPoint, -1));
 
-                //double tan = Math.Tan(player.ViewDirectionX * Math.PI / 180);
-                //Point direction = new Point();
-                //if (player.ViewDirectionX < -270 || (player.ViewDirectionX > -90 && player.ViewDirectionX < 90) || player.ViewDirectionX > 270)
+                Point direction = new Point();
+                if (angle < -270 || (angle > -90 && angle < 90) || angle > 270)
+                {
+                    direction = new Point(1, tan);
+                }
+                else if ((angle > 90 && angle < 270) || (angle < -90 && angle > -270))
+                {
+                    direction = new Point(-1, -tan);
+                }
+                else if (angle == 90 || angle == -270)
+                {
+                    direction = new Point(0, 1);
+                }
+                else if (angle == 270 || angle == -90)
+                {
+                    direction = new Point(0, -1);
+                }
+                direction = VectorHelper.GetUnitVector(new Point(0, 0), direction);
+                Point toMapPoint = AnalyzeHelper.DemoPointToMapPoint(new DemoInfo.Vector((float)player.Position.X, (float)player.Position.Y, (float)player.Position.Z) + new DemoInfo.Vector((float)(direction.X * 1000), (float)(direction.Y * 1000), 0), map.Name);
+                Point toWndPoint = GetWndPoint(toMapPoint, ImgType.Nothing);
+                List<Point> mapPointList = new List<Point>() { fromMapPoint, toMapPoint };
+                Line bulletLine = new Line();
+                bulletLine.Tag = mapPointList;
+                Point fromWndPoint = GetWndPoint(fromMapPoint, ImgType.Nothing);
+                bulletLine.X1 = fromWndPoint.X;
+                bulletLine.Y1 = fromWndPoint.Y;
+                bulletLine.X2 = toWndPoint.X;
+                bulletLine.Y2 = toWndPoint.Y;
+                c_runcanvas.Children.Add(bulletLine);
+                //Task shootTask = Task.Run(async () =>
                 //{
-                //    direction = new Point(1, tan);
-                //}
-                //else if ((player.ViewDirectionX > 90 && player.ViewDirectionX < 270) || (player.ViewDirectionX < -90 && player.ViewDirectionX > -270))
-                //{
-                //    direction = new Point(-1, -tan);
-                //}
-                //else if (player.ViewDirectionX == 90 || player.ViewDirectionX == -270)
-                //{
-                //    direction = new Point(0, 1);
-                //}
-                //else if (player.ViewDirectionX == 270 || player.ViewDirectionX == -90)
-                //{
-                //    direction = new Point(0, -1);
-                //}
-                //direction = VectorHelper.GetUnitVector(new Point(0, 0), direction);
-                //Point toMapPoint = AnalyzeHelper.DemoPointToMapPoint(player.Position + new DemoInfo.Vector((float)(direction.X * 1000), (float)(direction.Y * 1000), 0), currentInfo.Map);
-                //Point toWndPoint = GetWndPoint(toMapPoint, ImgType.Nothing);
+                //    await Task.Delay(150);
+                //    ThreadHelper.manualEvent.WaitOne();
+                //    c_runcanvas.Dispatcher.Invoke(() =>
+                //    {
+                //        c_runcanvas.Children.Remove(bulletLine);
+                //    });
+                //}, ThreadHelper.GetToken());
+                //ThreadHelper.AddThread(shootTask);
 
 
             }

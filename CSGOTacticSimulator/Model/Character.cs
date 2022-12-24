@@ -138,6 +138,15 @@ namespace CSGOTacticSimulator.Model
 
         public Character(string name, long steamId, bool isFriendly, bool isT, Point mapPoint, MainWindow wnd)
         {
+            if (name != "")
+            {
+                this.Name = name;
+                if (!CharacterHelper.AddIntoNameDic(name, CharacterHelper.GetCharacters().Count))
+                {
+                    return;
+                }
+            }
+
             CharacterImg.MouseEnter += wnd.ShowCharacterInfos;
             CharacterImg.MouseLeftButtonDown += wnd.ShowPov;
             CharacterImg.Cursor = Cursors.Hand;
@@ -147,12 +156,6 @@ namespace CSGOTacticSimulator.Model
 
             OtherImg.Visibility = Visibility.Collapsed;
             StatusImg.Visibility = Visibility.Collapsed;
-
-            if (name != "")
-            {
-                this.Name = name;
-                CharacterHelper.AddIntoNameDic(name, CharacterHelper.GetCharacters().Count);
-            }
 
             this.steamId = steamId;
 
