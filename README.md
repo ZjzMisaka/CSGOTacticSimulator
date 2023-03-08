@@ -133,7 +133,7 @@ https://www.iaders.com/upload/2020/0305/CTSDemo.gif </br>
 |[akiver/csgo-voice-extractor](https://github.com/akiver/csgo-voice-extractor)|MIT|
 |[ZjzMisaka/CustomizableMessageBox](https://github.com/ZjzMisaka/CustomizableMessageBox)|WTFPL|
 |[simpleradar/CSGOMaps](http://simpleradar.com/)|[Link](http://simpleradar.com/)|
-|[ICONS8](https://icons8.com)|[Link](https://icons8.com/license)|
+|[ICONS8](https://icons8.com)|[Link](https://icons8.com/license) \| [Good Boy License](https://icons8.com/good-boy-license)|
 |[Facepunch/Facepunch.Steamworks](https://github.com/Facepunch/Facepunch.Steamworks)|MIT|
 |[naudio/NAudio](https://github.com/naudio/NAudio)|MIT|
 |[ArttuKuikka/HltvSharp](https://github.com/ArttuKuikka/HltvSharp)|[Issue](https://github.com/ArttuKuikka/HltvSharp/issues/9)|
