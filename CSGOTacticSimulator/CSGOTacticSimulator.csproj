@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
@@ -360,6 +360,6 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="CustomizableMessageBox" Version="2.3.4" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.3" />
   </ItemGroup>
 </Project>
